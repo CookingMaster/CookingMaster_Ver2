@@ -88,6 +88,9 @@
     <ClInclude Include="src\Events\EventManager.hpp">
       <Filter>src\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\UIComponents.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

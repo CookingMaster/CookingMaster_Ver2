@@ -33,6 +33,7 @@
     <ClInclude Include="src\Components\BasicComponents.hpp" />
     <ClInclude Include="src\Components\Collider.hpp" />
     <ClInclude Include="src\Components\Renderer.hpp" />
+    <ClInclude Include="src\Components\UIComponents.hpp" />
     <ClInclude Include="src\ECS\ECS.hpp" />
     <ClInclude Include="src\Events\EventManager.hpp" />
     <ClInclude Include="src\Events\TestEvent.hpp" />
