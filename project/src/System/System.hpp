@@ -62,7 +62,7 @@ private:
 public:
 	//!画面サイズ
 	static constexpr int
-	SCREEN_WIDIH = 1248,
+	SCREEN_WIDIH = 1280,
 	SCREEN_HEIGHT = 720;
 	System()
 	{
