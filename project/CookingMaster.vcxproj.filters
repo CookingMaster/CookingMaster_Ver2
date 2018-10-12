@@ -88,6 +88,9 @@
     <ClInclude Include="src\Events\EventManager.hpp">
       <Filter>src\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Class\MusicScoreLoader.hpp">
+      <Filter>src\Class</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

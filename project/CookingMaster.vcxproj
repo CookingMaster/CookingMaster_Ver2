@@ -27,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ArcheType\TestArcheType.hpp" />
+    <ClInclude Include="src\Class\MusicScoreLoader.hpp" />
     <ClInclude Include="src\Class\ResourceManager.hpp" />
     <ClInclude Include="src\Class\Sound.hpp" />
     <ClInclude Include="src\Collision\Collision.hpp" />
