@@ -4,6 +4,9 @@
 * @note  特に理由がなければSpriteDrawやSpriteAnimationDraw、SpriteRectDrawが最も多機能なのでそれらの使用を推奨します
 * @author tonarinohito
 * @date 2018/10/06
+* @par History
+- 2018/10/12 tonarinohito
+-# SpriteRectDraw追加
 */
 #pragma once
 #include "../ECS/ECS.hpp"
