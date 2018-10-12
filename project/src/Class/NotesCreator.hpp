@@ -8,18 +8,34 @@
 #pragma once
 #include "NotesAndScoreData.hpp"
 #include "../Utility/Counter.hpp"
+#include "../Utility/CalcurationBeat.hpp"
 
 class NotesCreator
 {
 private:
-	int bpm;
-	int offsetTime;
-	TCounter<int> counter;
+	int bpm_;
+	int offsetTime_;
+	TCounter<int> counter_;
 
 public:
-	void ResetData(int setBPM, int setOffsetTime)
+	//BPM, OffsetTimeをリセットする
+	void resetData(int bpm, int offsetTime)
 	{
-		bpm = setBPM;
-		offsetTime = setOffsetTime;
+		bpm_ = bpm;
+		offsetTime_ = offsetTime;
+		counter_.reset();
+	}
+
+	//更新処理
+	void run(const std::vector<NotesData>& notesData, const ScoreData& scoreData)
+	{
+		CalcurationBeat beat((float)bpm_);
+
+		++counter_;
+		//一小節毎にノーツを生成する
+		if (counter_.getCurrentCount() % int(beat.calcOneBar_Frame()) == 0)
+		{
+			//アーキタイプ生成
+		}
 	}
 };

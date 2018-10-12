@@ -1,6 +1,6 @@
 /**
 * @file NotesArcheType.hpp
-* @brief ノーツの原型を作る
+* @brief ノーツの原型を生成する
 * @author feveleK5563
 * @date 2018/10/12
 */

@@ -1,6 +1,6 @@
 /**
 * @file CalcurationBeat.hpp
-* @brief BPM‚©‚çŠeŽí‰¹•„‚Ì’·‚³‚ðŒvŽZ‚·‚é
+* @brief BPM‚©‚ç”‚Ì’·‚³‚ðŒvŽZ‚·‚é
 * @author feveleK5563
 * @date 2018/10/12
 */
@@ -11,32 +11,32 @@
 class CalcurationBeat
 {
 private:
-	const float bpm;
+	const float bpm_;
 
 public:
-	CalcurationBeat(float setBpm) : bpm(setBpm){}
+	CalcurationBeat(float bpm) : bpm_(bpm){}
 
 	//ˆê¬ß(‘S‰¹•„)‚Ì’·‚³‚ðŒvŽZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
-	[[nodiscard]]float CalcOneBar_Frame()
+	[[nodiscard]]float calcOneBar_Frame()
 	{
-		return (60.f / bpm) * 240.f;
+		return (60.f / bpm_) * 240.f;
 	}
 	//ˆê¬ß(‘S‰¹•„)‚Ì’·‚³‚ðŒvŽZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
-	[[nodiscard]]float CalcOneBar_Millisecond()
+	[[nodiscard]]float calcOneBar_Millisecond()
 	{
-		return (60.f / bpm) * 4000.f;
+		return (60.f / bpm_) * 4000.f;
 	}
 
 	//Žw’è‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
-	[[nodiscard]]float CalcNote_Frame(float beat)
+	[[nodiscard]]float calcNote_Frame(float beat)
 	{
 		assert(beat > 0.f && "The beat is incorrect!");
-		return CalcOneBar_Frame() / beat;
+		return calcOneBar_Frame() / beat;
 	}
 	//Žw’è‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
-	[[nodiscard]]float CalcNote_Millisecond(float beat)
+	[[nodiscard]]float calcNote_Millisecond(float beat)
 	{
 		assert(beat > 0.f && "The beat is incorrect!");
-		return CalcOneBar_Millisecond() / beat;
+		return calcOneBar_Millisecond() / beat;
 	}
 };

@@ -16,10 +16,10 @@
 class MusicScoreLoader
 {
 private:
-	int bpm;
-	int offsetTime;
-	std::vector<NotesData> notesData;
-	ScoreData scoreData;
+	int bpm_;
+	int offsetTime_;
+	std::vector<NotesData> notesData_;
+	ScoreData scoreData_;
 
 public:
 	//譜面データを読み込む
@@ -30,12 +30,10 @@ public:
 		assert(fin && "ScoreDataFile was not found!");
 
 		//BPM読み込み
-		int bpm;
-		fin >> tmpstr >> bpm;
+		fin >> tmpstr >> bpm_;
 
 		//OffsetTime読み込み
-		int offset;
-		fin >> tmpstr >> offset;
+		fin >> tmpstr >> offsetTime_;
 
 		//NotesData読み込み
 		addRestNotes();
@@ -58,54 +56,54 @@ public:
 	//全てのデータを削除する
 	void allDataClear()
 	{
-		bpm = 0;
-		offsetTime = 0.f;
+		bpm_ = 0;
+		offsetTime_ = 0.f;
 
-		notesData.clear();
-		notesData.shrink_to_fit();
+		notesData_.clear();
+		notesData_.shrink_to_fit();
 
-		for (auto& it : scoreData)
+		for (auto& it : scoreData_)
 		{
 			it.clear();
 			it.shrink_to_fit();
 		}
-		scoreData.clear();
-		scoreData.shrink_to_fit();
+		scoreData_.clear();
+		scoreData_.shrink_to_fit();
 	}
 
 	[[nodiscard]]int GetBPM()
 	{
-		return bpm;
+		return bpm_;
 	}
 
 	[[nodiscard]]float GetOffsetTime()
 	{
-		return offsetTime;
+		return offsetTime_;
 	}
 
 	[[nodiscard]]const std::vector<NotesData>& GetNotesData()
 	{
-		return notesData;
+		return notesData_;
 	}
 
 	[[nodiscard]]const ScoreData& GetScoreData()
 	{
-		return scoreData;
+		return scoreData_;
 	}
 
 private:
 	//休符のノーツデータを追加する
 	void addRestNotes()
 	{
-		notesData.emplace_back();
-		notesData.back().imageName = "rest";
-		notesData.back().seName = "rest";
-		notesData.back().arrivalBeatTime = 0;
+		notesData_.emplace_back();
+		notesData_.back().imageName = "rest";
+		notesData_.back().seName = "rest";
+		notesData_.back().arrivalBeatTime = 0;
 		for (int i = 0; i < 4; ++i)
 		{
-			notesData.back().hitJudge[i] = 0.f;
+			notesData_.back().hitJudge[i] = 0.f;
 		}
-		notesData.shrink_to_fit();
+		notesData_.shrink_to_fit();
 	}
 
 	//ノーツデータを読み込む
@@ -119,15 +117,15 @@ private:
 		std::ifstream fin(notesDataPath);
 		assert(fin && "NotesDataFile was not found!");
 
-		notesData.emplace_back();
-		fin >> notesData.back().imageName
-			>> notesData.back().seName
-			>> notesData.back().arrivalBeatTime
-			>> notesData.back().hitJudge[0]
-			>> notesData.back().hitJudge[1]
-			>> notesData.back().hitJudge[2]
-			>> notesData.back().hitJudge[3];
-		notesData.shrink_to_fit();
+		notesData_.emplace_back();
+		fin >> notesData_.back().imageName
+			>> notesData_.back().seName
+			>> notesData_.back().arrivalBeatTime
+			>> notesData_.back().hitJudge[0]
+			>> notesData_.back().hitJudge[1]
+			>> notesData_.back().hitJudge[2]
+			>> notesData_.back().hitJudge[3];
+		notesData_.shrink_to_fit();
 
 		fin.close();
 	}
@@ -138,8 +136,8 @@ private:
 		std::stringstream ss;
 		ss << score;
 
-		scoreData.emplace_back();
-		scoreData.shrink_to_fit();
+		scoreData_.emplace_back();
+		scoreData_.shrink_to_fit();
 
 		std::vector<std::string> idstr;
 		while (true)
@@ -149,16 +147,16 @@ private:
 			if (idstr.back() == ",") break;	//コロンがあったら次へ
 		}
 		idstr.pop_back();
-		scoreData.back().resize(idstr.size());
+		scoreData_.back().resize(idstr.size());
 
 		int id;
 		for (unsigned int i = 0; i < idstr.size(); ++i)
 		{
 			id = std::stoi(idstr[i]);
 
-			scoreData.back()[i].notesID = abs(id);	//取得したノーツ番号を代入
-			if (id > 0) scoreData.back()[i].dir = OneNoteData::Direction::RIGHT;	//正の数だったら右から
-			else scoreData.back()[i].dir = OneNoteData::Direction::LEFT;			//負の数だったら左から
+			scoreData_.back()[i].notesID = abs(id);	//取得したノーツ番号を代入
+			if (id > 0) scoreData_.back()[i].dir = OneNoteData::Direction::RIGHT;	//正の数だったら右から
+			else scoreData_.back()[i].dir = OneNoteData::Direction::LEFT;			//負の数だったら左から
 		}
 	}
 };
