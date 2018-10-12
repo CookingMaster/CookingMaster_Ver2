@@ -513,4 +513,35 @@ namespace ECS
 			pivot_ = pivot;
 		}
 	};
+
+	/**
+	* @brief BPMに応じてアニメーションする
+	* - Transformが必要
+	* - 色を変えたい場合はColorが必要です
+	* - アルファブレンドをしたい場合はAlphaBlendが必要です
+	* - setPivotで基準座標を変更できます
+	* @author yokota0717
+	* @date 2018.10.12
+	*/
+	class AnimationByBPM final : public ComponentSystem {
+		Position* pos_ = nullptr;
+		Scale* scale_ = nullptr;
+		Rotation* rota_ = nullptr;
+		Color* color_ = nullptr;
+		AlphaBlend* blend_ = nullptr;
+		std::string name_;
+		Vec2 pivot_;
+		bool isDraw_ = true;
+		int index_ = 0;
+		int bpm_ = 0;
+	public:
+		AnimationByBPM(const char* name, const int bpm) {
+			assert(ResourceManager::GetGraph().hasDivHandle(name));
+			name_ = name;
+			bpm_ = bpm;
+		}
+		void initialize() override {
+
+		}
+	};
 }
