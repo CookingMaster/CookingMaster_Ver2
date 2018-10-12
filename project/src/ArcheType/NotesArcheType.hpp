@@ -14,7 +14,7 @@ namespace ECS
 {
 	namespace NotesArcheType
 	{
-		//エンティティの生成テスト
+		//ノーツを生成
 		Entity* CreateTestEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();

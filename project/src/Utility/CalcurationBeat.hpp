@@ -6,67 +6,37 @@
 */
 
 #pragma once
+#include <assert.h>
 
 class CalcurationBeat
 {
 private:
-	float bpm;
+	const float bpm;
 
 public:
 	CalcurationBeat(float setBpm) : bpm(setBpm){}
 
-	//ˆê”(4•ª‰¹•„)‚Ì’·‚³‚ðŒvŽZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
-	[[nodiscard]]float CalcOneBeat_Frame()
-	{
-		return (60.f / bpm) * 60.f;
-	}
-	//ˆê”(4•ª‰¹•„)‚Ì’·‚³‚ðŒvŽZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
-	[[nodiscard]]float CalcOneBeat_Millisecond()
-	{
-		return (60.f / bpm) * 1000.f;
-	}
-	
 	//ˆê¬ß(‘S‰¹•„)‚Ì’·‚³‚ðŒvŽZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
 	[[nodiscard]]float CalcOneBar_Frame()
 	{
-		return CalcOneBar_Frame() * 4.f;
+		return (60.f / bpm) * 240.f;
 	}
 	//ˆê¬ß(‘S‰¹•„)‚Ì’·‚³‚ðŒvŽZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
 	[[nodiscard]]float CalcOneBar_Millisecond()
 	{
-		return CalcOneBeat_Millisecond() * 4.f;
+		return (60.f / bpm) * 4000.f;
 	}
 
-	//2•ª‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
-	[[nodiscard]]float CalcHalfNote_Frame()
+	//Žw’è‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
+	[[nodiscard]]float CalcNote_Frame(float beat)
 	{
-		return CalcOneBar_Frame() * 2.f;
+		assert(beat > 0.f && "The beat is incorrect!");
+		return CalcOneBar_Frame() / beat;
 	}
-	//2•ª‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
-	[[nodiscard]]float CalcHalfNote_Millisecond()
+	//Žw’è‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
+	[[nodiscard]]float CalcNote_Millisecond(float beat)
 	{
-		return CalcOneBeat_Millisecond() * 2.f;
-	}
-
-	//8•ª‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
-	[[nodiscard]]float CalcEighthNote_Frame()
-	{
-		return CalcOneBar_Frame() / 2.f;
-	}
-	//8•ª‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
-	[[nodiscard]]float CalcEighthNote_Millisecond()
-	{
-		return CalcOneBeat_Millisecond() / 2.f;
-	}
-
-	//16•ª‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
-	[[nodiscard]]float CalcSixteenthNote_Frame()
-	{
-		return CalcOneBar_Frame() / 4.f;
-	}
-	//16•ª‰¹•„‚Ì’·‚³‚ðŒvŽZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
-	[[nodiscard]]float CalcSixteenthNote_Millisecond()
-	{
-		return CalcOneBeat_Millisecond() / 4.f;
+		assert(beat > 0.f && "The beat is incorrect!");
+		return CalcOneBar_Millisecond() / beat;
 	}
 };

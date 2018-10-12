@@ -27,7 +27,7 @@ public:
 	{
 		std::string tmpstr;	//•¶Žš—ñ‚ðˆêŽž“I‚ÉŠi”[‚·‚é‚½‚ß‚Ì‚â‚Â
 		std::ifstream fin(musicScoreDataPath);
-		if (!fin) assert(false && "ScoreData was not found!");
+		assert(fin && "ScoreDataFile was not found!");
 
 		//BPM“Ç‚Ýž‚Ý
 		int bpm;
@@ -117,7 +117,7 @@ private:
 		ss >> num >> notesDataPath;
 
 		std::ifstream fin(notesDataPath);
-		if (!fin) assert(false && "NotesDataPath was not found!");
+		assert(fin && "NotesDataFile was not found!");
 
 		notesData.emplace_back();
 		fin >> notesData.back().imageName
