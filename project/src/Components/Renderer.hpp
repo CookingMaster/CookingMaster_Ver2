@@ -1,9 +1,12 @@
 ﻿/**
 * @file  Renderer.hpp
 * @brief 描画関連のコンポーネントです。
-* @note  特に理由がなければSpriteDrawやSpriteAnimationDrawが最も多機能なのでそれらの使用を推奨します
+* @note  特に理由がなければSpriteDrawやSpriteAnimationDraw、SpriteRectDrawが最も多機能なのでそれらの使用を推奨します
 * @author tonarinohito
 * @date 2018/10/06
+* @par History
+- 2018/10/12 tonarinohito
+-# SpriteRectDraw追加
 */
 #pragma once
 #include "../ECS/ECS.hpp"
@@ -166,12 +169,12 @@ namespace ECS
 			}
 			
 		}
-		//! @brief 描画を有効にします
+		//!描画を有効にします
 		void drawEnable()
 		{
 			isDraw_ = true;
 		}
-		//! @brief 描画を無効にします
+		//!描画を無効にします
 		void drawDisable()
 		{
 			isDraw_ = false;
@@ -195,7 +198,7 @@ namespace ECS
 		Position* pos_ = nullptr;
 		Color* color_ = nullptr;
 		AlphaBlend* blend_ = nullptr;
-		RECT rect;
+		RECT rect_;
 		std::string name_;
 		bool isDraw_ = true;
 		bool isCenter_ = false;
@@ -204,10 +207,10 @@ namespace ECS
 		RectDraw(const char* name, const int srcX, const int srcY, const int w, const int h)
 		{
 			assert(ResourceManager::GetGraph().hasHandle(name));
-			rect.left = srcX;
-			rect.right = srcY;
-			rect.bottom = w;
-			rect.top = h;
+			rect_.left = srcX;
+			rect_.right = srcY;
+			rect_.bottom = w;
+			rect_.top = h;
 			name_ = name;
 		}
 		void initialize() override
@@ -226,20 +229,20 @@ namespace ECS
 				{
 					DrawRectGraphF(
 						pos_->val.x, pos_->val.y,
-						rect.left, rect.right,
-						rect.bottom,
-						rect.top,
+						rect_.left, rect_.right,
+						rect_.bottom,
+						rect_.top,
 						ResourceManager::GetGraph().getHandle(name_),
 						true);
 				}
 				else
 				{
 					DrawRectGraphF(
-						pos_->val.x - (static_cast<float>(rect.bottom) / 2),
-						pos_->val.y - (static_cast<float>(rect.top) / 2),
-						rect.left, rect.right,
-						rect.bottom,
-						rect.top,
+						pos_->val.x - (static_cast<float>(rect_.bottom) / 2),
+						pos_->val.y - (static_cast<float>(rect_.top) / 2),
+						rect_.left, rect_.right,
+						rect_.bottom,
+						rect_.top,
 						ResourceManager::GetGraph().getHandle(name_),
 						true);
 				}
@@ -247,12 +250,20 @@ namespace ECS
 				RenderUtility::ResetRenderState();
 			}
 		}
-		//! @brief 描画を有効にします
+		//!描画する範囲を再設定します
+		void setRect(const int srcX, const int srcY, const int w, const int h)
+		{
+			rect_.left = srcX;
+			rect_.right = srcY;
+			rect_.bottom = w;
+			rect_.top = h;
+		}
+		//!描画を有効にします
 		void drawEnable()
 		{
 			isDraw_ = true;
 		}
-		//! @brief 描画を無効にします
+		//!描画を無効にします
 		void drawDisable()
 		{
 			isDraw_ = false;
@@ -335,17 +346,17 @@ namespace ECS
 				RenderUtility::ResetRenderState();
 			}
 		}
-		//! @brief 描画したい分割画像の要素番号を指定します
+		//!描画したい分割画像の要素番号を指定します
 		void setIndex(const int index)
 		{
 			index_ = index;
 		}
-		//! @brief 描画を有効にします
+		//!描画を有効にします
 		void drawEnable()
 		{
 			isDraw_ = true;
 		}
-		//! @brief 描画を無効にします
+		//!描画を無効にします
 		void drawDisable()
 		{
 			isDraw_ = false;
@@ -357,6 +368,7 @@ namespace ECS
 	* - Transfromが必要です。
 	* - 色を変えたい場合はColorが必要です
 	* - アルファブレンドをしたい場合はAlphaBlendが必要です
+	* - doCenterで基準座標を変更できます
 	*/
 	class SpriteDraw final : public ComponentSystem
 	{
@@ -421,12 +433,12 @@ namespace ECS
 			}
 
 		}
-		//! @brief 描画を有効にします
+		//!描画を有効にします
 		void drawEnable()
 		{
 			isDraw_ = true;
 		}
-		//! @brief 描画を無効にします
+		//!描画を無効にします
 		void drawDisable()
 		{
 			isDraw_ = false;
@@ -492,20 +504,105 @@ namespace ECS
 			}
 
 		}
-		//! @brief 描画したい分割画像の要素番号を指定します
+		//!描画したい分割画像の要素番号を指定します
 		void setIndex(const int index)
 		{
 			index_ = index;
 		}
-		//! @brief 描画を有効にします
+		//!描画を有効にします
 		void drawEnable()
 		{
 			isDraw_ = true;
 		}
-		//! @brief 描画を無効にします
+		//!描画を無効にします
 		void drawDisable()
 		{
 			isDraw_ = false;
+		}
+		//!描画する基準座標を引数で指定します
+		void setPivot(const Vec2& pivot)
+		{
+			pivot_ = pivot;
+		}
+	};
+
+	/*!
+	@brief 多機能な指定した範囲を描画する機能です。左上基準です
+	* - Positionが必要です。
+	* - 色を変えたい場合はColorが必要です
+	* - アルファブレンドをしたい場合はAlphaBlendが必要です
+	* - setPivotで基準座標を変更できます
+	*/
+	class SpriteRectDraw final : public ComponentSystem
+	{
+	private:
+		Position* pos_ = nullptr;
+		Scale* scale_ = nullptr;
+		Rotation* rota_ = nullptr;
+		Color* color_ = nullptr;
+		AlphaBlend* blend_ = nullptr;
+		Vec2 pivot_;
+		RECT rect_;
+		std::string name_;
+		bool isDraw_ = true;
+		bool isCenter_ = false;
+	public:
+		//!登録した画像名を指定して初期化します
+		SpriteRectDraw(const char* name, const int srcX, const int srcY, const int w, const int h)
+		{
+			assert(ResourceManager::GetGraph().hasHandle(name));
+			rect_.left = srcX;
+			rect_.right = srcY;
+			rect_.bottom = w;
+			rect_.top = h;
+			name_ = name;
+		}
+		void initialize() override
+		{
+			pos_ = &entity->getComponent<Position>();
+			rota_ = &entity->getComponent<Rotation>();
+			scale_ = &entity->getComponent<Scale>();
+			RenderUtility::SatRenderDetail(entity, &color_, &blend_);
+		}
+		void draw2D() override
+		{
+			if (ResourceManager::GetGraph().hasHandle(name_) &&
+				isDraw_)
+			{
+				RenderUtility::SetColor(color_);
+				RenderUtility::SetBlend(blend_);
+				DrawRectRotaGraph3F(
+					pos_->val.x, pos_->val.y,
+					rect_.left, rect_.right,
+					rect_.bottom,
+					rect_.top,
+					pivot_.x,
+					pivot_.y,
+					scale_->val.x,
+					scale_->val.y,
+					DirectX::XMConvertToRadians(rota_->val),
+					ResourceManager::GetGraph().getHandle(name_),
+					true);
+				RenderUtility::ResetRenderState();
+			}
+		}
+		//!描画を有効にします
+		void drawEnable()
+		{
+			isDraw_ = true;
+		}
+		//!描画を無効にします
+		void drawDisable()
+		{
+			isDraw_ = false;
+		}
+		//!描画する範囲を再設定します
+		void setRect(const int srcX, const int srcY, const int w, const int h)
+		{
+			rect_.left = srcX;
+			rect_.right = srcY;
+			rect_.bottom = w;
+			rect_.top = h;
 		}
 		//!描画する基準座標を引数で指定します
 		void setPivot(const Vec2& pivot)
