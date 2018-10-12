@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file ResourceManager.hpp
-* @brief DXƒ‰ƒCƒuƒ‰ƒŠ‚ÌLoadGraph‚âLoadSoundMem‚©‚çæ“¾‚µ‚½ƒnƒ“ƒhƒ‹‚ğŠÇ—‚·‚éƒNƒ‰ƒX‚Å‚·
+* @brief DXãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®LoadGraphã‚„LoadSoundMemã‹ã‚‰å–å¾—ã—ãŸãƒãƒ³ãƒ‰ãƒ«ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã§ã™
 * @author tonarinohito
 * @date 2018/10/05
 */
@@ -12,12 +12,18 @@
 #include <assert.h>
 #include "../Utility/Utility.hpp"
 
-//!ƒOƒ‰ƒtƒBƒbƒN‚âƒTƒEƒ“ƒh‚Ìƒnƒ“ƒhƒ‹ŠÇ—‚ğ‚µ‚Ü‚·
+//!ã‚µã‚¦ãƒ³ãƒ‰ã®ç¨®é¡
+enum class SoundType
+{
+	BGM,
+	SE
+};
+//!ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚„ã‚µã‚¦ãƒ³ãƒ‰ã®ãƒãƒ³ãƒ‰ãƒ«ç®¡ç†ã‚’ã—ã¾ã™
 class ResourceManager final
 {
 private:
 	/*!
-	@brief Graphicƒnƒ“ƒhƒ‹‚ğŠÇ—‚µ‚Ü‚·
+	@brief Graphicãƒãƒ³ãƒ‰ãƒ«ã‚’ç®¡ç†ã—ã¾ã™
 	*/
 	class GraphicManager final
 	{
@@ -36,14 +42,14 @@ private:
 			InitGraph();
 		}
 		/**
-		* @brief  ‰æ‘œ‚ğƒ[ƒh‚µ‚Ü‚·
-		* @param  path ƒtƒ@ƒCƒ‹ƒpƒX
-		* @param  name “o˜^–¼
-		* @detail Šù‚É“o˜^‚µ‚½–¼‘O‚Íg‚¦‚Ü‚¹‚ñ
+		* @brief  ç”»åƒã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™
+		* @param  path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+		* @param  name ç™»éŒ²å
+		* @detail æ—¢ã«ç™»éŒ²ã—ãŸåå‰ã¯ä½¿ãˆã¾ã›ã‚“
 		*/
 		void load(const std::string& path, const std::string& name)
 		{
-			//–¼‘O‚Ìd•¡–h~
+			//åå‰ã®é‡è¤‡é˜²æ­¢
 			if (graphs_.count(name))
 			{
 				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
@@ -57,33 +63,33 @@ private:
 			}
 		}
 		/**
-		* @brief  ‰æ‘œ‚ğ”ñ“¯Šú‚Åƒ[ƒh‚µ‚Ü‚·
-		* @param  path ƒtƒ@ƒCƒ‹ƒpƒX
-		* @param  name “o˜^–¼
-		* @detail Šù‚É“o˜^‚µ‚½–¼‘O‚Íg‚¦‚Ü‚¹‚ñB”ñ“¯Šú‚È‚Ì‚Å‚±‚Ìƒƒ\ƒbƒh‚Åˆ—‚ª~‚Ü‚é‚±‚Æ‚Í‚ ‚è‚Ü‚¹‚ñ
+		* @brief  ç”»åƒã‚’éåŒæœŸã§ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™
+		* @param  path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+		* @param  name ç™»éŒ²å
+		* @detail æ—¢ã«ç™»éŒ²ã—ãŸåå‰ã¯ä½¿ãˆã¾ã›ã‚“ã€‚éåŒæœŸãªã®ã§ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã§å‡¦ç†ãŒæ­¢ã¾ã‚‹ã“ã¨ã¯ã‚ã‚Šã¾ã›ã‚“
 		*
 		*/
 		void loadAsync(const std::string& path, const std::string& name)
 		{
-			//–¼‘O‚Ìd•¡–h~
+			//åå‰ã®é‡è¤‡é˜²æ­¢
 			if (graphs_.count(name))
 			{
 				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
 				assert(false);
 			}
-			SetUseASyncLoadFlag(TRUE); // ”ñ“¯Šú“Ç‚İ‚İƒtƒ‰ƒOON
+			SetUseASyncLoadFlag(TRUE); // éåŒæœŸèª­ã¿è¾¼ã¿ãƒ•ãƒ©ã‚°ON
 			graphs_[name] = LoadGraph(path.c_str());
 			if (graphs_[name] == -1)
 			{
 				DOUT << path + "load is failed" << std::endl;
 				assert(false);
 			}
-			SetUseASyncLoadFlag(FALSE); // ”ñ“¯Šú“Ç‚İ‚İƒtƒ‰ƒOOFF
+			SetUseASyncLoadFlag(FALSE); // éåŒæœŸèª­ã¿è¾¼ã¿ãƒ•ãƒ©ã‚°OFF
 		}
 		/**
-		* @brief  w’è‚µ‚½ƒnƒ“ƒhƒ‹‚Ì“Ç‚İ‚İ‚ªŠ®—¹‚µ‚Ä‚¢‚é‚©•Ô‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @return “Ç‚İ‚İÏ‚İ‚È‚ç‚µ‚½‚çture
+		* @brief  æŒ‡å®šã—ãŸãƒãƒ³ãƒ‰ãƒ«ã®èª­ã¿è¾¼ã¿ãŒå®Œäº†ã—ã¦ã„ã‚‹ã‹è¿”ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @return èª­ã¿è¾¼ã¿æ¸ˆã¿ãªã‚‰ã—ãŸã‚‰ture
 		*/
 		[[nodiscard]] bool isLoaded(const std::string& name)
 		{
@@ -97,15 +103,15 @@ private:
 				}
 				break;
 
-			case FALSE: return true;	//”ñ“¯Šú“Ç‚İ‚İÏ‚İ
-			case TRUE:  return false;	//‚Ü‚¾
+			case FALSE: return true;	//éåŒæœŸèª­ã¿è¾¼ã¿æ¸ˆã¿
+			case TRUE:  return false;	//ã¾ã 
 			
 			}
 		}
 		/**
-		* @brief  w’è‚µ‚½ƒnƒ“ƒhƒ‹‚Ì“Ç‚İ‚İ‚ªŠ®—¹‚µ‚Ä‚¢‚é‚©•Ô‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @return “Ç‚İ‚İÏ‚İ‚È‚ç‚µ‚½‚çture
+		* @brief  æŒ‡å®šã—ãŸãƒãƒ³ãƒ‰ãƒ«ã®èª­ã¿è¾¼ã¿ãŒå®Œäº†ã—ã¦ã„ã‚‹ã‹è¿”ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @return èª­ã¿è¾¼ã¿æ¸ˆã¿ãªã‚‰ã—ãŸã‚‰ture
 		*/
 		[[nodiscard]] bool isLoadedDiv(const std::string& name)
 		{
@@ -119,29 +125,29 @@ private:
 				}
 				break;
 
-			case FALSE: return true;	//”ñ“¯Šú“Ç‚İ‚İÏ‚İ
-			case TRUE:  return false;	//‚Ü‚¾
+			case FALSE: return true;	//éåŒæœŸèª­ã¿è¾¼ã¿æ¸ˆã¿
+			case TRUE:  return false;	//ã¾ã 
 
 			}
 		}
 		/**
-		* @brief  •ªŠ„‰æ‘œ‚ğƒ[ƒh‚µ‚Ü‚·
-		* @param  path ƒtƒ@ƒCƒ‹ƒpƒX
-		* @param  name “o˜^–¼
-		* @param  allNum ‰æ‘œ‚Ì•ªŠ„‘”
-		* @param  xNum ‰¡•ûŒü‚Ì”
-		* @param  yNum c•ûŒü‚Ì”
-		* @param  xSize •ªŠ„‚µ‚½‰æ‘œˆê–‡•ª‚Ì‰¡‚ÌƒTƒCƒY
-		* @param  ySize •ªŠ„‚µ‚½‰æ‘œˆê–‡•ª‚Ìc‚ÌƒTƒCƒY
-		* @return ¬Œ÷‚µ‚½‚çture
-		* @detail Šù‚É“o˜^‚µ‚½–¼‘O‚Íg‚¦‚Ü‚¹‚ñ
+		* @brief  åˆ†å‰²ç”»åƒã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™
+		* @param  path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+		* @param  name ç™»éŒ²å
+		* @param  allNum ç”»åƒã®åˆ†å‰²ç·æ•°
+		* @param  xNum æ¨ªæ–¹å‘ã®æ•°
+		* @param  yNum ç¸¦æ–¹å‘ã®æ•°
+		* @param  xSize åˆ†å‰²ã—ãŸç”»åƒä¸€æšåˆ†ã®æ¨ªã®ã‚µã‚¤ã‚º
+		* @param  ySize åˆ†å‰²ã—ãŸç”»åƒä¸€æšåˆ†ã®ç¸¦ã®ã‚µã‚¤ã‚º
+		* @return æˆåŠŸã—ãŸã‚‰ture
+		* @detail æ—¢ã«ç™»éŒ²ã—ãŸåå‰ã¯ä½¿ãˆã¾ã›ã‚“
 		*/
 		void loadDiv(const std::string& path, const std::string& name,
 			const int allNum,
 			const int xNum, const int yNum,
 			const int xSize, const int ySize)
 		{
-			//–¼‘O‚Ìd•¡–h~
+			//åå‰ã®é‡è¤‡é˜²æ­¢
 			if (divGraphs_.count(name))
 			{
 				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
@@ -157,28 +163,28 @@ private:
 			}
 		}
 		/**
-		* @brief  •ªŠ„‰æ‘œ‚ğ”ñ“¯Šú‚Åƒ[ƒh‚µ‚Ü‚·
-		* @param  path	ƒtƒ@ƒCƒ‹ƒpƒX
-		* @param  name	“o˜^–¼
-		* @param  allNum ‰æ‘œ‚Ì•ªŠ„‘”
-		* @param  xNum ‰¡•ûŒü‚Ì”
-		* @param  yNum c•ûŒü‚Ì”
-		* @param  xSize •ªŠ„‚µ‚½‰æ‘œˆê–‡•ª‚Ì‰¡‚ÌƒTƒCƒY
-		* @param  ySize •ªŠ„‚µ‚½‰æ‘œˆê–‡•ª‚Ìc‚ÌƒTƒCƒY
-		* @detail Šù‚É“o˜^‚µ‚½–¼‘O‚Íg‚¦‚Ü‚¹‚ñB”ñ“¯Šú‚È‚Ì‚Å‚±‚Ìƒƒ\ƒbƒh‚Åˆ—‚ª~‚Ü‚é‚±‚Æ‚Í‚ ‚è‚Ü‚¹‚ñ
+		* @brief  åˆ†å‰²ç”»åƒã‚’éåŒæœŸã§ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™
+		* @param  path	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+		* @param  name	ç™»éŒ²å
+		* @param  allNum ç”»åƒã®åˆ†å‰²ç·æ•°
+		* @param  xNum æ¨ªæ–¹å‘ã®æ•°
+		* @param  yNum ç¸¦æ–¹å‘ã®æ•°
+		* @param  xSize åˆ†å‰²ã—ãŸç”»åƒä¸€æšåˆ†ã®æ¨ªã®ã‚µã‚¤ã‚º
+		* @param  ySize åˆ†å‰²ã—ãŸç”»åƒä¸€æšåˆ†ã®ç¸¦ã®ã‚µã‚¤ã‚º
+		* @detail æ—¢ã«ç™»éŒ²ã—ãŸåå‰ã¯ä½¿ãˆã¾ã›ã‚“ã€‚éåŒæœŸãªã®ã§ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã§å‡¦ç†ãŒæ­¢ã¾ã‚‹ã“ã¨ã¯ã‚ã‚Šã¾ã›ã‚“
 		*/
 		void loadDivAsync(const std::string& path, const std::string& name,
 			const int allNum,
 			const int xNum, const int yNum,
 			const int xSize, const int ySize)
 		{
-			//–¼‘O‚Ìd•¡–h~
+			//åå‰ã®é‡è¤‡é˜²æ­¢
 			if (divGraphs_.count(name))
 			{
 				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
 				assert(false);
 			}
-			SetUseASyncLoadFlag(TRUE); // ”ñ“¯Šú“Ç‚İ‚İƒtƒ‰ƒOON
+			SetUseASyncLoadFlag(TRUE); // éåŒæœŸèª­ã¿è¾¼ã¿ãƒ•ãƒ©ã‚°ON
 			divGraphs_[name].first = new int[allNum];
 			divGraphs_[name].second = (size_t)allNum;
 			int isOk = LoadDivGraph(path.c_str(), allNum, xNum, yNum, xSize, ySize, divGraphs_[name].first);
@@ -187,13 +193,13 @@ private:
 				DOUT << path + " is failed" << std::endl;
 				assert(false);
 			}
-			SetUseASyncLoadFlag(FALSE); // ”ñ“¯Šú“Ç‚İ‚İƒtƒ‰ƒOOFF
+			SetUseASyncLoadFlag(FALSE); // éåŒæœŸèª­ã¿è¾¼ã¿ãƒ•ãƒ©ã‚°OFF
 		}
 		/**
-		* @brief  ƒƒ‚ƒŠ‚É“Ç‚İ‚ñ‚¾‰æ‘œ‚Ìƒnƒ“ƒhƒ‹‚ğ•Ô‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @return ¬Œ÷‚µ‚½‚çƒnƒ“ƒhƒ‹‚ª•Ô‚è‚Ü‚·
-		* @detail ‘¶İ‚µ‚È‚¢–¼‘O‚ÉƒAƒNƒZƒX‚·‚é‚ÆƒGƒ‰[‚É‚È‚è‚Ü‚·
+		* @brief  ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã‚“ã ç”»åƒã®ãƒãƒ³ãƒ‰ãƒ«ã‚’è¿”ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @return æˆåŠŸã—ãŸã‚‰ãƒãƒ³ãƒ‰ãƒ«ãŒè¿”ã‚Šã¾ã™
+		* @detail å­˜åœ¨ã—ãªã„åå‰ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã¨ã‚¨ãƒ©ãƒ¼ã«ãªã‚Šã¾ã™
 		*/
 		[[nodiscard]] int getHandle(const std::string& name)
 		{
@@ -205,11 +211,11 @@ private:
 			return graphs_[name];
 		}
 		/**
-		* @brief  ƒƒ‚ƒŠ‚É“Ç‚İ‚ñ‚¾•ªŠ„‰æ‘œ‚Ìƒnƒ“ƒhƒ‹‚ğ•Ô‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @param  index ”z—ñ‚Ì—v‘f”
-		* @return ¬Œ÷‚µ‚½‚çƒnƒ“ƒhƒ‹‚ª•Ô‚è‚Ü‚·
-		* @detail ‘¶İ‚µ‚È‚¢–¼‘O‚ÉƒAƒNƒZƒX‚·‚é‚©•ªŠ„”‚ğ’´‚¦‚½’l‚ğw’è‚·‚é‚ÆƒGƒ‰[‚É‚È‚è‚Ü‚·
+		* @brief  ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã‚“ã åˆ†å‰²ç”»åƒã®ãƒãƒ³ãƒ‰ãƒ«ã‚’è¿”ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @param  index é…åˆ—ã®è¦ç´ æ•°
+		* @return æˆåŠŸã—ãŸã‚‰ãƒãƒ³ãƒ‰ãƒ«ãŒè¿”ã‚Šã¾ã™
+		* @detail å­˜åœ¨ã—ãªã„åå‰ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã‹åˆ†å‰²æ•°ã‚’è¶…ãˆãŸå€¤ã‚’æŒ‡å®šã™ã‚‹ã¨ã‚¨ãƒ©ãƒ¼ã«ãªã‚Šã¾ã™
 		*/
 		[[nodiscard]] int getDivHandle(const std::string& name, const int index)
 		{
@@ -226,9 +232,9 @@ private:
 			return divGraphs_[name].first[index];
 		}
 		/**
-		* @brief  ƒƒ‚ƒŠ‚É“Ç‚İ‚ñ‚¾‰æ‘œ‚Ìƒnƒ“ƒhƒ‹‚ª‘¶İ‚·‚é‚©•Ô‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @return ƒnƒ“ƒhƒ‹‚ª‘¶İ‚µ‚½‚çtrue
+		* @brief  ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã‚“ã ç”»åƒã®ãƒãƒ³ãƒ‰ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã‹è¿”ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @return ãƒãƒ³ãƒ‰ãƒ«ãŒå­˜åœ¨ã—ãŸã‚‰true
 		*/
 		[[nodiscard]] bool hasHandle(const std::string& name)
 		{
@@ -239,9 +245,9 @@ private:
 			return false;
 		}
 		/**
-		* @brief  ƒƒ‚ƒŠ‚É“Ç‚İ‚ñ‚¾•ªŠ„‰æ‘œ‚Ìƒnƒ“ƒhƒ‹‚ª‘¶İ‚·‚é‚©•Ô‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @return ƒnƒ“ƒhƒ‹‚ª‘¶İ‚µ‚½‚çtrue
+		* @brief  ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã‚“ã åˆ†å‰²ç”»åƒã®ãƒãƒ³ãƒ‰ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã‹è¿”ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @return ãƒãƒ³ãƒ‰ãƒ«ãŒå­˜åœ¨ã—ãŸã‚‰true
 		*/
 		[[nodiscard]] bool hasDivHandle(const std::string& name)
 		{
@@ -252,9 +258,9 @@ private:
 			return false;
 		}
 		/**
-		* @brief  ƒƒ‚ƒŠ‚É“Ç‚İ‚ñ‚¾‰æ‘œƒŠƒ\[ƒX‚ğ‰ğ•ú‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @return “o˜^–¼‚ª‘¶İ‚µ‚È‚¢ê‡‰½‚à‹N‚«‚Ü‚¹‚ñ
+		* @brief  ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã‚“ã ç”»åƒãƒªã‚½ãƒ¼ã‚¹ã‚’è§£æ”¾ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @return ç™»éŒ²åãŒå­˜åœ¨ã—ãªã„å ´åˆä½•ã‚‚èµ·ãã¾ã›ã‚“
 		*/
 		void removeDivGraph(const std::string& name)
 		{
@@ -268,9 +274,9 @@ private:
 			divGraphs_.erase(name);
 		}
 		/**
-		* @brief  ƒƒ‚ƒŠ‚É“Ç‚İ‚ñ‚¾•ªŠ„‰æ‘œƒŠƒ\[ƒX‚ğ‰ğ•ú‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @return “o˜^–¼‚ª‘¶İ‚µ‚È‚¢ê‡‰½‚à‹N‚«‚Ü‚¹‚ñ
+		* @brief  ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã‚“ã åˆ†å‰²ç”»åƒãƒªã‚½ãƒ¼ã‚¹ã‚’è§£æ”¾ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @return ç™»éŒ²åãŒå­˜åœ¨ã—ãªã„å ´åˆä½•ã‚‚èµ·ãã¾ã›ã‚“
 		*/
 		void removeGraph(const std::string& name)
 		{
@@ -286,90 +292,94 @@ private:
 
 	/*!
 	@class SoundManager
-	@brief ƒTƒEƒ“ƒhƒnƒ“ƒhƒ‹‚ğŠÇ—‚µ‚Ü‚·
+	@brief ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ã‚’ç®¡ç†ã—ã¾ã™
 	*/
 	class SoundManager final
 	{
 	private:
-		typedef std::unordered_map<std::string, int> SoundMap;
+		typedef std::unordered_map<std::string, std::pair<int,SoundType>> SoundMap;
 		SoundMap sounds_;
 	public:
+	
 		~SoundManager()
 		{
 			InitSoundMem();
 		}
 		/**
-		* @brief ƒTƒEƒ“ƒh‚ğƒ[ƒh‚µ‚Ü‚·
-		* @param  path ƒtƒ@ƒCƒ‹ƒpƒX
-		* @param  name “o˜^–¼
-		* @detail Šù‚É“o˜^‚µ‚½–¼‘O‚Íg‚¦‚Ü‚¹‚ñ
+		* @brief ã‚µã‚¦ãƒ³ãƒ‰ã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™
+		* @param  path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+		* @param  name ç™»éŒ²å
+		* @param  soundType BGMã‹SEã‹åˆ—æŒ™å‹ã§æŒ‡å®š
+		* @detail æ—¢ã«ç™»éŒ²ã—ãŸåå‰ã¯ä½¿ãˆã¾ã›ã‚“
 		*/
-		void load(const std::string& path, const std::string& name)
+		void load(const std::string& path, const std::string& name,const SoundType& soundType)
 		{
-			//–¼‘O‚Ìd•¡–h~
+			//åå‰ã®é‡è¤‡é˜²æ­¢
 			if (sounds_.count(name))
 			{
 				DOUT << "SoundHandle :" + name + " add is failed" << std::endl;
 				assert(false);
 			}
-			sounds_[name] = LoadSoundMem(path.c_str());
-			if (sounds_[name] == -1)
+			sounds_[name].second = soundType;
+			sounds_[name].first = LoadSoundMem(path.c_str());
+			if (sounds_[name].first == -1)
 			{
 				DOUT << path + " is failed" << std::endl;
 				assert(false);
 			}
 		}
 		/**
-		* @brief  ƒTƒEƒ“ƒh‚ğ”ñ“¯Šú‚Åƒ[ƒh‚µ‚Ü‚·
-		* @param  path ƒtƒ@ƒCƒ‹ƒpƒX
-		* @param  name “o˜^–¼
-		* @detail Šù‚É“o˜^‚µ‚½–¼‘O‚Íg‚¦‚Ü‚¹‚ñB”ñ“¯Šú‚È‚Ì‚Å‚±‚Ìƒƒ\ƒbƒh‚Åˆ—‚ª~‚Ü‚é‚±‚Æ‚Í‚ ‚è‚Ü‚¹‚ñ
+		* @brief  ã‚µã‚¦ãƒ³ãƒ‰ã‚’éåŒæœŸã§ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™
+		* @param  path ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+		* @param  name ç™»éŒ²å
+		* @detail æ—¢ã«ç™»éŒ²ã—ãŸåå‰ã¯ä½¿ãˆã¾ã›ã‚“ã€‚éåŒæœŸãªã®ã§ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã§å‡¦ç†ãŒæ­¢ã¾ã‚‹ã“ã¨ã¯ã‚ã‚Šã¾ã›ã‚“
 		*
 		*/
-		void loadAsync(const std::string& path, const std::string& name)
+		void loadAsync(const std::string& path, const std::string& name, const SoundType& soundType)
 		{
-			//–¼‘O‚Ìd•¡–h~
+			//åå‰ã®é‡è¤‡é˜²æ­¢
 			if (sounds_.count(name))
 			{
 				DOUT << "SoundHandle :" + name + " add is failed" << std::endl;
 				assert(false);
 			}
-			SetUseASyncLoadFlag(TRUE); // ”ñ“¯Šú“Ç‚İ‚İƒtƒ‰ƒOON
-			sounds_[name] = LoadSoundMem(path.c_str());
-			if (sounds_[name] == -1)
+			sounds_[name].second = soundType;
+			SetUseASyncLoadFlag(TRUE); // éåŒæœŸèª­ã¿è¾¼ã¿ãƒ•ãƒ©ã‚°ON
+			sounds_[name].first = LoadSoundMem(path.c_str());
+			if (sounds_[name].first == -1)
 			{
 				DOUT << path + " is failed" << std::endl;
 				assert(false);
 			}
-			SetUseASyncLoadFlag(FALSE); // ”ñ“¯Šú“Ç‚İ‚İƒtƒ‰ƒOOFF
+			SetUseASyncLoadFlag(FALSE); // éåŒæœŸèª­ã¿è¾¼ã¿ãƒ•ãƒ©ã‚°OFF
 		}
 		/**
-		* @brief  w’è‚µ‚½ƒnƒ“ƒhƒ‹‚Ì“Ç‚İ‚İ‚ªŠ®—¹‚µ‚Ä‚¢‚é‚©•Ô‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @return “Ç‚İ‚İÏ‚İ‚È‚ç‚µ‚½‚çture
+		* @brief  æŒ‡å®šã—ãŸãƒãƒ³ãƒ‰ãƒ«ã®èª­ã¿è¾¼ã¿ãŒå®Œäº†ã—ã¦ã„ã‚‹ã‹è¿”ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @return èª­ã¿è¾¼ã¿æ¸ˆã¿ãªã‚‰ã—ãŸã‚‰ture
 		*/
 		[[nodiscard]] bool isLoaded(const std::string& name)
 		{
-			switch (CheckHandleASyncLoad(sounds_[name]))
+			switch (CheckHandleASyncLoad(sounds_[name].first))
 			{
 			case -1:
-				if (sounds_[name] == -1)
+				if (sounds_[name].first == -1)
 				{
 					DOUT << name + "loadAsync is failed" << std::endl;
 					assert(false);
 				}
 				break;
 
-			case FALSE: return true;	//”ñ“¯Šú“Ç‚İ‚İÏ‚İ
-			case TRUE:  return false;	//‚Ü‚¾
+			case FALSE: return true;	//éåŒæœŸèª­ã¿è¾¼ã¿æ¸ˆã¿
+			case TRUE:  return false;	//ã¾ã 
 
 			}
 		}
 		/**
-		* @brief  ƒƒ‚ƒŠ‚É“Ç‚İ‚ñ‚¾ƒTƒEƒ“ƒhƒnƒ“ƒhƒ‹‚ğ•Ô‚µ‚Ü‚·
-		* @param  name “o˜^–¼
-		* @return ¬Œ÷‚µ‚½‚çƒnƒ“ƒhƒ‹‚ª•Ô‚è‚Ü‚·
-		* @detail ‘¶İ‚µ‚È‚¢–¼‘O‚ÉƒAƒNƒZƒX‚·‚é‚ÆƒGƒ‰[‚É‚È‚è‚Ü‚·
+		* @brief  ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã‚“ã ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ã‚’è¿”ã—ã¾ã™
+		* @param  name ç™»éŒ²å
+		* @return æˆåŠŸã—ãŸã‚‰ãƒãƒ³ãƒ‰ãƒ«ãŒè¿”ã‚Šã¾ã™
+		* @detail å­˜åœ¨ã—ãªã„åå‰ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã¨ã‚¨ãƒ©ãƒ¼ã«ãªã‚Šã¾ã™
 		*/
 		[[nodiscard]] int getHandle(const std::string& name)
 		{
@@ -378,12 +388,12 @@ private:
 				DOUT << "Registered name :" + name + " is not found" << std::endl;
 				assert(false);
 			}
-			return sounds_[name];
+			return sounds_[name].first;
 		}
 		/**
-		* @brief ƒƒ‚ƒŠ‚É“Ç‚İ‚ñ‚¾ƒTƒEƒ“ƒhƒnƒ“ƒhƒ‹‚ª‘¶İ‚·‚é‚©•Ô‚µ‚Ü‚·
-		* @param name “o˜^–¼
-		* @return ƒnƒ“ƒhƒ‹‚ª‘¶İ‚µ‚½‚çtrue
+		* @brief ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã‚“ã ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã‹è¿”ã—ã¾ã™
+		* @param name ç™»éŒ²å
+		* @return ãƒãƒ³ãƒ‰ãƒ«ãŒå­˜åœ¨ã—ãŸã‚‰true
 		*/
 		[[nodiscard]] bool hasHandle(const std::string& name)
 		{
@@ -394,21 +404,21 @@ private:
 			return false;
 		}
 		/**
-		* @brief ƒƒ‚ƒŠ‚É“Ç‚İ‚ñ‚¾ƒTƒEƒ“ƒhƒŠƒ\[ƒX‚ğ‰ğ•ú‚µ‚Ü‚·
-		* @param name “o˜^–¼
-		* @return “o˜^–¼‚ª‘¶İ‚µ‚È‚¢ê‡‰½‚à‹N‚«‚Ü‚¹‚ñ
+		* @brief ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã‚“ã ã‚µã‚¦ãƒ³ãƒ‰ãƒªã‚½ãƒ¼ã‚¹ã‚’è§£æ”¾ã—ã¾ã™
+		* @param name ç™»éŒ²å
+		* @return ç™»éŒ²åãŒå­˜åœ¨ã—ãªã„å ´åˆä½•ã‚‚èµ·ãã¾ã›ã‚“
 		*/
 		void remove(const std::string& name)
 		{
-			if (sounds_.find(name) == sounds_.end() || !sounds_[name])
+			if (sounds_.find(name) == sounds_.end() || !sounds_[name].first)
 			{
 				DOUT << "Registered name :" + name + " is remove failed" << std::endl;
 				return;
 			}
-			DeleteSoundMem(sounds_[name]);
+			DeleteSoundMem(sounds_[name].first);
 			sounds_.erase(name);
 		}
-		//!‚·‚×‚Ä‚Ìƒnƒ“ƒhƒ‹‚ğunordered_map‚Å•Ô‚µ‚Ü‚·
+		//!ã™ã¹ã¦ã®ãƒãƒ³ãƒ‰ãƒ«ã‚’unordered_mapã§è¿”ã—ã¾ã™
 		[[nodiscard]] const SoundMap& getSoundMap() const
 		{
 			return sounds_;
@@ -418,21 +428,21 @@ private:
 
 public:
 	/**
-	* @brief ”ñ“¯Šú“Ç‚İ‚İ’†‚Ìˆ—”‚ğ•Ô‚µ‚Ü‚·
-	* @return ”ñ“¯Šúˆ—’†‚Ì”
+	* @brief éåŒæœŸèª­ã¿è¾¼ã¿ä¸­ã®å‡¦ç†æ•°ã‚’è¿”ã—ã¾ã™
+	* @return éåŒæœŸå‡¦ç†ä¸­ã®æ•°
 	*/
 	static int GetAsyncLoadNum()
 	{
 		return GetASyncLoadNum();
 	}
-	/** @brief GraphicManager‚ğæ“¾‚µ‚Ü‚·*/
+	/** @brief GraphicManagerã‚’å–å¾—ã—ã¾ã™*/
 	static GraphicManager& GetGraph()
 	{
 		static std::unique_ptr<GraphicManager> pGraph =
 			std::make_unique<GraphicManager>();
 		return *pGraph;
 	}
-	/** @brief SoundManager‚ğæ“¾‚µ‚Ü‚·*/
+	/** @brief SoundManagerã‚’å–å¾—ã—ã¾ã™*/
 	static SoundManager& GetSound()
 	{
 		static std::unique_ptr<SoundManager> pSound =
