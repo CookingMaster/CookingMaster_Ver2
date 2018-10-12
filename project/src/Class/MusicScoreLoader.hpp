@@ -1,36 +1,15 @@
 /**
-* @file NotesLoader.hpp
+* @file MusicScoreLoader.hpp
 * @brief ノーツの出現タイミングやデータを読み込み、外部に提供する
 * @author feveleK5563
 * @date 2018/10/11
 */
 
 #pragma once
-#include <string>
 #include <sstream>
 #include <fstream>
 #include <assert.h>
-#include <vector>
-
-//ノーツに使用される各種データ
-struct NotesData
-{
-	std::string imageName;	//使用する画像名
-	std::string seName;		//切った時の効果音名
-	int arrivalBeatTime;	//マーカーへの到達拍数
-	float hitJudge[4];		//接触判定時間(MISSを除く評価4段階分)
-};
-
-//一つの音符のデータ
-struct ScoreNoteData
-{
-	int notesID;								//ノーツの番号
-	enum class Direction { LEFT, RIGHT } dir;	//飛んでくる方向
-};
-
-//譜面データ
-typedef std::vector<std::vector<ScoreNoteData>> ScoreData;
-
+#include "NotesAndScoreData.hpp"
 
 //-----------------------------------------------------------------------------
 //読み込み&提供くん
@@ -94,22 +73,22 @@ public:
 		scoreData.shrink_to_fit();
 	}
 
-	int GetBPM()
+	[[nodiscard]]int GetBPM()
 	{
 		return bpm;
 	}
 
-	float GetOffsetTime()
+	[[nodiscard]]float GetOffsetTime()
 	{
 		return offsetTime;
 	}
 
-	const std::vector<NotesData>& GetNotesData()
+	[[nodiscard]]const std::vector<NotesData>& GetNotesData()
 	{
 		return notesData;
 	}
 
-	const ScoreData& GetScoreData()
+	[[nodiscard]]const ScoreData& GetScoreData()
 	{
 		return scoreData;
 	}
@@ -140,7 +119,6 @@ private:
 		std::ifstream fin(notesDataPath);
 		if (!fin) assert(false && "NotesDataPath was not found!");
 
-		//読み込む
 		notesData.emplace_back();
 		fin >> notesData.back().imageName
 			>> notesData.back().seName
@@ -148,8 +126,7 @@ private:
 			>> notesData.back().hitJudge[0]
 			>> notesData.back().hitJudge[1]
 			>> notesData.back().hitJudge[2]
-			>> notesData.back().hitJudge[3]
-			>> notesData.back().hitJudge[4];
+			>> notesData.back().hitJudge[3];
 		notesData.shrink_to_fit();
 
 		fin.close();
@@ -169,7 +146,7 @@ private:
 		{
 			idstr.emplace_back();
 			ss >> idstr.back();	//文字列を取得
-			if (idstr.back() == ",") break;	//コロンだったら次へ
+			if (idstr.back() == ",") break;	//コロンがあったら次へ
 		}
 		idstr.pop_back();
 		scoreData.back().resize(idstr.size());
@@ -180,8 +157,8 @@ private:
 			id = std::stoi(idstr[i]);
 
 			scoreData.back()[i].notesID = abs(id);	//取得したノーツ番号を代入
-			if (id > 0) scoreData.back()[i].dir = ScoreNoteData::Direction::RIGHT;	//正の数だったら右から
-			else scoreData.back()[i].dir = ScoreNoteData::Direction::LEFT;			//負の数だったら左から
+			if (id > 0) scoreData.back()[i].dir = OneNoteData::Direction::RIGHT;	//正の数だったら右から
+			else scoreData.back()[i].dir = OneNoteData::Direction::LEFT;			//負の数だったら左から
 		}
 	}
 };
