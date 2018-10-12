@@ -8,7 +8,7 @@ namespace Scene
 			entityManager_(manager)
 	{
 		ResourceManager::GetGraph().loadDiv("Resource/image/Act_Chara2.png", "test", 48, 6, 8, 64, 64);
-		ResourceManager::GetSound().load("Resource/sound/onion.ogg", "onion");
+		ResourceManager::GetSound().load("Resource/sound/onion.ogg", "onion",SoundType::SE);
 		testEntity = ECS::ArcheType::CreateTestEntity("test", Vec2{100.f,300.f}, entityManager_);
 	}
 

@@ -14,7 +14,7 @@ namespace Event
 				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 				{
 					Sound sound("onion");
-					sound.play(false);
+					sound.play(false,true);
 					it->getComponent<ECS::AlphaBlend>().blendMode = ECS::AlphaBlend::INVSRC;
 				}
 				if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
