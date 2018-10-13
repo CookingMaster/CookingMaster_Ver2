@@ -22,7 +22,10 @@ private:
 	ScoreData scoreData_;
 
 public:
-	//譜面データを読み込む
+	/**
+	* @brief 譜面データを読み込む
+	* @param musicScoreDataPath 譜面情報ファイルへのパス
+	*/
 	void loadMusicScoreData(const std::string& musicScoreDataPath)
 	{
 		std::string tmpstr;	//文字列を一時的に格納するためのやつ
@@ -44,6 +47,7 @@ public:
 		}
 
 		//譜面読み込み
+		addRestScoreData();
 		while(std::getline(fin, tmpstr))
 		{
 			if (tmpstr == "#END") break;
@@ -53,7 +57,9 @@ public:
 		fin.close();
 	}
 
-	//全てのデータを削除する
+	/**
+	* @brief 全てのデータを削除する
+	*/
 	void allDataClear()
 	{
 		bpm_ = 0;
@@ -71,21 +77,34 @@ public:
 		scoreData_.shrink_to_fit();
 	}
 
+	/**
+	* @brief BPMを取得する
+	* @return int BPM
+	*/
 	[[nodiscard]]int GetBPM()
 	{
 		return bpm_;
 	}
-
+	/**
+	* @brief オフセットの値(フレーム)を取得する
+	* @return float オフセット時間
+	*/
 	[[nodiscard]]float GetOffsetTime()
 	{
 		return offsetTime_;
 	}
-
+	/**
+	* @brief 使用するノーツのデータを取得する
+	* @return const std::vector<NotesData>& 使用するノーツのデータ
+	*/
 	[[nodiscard]]const std::vector<NotesData>& GetNotesData()
 	{
 		return notesData_;
 	}
-
+	/**
+	* @brief 譜面データを取得する
+	* @return const ScoreData& 譜面データ
+	*/
 	[[nodiscard]]const ScoreData& GetScoreData()
 	{
 		return scoreData_;
@@ -128,6 +147,16 @@ private:
 		notesData_.shrink_to_fit();
 
 		fin.close();
+	}
+
+	//全休符のみの小節を譜面データに追加する
+	void addRestScoreData()
+	{
+		scoreData_.emplace_back();
+		scoreData_.shrink_to_fit();
+
+		scoreData_.back().resize(1);
+		scoreData_.back().back() = {0, OneNoteData::Direction::LEFT};
 	}
 
 	//譜面データを追加する

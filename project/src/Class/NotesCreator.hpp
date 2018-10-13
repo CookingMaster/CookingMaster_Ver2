@@ -9,33 +9,78 @@
 #include "NotesAndScoreData.hpp"
 #include "../Utility/Counter.hpp"
 #include "../Utility/CalcurationBeat.hpp"
+#include "../ArcheType/NotesArcheType.hpp"
+#include "../ECS/ECS.hpp"
 
 class NotesCreator
 {
+#undef max
 private:
-	int bpm_;
-	int offsetTime_;
-	TCounter<int> counter_;
+	int bpm_;					//BPM
+	int offsetTime_;			//オフセット時間
+	TCounter<int> cntTime_;		//時間計測
+	TCounter<int> cntBar_;		//小節の計測
 
 public:
-	//BPM, OffsetTimeをリセットする
+	/**
+	* @brief BPM, OffsetTimeを設定し、経過時間を0にする
+	* @param bpm BPM
+	* @param offsetTime オフセット時間
+	*/
 	void resetData(int bpm, int offsetTime)
 	{
 		bpm_ = bpm;
 		offsetTime_ = offsetTime;
-		counter_.reset();
+		cntTime_.reset();
+		cntBar_.reset();
 	}
 
-	//更新処理
-	void run(const std::vector<NotesData>& notesData, const ScoreData& scoreData)
+	/**
+	* @brief 更新処理
+	* @param notesData 使用するノーツのデータ
+	* @param scoreData 譜面データ
+	* @param entityManager エンティティマネージャ
+	*/
+	void run(const std::vector<NotesData>& notesData, const ScoreData& scoreData, ECS::EntityManager& entityManager)
 	{
 		CalcurationBeat beat((float)bpm_);
 
-		++counter_;
+		++cntTime_;
 		//一小節毎にノーツを生成する
-		if (counter_.getCurrentCount() % int(beat.calcOneBar_Frame()) == 0)
+		if (cntTime_.getCurrentCount() % int(beat.calcOneBar_Frame()) == 0)
 		{
-			//アーキタイプ生成
+			//ノーツ生成
+			createNotes(notesData, scoreData, entityManager);
 		}
+	}
+
+private:
+	//ノーツを生成する
+	void createNotes(const std::vector<NotesData>& notesData, const ScoreData& scoreData, ECS::EntityManager& entityManager)
+	{
+		//次の小節の譜面を見る
+		int nextBar = cntBar_.getCurrentCount() + 1;
+		if ((unsigned int)nextBar >= scoreData.size()) return;
+		
+		//その小節内で生成されるノーツ数から音の長さを計算
+		CalcurationBeat beat((float)bpm_);
+		float noteFlame = beat.calcNote_Frame(float(scoreData[nextBar].size()));
+
+		for (unsigned int i = 0; i < scoreData[nextBar].size(); ++i)
+		{
+			NotesData nd = notesData[scoreData[nextBar][i].notesID];
+			float arrivalBeatTime = float(nd.arrivalBeatTime) * noteFlame;
+			//そのノーツが画面内に出現するまでの待ち時間を計算
+			float waitTime = beat.calcOneBar_Frame() * 2.f - (float(scoreData[nextBar].size() - i) * noteFlame) - arrivalBeatTime;
+
+			//生成
+			ECS::NotesArcheType::CreateNotes(
+				nd,
+				scoreData[nextBar][i].dir,
+				waitTime,
+				entityManager);
+		}
+
+		++cntBar_;
 	}
 };
