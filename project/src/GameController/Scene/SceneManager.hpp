@@ -1,82 +1,58 @@
-/**
+ï»¿/**
 * @file SceneManager.hpp
-* @brief SceneƒIƒuƒWƒFƒNƒg‚ğŠÇ—‚µ‚Ü‚·	
+* @brief Sceneã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¿…è¦ãªåŸºåº•ã‚¯ãƒ©ã‚¹ã‚„åˆ—æŒ™å‹ã§ã™
 * @author tonarinohito
-* @date 2018/10/06
+* @date 2018/10/14
 */
 #pragma once
 #include "../../ECS/ECS.hpp"
 #include "../../Utility/Utility.hpp"
-#include "Title.h"
-#include "Game.h"
+#include "../Scene/Parameter.hpp"
 
 namespace Scene
 {
-	//!ƒV[ƒ“‚ÌŠÇ—‚ğs‚¢‚Ü‚·
-	class SceneManager final
+	/**
+	* @briefã‚·ãƒ¼ãƒ³ã®çŠ¶æ…‹ã‚’è¡¨ã—ã¾ã™
+	* - BACK_TO_SCENEã‚’æŒ‡å®šã—ãŸå ´åˆå‰ã®ã‚·ãƒ¼ãƒ³ã«æˆ»ã‚Šã¾ã™ã€‚ãã®å ´åˆã¯ç¬¬ä¸‰å¼•æ•°ã‚’trueã«ã—ã¦ä¸‹ã•ã„
+	* - 
+	*/
+	enum class SceneName
+	{
+		TITLE,
+		GAME,
+		BACK_TO_SCENE	//å‰ã®ã‚¹ã‚¿ãƒƒã‚¯(ã‚·ãƒ¼ãƒ³)ãŒæ®‹ã£ã¦ã„ã‚Œã°æˆ»ã‚‹
+	};
+
+	//!ã‚·ãƒ¼ãƒ³å¤‰æ›´æ™‚ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã§ã™
+	class IOnSceneChangeCallback
 	{
 	public:
-		//!ƒV[ƒ“‚Ìó‘Ô‚Å‚·
-		enum class State : short
-		{
-			TITLE,
-			SELECT,
-			PAUSE,
-			GAME,
-			RESULT
-		};
-	private:
-		class Singleton final
-		{
-		private:
-			State state_;
-			IScene* pScene_ = nullptr;
-		public:
-			~Singleton()
-			{
-				Utility::SafeDelete(pScene_);
-			}
-			/**
-			* @brief ˆ—‚µ‚½‚¢ƒV[ƒ“‚ğŒˆ’è‚µ‚Ü‚·
-			* @param scene w’è‚µ‚½‚¢ƒV[ƒ“
-			* @param entityManager EntityManager
-			*/
-			void changeScene(const State& scene, ECS::EntityManager& entityManager)
-			{
-				Utility::SafeRelease(pScene_);
-				Utility::SafeDelete(pScene_);
-				switch (scene)
-				{
-				case State::TITLE:  pScene_ = new Title(entityManager); break;
-				case State::SELECT:	break;
-				case State::PAUSE:  break;
-				case State::GAME:   pScene_ = new Game(entityManager); break;
-				case State::RESULT: break;
-				}
-				state_ = scene;
-			}
-			//!Œ»İw’è‚³‚ê‚Ä‚¢‚éƒV[ƒ“‚ÌXV‚ğs‚¢‚Ü‚·
-			void update()
-			{
-				pScene_->update();
-			}
-			//!Œ»İw’è‚³‚ê‚Ä‚¢‚éƒV[ƒ“‚Ì•`‰æ‚ğs‚¢‚Ü‚·
-			void draw()
-			{
-				pScene_->draw();
-			}
-			//!Œ»İ‚ÌƒV[ƒ“‚ğ•Ô‚µ‚Ü‚·
-			const State& getCurrentScene() const
-			{
-				return state_;
-			}
-		};
+		IOnSceneChangeCallback() = default;
+		virtual ~IOnSceneChangeCallback() = default;
+		/*!
+		* @brief ã‚·ãƒ¼ãƒ³å¤‰æ›´(å„ã‚·ãƒ¼ãƒ³ã‹ã‚‰ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã•ã‚Œã‚‹)
+		* @param parame æ¬¡ã®ã‚·ãƒ¼ãƒ³ã«æ¸¡ã—ãŸã„å€¤ã€‚ä¸è¦ãªã‚‰nullptrã‚’æŒ‡å®šã—ã¾ã™
+		* @param scene å¤‰æ›´ã™ã‚‹ã‚·ãƒ¼ãƒ³ã®enum
+		* @param stackClear ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã®ã‚¹ã‚¿ãƒƒã‚¯ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹ã‹
+		*/
+		virtual void onSceneChange(const SceneName& scene, const Parameter* parame, const bool stackClear) = 0;
+		//!ã‚¹ã‚¿ãƒƒã‚¯ã‚ªãƒ¼ãƒ«ã‚¯ãƒªã‚¢
+		virtual void stackClear() = 0;
+	};
+
+	//!ã‚·ãƒ¼ãƒ³ã®åŸºåº•ã‚¯ãƒ©ã‚¹ã§ã™
+	class AbstractScene
+	{
 	public:
-		static Singleton& Get()
+		AbstractScene(IOnSceneChangeCallback* sceneCallback)
 		{
-			static std::unique_ptr<Singleton> inst =
-				std::make_unique<Singleton>();
-			return *inst;
+			callBack = sceneCallback;
 		}
+		virtual ~AbstractScene() = default;
+		virtual void update() = 0;
+		virtual void draw() = 0;
+		IOnSceneChangeCallback& getCallBack() const { return *callBack; }
+	private:
+		IOnSceneChangeCallback* callBack;
 	};
 }

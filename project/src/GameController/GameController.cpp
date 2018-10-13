@@ -2,8 +2,8 @@
 #include "../Class/ResourceManager.hpp"
 #include "Scene/SceneManager.hpp"
 #include "../Input/Input.hpp"
-#include "../Events/EventManager.hpp"
-#include "../Events/TestEvent.hpp"
+#include "Scene/Title.h"
+#include "Scene/Game.h"
 void GameController::resourceLoad()
 {
 	
@@ -14,26 +14,47 @@ GameController::GameController()
 	//最初に必要なリソースやEntityの生成、ロードを行う
 	resourceLoad();
 	//初期シーンの設定
-	Scene::SceneManager::Get().changeScene(Scene::SceneManager::State::TITLE, entityManager_);
-	//イベント追加
-	Event::EventManager::Get().addEvent(Scene::SceneManager::State::GAME, Event::TestEvents::BlendSelect);
+	sceneStack.push(std::make_unique<Scene::Title >(this, param, &entityManager_));	//タイトルシーンを作成し、プッシュ
 }
 
+void GameController::onSceneChange(const Scene::SceneName& scene, const Parameter* parame, bool isStackClear)
+{
+	if (isStackClear || scene == Scene::SceneName::BACK_TO_SCENE)
+	{
+		sceneStack.pop();
+		DOUT << "poped the scene stack" << std::endl;
+	}
+	switch (scene)
+	{
+	case Scene::SceneName::TITLE:
+		sceneStack.push(std::make_unique<Scene::Title>(this, *parame, &entityManager_));
+		break;
+	case Scene::SceneName::GAME:
+		sceneStack.push(std::make_unique<Scene::Game>(this, *parame, &entityManager_));
+		break;
+	default:
+		break;
+	}
+}
+
+void GameController::stackClear()
+{
+	while (!sceneStack.empty())
+	{
+		sceneStack.pop();
+	}
+}
 
 void GameController::update()
 {
 	entityManager_.refresh();
 	Input::Get().updateKey();
 	//シーン更新
-	Scene::SceneManager::Get().update();
-	//イベント更新
-	Event::EventManager::Get().update(entityManager_);
-	//サウンド更新
-	MasterSound::Get().update();
+	sceneStack.top()->update();
 }
 
 void GameController::draw()
 {
 	//シーン描画
-	Scene::SceneManager::Get().draw();
+	sceneStack.top()->draw();
 }

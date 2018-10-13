@@ -3,6 +3,10 @@
 * @brief DXライブラリのLoadGraphやLoadSoundMemから取得したハンドルを管理するクラスです
 * @author tonarinohito
 * @date 2018/10/05
+* @par History
+- 2018/10/14 tonarinohito
+-# load系メソッドが戻り値を返すようにした
+-# load系メソッドにて登録の重複がある場合、そのハンドルを返すようにした
 */
 #pragma once
 #include <DxLib.h>
@@ -18,6 +22,16 @@ enum class SoundType
 	BGM,
 	SE
 };
+
+struct ResourceErrorMessage
+{
+	inline static const std::string LOAD_FAILED = " load is failed";
+	inline static const std::string ADD_FAILED = " add is failed";
+	inline static const std::string LOAD_ASYNC_FAILED = " loadAsync is failed";
+	inline static const std::string NOT_FOUND = " is not found";
+	inline static const std::string REMOVE_FAILED = " is remove failed";
+};
+
 //!グラフィックやサウンドのハンドル管理をします
 class ResourceManager final
 {
@@ -46,45 +60,50 @@ private:
 		* @param  path ファイルパス
 		* @param  name 登録名
 		* @detail 既に登録した名前は使えません
+		* @return 登録したハンドルが返ります。
+		* - すでに登録した名前を指定したらそのハンドルが返ります
 		*/
-		void load(const std::string& path, const std::string& name)
+		int load(const std::string& path, const std::string& name)
 		{
 			//名前の重複防止
 			if (graphs_.count(name))
 			{
-				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
-				assert(false);
+				DOUT << "GraphicHandle :" + name + ResourceErrorMessage::ADD_FAILED << std::endl;
+				return graphs_[name];
 			}
 			graphs_[name] = LoadGraph(path.c_str());
 			if (graphs_[name] == -1)
 			{
-				DOUT << path + "load is failed" << std::endl;
-				assert(false);
+				DOUT << path + ResourceErrorMessage::LOAD_FAILED << std::endl;
+				assert(false && ResourceErrorMessage::LOAD_FAILED.c_str());
 			}
+			return graphs_[name];
 		}
 		/**
 		* @brief  画像を非同期でロードします
 		* @param  path ファイルパス
 		* @param  name 登録名
 		* @detail 既に登録した名前は使えません。非同期なのでこのメソッドで処理が止まることはありません
-		*
+		* @return 正常に読み込めたら1が返ります
+		* - すでに登録した名前を指定したらそのハンドルが返ります
 		*/
-		void loadAsync(const std::string& path, const std::string& name)
+		int loadAsync(const std::string& path, const std::string& name)
 		{
 			//名前の重複防止
 			if (graphs_.count(name))
 			{
-				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
-				assert(false);
+				DOUT << "GraphicHandle :" + name + ResourceErrorMessage::ADD_FAILED << std::endl;
+				return graphs_[name];
 			}
 			SetUseASyncLoadFlag(TRUE); // 非同期読み込みフラグON
 			graphs_[name] = LoadGraph(path.c_str());
 			if (graphs_[name] == -1)
 			{
-				DOUT << path + "load is failed" << std::endl;
-				assert(false);
+				DOUT << path + ResourceErrorMessage::LOAD_FAILED << std::endl;
+				assert(false && ResourceErrorMessage::LOAD_FAILED.c_str());
 			}
 			SetUseASyncLoadFlag(FALSE); // 非同期読み込みフラグOFF
+			return 1;
 		}
 		/**
 		* @brief  指定したハンドルの読み込みが完了しているか返します
@@ -98,14 +117,14 @@ private:
 			case -1:
 				if (graphs_[name] == -1)
 				{
-					DOUT << name + "loadAsync is failed" << std::endl;
-					assert(false);
+					DOUT << name + ResourceErrorMessage::LOAD_ASYNC_FAILED << std::endl;
+					assert(false && ResourceErrorMessage::LOAD_ASYNC_FAILED.c_str());
 				}
 				break;
 
 			case FALSE: return true;	//非同期読み込み済み
 			case TRUE:  return false;	//まだ
-			
+
 			}
 		}
 		/**
@@ -120,8 +139,8 @@ private:
 			case -1:
 				if (*divGraphs_[name].first == -1)
 				{
-					DOUT << name + "loadAsync is failed" << std::endl;
-					assert(false);
+					DOUT << name + ResourceErrorMessage::LOAD_ASYNC_FAILED << std::endl;
+					assert(false && ResourceErrorMessage::LOAD_ASYNC_FAILED.c_str());
 				}
 				break;
 
@@ -139,10 +158,10 @@ private:
 		* @param  yNum 縦方向の数
 		* @param  xSize 分割した画像一枚分の横のサイズ
 		* @param  ySize 分割した画像一枚分の縦のサイズ
-		* @return 成功したらture
-		* @detail 既に登録した名前は使えません
+		* @return 登録したハンドルの先頭要素が返ります。
+		* - すでに登録した名前を指定したらそのハンドルの先頭要素が返ります
 		*/
-		void loadDiv(const std::string& path, const std::string& name,
+		int loadDiv(const std::string& path, const std::string& name,
 			const int allNum,
 			const int xNum, const int yNum,
 			const int xSize, const int ySize)
@@ -150,17 +169,18 @@ private:
 			//名前の重複防止
 			if (divGraphs_.count(name))
 			{
-				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
-				assert(false);
+				DOUT << "GraphicHandle :" + name + ResourceErrorMessage::ADD_FAILED << std::endl;
+				return divGraphs_[name].first[0];
 			}
 			divGraphs_[name].first = new int[allNum];
 			divGraphs_[name].second = (size_t)allNum;
 			int isOk = LoadDivGraph(path.c_str(), allNum, xNum, yNum, xSize, ySize, divGraphs_[name].first);
 			if (isOk == -1)
 			{
-				DOUT << path + " is failed" << std::endl;
-				assert(false);
+				DOUT << path + ResourceErrorMessage::LOAD_FAILED << std::endl;
+				assert(false && ResourceErrorMessage::LOAD_FAILED.c_str());
 			}
+			return divGraphs_[name].first[0];
 		}
 		/**
 		* @brief  分割画像を非同期でロードします
@@ -171,9 +191,10 @@ private:
 		* @param  yNum 縦方向の数
 		* @param  xSize 分割した画像一枚分の横のサイズ
 		* @param  ySize 分割した画像一枚分の縦のサイズ
-		* @detail 既に登録した名前は使えません。非同期なのでこのメソッドで処理が止まることはありません
+		* @return 正常に読み込めたら1が返ります
+		* - すでに登録した名前を指定したらそのハンドルの先頭要素が返ります
 		*/
-		void loadDivAsync(const std::string& path, const std::string& name,
+		int loadDivAsync(const std::string& path, const std::string& name,
 			const int allNum,
 			const int xNum, const int yNum,
 			const int xSize, const int ySize)
@@ -181,8 +202,8 @@ private:
 			//名前の重複防止
 			if (divGraphs_.count(name))
 			{
-				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
-				assert(false);
+				DOUT << "GraphicHandle :" + name + ResourceErrorMessage::ADD_FAILED << std::endl;
+				return divGraphs_[name].first[0];
 			}
 			SetUseASyncLoadFlag(TRUE); // 非同期読み込みフラグON
 			divGraphs_[name].first = new int[allNum];
@@ -190,10 +211,11 @@ private:
 			int isOk = LoadDivGraph(path.c_str(), allNum, xNum, yNum, xSize, ySize, divGraphs_[name].first);
 			if (isOk == -1)
 			{
-				DOUT << path + " is failed" << std::endl;
-				assert(false);
+				DOUT << path + ResourceErrorMessage::LOAD_ASYNC_FAILED << std::endl;
+				assert(false && ResourceErrorMessage::LOAD_ASYNC_FAILED.c_str());
 			}
 			SetUseASyncLoadFlag(FALSE); // 非同期読み込みフラグOFF
+			return 1;
 		}
 		/**
 		* @brief  メモリに読み込んだ画像のハンドルを返します
@@ -205,7 +227,7 @@ private:
 		{
 			if (graphs_.find(name) == graphs_.end())
 			{
-				DOUT << "Registered name :" + name + " is not found" << std::endl;
+				DOUT << "Registered name :" + name + ResourceErrorMessage::NOT_FOUND << std::endl;
 				assert(false);
 			}
 			return graphs_[name];
@@ -221,7 +243,7 @@ private:
 		{
 			if (divGraphs_.find(name) == divGraphs_.end())
 			{
-				DOUT << "Registered name :" + name + " is not found" << std::endl;
+				DOUT << "Registered name :" + name + ResourceErrorMessage::NOT_FOUND << std::endl;
 				assert(false);
 			}
 			if ((size_t)index >= divGraphs_[name].second)
@@ -266,7 +288,7 @@ private:
 		{
 			if (divGraphs_.find(name) == divGraphs_.end() || !divGraphs_[name].first)
 			{
-				DOUT << "Registered name :" + name + " is remove failed" << std::endl;
+				DOUT << "Registered name :" + name + ResourceErrorMessage::REMOVE_FAILED << std::endl;
 				return;
 			}
 			DeleteGraph(*divGraphs_[name].first);
@@ -282,7 +304,7 @@ private:
 		{
 			if (graphs_.find(name) == graphs_.end() || !graphs_[name])
 			{
-				DOUT << "Registered name :" + name + " is remove failed" << std::endl;
+				DOUT << "Registered name :" + name + ResourceErrorMessage::REMOVE_FAILED << std::endl;
 				return;
 			}
 			DeleteGraph(graphs_[name]);
@@ -297,10 +319,10 @@ private:
 	class SoundManager final
 	{
 	private:
-		typedef std::unordered_map<std::string, std::pair<int,SoundType>> SoundMap;
+		typedef std::unordered_map<std::string, std::pair<int, SoundType>> SoundMap;
 		SoundMap sounds_;
 	public:
-	
+
 		~SoundManager()
 		{
 			InitSoundMem();
@@ -310,48 +332,51 @@ private:
 		* @param  path ファイルパス
 		* @param  name 登録名
 		* @param  soundType BGMかSEか列挙型で指定
-		* @detail 既に登録した名前は使えません
+		* @return 登録したハンドルが返ります。
+		* - すでに登録した名前を指定したらそのハンドルが返ります
 		*/
-		void load(const std::string& path, const std::string& name,const SoundType& soundType)
+		int load(const std::string& path, const std::string& name, const SoundType& soundType)
 		{
 			//名前の重複防止
 			if (sounds_.count(name))
 			{
-				DOUT << "SoundHandle :" + name + " add is failed" << std::endl;
-				assert(false);
+				DOUT << "SoundHandle :" + name + ResourceErrorMessage::ADD_FAILED << std::endl;
+				return sounds_[name].first;
 			}
 			sounds_[name].second = soundType;
 			sounds_[name].first = LoadSoundMem(path.c_str());
 			if (sounds_[name].first == -1)
 			{
-				DOUT << path + " is failed" << std::endl;
-				assert(false);
+				DOUT << path + ResourceErrorMessage::LOAD_FAILED << std::endl;
+				assert(false && ResourceErrorMessage::LOAD_FAILED.c_str());
 			}
+			return sounds_[name].first;
 		}
 		/**
 		* @brief  サウンドを非同期でロードします
 		* @param  path ファイルパス
 		* @param  name 登録名
-		* @detail 既に登録した名前は使えません。非同期なのでこのメソッドで処理が止まることはありません
-		*
+		* @return 正常に読み込めたら1が返ります
+		* - すでに登録した名前を指定したらそのハンドルが返ります
 		*/
-		void loadAsync(const std::string& path, const std::string& name, const SoundType& soundType)
+		int loadAsync(const std::string& path, const std::string& name, const SoundType& soundType)
 		{
 			//名前の重複防止
 			if (sounds_.count(name))
 			{
-				DOUT << "SoundHandle :" + name + " add is failed" << std::endl;
-				assert(false);
+				DOUT << "SoundHandle :" + name + ResourceErrorMessage::ADD_FAILED << std::endl;
+				return sounds_[name].first;
 			}
 			sounds_[name].second = soundType;
 			SetUseASyncLoadFlag(TRUE); // 非同期読み込みフラグON
 			sounds_[name].first = LoadSoundMem(path.c_str());
 			if (sounds_[name].first == -1)
 			{
-				DOUT << path + " is failed" << std::endl;
-				assert(false);
+				DOUT << path + ResourceErrorMessage::LOAD_FAILED << std::endl;
+				assert(false && ResourceErrorMessage::LOAD_FAILED.c_str());
 			}
 			SetUseASyncLoadFlag(FALSE); // 非同期読み込みフラグOFF
+			return 1;
 		}
 		/**
 		* @brief  指定したハンドルの読み込みが完了しているか返します
@@ -365,8 +390,8 @@ private:
 			case -1:
 				if (sounds_[name].first == -1)
 				{
-					DOUT << name + "loadAsync is failed" << std::endl;
-					assert(false);
+					DOUT << name + ResourceErrorMessage::LOAD_ASYNC_FAILED << std::endl;
+					assert(false && ResourceErrorMessage::LOAD_ASYNC_FAILED.c_str());
 				}
 				break;
 
@@ -385,7 +410,7 @@ private:
 		{
 			if (sounds_.find(name) == sounds_.end())
 			{
-				DOUT << "Registered name :" + name + " is not found" << std::endl;
+				DOUT << "Registered name :" + name + ResourceErrorMessage::NOT_FOUND << std::endl;
 				assert(false);
 			}
 			return sounds_[name].first;
@@ -412,7 +437,7 @@ private:
 		{
 			if (sounds_.find(name) == sounds_.end() || !sounds_[name].first)
 			{
-				DOUT << "Registered name :" + name + " is remove failed" << std::endl;
+				DOUT << "Registered name :" + name + ResourceErrorMessage::REMOVE_FAILED << std::endl;
 				return;
 			}
 			DeleteSoundMem(sounds_[name].first);
