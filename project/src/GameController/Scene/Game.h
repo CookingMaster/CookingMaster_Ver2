@@ -1,25 +1,26 @@
-/**
+ï»¿/**
 * @file Game.hpp
-* @brief ƒQ[ƒ€ƒV[ƒ“‚Å‚Ì“®ì‚ğ‹Lq‚µ‚Ü‚·
+* @brief ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã§ã®å‹•ä½œã‚’è¨˜è¿°ã—ã¾ã™
 * @author 
 * @date 
 */
 #pragma once
 #include "../../ECS/ECS.hpp"
-#include "Scene.hpp"
+#include "Parameter.hpp"
+#include "../Scene/SceneManager.hpp"
 
 namespace Scene
 {
-	class Game final : public IScene
+	class Game : public AbstractScene
 	{
 	private:
-		ECS::Entity* testEntity;
-		ECS::EntityManager& entityManager_;
+		Parameter playerDetail;
+		ECS::EntityManager* entityManager_;
 	public:
-		Game(ECS::EntityManager& manager); 
-		~Game() = default;
-		void update() override;
-		void draw() override;
-		void release() override;
+		Game(IOnSceneChangeCallback* sceneTitleChange, const Parameter& parame, ECS::EntityManager* entityManager);
+		~Game();
+		virtual void update() override;
+		virtual void draw() override;
+	
 	};
 }
