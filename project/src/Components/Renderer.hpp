@@ -528,7 +528,7 @@ namespace ECS
 
 	/*!
 	@brief 多機能な指定した範囲を描画する機能です。左上基準です
-	* - Positionが必要です。
+	* - Transfromが必要です。
 	* - 色を変えたい場合はColorが必要です
 	* - アルファブレンドをしたい場合はAlphaBlendが必要です
 	* - setPivotで基準座標を変更できます
