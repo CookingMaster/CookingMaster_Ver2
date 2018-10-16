@@ -8,6 +8,8 @@
 #include "../../ECS/ECS.hpp"
 #include "Parameter.hpp"
 #include "../Scene/SceneManager.hpp"
+#include "../../Class/MusicScoreLoader.hpp"
+#include "../../Class/NotesCreator.hpp"
 
 namespace Scene
 {
@@ -16,6 +18,8 @@ namespace Scene
 	private:
 		Parameter playerDetail;
 		ECS::EntityManager* entityManager_;
+		MusicScoreLoader msl;
+		NotesCreator nc;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, const Parameter& parame, ECS::EntityManager* entityManager);
 		~Game();

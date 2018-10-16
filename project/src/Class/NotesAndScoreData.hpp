@@ -12,6 +12,7 @@
 //ノーツに使用される各種データ
 struct NotesData
 {
+	std::string imagePath;	//画像へのパス
 	std::string imageName;	//使用する画像名
 	std::string seName;		//切った時の効果音名
 	int arrivalBeatTime;	//マーカーへの到達拍数

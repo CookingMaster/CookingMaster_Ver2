@@ -10,6 +10,7 @@
 #include <fstream>
 #include <assert.h>
 #include "NotesAndScoreData.hpp"
+#include "ResourceManager.hpp"
 
 //-----------------------------------------------------------------------------
 //読み込み&提供くん
@@ -42,6 +43,7 @@ public:
 		addRestNotes();
 		while (std::getline(fin, tmpstr))
 		{
+			if (tmpstr == "" || tmpstr == "#NOTESDATA") continue;
 			if (tmpstr == "#START") break;
 			loadNotesData(tmpstr);
 		}
@@ -63,7 +65,7 @@ public:
 	void allDataClear()
 	{
 		bpm_ = 0;
-		offsetTime_ = 0.f;
+		offsetTime_ = 0;
 
 		notesData_.clear();
 		notesData_.shrink_to_fit();
@@ -89,7 +91,7 @@ public:
 	* @brief オフセットの値(フレーム)を取得する
 	* @return float オフセット時間
 	*/
-	[[nodiscard]]float GetOffsetTime()
+	[[nodiscard]]int GetOffsetTime()
 	{
 		return offsetTime_;
 	}
@@ -115,6 +117,7 @@ private:
 	void addRestNotes()
 	{
 		notesData_.emplace_back();
+		notesData_.back().imagePath = "rest";
 		notesData_.back().imageName = "rest";
 		notesData_.back().seName = "rest";
 		notesData_.back().arrivalBeatTime = 0;
@@ -137,7 +140,8 @@ private:
 		assert(fin && "NotesDataFile was not found!");
 
 		notesData_.emplace_back();
-		fin >> notesData_.back().imageName
+		fin >> notesData_.back().imagePath
+			>> notesData_.back().imageName
 			>> notesData_.back().seName
 			>> notesData_.back().arrivalBeatTime
 			>> notesData_.back().hitJudge[0]
@@ -145,6 +149,10 @@ private:
 			>> notesData_.back().hitJudge[2]
 			>> notesData_.back().hitJudge[3];
 		notesData_.shrink_to_fit();
+
+		//リソースの読み込み
+		ResourceManager::GetGraph().load(notesData_.back().imagePath, notesData_.back().imageName);	//Image
+		//SE
 
 		fin.close();
 	}

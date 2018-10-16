@@ -9,33 +9,36 @@
 #include "../GameController/GameController.h"
 #include "../Components/Renderer.hpp"
 #include "../Class/NotesAndScoreData.hpp"
-#include "../System/System.hpp"
 
 namespace ECS
 {
-	namespace NotesArcheType
+	struct NotesArcheType
 	{
 		//ƒm[ƒc‚ð¶¬
-		Entity* CreateNotes(const NotesData& notesData, const OneNoteData::Direction& dir, float wait, EntityManager& entityManager_)
+		static Entity* CreateNotes(const NotesData& notesData, const OneNoteData::Direction& dir, float wait, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 
 			if (dir == OneNoteData::Direction::LEFT)
 			{
 				entity->addComponent<Transform>().setPosition(-32.f, 100.f);
+				entity->addComponent<Velocity>(0, 5);
 			}
 			else
 			{
 				entity->addComponent<Transform>().setPosition(float(System::SCREEN_WIDIH), 100.f);
+				entity->addComponent<Velocity>(0, -5);
 			}
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 
-			entity->addComponent<SpriteAnimationDraw>(notesData.imageName).setIndex(1);
-			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
+			entity->addComponent<SpriteAnimationDraw>(notesData.imageName.c_str()).setIndex(1);
+			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{32, 32});
+
+			entity->addComponent<KillEntity>(notesData.arrivalBeatTime);
 
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
-	}
+	};
 }

@@ -6,11 +6,9 @@
 */
 
 #pragma once
-#include "NotesAndScoreData.hpp"
 #include "../Utility/Counter.hpp"
 #include "../Utility/CalcurationBeat.hpp"
 #include "../ArcheType/NotesArcheType.hpp"
-#include "../ECS/ECS.hpp"
 
 class NotesCreator
 {
@@ -45,13 +43,13 @@ public:
 	{
 		CalcurationBeat beat((float)bpm_);
 
-		++cntTime_;
 		//一小節毎にノーツを生成する
 		if (cntTime_.getCurrentCount() % int(beat.calcOneBar_Frame()) == 0)
 		{
 			//ノーツ生成
 			createNotes(notesData, scoreData, entityManager);
 		}
+		++cntTime_;
 	}
 
 private:
@@ -69,7 +67,10 @@ private:
 		for (unsigned int i = 0; i < scoreData[nextBar].size(); ++i)
 		{
 			NotesData nd = notesData[scoreData[nextBar][i].notesID];
-			float arrivalBeatTime = float(nd.arrivalBeatTime) * noteFlame;
+			if (nd.imageName == "rest")
+				continue;
+
+			float arrivalBeatTime = beat.calcNote_Frame(nd.arrivalBeatTime);
 			//そのノーツが画面内に出現するまでの待ち時間を計算
 			float waitTime = beat.calcOneBar_Frame() * 2.f - (float(scoreData[nextBar].size() - i) * noteFlame) - arrivalBeatTime;
 

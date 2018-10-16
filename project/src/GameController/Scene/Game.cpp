@@ -28,6 +28,9 @@ namespace Scene
 			ECS::Entity* entity = ECS::ArcheType::CreateTestEntity("test", Vec2{ 100.f,300.f }, *entityManager_);
 			entity->getComponent<ECS::AlphaBlend>().blendMode = ECS::AlphaBlend::INVSRC;
 		}
+
+		msl.loadMusicScoreData("Resource/score/musicScoreTest.txt");
+		nc.resetData(msl.GetBPM(), msl.GetOffsetTime());
 	}
 
 	void Game::update()
@@ -37,6 +40,8 @@ namespace Scene
 		{
 			getCallBack().onSceneChange(SceneName::TITLE, nullptr, true);
 		}
+
+		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
 	}
 
 	void Game::draw()
