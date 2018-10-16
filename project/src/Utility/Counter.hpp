@@ -3,6 +3,9 @@
 * @brief Counterを扱うクラスです
 * @author tonarinohito
 * @date 2018/10/05
+* @par History
+- 2018/10/12 tonarinohito
+-# reset()修正
 */
 #pragma once
 
@@ -125,7 +128,7 @@ public:
 	{
 		isMax_ = false;
 		isMin_ = false;
-		now_ = now_;
+		now_ = 0;
 	}
 
 	//!現在のカウンターの値をミリ秒で返します

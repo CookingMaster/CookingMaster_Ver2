@@ -1,44 +1,100 @@
-/**
+ï»¿/**
 * @file Sound.hpp
-* @brief DXƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒTƒEƒ“ƒhŠÖ”‚ğƒ‰ƒbƒv‚µ‚Ü‚·
+* @brief DXãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ã‚µã‚¦ãƒ³ãƒ‰é–¢æ•°ã‚’ãƒ©ãƒƒãƒ—ã—ã¾ã™
+* @detail ResourceManagerã§èª­ã¿è¾¼ã‚“ã ãƒãƒ³ãƒ‰ãƒ«ãŒå¯¾è±¡ã§ã™
 * @author tonarinohito
 * @date 2018/10/08
 */
 #pragma once
 #include "ResourceManager.hpp"
 
-//!ƒTƒEƒ“ƒh‘€ìƒNƒ‰ƒX‚Å‚·
+//!ã™ã¹ã¦ã®ã‚µã‚¦ãƒ³ãƒ‰ã®éŸ³é‡ã«å¯¾ã—ã¦ã®å‡¦ç†ã‚’è¡Œã„ã¾ã™
+class MasterSound final
+{
+private:
+	class Singleton final
+	{
+	private:
+		float seGain_ = 1.0f;
+		float bgmGain_ = 1.0f;
+	public:
+		//!ã™ã¹ã¦ã®SEã‚µã‚¦ãƒ³ãƒ‰ã®éŸ³é‡ã‚’0.0f~1.fã§æŒ‡å®š
+		void setAllSEGain(float gain)
+		{
+			seGain_ = gain;
+		}
+		//!ã™ã¹ã¦ã®BGMã‚µã‚¦ãƒ³ãƒ‰ã®éŸ³é‡ã‚’0.0f~1.fã§æŒ‡å®š
+		void setAllBGMGain(float gain)
+		{
+			bgmGain_ = gain;
+		}
+		//!ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‚µã‚¦ãƒ³ãƒ‰ã®æ›´æ–°ã‚’è¡Œã„ã¾ã™
+		void update()
+		{
+			auto& sounds = ResourceManager::GetSound().getSoundMap();
+			for (auto&[key, val] : sounds)
+			{
+				switch (val.second)
+				{
+				case SoundType::SE:
+					ChangeVolumeSoundMem(int(255 * seGain_), val.first);
+					break;
+				case SoundType::BGM:
+					ChangeVolumeSoundMem(int(255 * bgmGain_), val.first);
+					break;
+				}
+			}
+		}
+	};
+public:
+	inline static Singleton& Get()
+	{
+		static auto inst = std::make_unique<Singleton>();
+		return *inst;
+	}
+};
+
+//!ã‚µã‚¦ãƒ³ãƒ‰æ“ä½œã‚¯ãƒ©ã‚¹ã§ã™
 class Sound final
 {
 private:
 	std::string name_;
 	int handle_;
+	float gain_ = 1.f;
 public:
-	//!ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å“o˜^‚µ‚½ƒTƒEƒ“ƒhƒnƒ“ƒhƒ‹–¼‚ğw’è‚µ‚Ü‚·
+
+	//!ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§ç™»éŒ²ã—ãŸã‚µã‚¦ãƒ³ãƒ‰ãƒãƒ³ãƒ‰ãƒ«åã‚’æŒ‡å®šã—ã¾ã™
 	Sound(const std::string& soundName)
 	{
 		assert(ResourceManager::GetSound().hasHandle(soundName));
 		handle_ = ResourceManager::GetSound().getHandle(soundName);
 		name_ = soundName;
 	}
-	//!ƒTƒEƒ“ƒh‚ğÄ¶‚µ‚Ü‚·
-	void play(bool isLoop)
+	/**
+	* @brief ã‚µã‚¦ãƒ³ãƒ‰ã‚’å†ç”Ÿã—ã¾ã™
+	* @param  isLoop ãƒ«ãƒ¼ãƒ—å†ç”Ÿã™ã‚‹ã‹ã©ã†ã‹
+	* @param  isContinuation stop()ã§æ­¢ã‚ãŸã‚µã‚¦ãƒ³ãƒ‰ã‚’ç¶šãã‹ã‚‰å†ç”Ÿã™ã‚‹ã‹ã©ã†ã‹ã€‚falseã§ç¶šãã‹ã‚‰å†ç”Ÿã™ã‚‹
+	* - ç¬¬äºŒå¼•æ•°ã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§trueã§ã™ã€‚falseã§å†ç”Ÿã™ã‚‹ã¨å†ç”Ÿä½ç½®ãŒæˆ»ã‚‰ãªã„ã®ã§é€£ç¶šã§å†ç”Ÿã§ãã¾ã›ã‚“
+	* - SEã®æ™‚ã¯trueã§BGMã®æ™‚ã¯falseãŒé©ã—ã¦ã„ã¾ã™
+	*/
+	void play(const bool isLoop, bool isContinuation)
 	{
 		if (isLoop)
 		{
-			PlaySoundMem(handle_, DX_PLAYTYPE_LOOP);
+			//trueãªã‚‰æœ€åˆã‹ã‚‰å†ç”Ÿ
+			PlaySoundMem(handle_, DX_PLAYTYPE_LOOP, isContinuation);
 		}
 		else
 		{
-			PlaySoundMem(handle_, DX_PLAYTYPE_BACK);
+			PlaySoundMem(handle_, DX_PLAYTYPE_BACK, isContinuation);
 		}
 	}
-	//!ƒTƒEƒ“ƒh‚ÌÄ¶’†‚ğ~‚ß‚Ü‚·
+	//!ã‚µã‚¦ãƒ³ãƒ‰ã®å†ç”Ÿã‚’æ­¢ã‚ã¾ã™
 	void stop()
 	{
 		StopSoundMem(handle_);
 	}
-	//!ƒTƒEƒ“ƒh‚ªÄ¶’†‚©æ“¾‚µ‚Ü‚·
+	//!ã‚µã‚¦ãƒ³ãƒ‰ãŒå†ç”Ÿä¸­ã‹å–å¾—ã—ã¾ã™
 	[[nodiscard]] const bool isPlay() const
 	{
 		switch (CheckSoundMem(handle_))
@@ -47,38 +103,23 @@ public:
 		case 1: return true;
 		}
 	}
-	//!ƒTƒEƒ“ƒh‚ÌŒ»İ‚ÌÄ¶ˆÊ’u‚ğƒ~ƒŠ•b’PˆÊ‚Åæ“¾‚µ‚Ü‚·
+	//!ã‚µã‚¦ãƒ³ãƒ‰ã®ç¾åœ¨ã®å†ç”Ÿä½ç½®ã‚’ãƒŸãƒªç§’å˜ä½ã§å–å¾—ã—ã¾ã™
 	[[nodiscard]] const int getCurrentTime() const
 	{
 		return GetSoundCurrentTime(handle_);
 	}
-	//!ƒTƒEƒ“ƒh‚Ì‘ŠÔ‚ğƒ~ƒŠ•b’PˆÊ‚Åæ“¾‚µ‚Ü‚·
+	//!ã‚µã‚¦ãƒ³ãƒ‰ã®ç·æ™‚é–“ã‚’ãƒŸãƒªç§’å˜ä½ã§å–å¾—ã—ã¾ã™
 	[[nodiscard]] const int getTotalTime() const 
 	{
 		return GetSoundTotalTime(handle_);
 	}
 	/**
-	* @brief ƒTƒEƒ“ƒh‚Ìƒpƒ“‚ğİ’è‚µ‚Ü‚·
-	* @param  panPosition ‰¹‚ÌˆÊ’u(-255~255)
-	* @return ƒnƒ“ƒhƒ‹‚ª‘¶İ‚µ‚½‚çtrue
+	* @brief ã‚µã‚¦ãƒ³ãƒ‰ã®ãƒ‘ãƒ³ã‚’è¨­å®šã—ã¾ã™
+	* @param  panPosition éŸ³ã®ä½ç½®(-255~255)
+	* @return ãƒãƒ³ãƒ‰ãƒ«ãŒå­˜åœ¨ã—ãŸã‚‰true
 	*/
 	void setPan(const int panPosition)
 	{
 		ChangePanSoundMem(panPosition,handle_);
 	}
-	//!‚±‚ÌƒTƒEƒ“ƒh‚Ì‰¹—Ê‚ğ0.0f~1.f‚Åw’è
-	void setGain(float gain)
-	{
-		ChangeVolumeSoundMem(int(255 * gain), handle_);
-	}
-	//!‚·‚×‚Ä‚ÌƒTƒEƒ“ƒh‚Ì‰¹—Ê‚ğ0.0f~1.f‚Åw’è
-	static void SetAllGain(float gain)
-	{
-		auto& sounds = ResourceManager::GetSound().getSoundMap();
-		for (auto&[key, val] : sounds)
-		{
-			ChangeVolumeSoundMem(int(255 * gain), val);
-		}
-	}
-	
 };
