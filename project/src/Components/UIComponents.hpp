@@ -182,4 +182,124 @@ namespace ECS
 			scale_->val = cnt_.getCurrentCount();
 		}
 	};
+
+	/*
+	*@brief　X軸のバーを描画します
+	SpriteRectDraw、Rectがないとエラーが出ます
+	*　rect_x_	元画像の全体の幅
+	*　now_		現在の数値
+	*　max_		最大数値
+	*　size_w_	表示する画像の幅
+	*/
+	class BarComponentSystemX final : public ComponentSystem
+	{
+	private:
+		SpriteRectDraw* rect_;
+		Rectangle* rectangle_;
+
+		int rect_x_;
+		int now_;
+		int max_;
+		int size_w_;
+
+	public:
+		BarComponentSystemX(int rectX, int now, int max)
+		{
+			rect_x_ = rectX;
+			now_ = now;
+			max_ = max;
+		}
+		
+		void initialize() override
+		{
+			rect_ = &entity->getComponent<SpriteRectDraw>();
+			rectangle_ = &entity->getComponent<Rectangle>();
+
+			size_w_ = (int)(now_ * rect_x_ / (float)max_);
+		}
+		void update() override
+		{
+			rect_->setRect(rectangle_->x, rectangle_->y, size_w_, rectangle_->h);
+		}
+	};
+
+	/*
+	*@brief　Y軸のバーを描画します
+	SpriteRectDraw、Rectがないとエラーが出ます
+	*　rect_y_	元画像の全体の高さ
+	*　now_		現在の数値
+	*　max_		最大数値
+	*　size_h_	表示する画像の高さ
+	*/
+	/*class BarComponentSystemY final : public ComponentSystem
+	{
+	private:
+		SpriteRectDraw* rect_;
+		Rectangle* rectangle_;
+
+		int rect_y_;
+		int now_;
+		int max_;
+		int size_h_;
+
+	public:
+
+		BarComponentSystemY(int rectY, int now, int max)
+		{
+			rect_y_ = rectY;
+			now_ = now;
+			max_ = max;
+		}
+
+		void initialize() override
+		{
+			rect_ = &entity->getComponent<SpriteRectDraw>();
+			rectangle_ = &entity->getComponent<Rectangle>();
+
+			size_h_ = (int)(now_ * rectangle_->h / (float)max_);
+		}
+		void update() override
+		{
+			rect_->setRect(rectangle_->x, rectangle_->y, rectangle_->w, size_h_);
+		}
+	};*/
+
+	/*
+	*@brief フォント画像を描画します
+	SpriteRectDraw、Rectがないとエラーが出ます
+	*　rect_w	フォント1個の横幅
+	*　num		表示する数字
+	*/
+	class DrawFont final : public ComponentSystem
+	{
+	private:
+		SpriteRectDraw* rect_;
+		Rectangle* rectangle_;
+		
+		int rect_w_;
+		int num_;
+		int src_x;
+
+	public:
+
+		DrawFont(int rect_w, int num)
+		{
+			rect_w_ = rect_w;
+			num_ = num;
+		}
+
+		void initialize() override
+		{
+			rect_ = &entity->getComponent<SpriteRectDraw>();
+			rectangle_ = &entity->getComponent<Rectangle>();
+
+			src_x = rect_w_ * num_;
+		}
+
+		void update() override
+		{
+			rect_->setRect(src_x, rectangle_->y, rect_w_, rectangle_->h);
+		}
+	};
+
 }
