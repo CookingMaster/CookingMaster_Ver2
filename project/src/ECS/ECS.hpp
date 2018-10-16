@@ -3,6 +3,9 @@
 * @brief EntityComponentSystem
 * @author tonarinohito
 * @date 2018/10/05
+* @par History
+- 2018/10/14 tonarinohito
+-# すべてのエンティティを削除するallDestory()追加
 * @note  参考元 https://github.com/SuperV1234/Tutorials
 */
 #pragma once
@@ -195,7 +198,7 @@ namespace ECS
 		* @param args コンポーネントのコンストラクタと同じものになります
 		* @return T 追加したコンポーネントのポインタ
 		* @details 追加されたらコンポーネントの初期化メソッドが呼ばれます
-		* - 重複はできません
+		* - 重複はできません。重複した場合はそのコンポーネントが返ります
 		*/
 		template <typename T, typename... TArgs> T& addComponent(TArgs&&... args)
 		{
@@ -307,6 +310,14 @@ namespace ECS
 			for (auto& e : entityes_)
 			{
 				e->draw2D();
+			}
+		}
+		//!すべてのエンティティを削除します
+		void allDestory()
+		{
+			for (auto& e : entityes_)
+			{
+				e->destroy();
 			}
 		}
 		//!アクティブでないEntityを削除します。必ず更新処理で呼んでください

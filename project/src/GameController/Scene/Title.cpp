@@ -1,26 +1,42 @@
-#include "Title.h"
+ï»¿#include "Title.h"
 #include "../../Input/Input.hpp"
 #include "SceneManager.hpp"
 #include "../GameController.h"
 #include "../../System/System.hpp"
+
+
 namespace Scene
 {
-	Title::Title(ECS::EntityManager& manager) :
-		entityManager_(manager)
-	{}
+	Title::Title(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] const Parameter& parame, ECS::EntityManager* entityManager)
+		: AbstractScene(sceneTitleChange)
+		, entitytManager_(entityManager)
+	{
+		
+	}
 	void Title::update()
 	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_S) == 1)
+		if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
 		{
-			SceneManager::Get().changeScene(SceneManager::State::GAME, entityManager_);
+			Parameter playerDetail;
+			playerDetail.add<std::string>("åå‰", "ãŸã‹ã—");
+			getCallBack().onSceneChange(SceneName::GAME, &playerDetail, true);
 		}
-		
+		else if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+		{
+			Parameter playerDetail;
+			playerDetail.add<std::string>("åå‰", "ã¾ã‚†ã¿");
+			getCallBack().onSceneChange(SceneName::GAME, &playerDetail, true);
+		}
+		else if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
+		{
+			Parameter playerDetail;
+			playerDetail.add<std::string>("åå‰", "ã¿ã¤ã²ã“");
+			getCallBack().onSceneChange(SceneName::GAME, &playerDetail, true);
+		}
 	}
 	void Title::draw()
 	{
-		DrawFormatString(0,0,0xffffffff,"SƒL[‰Ÿ‚µ‚ÄƒQ[ƒ€ƒV[ƒ“‚Ö");
+		DrawFormatString(0, 0, 0xffffffff, "ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢");
 	}
-	void Title::release()
-	{
-	}
+
 }
