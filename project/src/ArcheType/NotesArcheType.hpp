@@ -15,27 +15,28 @@ namespace ECS
 	struct NotesArcheType
 	{
 		//ƒm[ƒc‚ð¶¬
-		static Entity* CreateNotes(const NotesData& notesData, const OneNoteData::Direction& dir, float wait, EntityManager& entityManager_)
+		static Entity* CreateNotes(const NotesData& notesData, const OneNoteData::Direction& dir, float wait, float arrivalBeatTime, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 
 			if (dir == OneNoteData::Direction::LEFT)
 			{
-				entity->addComponent<Transform>().setPosition(-32.f, 100.f);
-				entity->addComponent<Velocity>(0, 5);
+				entity->addComponent<Transform>().setPosition(-32.f, float(System::SCREEN_HEIGHT) / 2.f);
+				entity->addComponent<Velocity>(5, 0);
 			}
 			else
 			{
-				entity->addComponent<Transform>().setPosition(float(System::SCREEN_WIDIH), 100.f);
-				entity->addComponent<Velocity>(0, -5);
+				entity->addComponent<Transform>().setPosition(float(System::SCREEN_WIDIH), float(System::SCREEN_HEIGHT) / 2.f);
+				entity->addComponent<Velocity>(-5, 0);
 			}
+			entity->addComponent<Gravity>(0.f);
+			entity->addComponent<Physics>();
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 
-			entity->addComponent<SpriteAnimationDraw>(notesData.imageName.c_str()).setIndex(1);
-			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{32, 32});
+			entity->addComponent<SimpleDraw>(notesData.imageName.c_str());
 
-			entity->addComponent<KillEntity>(notesData.arrivalBeatTime);
+			entity->addComponent<KillEntity>(arrivalBeatTime);
 
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;

@@ -79,6 +79,7 @@ private:
 				nd,
 				scoreData[nextBar][i].dir,
 				waitTime,
+				arrivalBeatTime,
 				entityManager);
 		}
 
