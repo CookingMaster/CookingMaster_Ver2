@@ -43,33 +43,16 @@ namespace ECS {
 	class AnimatorPlayer final : public ComponentSystem
 	{
 	private:
-		SpriteAnimationDraw* animation_ = nullptr;
 		PlayerState* state_;
-		float bpm_ = 0;
-		DWORD beat_ = 0;
-		DWORD start_ = 0;
-		std::string soundname_ = "";
-		Counter counter_;
-		int frame_ = 0;		//!アニメーションするフレーム数
-		int indexX_ = 0;
-		int indexY_ = 0;
-		int xmin_ = 0;		//!描画する画像のX方向のインデックスの最小
-		int ymin_ = 0;		//!描画する画像のY方向のインデックスの最小
-		int maxXnum_ = 0;	//!描画する画像のX方向の枚数
-		int maxYnum_ = 0;	//!描画する画像のY方向の枚数
+		AnimatorByBPM* animatorBPM_ = nullptr;
+		AnimatorByFrame* animatorFrame_ = nullptr;
 
 	public:
-		AnimatorPlayer(const char* soundname, const float bpm, const int frame) 
-			:
-			soundname_(soundname),
-			bpm_(bpm),
-			frame_(frame)
-		{
-			calcBeat();
-		}
+		AnimatorPlayer() {}
 		void initialize() override
 		{
-			animation_ = &entity->getComponent<SpriteAnimationDraw>();
+			animatorBPM_ = &entity->getComponent<AnimatorByBPM>();
+			animatorFrame_ = &entity->getComponent<AnimatorByFrame>();
 			state_ = &entity->getComponent<PlayerState>();
 		}
 		void update() override
@@ -77,37 +60,28 @@ namespace ECS {
 			switch (state_->val)
 			{
 			case PlayerState::State::Idle:
-
+				entity->stopComponent<AnimatorByFrame>();
+				entity->updateComponent<AnimatorByBPM>();
 				break;
 			case PlayerState::State::Left:
-				break;
+				[[fallthrough]];
 			case PlayerState::State::Right:
-				break;
+				[[fallthrough]];
 			case PlayerState::State::Up:
-				break;
+				[[fallthrough]];
 			case PlayerState::State::Down:
-				break;
+				[[fallthrough]];
 			case PlayerState::State::Enter:
-				break;
+				[[fallthrough]];
 			case PlayerState::State::Clear:
-				break;
+				[[fallthrough]];
 			case PlayerState::State::Non:
+				[[fallthrough]];
 			default:
+				entity->stopComponent<AnimatorByBPM>();
+				entity->updateComponent<AnimatorByFrame>();
 				break;
 			}
-		}
-		//!BPMを設定する
-		void setBPM(const float bpm)
-		{
-			bpm_ = bpm;
-		}
-		/**
-		* @brief 1拍の長さ(ms)を計算する
-		* @note 1000(ms) * 60(sec/min) / bpm(beat/min)
-		*/
-		void calcBeat()
-		{
-			beat_ = static_cast<DWORD>(1000 * (60.f / bpm_));
 		}
 
 	};
