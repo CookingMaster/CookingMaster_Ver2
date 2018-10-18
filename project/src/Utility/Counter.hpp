@@ -6,6 +6,8 @@
 * @par History
 - 2018/10/12 tonarinohito
 -# reset()修正
+- 2018/10/16 tonarinohito
+-# ++や--の属性を消した
 */
 #pragma once
 
@@ -76,7 +78,7 @@ public:
 	* @brief カウンターを加算値分足します
 	* @return 現在のカウンターの値
 	*/
-	[[nodiscard]] const T operator++()
+	const T operator++()
 	{
 		if (now_ >= max_)
 		{
@@ -93,7 +95,7 @@ public:
 	* @brief カウンターを加算値分引きます
 	* @return 現在のカウンターの値
 	*/
-	[[nodiscard]] const T operator--()
+	const T operator--()
 	{
 		if (now_ <= min_)
 		{
