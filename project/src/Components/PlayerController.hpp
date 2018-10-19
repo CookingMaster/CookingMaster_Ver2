@@ -139,7 +139,7 @@ namespace ECS {
 			indexY_ = 0;
 		}
 		//!BPMÇê›íËÇ∑ÇÈ
-		void setBPM(const float bpm)
+		void setBPM(const int bpm)
 		{
 			bpm_ = bpm;
 		}
@@ -216,11 +216,11 @@ namespace ECS {
 				}
 				if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
 				{
-					changeState(PlayerState::State::Up);
+					//changeState(PlayerState::State::Up);
 				}
 				if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
 				{
-					changeState(PlayerState::State::Down);
+					//changeState(PlayerState::State::Down);
 				}
 				break;
 			case PlayerState::State::Left:

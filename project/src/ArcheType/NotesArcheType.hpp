@@ -1,6 +1,6 @@
 /**
 * @file NotesArcheType.hpp
-* @brief ノーツの原型を作る
+* @brief ノーツの原型を生成する
 * @author feveleK5563
 * @date 2018/10/12
 */
@@ -8,23 +8,41 @@
 #pragma once
 #include "../GameController/GameController.h"
 #include "../Components/Renderer.hpp"
+#include "../Components/ReplayPhysics.hpp"
 #include "../Class/NotesAndScoreData.hpp"
 
 namespace ECS
 {
-	namespace NotesArcheType
+	struct NotesArcheType
 	{
-		//エンティティの生成テスト
-		Entity* CreateTestEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		//ノーツを生成
+		static Entity* CreateNotes(const NotesData& notesData, const OneNoteData::Direction& dir, float wait, float arrivalBeatTime, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+
+			if (dir == OneNoteData::Direction::LEFT)
+			{
+				entity->addComponent<Transform>().setPosition(-32.f, float(System::SCREEN_HEIGHT) / 2.f);
+				entity->addComponent<Velocity>(10.f, 0.f);
+			}
+			else
+			{
+				entity->addComponent<Transform>().setPosition(float(System::SCREEN_WIDIH), float(System::SCREEN_HEIGHT) / 2.f);
+				entity->addComponent<Velocity>(-10.f, 0.f);
+			}
+			entity->addComponent<Gravity>(0.f);
+			entity->addComponent<Physics>();
+
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(1);
-			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
+
+			entity->addComponent<SimpleDraw>(notesData.imageName.c_str());
+
+			entity->addComponent<KillEntity>(int(arrivalBeatTime));
+			entity->addComponent<ReplayPhysics>(int(wait));
+
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
-	}
+	};
 }
