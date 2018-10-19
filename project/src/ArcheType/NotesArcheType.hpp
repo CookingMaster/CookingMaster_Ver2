@@ -23,12 +23,12 @@ namespace ECS
 			if (dir == OneNoteData::Direction::LEFT)
 			{
 				entity->addComponent<Transform>().setPosition(-32.f, float(System::SCREEN_HEIGHT) / 2.f);
-				entity->addComponent<Velocity>(10, 0);
+				entity->addComponent<Velocity>(10.f, 0.f);
 			}
 			else
 			{
 				entity->addComponent<Transform>().setPosition(float(System::SCREEN_WIDIH), float(System::SCREEN_HEIGHT) / 2.f);
-				entity->addComponent<Velocity>(-10, 0);
+				entity->addComponent<Velocity>(-10.f, 0.f);
 			}
 			entity->addComponent<Gravity>(0.f);
 			entity->addComponent<Physics>();
