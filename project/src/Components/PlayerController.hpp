@@ -53,7 +53,7 @@ namespace ECS {
 		SpriteAnimationDraw* animation_ = nullptr;
 		Counter counter_;
 		int frame_ = 0;					//!アニメーションするフレーム数
-		float bpm_ = 0;					//!現在のBPM
+		int bpm_ = 0;					//!現在のBPM
 		DWORD beat_ = 0;				//!一拍の長さ(ms)
 		DWORD start_ = 0;
 		std::string soundname_ = "";	//!現在のBGMの登録名
@@ -63,7 +63,7 @@ namespace ECS {
 		int maxXnum_BPM_ = 0;			//!BPMに合わせている時の描画する画像のX方向の枚数
 		int maxXnum_Frame_ = 0;			//!フレームに合わせている時の描画する画像のX方向の枚数
 	public:
-		AnimatorPlayer(const char* soundname, const float bpm, const int frame)
+		AnimatorPlayer(const char* soundname, const int bpm, const int frame)
 			:
 			soundname_(soundname),
 			bpm_(bpm),
@@ -151,7 +151,11 @@ namespace ECS {
 		{
 			beat_ = static_cast<DWORD>(1000 * (60.f / bpm_));
 		}
-		//!画像枚数の設定
+		/**
+		* @brief 画像枚数の設定
+		* @param xmaxBPM BPMに合わせたアニメーションをするときの画像枚数
+		* @param xmaxFrame フレームに合わせたアニメーションをするときの画像枚数
+		*/
 		void setSpriteNum(const int xmaxBPM, const int xmaxFrame)
 		{
 			maxXnum_BPM_ = xmaxBPM;
@@ -162,7 +166,7 @@ namespace ECS {
 
 	/**
 	* @brief プレイヤの女の子を制御するコンポーネント
-	* - PlayerStateが必要
+	* - AnimatorPlayerが必要
 	*/
 	class PlayerController final : public ComponentSystem
 	{
@@ -170,6 +174,7 @@ namespace ECS {
 		AnimatorPlayer* animator_ = nullptr;
 		PlayerState* state_;
 		Counter counter_;
+		int cutAnimMaxTime_ = 180;	//!切るモーションの全体の長さ(フレーム数)、これを超えるとIdleに戻る
 	public:
 		PlayerController()
 		{
@@ -178,7 +183,7 @@ namespace ECS {
 		void initialize() override
 		{
 			state_ = &entity->getComponent<PlayerState>();
-			counter_.SetCounter(0, 1, 0, 180);
+			counter_.SetCounter(0, 1, 0, cutAnimMaxTime_);
 		}
 		void update() override
 		{
@@ -225,7 +230,7 @@ namespace ECS {
 			case PlayerState::State::Up:
 				[[fallthrough]];
 			case PlayerState::State::Down:
-				if (++counter_ >= 180)
+				if (++counter_ >= cutAnimMaxTime_)
 				{
 					changeState(PlayerState::State::Idle);
 				}
