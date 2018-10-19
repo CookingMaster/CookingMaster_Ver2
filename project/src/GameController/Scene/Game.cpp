@@ -12,6 +12,8 @@ namespace Scene
 	{
 		ResourceManager::GetGraph().loadDiv("Resource/image/Act_Chara2.png", "test", 48, 6, 8, 64, 64);
 		ResourceManager::GetSound().load("Resource/sound/onion.ogg", "onion", SoundType::SE);
+		//BPMアニメーションテストのため仮読み込み
+		ResourceManager::GetGraph().loadDiv("Resource/image/Chara_Test.png", "chara", 18, 6, 3, 64, 64);
 		ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "BGM", SoundType::BGM);
 		if (playerDetail.get<std::string>("名前") == "たかし")
 		{
@@ -32,6 +34,8 @@ namespace Scene
 		msl.loadMusicScoreData("Resource/score/musicScoreTest.txt");
 		nc.resetData(msl.GetBPM(), msl.GetOffsetTime());
 		s.play(false,false);
+		//プレイヤテスト
+		ECS::ArcheType::CreatePlayerEntity("chara", "BGM", Vec2{ 300, 100 }, 20, *entityManager_);
 	}
 
 	void Game::update()
