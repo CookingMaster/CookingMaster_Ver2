@@ -34,8 +34,14 @@ namespace ECS {
 			Clear,	//!曲終了
 		};
 		State val;
-		explicit PlayerState() : val(State::Non) {}
+		PlayerState() : val(State::Non) {}
+		explicit PlayerState(State state) 
+			:
+			val(state)
+		{}
 	};
+
+
 	/**
 	* @brief プレイヤ専用アニメーター
 	* - SpriteAnimationDraw、PlayerStateが必要
@@ -44,46 +50,113 @@ namespace ECS {
 	{
 	private:
 		PlayerState* state_;
-		AnimatorByBPM* animatorBPM_ = nullptr;
-		AnimatorByFrame* animatorFrame_ = nullptr;
-
+		SpriteAnimationDraw* animation_ = nullptr;
+		Counter counter_;
+		int frame_ = 0;					//!アニメーションするフレーム数
+		float bpm_ = 0;					//!現在のBPM
+		DWORD beat_ = 0;				//!一拍の長さ(ms)
+		DWORD start_ = 0;
+		std::string soundname_ = "";	//!現在のBGMの登録名
+		int indexX_BPM_ = 0;			//!BPMに合わせている時のX方向のインデックス
+		int indexX_Frame_ = 0;			//!フレームに合わせている時のX方向のインデックス
+		int indexY_ = 0;				//!Y方向のインデックス
+		int maxXnum_BPM_ = 0;			//!BPMに合わせている時の描画する画像のX方向の枚数
+		int maxXnum_Frame_ = 0;			//!フレームに合わせている時の描画する画像のX方向の枚数
 	public:
-		AnimatorPlayer() {}
+		AnimatorPlayer(const char* soundname, const float bpm, const int frame)
+			:
+			soundname_(soundname),
+			bpm_(bpm),
+			frame_(frame)
+		{}
 		void initialize() override
 		{
-			animatorBPM_ = &entity->getComponent<AnimatorByBPM>();
-			animatorFrame_ = &entity->getComponent<AnimatorByFrame>();
+			animation_ = &entity->getComponent<SpriteAnimationDraw>();
 			state_ = &entity->getComponent<PlayerState>();
+			counter_.SetCounter(0, 1, 0, frame_);
+			start_ = GetSoundCurrentTime(ResourceManager::GetSound().getHandle(soundname_));
+			calcBeat();
 		}
 		void update() override
 		{
-			switch (state_->val)
+			updateByBPM();
+			if (state_->val != PlayerState::State::Idle)
 			{
-			case PlayerState::State::Idle:
-				entity->stopComponent<AnimatorByFrame>();
-				entity->updateComponent<AnimatorByBPM>();
-				break;
-			case PlayerState::State::Left:
-				[[fallthrough]];
-			case PlayerState::State::Right:
-				[[fallthrough]];
-			case PlayerState::State::Up:
-				[[fallthrough]];
-			case PlayerState::State::Down:
-				[[fallthrough]];
-			case PlayerState::State::Enter:
-				[[fallthrough]];
-			case PlayerState::State::Clear:
-				[[fallthrough]];
-			case PlayerState::State::Non:
-				[[fallthrough]];
-			default:
-				entity->stopComponent<AnimatorByBPM>();
-				entity->updateComponent<AnimatorByFrame>();
-				break;
+				updateByFrame();
+			}
+			else
+			{
+				initFrameAnimator();
 			}
 		}
-
+		//!BPMに合わせた更新処理をする
+		void updateByBPM()
+		{
+			DWORD now = GetSoundCurrentTime(ResourceManager::GetSound().getHandle(soundname_));
+			if (now - start_ >= beat_)
+			{
+				++indexX_BPM_;
+				if (indexX_BPM_ >= maxXnum_BPM_)
+				{
+					indexX_BPM_ = 0;
+				}
+				start_ = now;
+			}
+			animation_->setIndex(indexX_BPM_);
+		}
+		//!フレームに合わせた更新処理をする
+		void updateByFrame()
+		{
+			//!X方向のインデックス更新
+			if (++counter_ >= frame_)
+			{
+				++indexX_Frame_;
+				if (indexX_Frame_ >= maxXnum_Frame_)
+				{
+					indexX_Frame_ = 0;
+				}
+			}
+			//!Y方向のインデックス設定
+			switch (state_->val)
+			{
+			case PlayerState::State::Left:
+				indexY_ = 1; break;
+			case PlayerState::State::Right:
+				indexY_ = 2; break;
+			case PlayerState::State::Down:
+				//indexY_ = 3; break;
+			default:
+				indexY_ = 0; break;
+			}
+			//!描画画像指定
+			animation_->setIndex(indexX_Frame_ + (indexY_ * maxXnum_BPM_));
+		}
+		//!フレームに合わせたアニメーション関連の初期化
+		void initFrameAnimator()
+		{
+			indexX_Frame_ = 0;
+			counter_.reset();
+			indexY_ = 0;
+		}
+		//!BPMを設定する
+		void setBPM(const float bpm)
+		{
+			bpm_ = bpm;
+		}
+		/**
+		* @brief 1拍の長さ(ms)を計算する
+		* @note 1000(ms) * 60(sec/min) / bpm(beat/min)
+		*/
+		void calcBeat()
+		{
+			beat_ = static_cast<DWORD>(1000 * (60.f / bpm_));
+		}
+		//!画像枚数の設定
+		void setSpriteNum(const int xmaxBPM, const int xmaxFrame)
+		{
+			maxXnum_BPM_ = xmaxBPM;
+			maxXnum_Frame_ = xmaxFrame;
+		}
 	};
 
 
@@ -95,10 +168,8 @@ namespace ECS {
 	{
 	private:
 		AnimatorPlayer* animator_ = nullptr;
-		PlayerState * state_;
-		int indexX_ = 0;
-		int indexY_ = 0;
-		Counter animCounter_;
+		PlayerState* state_;
+		Counter counter_;
 	public:
 		PlayerController()
 		{
@@ -106,13 +177,12 @@ namespace ECS {
 		}
 		void initialize() override
 		{
-			if (!entity->hasComponent<AnimatorPlayer>())
-			{
-				entity->addComponent<PlayerState>();
-			}
+			state_ = &entity->getComponent<PlayerState>();
+			counter_.SetCounter(0, 1, 0, 180);
 		}
 		void update() override
 		{
+			std::cout << (int)state_->val << std::endl;
 			tryAction();
 			actionByState();
 			
@@ -149,13 +219,16 @@ namespace ECS {
 				}
 				break;
 			case PlayerState::State::Left:
-				break;
+				[[fallthrough]];
 			case PlayerState::State::Right:
-				break;
+				[[fallthrough]];
 			case PlayerState::State::Up:
-				break;
+				[[fallthrough]];
 			case PlayerState::State::Down:
-				break;
+				if (++counter_ >= 180)
+				{
+					changeState(PlayerState::State::Idle);
+				}
 			case PlayerState::State::Enter:
 				break;
 			case PlayerState::State::Clear:
@@ -163,7 +236,6 @@ namespace ECS {
 			case PlayerState::State::Non:
 			default:
 				break;
-
 			}
 
 		}
@@ -172,7 +244,6 @@ namespace ECS {
 			switch (state_->val)
 			{
 			case PlayerState::State::Idle:
-
 				break;
 			case PlayerState::State::Left:
 				break;
@@ -191,20 +262,14 @@ namespace ECS {
 				break;
 
 			}
-
 		}
-
+		/**
+		* @brief状態を変更する
+		* @param state 変更する状態
+		*/
 		void changeState(PlayerState::State state)
 		{
 			state_->val = state;
-		}
-
-		/**
-		* @brief アニメーション用のカウンタを設定する
-		*/
-		void initAnimCounter(const int add, const int max)
-		{
-			animCounter_.SetCounter(0, add, 0, max);
 		}
 	};
 
