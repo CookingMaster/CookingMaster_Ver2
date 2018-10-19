@@ -100,7 +100,7 @@
     <ClInclude Include="src\Utility\CalcurationBeat.hpp">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\StopComponent.hpp">
+    <ClInclude Include="src\Components\ReplayPhysics.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
   </ItemGroup>

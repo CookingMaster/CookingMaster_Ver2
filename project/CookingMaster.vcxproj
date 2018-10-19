@@ -37,7 +37,7 @@
     <ClInclude Include="src\Components\BasicComponents.hpp" />
     <ClInclude Include="src\Components\Collider.hpp" />
     <ClInclude Include="src\Components\Renderer.hpp" />
-    <ClInclude Include="src\Components\StopComponent.hpp" />
+    <ClInclude Include="src\Components\ReplayPhysics.hpp" />
     <ClInclude Include="src\Components\UIComponents.hpp" />
     <ClInclude Include="src\ECS\ECS.hpp" />
     <ClInclude Include="src\GameController\GameController.h" />
