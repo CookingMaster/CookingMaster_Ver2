@@ -6,8 +6,8 @@
 1 Resource/score/notesData/notesDataTest.txt
 
 #START
-1 1 1 1 ,
-1 1 1 1 1 1 1 1 ,
-0 1 0 1 ,
-0 1 0 1 0 1 0 1 ,
+1 -1 1 -1 ,
+1 -1 1 -1 1 -1 1 -1 ,
+0 1 0 -1 ,
+0 1 0 -1 0 1 0 -1 ,
 #END

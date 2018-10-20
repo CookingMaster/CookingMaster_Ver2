@@ -80,6 +80,8 @@ private:
 				scoreData[nextBar][i].dir,
 				waitTime,
 				arrivalBeatTime,
+				64,
+				System::SCREEN_WIDIH / 2.f,
 				entityManager);
 		}
 
