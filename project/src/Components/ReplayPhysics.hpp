@@ -11,6 +11,10 @@
 
 namespace ECS
 {
+	/*
+	@brief 停止しているPhysicsとKillEntityを、指定フレーム後に再開させる
+	@details PhysicsとKillEntityを予め用意しておく必要がある
+	*/
 	class ReplayPhysics final : public ComponentSystem
 	{
 	private:
@@ -30,7 +34,7 @@ namespace ECS
 			{
 				entity->updateComponent<Physics>();
 				entity->updateComponent<KillEntity>();
-				//entity->stopComponent<ReplayPhysics>();
+				entity->stopComponent<ReplayPhysics>();
 			}
 		}
 	};

@@ -1,6 +1,6 @@
 /**
 * @file NotesArcheType.hpp
-* @brief ƒm[ƒc‚ÌŒ´Œ^‚ð¶¬‚·‚é
+* @brief ï¿½mï¿½[ï¿½cï¿½ÌŒï¿½ï¿½^ï¿½ð¶ï¿½ï¿½ï¿½ï¿½ï¿½
 * @author feveleK5563
 * @date 2018/10/12
 */
@@ -15,28 +15,30 @@ namespace ECS
 {
 	struct NotesArcheType
 	{
-		//ƒm[ƒc‚ð¶¬
-		static Entity* CreateNotes(const NotesData& notesData, const OneNoteData::Direction& dir, float wait, float arrivalBeatTime, EntityManager& entityManager_)
+		//ï¿½mï¿½[ï¿½cï¿½ð¶ï¿½
+		static Entity* CreateNotes(const NotesData& notesData, const OneNoteData::Direction& dir, float wait, float arrivalBeatTime, int imgSize, float targetPosX, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 
+			float posX;
 			if (dir == OneNoteData::Direction::LEFT)
 			{
-				entity->addComponent<Transform>().setPosition(-32.f, float(System::SCREEN_HEIGHT) / 2.f);
-				entity->addComponent<Velocity>(10.f, 0.f);
+				posX = -float(imgSize / 2);
+				entity->addComponent<Transform>().setPosition(posX, float(System::SCREEN_HEIGHT) / 2.f);
 			}
 			else
 			{
-				entity->addComponent<Transform>().setPosition(float(System::SCREEN_WIDIH), float(System::SCREEN_HEIGHT) / 2.f);
-				entity->addComponent<Velocity>(-10.f, 0.f);
+				posX = float(System::SCREEN_WIDIH + imgSize / 2);
+				entity->addComponent<Transform>().setPosition(posX, float(System::SCREEN_HEIGHT) / 2.f);
 			}
-			entity->addComponent<Gravity>(0.f);
+			float grav = 0.5f;
+			entity->addComponent<Velocity>((targetPosX - posX) / arrivalBeatTime, -grav * (arrivalBeatTime / 2.f));
+			entity->addComponent<Gravity>(grav);
 			entity->addComponent<Physics>();
 
 			entity->addComponent<Color>();
-			entity->addComponent<AlphaBlend>();
 
-			entity->addComponent<SimpleDraw>(notesData.imageName.c_str());
+			entity->addComponent<SpriteDraw>(notesData.imageName.c_str());
 
 			entity->addComponent<KillEntity>(int(arrivalBeatTime));
 			entity->addComponent<ReplayPhysics>(int(wait));
