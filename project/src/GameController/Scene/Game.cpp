@@ -43,7 +43,8 @@ namespace Scene
 		entityManager_->update();
 		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 		{
-			getCallBack().onSceneChange(SceneName::TITLE, nullptr, true);
+			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP);
+			return;
 		}
 
 		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
@@ -63,5 +64,7 @@ namespace Scene
 	{
 		ResourceManager::GetGraph().removeDivGraph("test");
 		ResourceManager::GetSound().remove("onion");
+		ResourceManager::GetSound().remove("BGM");
+		entityManager_->allDestory();
 	}
 }

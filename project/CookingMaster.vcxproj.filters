@@ -103,6 +103,12 @@
     <ClInclude Include="src\Components\ReplayPhysics.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\Animator.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\PlayerController.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

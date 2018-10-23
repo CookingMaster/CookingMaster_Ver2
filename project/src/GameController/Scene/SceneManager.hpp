@@ -23,6 +23,16 @@ namespace Scene
 		BACK_TO_SCENE	//前のスタック(シーン)が残っていれば戻る
 	};
 
+	/**
+	* @briefシーンの消去フラグです
+	* -
+	*/
+	enum class StackPopFlag
+	{
+		POP,		//現在のシーンをポップします
+		NON,		//現在のシーンをスタック
+		ALL_CLEAR	//すべてのスタックをクリアします
+	};
 	//!シーン変更時のコールバックです
 	class IOnSceneChangeCallback
 	{
@@ -35,7 +45,7 @@ namespace Scene
 		* @param parame 次のシーンに渡したい値。不要ならnullptrを指定します
 		* @param stackClear 現在のシーンのスタックをクリアするか
 		*/
-		virtual void onSceneChange(const SceneName& scene, const Parameter* parame, const bool stackClear) = 0;
+		virtual void onSceneChange(const SceneName& scene, const Parameter* parame, const StackPopFlag stackClear) = 0;
 		//!スタックオールクリア
 		virtual void stackClear() = 0;
 	};
