@@ -16,12 +16,12 @@ namespace ECS
 	struct NotesArcheType
 	{
 		//�m�[�c�𐶐�
-		static Entity* CreateNotes(const NotesData& notesData, const OneNoteData::Direction& dir, float wait, float arrivalBeatTime, int imgSize, float targetPosX, EntityManager& entityManager_)
+		static Entity* CreateNotes(const NotesData& notesData, const ECS::Direction::Dir& dir, float wait, float arrivalBeatTime, int imgSize, float targetPosX, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 
 			float posX;
-			if (dir == OneNoteData::Direction::LEFT)
+			if (dir == ECS::Direction::Dir::L)
 			{
 				posX = -float(imgSize / 2);
 				entity->addComponent<Transform>().setPosition(posX, float(System::SCREEN_HEIGHT) / 2.f);

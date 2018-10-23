@@ -164,7 +164,7 @@ private:
 		scoreData_.shrink_to_fit();
 
 		scoreData_.back().resize(1);
-		scoreData_.back().back() = {0, OneNoteData::Direction::LEFT};
+		scoreData_.back().back() = {0, ECS::Direction::Dir::L};
 	}
 
 	//譜面データを追加する
@@ -192,8 +192,8 @@ private:
 			id = std::stoi(idstr[i]);
 
 			scoreData_.back()[i].notesID = abs(id);	//取得したノーツ番号を代入
-			if (id > 0) scoreData_.back()[i].dir = OneNoteData::Direction::RIGHT;	//正の数だったら右から
-			else scoreData_.back()[i].dir = OneNoteData::Direction::LEFT;			//負の数だったら左から
+			if (id > 0) scoreData_.back()[i].dir = ECS::Direction::Dir::R;	//正の数だったら右から
+			else scoreData_.back()[i].dir = ECS::Direction::Dir::L;			//負の数だったら左から
 		}
 	}
 };

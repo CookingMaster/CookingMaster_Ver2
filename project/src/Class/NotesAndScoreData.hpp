@@ -8,6 +8,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "../Components/BasicComponents.hpp"
 
 //ノーツに使用される各種データ
 struct NotesData
@@ -22,8 +23,8 @@ struct NotesData
 //一つの音符のデータ
 struct OneNoteData
 {
-	int notesID;								//ノーツの番号
-	enum class Direction { LEFT, RIGHT } dir;	//飛んでくる方向
+	int notesID;				//ノーツの番号
+	ECS::Direction::Dir dir;	//飛んでくる方向
 };
 
 //譜面データ
