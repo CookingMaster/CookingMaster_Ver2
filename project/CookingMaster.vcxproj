@@ -34,8 +34,10 @@
     <ClInclude Include="src\Class\ResourceManager.hpp" />
     <ClInclude Include="src\Class\Sound.hpp" />
     <ClInclude Include="src\Collision\Collision.hpp" />
+    <ClInclude Include="src\Components\Animator.hpp" />
     <ClInclude Include="src\Components\BasicComponents.hpp" />
     <ClInclude Include="src\Components\Collider.hpp" />
+    <ClInclude Include="src\Components\PlayerController.hpp" />
     <ClInclude Include="src\Components\Renderer.hpp" />
     <ClInclude Include="src\Components\ReplayPhysics.hpp" />
     <ClInclude Include="src\Components\UIComponents.hpp" />

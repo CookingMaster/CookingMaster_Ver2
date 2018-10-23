@@ -59,7 +59,7 @@ private:
 			//名前の重複防止
 			if (graphs_.count(name))
 			{
-				DOUT << "GraphicHandle :" + name + " load is failed" << std::endl;
+				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
 				return graphs_[name];
 			}
 			graphs_[name] = LoadGraph(path.c_str());
@@ -83,7 +83,7 @@ private:
 			//名前の重複防止
 			if (graphs_.count(name))
 			{
-				DOUT << "GraphicHandle :" + name + " load is failed" << std::endl;
+				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
 				return graphs_[name];
 			}
 			SetUseASyncLoadFlag(TRUE); // 非同期読み込みフラグON
@@ -160,7 +160,7 @@ private:
 			//名前の重複防止
 			if (divGraphs_.count(name))
 			{
-				DOUT << "GraphicHandle :" + name + " load is failed" << std::endl;
+				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
 				return divGraphs_[name].first[0];
 			}
 			divGraphs_[name].first = new int[allNum];
@@ -193,7 +193,7 @@ private:
 			//名前の重複防止
 			if (divGraphs_.count(name))
 			{
-				DOUT << "GraphicHandle :" + name + " load is failed" << std::endl;
+				DOUT << "GraphicHandle :" + name + " add is failed" << std::endl;
 				return divGraphs_[name].first[0];
 			}
 			SetUseASyncLoadFlag(TRUE); // 非同期読み込みフラグON
@@ -331,7 +331,7 @@ private:
 			//名前の重複防止
 			if (sounds_.count(name))
 			{
-				DOUT << "SoundHandle :" + name + " load is failed" << std::endl;
+				DOUT << "SoundHandle :" + name + " add is failed" << std::endl;
 				return sounds_[name].first;
 			}
 			sounds_[name].second = soundType;
@@ -355,7 +355,7 @@ private:
 			//名前の重複防止
 			if (sounds_.count(name))
 			{
-				DOUT << "SoundHandle :" + name + " load is failed" << std::endl;
+				DOUT << "SoundHandle :" + name + " add is failed" << std::endl;
 				return sounds_[name].first;
 			}
 			sounds_[name].second = soundType;
