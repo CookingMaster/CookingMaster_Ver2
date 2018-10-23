@@ -26,13 +26,18 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ArcheType\NotesArcheType.hpp" />
     <ClInclude Include="src\ArcheType\TestArcheType.hpp" />
+    <ClInclude Include="src\Class\MusicScoreLoader.hpp" />
+    <ClInclude Include="src\Class\NotesAndScoreData.hpp" />
+    <ClInclude Include="src\Class\NotesCreator.hpp" />
     <ClInclude Include="src\Class\ResourceManager.hpp" />
     <ClInclude Include="src\Class\Sound.hpp" />
     <ClInclude Include="src\Collision\Collision.hpp" />
     <ClInclude Include="src\Components\BasicComponents.hpp" />
     <ClInclude Include="src\Components\Collider.hpp" />
     <ClInclude Include="src\Components\Renderer.hpp" />
+    <ClInclude Include="src\Components\ReplayPhysics.hpp" />
     <ClInclude Include="src\Components\UIComponents.hpp" />
     <ClInclude Include="src\ECS\ECS.hpp" />
     <ClInclude Include="src\GameController\GameController.h" />
@@ -43,6 +48,7 @@
     <ClInclude Include="src\GameController\Scene\Title.h" />
     <ClInclude Include="src\Input\Input.hpp" />
     <ClInclude Include="src\System\System.hpp" />
+    <ClInclude Include="src\Utility\CalcurationBeat.hpp" />
     <ClInclude Include="src\Utility\Counter.hpp" />
     <ClInclude Include="src\Utility\Easing.hpp" />
     <ClInclude Include="src\Utility\FPS.hpp" />

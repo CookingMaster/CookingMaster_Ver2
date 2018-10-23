@@ -7,12 +7,14 @@
 #pragma once
 #include "../GameController/GameController.h"
 #include "../Components/Renderer.hpp"
+#include "../Components/Animator.hpp"
+#include "../Components/PlayerController.hpp"
 namespace ECS
 {
-	namespace ArcheType
+	struct ArcheType
 	{
 		//!エンティティの生成テスト
-		Entity* CreateTestEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		static Entity* CreateTestEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x,pos.y);
@@ -23,5 +25,49 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
-	}
+
+		//!BPMアニメーションテスト
+		static Entity* CreateAnimationEntity(const char* graphicName, const char* soundName, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(1);
+			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
+			entity->addComponent<AnimatorByBPM>(soundName, 130).setSpriteNum(1, 0, 5, 3);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
+
+		//!フレームアニメーションテスト
+		static Entity* CreateFrameAnimationEntity(const char* graphicName, const Vec2 pos, const int frame, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(1);
+			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
+			entity->addComponent<AnimatorByFrame>(frame).setSpriteNum(1, 0, 5, 1);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
+
+		//!プレイヤエンティティテスト
+		static Entity* CreatePlayerEntity(const char* graphicName, const char* soundName, const Vec2 pos, const int frame, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SpriteAnimationDraw>(graphicName);
+			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
+			entity->addComponent<PlayerState>(PlayerState::State::Idle);
+			entity->addComponent<AnimatorPlayer>(soundName, 130, frame).setSpriteNum(6, 4);
+			entity->addComponent<PlayerController>();
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
+	};
 }

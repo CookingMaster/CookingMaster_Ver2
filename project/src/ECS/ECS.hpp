@@ -6,6 +6,8 @@
 * @par History
 - 2018/10/14 tonarinohito
 -# すべてのエンティティを削除するallDestory()追加
+- 2018/10/16 tonarinohito
+-# コンポーネントをEntity::stopComponent<>()で停止できるようにした
 * @note  参考元 https://github.com/SuperV1234/Tutorials
 */
 #pragma once
@@ -65,6 +67,7 @@ namespace ECS
 		friend class Entity;
 		bool active_ = true;
 		void removeThis() { active_ = false;}
+		bool isStop_ = false;
 	public:
 		Entity* entity;
 		virtual void initialize() {};
@@ -72,8 +75,10 @@ namespace ECS
 		virtual void draw3D() {};
 		virtual void draw2D() {};
 		virtual ~ComponentSystem() {}
-		//このコンポーネントが生きているか返します
+		//!このコンポーネントが生きているか返します
 		[[nodiscard]] virtual bool isActive() const final { return active_; }
+		//!このコンポーネントが更新しているか返します
+		[[nodiscard]] virtual bool isStop() const final { return isStop_; }
 
 	};
 
@@ -130,7 +135,7 @@ namespace ECS
 			refreshComponent();
 			for (auto& c : components_)
 			{
-				if (c == nullptr)
+				if (c == nullptr || c->isStop_)
 				{
 					continue;
 				}
@@ -149,7 +154,7 @@ namespace ECS
 				c->draw3D();
 			}
 		}
-
+		
 		//!このEntityについているComponentの2D描画処理を行います
 		void draw2D()
 		{
@@ -232,7 +237,17 @@ namespace ECS
 				componentBitSet_[GetComponentTypeID<T>()] = false;
 			}
 		}
-
+		//!指定したコンポーネントの更新処理を止めます
+		template<typename T> void stopComponent() noexcept
+		{
+			getComponent<T>().isStop_ = true;
+		}
+		//!指定したコンポーネントの更新処理を実行可能にします
+		template<typename T> void updateComponent() noexcept
+		{
+			getComponent<T>().isStop_ = false;
+		}
+		
 		/**
 		* @brief 登録済みのコンポーネントを取得します
 		* @return T 指定したコンポーネントのポインタ

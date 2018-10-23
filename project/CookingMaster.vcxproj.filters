@@ -85,6 +85,24 @@
     <ClInclude Include="src\Components\UIComponents.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Class\MusicScoreLoader.hpp">
+      <Filter>src\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class\NotesCreator.hpp">
+      <Filter>src\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ArcheType\NotesArcheType.hpp">
+      <Filter>src\ArcheType</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class\NotesAndScoreData.hpp">
+      <Filter>src\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\CalcurationBeat.hpp">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\ReplayPhysics.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
