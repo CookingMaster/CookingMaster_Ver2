@@ -32,7 +32,10 @@ namespace ECS
 				entity->addComponent<Transform>().setPosition(posX, float(System::SCREEN_HEIGHT) / 2.f);
 			}
 			float grav = 0.5f;
+
+			//横方向の移動速度と、上にどの程度飛ぶかの計算を行う
 			entity->addComponent<Velocity>((targetPosX - posX) / arrivalBeatTime, -grav * (arrivalBeatTime / 2.f));
+			
 			entity->addComponent<Gravity>(grav);
 			entity->addComponent<Physics>();
 

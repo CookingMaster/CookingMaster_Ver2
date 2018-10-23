@@ -186,14 +186,38 @@ private:
 		idstr.pop_back();
 		scoreData_.back().resize(idstr.size());
 
-		int id;
 		for (unsigned int i = 0; i < idstr.size(); ++i)
 		{
-			id = std::stoi(idstr[i]);
+			char tmpid = idstr[i][0];
 
-			scoreData_.back()[i].notesID = abs(id);	//取得したノーツ番号を代入
-			if (id > 0) scoreData_.back()[i].dir = ECS::Direction::Dir::R;	//正の数だったら右から
-			else scoreData_.back()[i].dir = ECS::Direction::Dir::L;			//負の数だったら左から
+			//IDに付属しているアルファベットからノーツの種類を取得
+			switch (tmpid)
+			{
+			case 'L':
+				scoreData_.back()[i].dir = ECS::Direction::Dir::L;
+				break;
+
+			case 'R':
+				scoreData_.back()[i].dir = ECS::Direction::Dir::R;
+				break;
+
+			case 'U':
+				scoreData_.back()[i].dir = ECS::Direction::Dir::U;
+				break;
+
+			case 'D':
+				scoreData_.back()[i].dir = ECS::Direction::Dir::D;
+				break;
+
+			default:	//IDが'0'だったりミスってた場合は休符とする
+				scoreData_.back()[i].dir = ECS::Direction::Dir::L;
+				scoreData_.back()[i].notesID = 0;
+				continue;
+			}
+
+			//取得したノーツ番号を代入
+			int tmtmt = int(idstr[i][1] - '0');
+			scoreData_.back()[i].notesID = int(idstr[i][1] - '0');
 		}
 	}
 };
