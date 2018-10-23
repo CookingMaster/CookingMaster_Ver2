@@ -1,6 +1,6 @@
 /**
 * @file NotesArcheType.hpp
-* @brief ƒm[ƒc‚ÌŒ´Œ^‚ğ¶¬‚·‚é
+* @brief ï¿½mï¿½[ï¿½cï¿½ÌŒï¿½ï¿½^ï¿½ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½
 * @author feveleK5563
 * @date 2018/10/12
 */
@@ -15,7 +15,7 @@ namespace ECS
 {
 	struct NotesArcheType
 	{
-		//ƒm[ƒc‚ğ¶¬
+		//ï¿½mï¿½[ï¿½cï¿½ğ¶ï¿½
 		static Entity* CreateNotes(const NotesData& notesData, const OneNoteData::Direction& dir, float wait, float arrivalBeatTime, int imgSize, float targetPosX, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
