@@ -19,19 +19,19 @@ namespace Scene
 		{
 			Parameter playerDetail;
 			playerDetail.add<std::string>("名前", "たかし");
-			getCallBack().onSceneChange(SceneName::GAME, &playerDetail, true);
+			getCallBack().onSceneChange(SceneName::GAME, &playerDetail, StackPopFlag::POP);
 		}
 		else if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 		{
 			Parameter playerDetail;
 			playerDetail.add<std::string>("名前", "まゆみ");
-			getCallBack().onSceneChange(SceneName::GAME, &playerDetail, true);
+			getCallBack().onSceneChange(SceneName::GAME, &playerDetail, StackPopFlag::POP);
 		}
 		else if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
 			Parameter playerDetail;
 			playerDetail.add<std::string>("名前", "みつひこ");
-			getCallBack().onSceneChange(SceneName::GAME, &playerDetail, true);
+			getCallBack().onSceneChange(SceneName::GAME, &playerDetail, StackPopFlag::POP);
 		}
 	}
 	void Title::draw()
