@@ -14,6 +14,8 @@ namespace Scene
 		ResourceManager::GetSound().load("Resource/sound/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/Chara_Test.png", "chara", 18, 6, 3, 64, 64);
+		ResourceManager::GetGraph().load("Resource/image/bar_empty.png", "bar_empty");
+		ResourceManager::GetGraph().load("Resource/image/bar_full.png", "bar_full");
 		ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "BGM", SoundType::BGM);
 		if (playerDetail.get<std::string>("名前") == "たかし")
 		{
@@ -36,14 +38,22 @@ namespace Scene
 		s.play(false,false);
 		//プレイヤテスト
 		ECS::ArcheType::CreatePlayerEntity("chara", "BGM", Vec2{ 300, 100 }, 20, *entityManager_);
+		//Bar
+		ECS::ArcheType::CreateEmptyBarUI("bar_empty", Vec2{ 431.f,44.f }, Vec2{ 300.f,300.f }, *entityManager_);
+		bar = ECS::ArcheType::CreateFullBarUI("bar_full", Vec2{ 424.f,38.f }, Vec2{ 300.f,300.f }, *entityManager_);
 	}
-
 	void Game::update()
 	{
 		entityManager_->update();
 		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 		{
 			getCallBack().onSceneChange(SceneName::TITLE, nullptr, true);
+		}
+
+		if (Input::Get().getKeyFrame(KEY_INPUT_V) == 1)
+		{
+			bar->getComponent<ECS::BarComponentSystemX>().addScore(30);
+			bar->addComponent<ECS::BarComponentSystemX>(0,0,0);
 		}
 
 		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);

@@ -20,6 +20,7 @@ namespace Scene
 		ECS::EntityManager* entityManager_;
 		MusicScoreLoader msl;
 		NotesCreator nc;
+		ECS::Entity* bar;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, const Parameter& parame, ECS::EntityManager* entityManager);
 		~Game();

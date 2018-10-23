@@ -9,6 +9,7 @@
 #include "../Utility/Vec.hpp"
 #include "../Utility/Counter.hpp"
 #include "Renderer.hpp"
+#include "../../Utility/Easing.hpp"
 #include <DxLib.h>
 #include <functional>
 namespace ECS
@@ -103,7 +104,7 @@ namespace ECS
 	};
 
 	/*!
-	@brief ‰æ‘œ‚ðŠg‘å‚µA‚Ü‚½k¬‚µ‚Ü‚·
+	@brief ‰æ‘œ‚ðŠg‘å‚µA‚Ü‚½Œ³‚Ì‰æ‘œ‚É–ß‚è‚Ü‚·
 	*/
 	class ExpandReduceComponentSystem final : public ComponentSystem
 	{
@@ -194,32 +195,37 @@ namespace ECS
 	class BarComponentSystemX final : public ComponentSystem
 	{
 	private:
-		SpriteRectDraw* rect_;
 		Rectangle* rectangle_;
+		Easing eas_;
 
 		int rect_x_;
-		int now_;
+		int score_;
 		int max_;
-		int size_w_;
+		float sizeW_;
 
 	public:
 		BarComponentSystemX(int rectX, int now, int max)
 		{
 			rect_x_ = rectX;
-			now_ = now;
+			score_ = now;
 			max_ = max;
 		}
 		
 		void initialize() override
 		{
-			rect_ = &entity->getComponent<SpriteRectDraw>();
 			rectangle_ = &entity->getComponent<Rectangle>();
-
-			size_w_ = (int)(now_ * rect_x_ / (float)max_);
+			
 		}
 		void update() override
 		{
-			rect_->setRect(rectangle_->x, rectangle_->y, size_w_, rectangle_->h);
+				eas_.run(Easing::CircIn, 10);
+				float size_w_ = score_ * rect_x_ / (float)max_;
+				rectangle_->w = eas_.getVolume(rectangle_->w, size_w_- rectangle_->w);
+			
+		}
+		void addScore(int score)
+		{
+			score_ += score;
 		}
 	};
 
@@ -273,33 +279,33 @@ namespace ECS
 	class DrawFont final : public ComponentSystem
 	{
 	private:
-		SpriteRectDraw* rect_;
 		Rectangle* rectangle_;
 		
-		int rect_w_;
+		int rectW_;
 		int num_;
-		int src_x;
+		int srcX_;
 
 	public:
 
 		DrawFont(int rect_w, int num)
 		{
-			rect_w_ = rect_w;
+			rectW_ = rect_w;
 			num_ = num;
 		}
 
 		void initialize() override
 		{
-			rect_ = &entity->getComponent<SpriteRectDraw>();
 			rectangle_ = &entity->getComponent<Rectangle>();
 
-			src_x = rect_w_ * num_;
+			srcX_ = rectW_ * num_;
 		}
 
 		void update() override
 		{
-			rect_->setRect(src_x, rectangle_->y, rect_w_, rectangle_->h);
+			rectangle_->x = srcX_;
+			rectangle_->w = rectW_;
 		}
 	};
+
 
 }
