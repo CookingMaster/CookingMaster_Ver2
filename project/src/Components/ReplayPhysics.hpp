@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file ReplayPhysics.hpp
-* @brief ’â~‚µ‚Ä‚¢‚éPhysics‚ÆKillEntity‚ğÄŠJ‚³‚¹‚éƒRƒ“ƒ|[ƒlƒ“ƒg
+* @brief åœæ­¢ã—ã¦ã„ã‚‹Physicsã¨KillEntityã‚’å†é–‹ã•ã›ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 * @author feveleK5563
 * @date 2018/10/18
 */
@@ -12,8 +12,8 @@
 namespace ECS
 {
 	/*
-	@brief ’â~‚µ‚Ä‚¢‚éPhysics‚ÆKillEntity‚ğAw’èƒtƒŒ[ƒ€Œã‚ÉÄŠJ‚³‚¹‚é
-	@details Physics‚ÆKillEntity‚ğ—\‚ß—pˆÓ‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚é
+	@brief åœæ­¢ã—ã¦ã„ã‚‹Physicsã¨KillEntityã‚’ã€æŒ‡å®šãƒ•ãƒ¬ãƒ¼ãƒ å¾Œã«å†é–‹ã•ã›ã‚‹
+	@details Physicsã¨KillEntityã‚’äºˆã‚ç”¨æ„ã—ã¦ãŠãå¿…è¦ãŒã‚ã‚‹
 	*/
 	class ReplayPhysics final : public ComponentSystem
 	{

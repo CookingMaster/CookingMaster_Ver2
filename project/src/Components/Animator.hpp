@@ -1,7 +1,7 @@
-/**
+ï»¿/**
 * @file  Animator.hpp
-* @brief ƒAƒjƒ[ƒVƒ‡ƒ“ŠÖ˜A‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚Å‚·
-* @note  BPMA‚Ü‚½‚ÍƒtƒŒ[ƒ€‚É‰‚¶‚½ƒAƒjƒ[ƒVƒ‡ƒ“‚ğ‚·‚é
+* @brief ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–¢é€£ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã§ã™
+* @note  BPMã€ã¾ãŸã¯ãƒ•ãƒ¬ãƒ¼ãƒ ã«å¿œã˜ãŸã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã™ã‚‹
 * @author yokota0717
 * @date 2018/10/16
 */
@@ -15,8 +15,8 @@
 
 namespace ECS {
 	/*!
-	@brief BPM‚É‰‚¶‚ÄƒAƒjƒ[ƒVƒ‡ƒ“‚·‚é•`‰æ‹@”\‚Å‚·B‰æ‘œ‚Ì’†S‚ªŠî€‚Å‚·
-	* - SpriteAnimationDraw‚ª•K—v‚Å‚·B
+	@brief BPMã«å¿œã˜ã¦ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹æç”»æ©Ÿèƒ½ã§ã™ã€‚ç”»åƒã®ä¸­å¿ƒãŒåŸºæº–ã§ã™
+	* - SpriteAnimationDrawãŒå¿…è¦ã§ã™ã€‚
 	*/
 	class AnimatorByBPM final : public ComponentSystem
 	{
@@ -28,12 +28,12 @@ namespace ECS {
 		std::string soundname_ = "";
 		int indexX_ = 0;
 		int indexY_ = 0;
-		int xmin_ = 0;		//!•`‰æ‚·‚é‰æ‘œ‚ÌX•ûŒü‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌÅ¬
-		int ymin_ = 0;		//!•`‰æ‚·‚é‰æ‘œ‚ÌY•ûŒü‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌÅ¬
-		int maxXnum_ = 0;	//!•`‰æ‚·‚é‰æ‘œ‚ÌX•ûŒü‚Ì–‡”
-		int maxYnum_ = 0;	//!•`‰æ‚·‚é‰æ‘œ‚ÌY•ûŒü‚Ì–‡”
+		int xmin_ = 0;		//!æç”»ã™ã‚‹ç”»åƒã®Xæ–¹å‘ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®æœ€å°
+		int ymin_ = 0;		//!æç”»ã™ã‚‹ç”»åƒã®Yæ–¹å‘ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®æœ€å°
+		int maxXnum_ = 0;	//!æç”»ã™ã‚‹ç”»åƒã®Xæ–¹å‘ã®æšæ•°
+		int maxYnum_ = 0;	//!æç”»ã™ã‚‹ç”»åƒã®Yæ–¹å‘ã®æšæ•°
 	public:
-		//!‹È–¼‚ÆBPM‚ğw’è‚µ‚Ä‰Šú‰»‚µ‚Ü‚·
+		//!æ›²åã¨BPMã‚’æŒ‡å®šã—ã¦åˆæœŸåŒ–ã—ã¾ã™
 		AnimatorByBPM(const char* soundname, const int bpm)
 		{
 			soundname_ = soundname;
@@ -67,13 +67,13 @@ namespace ECS {
 			}
 			animation_->setIndex(indexX_ * (indexY_ + 1));
 		}
-		//!BPM‚ğİ’è‚·‚é
+		//!BPMã‚’è¨­å®šã™ã‚‹
 		void setBPM(const float bpm)
 		{
 			bpm_ = bpm;
 		}
 		/**
-		* @brief 1”‚Ì’·‚³(ms)‚ğŒvZ‚·‚é
+		* @brief 1æ‹ã®é•·ã•(ms)ã‚’è¨ˆç®—ã™ã‚‹
 		* @note 1000(ms) * 60(sec/min) / bpm(beat/min)
 		*/
 		void calcBeat()
@@ -81,12 +81,12 @@ namespace ECS {
 			beat_ = static_cast<DWORD>(1000 * (60.f / bpm_));
 		}
 		/**
-		* @brief ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒCƒ“ƒfƒbƒNƒXî•ñ‚ğİ’è‚·‚é
-		* @param minX X‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌÅ¬
-		* @param minY Y‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌÅ¬
-		* @param maxX X‚Ì–‡”
-		* @param maxY Y‚Ì–‡”
-		* @note g—p—áFY‚Ì0”Ô–ÚAX‚Ì1~5”Ô–Ú‚ÅƒAƒjƒ[ƒVƒ‡ƒ“‚·‚é
+		* @brief ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æƒ…å ±ã‚’è¨­å®šã™ã‚‹
+		* @param minX Xã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®æœ€å°
+		* @param minY Yã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®æœ€å°
+		* @param maxX Xã®æšæ•°
+		* @param maxY Yã®æšæ•°
+		* @note ä½¿ç”¨ä¾‹ï¼šYã®0ç•ªç›®ã€Xã®1~5ç•ªç›®ã§ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹
 		* -
 		*/
 		void setSpriteNum(const int xmin, const int ymin, const int xnum, const int ynum)
@@ -101,23 +101,23 @@ namespace ECS {
 	};
 
 	/*!
-	@brief w’èƒtƒŒ[ƒ€–ˆ‚ÉƒAƒjƒ[ƒVƒ‡ƒ“‚·‚é•`‰æ‹@”\‚Å‚·B‰æ‘œ‚Ì’†S‚ªŠî€‚Å‚·
-	* - SpriteAnimationDraw‚ª•K—v‚Å‚·B
+	@brief æŒ‡å®šãƒ•ãƒ¬ãƒ¼ãƒ æ¯ã«ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹æç”»æ©Ÿèƒ½ã§ã™ã€‚ç”»åƒã®ä¸­å¿ƒãŒåŸºæº–ã§ã™
+	* - SpriteAnimationDrawãŒå¿…è¦ã§ã™ã€‚
 	*/
 	class AnimatorByFrame final : public ComponentSystem
 	{
 	private:
 		SpriteAnimationDraw * animation_ = nullptr;
 		Counter counter_;
-		int frame_ = 0;		//!ƒAƒjƒ[ƒVƒ‡ƒ“‚·‚éƒtƒŒ[ƒ€”
+		int frame_ = 0;		//!ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
 		int indexX_ = 0;
 		int indexY_ = 0;
-		int xmin_ = 0;		//!•`‰æ‚·‚é‰æ‘œ‚ÌX•ûŒü‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌÅ¬
-		int ymin_ = 0;		//!•`‰æ‚·‚é‰æ‘œ‚ÌY•ûŒü‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌÅ¬
-		int maxXnum_ = 0;	//!•`‰æ‚·‚é‰æ‘œ‚ÌX•ûŒü‚Ì–‡”
-		int maxYnum_ = 0;	//!•`‰æ‚·‚é‰æ‘œ‚ÌY•ûŒü‚Ì–‡”
+		int xmin_ = 0;		//!æç”»ã™ã‚‹ç”»åƒã®Xæ–¹å‘ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®æœ€å°
+		int ymin_ = 0;		//!æç”»ã™ã‚‹ç”»åƒã®Yæ–¹å‘ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®æœ€å°
+		int maxXnum_ = 0;	//!æç”»ã™ã‚‹ç”»åƒã®Xæ–¹å‘ã®æšæ•°
+		int maxYnum_ = 0;	//!æç”»ã™ã‚‹ç”»åƒã®Yæ–¹å‘ã®æšæ•°
 	public:
-		//!‹È–¼‚ÆBPM‚ğw’è‚µ‚Ä‰Šú‰»‚µ‚Ü‚·
+		//!æ›²åã¨BPMã‚’æŒ‡å®šã—ã¦åˆæœŸåŒ–ã—ã¾ã™
 		AnimatorByFrame(const int frame)
 			:
 			frame_(frame)
@@ -148,12 +148,12 @@ namespace ECS {
 			animation_->setIndex(indexX_ * (indexY_ + 1));
 		}
 		/**
-		* @brief ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒCƒ“ƒfƒbƒNƒXî•ñ‚ğİ’è‚·‚é
-		* @param minX X‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌÅ¬
-		* @param minY Y‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌÅ¬
-		* @param maxX X‚Ì–‡”
-		* @param maxY Y‚Ì–‡”
-		* @note g—p—áFY‚Ì0”Ô–ÚAX‚Ì1~5”Ô–Ú‚ÅƒAƒjƒ[ƒVƒ‡ƒ“‚·‚é
+		* @brief ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æƒ…å ±ã‚’è¨­å®šã™ã‚‹
+		* @param minX Xã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®æœ€å°
+		* @param minY Yã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®æœ€å°
+		* @param maxX Xã®æšæ•°
+		* @param maxY Yã®æšæ•°
+		* @note ä½¿ç”¨ä¾‹ï¼šYã®0ç•ªç›®ã€Xã®1~5ç•ªç›®ã§ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹
 		* -
 		*/
 		void setSpriteNum(const int xmin, const int ymin, const int xnum, const int ynum)

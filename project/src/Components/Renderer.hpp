@@ -20,6 +20,28 @@
 namespace ECS
 {
 	/*!
+	@brief 四角形のデータベース
+	*/
+	struct Rectangle final : public ComponentData
+	{
+	private:
+
+	public:
+		int x;
+		int y;
+		int w;
+		int h;
+
+		Rectangle(const int setX, const int setY, const int setW, const int setH) :
+			x(setX),
+			y(setY),
+			w(setW),
+			h(setH)
+			{}
+
+	};
+
+	/*!
 	@brief 色のデータです
 	*RGBを扱います。データの型はintです
 	*/
@@ -531,6 +553,7 @@ namespace ECS
 	* - Transfromが必要です。
 	* - 色を変えたい場合はColorが必要です
 	* - アルファブレンドをしたい場合はAlphaBlendが必要です
+	* - Rectangleが必要です。
 	* - setPivotで基準座標を変更できます
 	*/
 	class SpriteRectDraw final : public ComponentSystem
@@ -541,20 +564,16 @@ namespace ECS
 		Rotation* rota_ = nullptr;
 		Color* color_ = nullptr;
 		AlphaBlend* blend_ = nullptr;
+		Rectangle* rect_ = nullptr;
 		Vec2 pivot_;
-		RECT rect_;
 		std::string name_;
 		bool isDraw_ = true;
 		bool isCenter_ = false;
 	public:
 		//!登録した画像名を指定して初期化します
-		SpriteRectDraw(const char* name, const int srcX, const int srcY, const int w, const int h)
-		{
+		SpriteRectDraw(const char* name)
+		{	
 			assert(ResourceManager::GetGraph().hasHandle(name));
-			rect_.left = srcX;
-			rect_.right = srcY;
-			rect_.bottom = w;
-			rect_.top = h;
 			name_ = name;
 		}
 		void initialize() override
@@ -562,6 +581,7 @@ namespace ECS
 			pos_ = &entity->getComponent<Position>();
 			rota_ = &entity->getComponent<Rotation>();
 			scale_ = &entity->getComponent<Scale>();
+			rect_ = &entity->getComponent<Rectangle>();
 			RenderUtility::SatRenderDetail(entity, &color_, &blend_);
 		}
 		void draw2D() override
@@ -573,9 +593,9 @@ namespace ECS
 				RenderUtility::SetBlend(blend_);
 				DrawRectRotaGraph3F(
 					pos_->val.x, pos_->val.y,
-					rect_.left, rect_.right,
-					rect_.bottom,
-					rect_.top,
+					rect_->x, rect_->y,
+					rect_->w,
+					rect_->h,
 					pivot_.x,
 					pivot_.y,
 					scale_->val.x,
@@ -599,10 +619,10 @@ namespace ECS
 		//!描画する範囲を再設定します
 		void setRect(const int srcX, const int srcY, const int w, const int h)
 		{
-			rect_.left = srcX;
-			rect_.right = srcY;
-			rect_.bottom = w;
-			rect_.top = h;
+			rect_->x = srcX;
+			rect_->y = srcY;
+			rect_->w = w;
+			rect_->h = h;
 		}
 		//!描画する基準座標を引数で指定します
 		void setPivot(const Vec2& pivot)

@@ -1,4 +1,4 @@
-#include "ECS.hpp"
+﻿#include "ECS.hpp"
 
 void ECS::Entity::addGroup(Group group) noexcept
 {

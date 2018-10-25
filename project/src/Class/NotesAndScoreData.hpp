@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file MusicScoreLoader.hpp
-* @brief ƒm[ƒcE•ˆ–Ê‚ÉŠÖ‚·‚é\‘¢‘Ì
+* @brief ãƒãƒ¼ãƒ„ãƒ»è­œé¢ã«é–¢ã™ã‚‹æ§‹é€ ä½“
 * @author feveleK5563
 * @date 2018/10/12
 */
@@ -10,28 +10,28 @@
 #include <vector>
 #include "../Components/BasicComponents.hpp"
 
-//ƒm[ƒc‚Ég—p‚³‚ê‚éŠeíƒf[ƒ^
+//ãƒãƒ¼ãƒ„ã«ä½¿ç”¨ã•ã‚Œã‚‹å„ç¨®ãƒ‡ãƒ¼ã‚¿
 struct NotesData
 {
-	std::string imagePath;	//‰æ‘œ‚Ö‚ÌƒpƒX
-	std::string imageName;	//g—p‚·‚é‰æ‘œ–¼
-	std::string seName;		//Ø‚Á‚½‚ÌŒø‰Ê‰¹–¼
-	int arrivalBeatTime;	//ƒ}[ƒJ[‚Ö‚Ì“’B””
-	float hitJudge[4];		//ÚG”»’èŠÔ(MISS‚ğœ‚­•]‰¿4’iŠK•ª)
+	std::string imagePath;	//ï¿½æ‘œï¿½Ö‚Ìƒpï¿½X
+	std::string imageName;	//ï¿½gï¿½pï¿½ï¿½ï¿½ï¿½æ‘œï¿½ï¿½
+	std::string seName;		//ï¿½Ø‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌŒï¿½ï¿½Ê‰ï¿½ï¿½ï¿½
+	int arrivalBeatTime;	//ï¿½}ï¿½[ï¿½Jï¿½[ï¿½Ö‚Ì“ï¿½ï¿½Bï¿½ï¿½ï¿½ï¿½
+	float hitJudge[4];		//ï¿½ÚGï¿½ï¿½ï¿½èï¿½ï¿½(MISSï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½4ï¿½iï¿½Kï¿½ï¿½)
 	
-	int xsize;		//‰æ‘œ‚ÌX•ûŒü‚ÌƒTƒCƒY
-	int ysize;		//‰æ‘œ‚ÌY•ûŒü‚ÌƒTƒCƒY
-	int animFlame;	//ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒtƒŒ[ƒ€”
-	int xnum;		//ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌX•ûŒü‚Ì–‡”
-	int ynum;		//ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌY•ûŒü‚Ì–‡”
+	int xsize;		//ï¿½æ‘œï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ÌƒTï¿½Cï¿½Y
+	int ysize;		//ï¿½æ‘œï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ÌƒTï¿½Cï¿½Y
+	int animFlame;	//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+	int xnum;		//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Ì–ï¿½ï¿½ï¿½
+	int ynum;		//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½Ì–ï¿½ï¿½ï¿½
 };
 
-//ˆê‚Â‚Ì‰¹•„‚Ìƒf[ƒ^
+//ä¸€ã¤ã®éŸ³ç¬¦ã®ãƒ‡ãƒ¼ã‚¿
 struct OneNoteData
 {
-	int notesID;				//ƒm[ƒc‚Ì”Ô†
-	ECS::Direction::Dir dir;	//”ò‚ñ‚Å‚­‚é•ûŒü
+	int notesID;				//ï¿½mï¿½[ï¿½cï¿½Ì”Ôï¿½
+	ECS::Direction::Dir dir;	//ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 };
 
-//•ˆ–Êƒf[ƒ^
+//è­œé¢ãƒ‡ãƒ¼ã‚¿
 typedef std::vector<std::vector<OneNoteData>> ScoreData;

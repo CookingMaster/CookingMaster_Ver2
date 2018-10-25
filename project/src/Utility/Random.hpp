@@ -1,13 +1,13 @@
-/**
+ï»¿/**
  * @file Random.hpp
- * @brief —”‚ÉŠÖ‚·‚éˆ—‚ğ‹Lq‚µ‚Ü‚·
+ * @brief ä¹±æ•°ã«é–¢ã™ã‚‹å‡¦ç†ã‚’è¨˜è¿°ã—ã¾ã™
  * @author tonarinohito
  * @date 2018/10/05
  */
 #pragma once
 #include <random>
 /**
-* @brief ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğˆµ‚¢‚Ü‚·
+* @brief ãƒ©ãƒ³ãƒ€ãƒ ãªå€¤ã‚’æ‰±ã„ã¾ã™
 */
 class Random
 {
@@ -21,19 +21,19 @@ public:
 		mt_.seed(device());
 	}
 
-	//![min, max]”ÍˆÍ‚Ìˆê—l—”‚ğæ“¾‚µ‚Ü‚·
+	//![min, max]ç¯„å›²ã®ä¸€æ§˜ä¹±æ•°ã‚’å–å¾—ã—ã¾ã™
 	[[nodiscard]] const int getRand(int min, int max)
 	{
 		std::uniform_int_distribution<int> range(min, max);
 		return range(mt_);
 	}
-	//![min, max]”ÍˆÍ‚Ìˆê—l—”‚ğæ“¾‚µ‚Ü‚·
+	//![min, max]ç¯„å›²ã®ä¸€æ§˜ä¹±æ•°ã‚’å–å¾—ã—ã¾ã™
 	[[nodiscard]] const float getRand(float min, float max)
 	{
 		std::uniform_real_distribution<float> range(min, max);
 		return range(mt_);
 	}
-	//![min, max]”ÍˆÍ‚Ìˆê—l—”‚ğæ“¾‚µ‚Ü‚·
+	//![min, max]ç¯„å›²ã®ä¸€æ§˜ä¹±æ•°ã‚’å–å¾—ã—ã¾ã™
 	[[nodiscard]] const double getRand(double min, double max)
 	{
 		std::uniform_real_distribution<double> range(min, max);

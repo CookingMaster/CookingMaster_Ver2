@@ -1,4 +1,4 @@
-#include "GameController.h"
+ï»¿#include "GameController.h"
 #include "../Class/ResourceManager.hpp"
 #include "Scene/SceneManager.hpp"
 #include "../Input/Input.hpp"
@@ -11,10 +11,10 @@ void GameController::resourceLoad()
 
 GameController::GameController()
 {
-	//Å‰‚É•K—v‚ÈƒŠƒ\[ƒX‚âEntity‚Ì¶¬Aƒ[ƒh‚ğs‚¤
+	//æœ€åˆã«å¿…è¦ãªãƒªã‚½ãƒ¼ã‚¹ã‚„Entityã®ç”Ÿæˆã€ãƒ­ãƒ¼ãƒ‰ã‚’è¡Œã†
 	resourceLoad();
-	//‰ŠúƒV[ƒ“‚Ìİ’è
-	sceneStack.push(std::make_unique<Scene::Title >(this, param, &entityManager_));	//ƒ^ƒCƒgƒ‹ƒV[ƒ“‚ğì¬‚µAƒvƒbƒVƒ…
+	//åˆæœŸã‚·ãƒ¼ãƒ³ã®è¨­å®š
+	sceneStack.push(std::make_unique<Scene::Title >(this, param, &entityManager_));	//ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³ã‚’ä½œæˆã—ã€ãƒ—ãƒƒã‚·ãƒ¥
 }
 
 void GameController::onSceneChange(const Scene::SceneName& scene, const Parameter* parame, const Scene::StackPopFlag stackClear)
@@ -50,12 +50,12 @@ void GameController::update()
 {
 	entityManager_.refresh();
 	Input::Get().updateKey();
-	//ƒV[ƒ“XV
+	//ã‚·ãƒ¼ãƒ³æ›´æ–°
 	sceneStack.top()->update();
 }
 
 void GameController::draw()
 {
-	//ƒV[ƒ“•`‰æ
+	//ã‚·ãƒ¼ãƒ³æç”»
 	sceneStack.top()->draw();
 }

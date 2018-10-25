@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file CalcurationBeat.hpp
-* @brief BPM‚©‚ç”‚Ì’·‚³‚ğŒvZ‚·‚é
+* @brief BPMã‹ã‚‰æ‹ã®é•·ã•ã‚’è¨ˆç®—ã™ã‚‹
 * @author feveleK5563
 * @date 2018/10/12
 */
@@ -17,16 +17,16 @@ public:
 	CalcurationBeat(float bpm) : bpm_(bpm){}
 
 	/**
-	* @brief ˆê¬ß(‘S‰¹•„)‚Ì’·‚³‚ğŒvZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
-	* @return float ˆê¬ß(‘S‰¹•„)‚Ì’·‚³
+	* @brief ä¸€å°ç¯€(å…¨éŸ³ç¬¦)ã®é•·ã•ã‚’è¨ˆç®—ã—ã¦ãƒ•ãƒ¬ãƒ¼ãƒ ã§è¿”ã™
+	* @return float ä¸€å°ç¯€(å…¨éŸ³ç¬¦)ã®é•·ã•
 	*/
 	[[nodiscard]]float calcOneBar_Frame()
 	{
 		return (60.f / bpm_) * 240.f;
 	}
 	/**
-	* @brief ˆê¬ß(‘S‰¹•„)‚Ì’·‚³‚ğŒvZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
-	* @return float ˆê¬ß(‘S‰¹•„)‚Ì’·‚³
+	* @brief ä¸€å°ç¯€(å…¨éŸ³ç¬¦)ã®é•·ã•ã‚’è¨ˆç®—ã—ã¦ãƒŸãƒªç§’ã§è¿”ã™
+	* @return float ä¸€å°ç¯€(å…¨éŸ³ç¬¦)ã®é•·ã•
 	*/
 	[[nodiscard]]float calcOneBar_Millisecond()
 	{
@@ -34,9 +34,9 @@ public:
 	}
 
 	/**
-	* @brief w’è‚µ‚½”‚Ì’·‚³‚ğŒvZ‚µ‚ÄƒtƒŒ[ƒ€‚Å•Ô‚·
-	* @param beat ””
-	* @return float ”‚Ì’·‚³
+	* @brief æŒ‡å®šã—ãŸæ‹ã®é•·ã•ã‚’è¨ˆç®—ã—ã¦ãƒ•ãƒ¬ãƒ¼ãƒ ã§è¿”ã™
+	* @param beat æ‹æ•°
+	* @return float æ‹ã®é•·ã•
 	*/
 	[[nodiscard]]float calcNote_Frame(float beat)
 	{
@@ -44,9 +44,9 @@ public:
 		return calcOneBar_Frame() / beat;
 	}
 	/**
-	* @brief w’è‰¹•„‚Ì’·‚³‚ğŒvZ‚µ‚Äƒ~ƒŠ•b‚Å•Ô‚·
-	* @param beat ””
-	* @return float ”‚Ì’·‚³
+	* @brief æŒ‡å®šéŸ³ç¬¦ã®é•·ã•ã‚’è¨ˆç®—ã—ã¦ãƒŸãƒªç§’ã§è¿”ã™
+	* @param beat æ‹æ•°
+	* @return float æ‹ã®é•·ã•
 	*/
 	[[nodiscard]]float calcNote_Millisecond(float beat)
 	{

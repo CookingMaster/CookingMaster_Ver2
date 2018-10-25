@@ -1,11 +1,11 @@
-/**
+﻿/**
  * @file GameController.hpp
- * @brief �A�v���P�[�V�����̏������s���܂�
+ * @brief アプリケーションの処理を行います
  * @author tonarinohito
  * @date 2018/10/06
  * @par History
  - 2018/10/14 tonarinohito
- -# ���̃N���X�ŃV�[���̃X�^�b�N���Ď�����悤�ɕύX
+ -# このクラスでシーンのスタックを監視するように変更
  */
 #pragma once
 #include "../ECS/ECS.hpp"
@@ -18,48 +18,48 @@ class GameController final : public Scene::IOnSceneChangeCallback
 {
 private:
 	ECS::EntityManager entityManager_;
-	std::stack<std::unique_ptr<Scene::AbstractScene>> sceneStack;	//�V�[���̃X�^�b�N
+	std::stack<std::unique_ptr<Scene::AbstractScene>> sceneStack;	//シーンのスタック
 	Parameter param;
 	void resourceLoad();
 public:
 
 	/**
-	*  @brief �G���e�B�e�B������̃O���[�v�ł�
-	* - �`�惌�C���[�A�������A�G���e�B�e�B�̎擾�Ɏg���܂�
-	* - OrderByDraw�g�p���A�ԍ����傫���قǎ�O�ɕ`�悳��܂�
+	*  @brief エンティティ属するのグループです
+	* - 描画レイヤー、処理順、エンティティの取得に使います
+	* - OrderByDraw使用時、番号が大きいほど手前に描画されます
 	*/
 	enum class GameGroup : ECS::Group
 	{
-		LAYER1,			//�e�X�g�p
-		BACK,			//�Ŕw�ʔw�i
-		BACK_OBJECT,	//�w�i�̓��M�Ȃǂ̒������
-		BACK_STAFF,		//���œ����]�ƈ�
-		MASTER,			//���������
-		KITCHENWARE,	//������ɏ�ɍڂ����I�u�W�F�N�g
-		COOKING_AREA,	//������⏰
-		GIRL,			//���̎q
-		RECEIVE_STAFF,	//�H�ނ��󂯎��X�^�b�t
-		NOTE,			//����(�H��)
-		EFFECT,			//���o�p�G�t�F�N�g
-		UI,				//���v��X�R�A�Q�[�W����UI
-		FADE,			//�t�F�[�h�p
-		PAUSE_UI,		//�|�[�Y�pUI
-		TOP_FADE,		//�őO�ʃt�F�[�h
-		MAX,			//�ő吔
+		LAYER1,			//テスト用
+		BACK,			//最背面背景
+		BACK_OBJECT,	//背景の鍋や皿などの調理器具
+		BACK_STAFF,		//後ろで働く従業員
+		MASTER,			//おやっさん
+		KITCHENWARE,	//調理台に上に載ったオブジェクト
+		COOKING_AREA,	//調理台や床
+		GIRL,			//女の子
+		RECEIVE_STAFF,	//食材を受け取るスタッフ
+		NOTE,			//音符(食材)
+		EFFECT,			//演出用エフェクト
+		UI,				//時計やスコアゲージ等のUI
+		FADE,			//フェード用
+		PAUSE_UI,		//ポーズ用UI
+		TOP_FADE,		//最前面フェード
+		MAX,			//最大数
 	};
 	GameController();
 	~GameController() = default;
 	/*!
-	* @brief �V�[���ύX(�e�V�[������R�[���o�b�N�����)
-	* @param parame ���̃V�[���ɓn�������l�B�s�v�Ȃ�nullptr���w�肵�܂�
-	* @param scene �ύX����V�[����enum
-	* @param stackClear ���݂̃V�[���̃X�^�b�N���N���A���邩
+	* @brief シーン変更(各シーンからコールバックされる)
+	* @param parame 次のシーンに渡したい値。不要ならnullptrを指定します
+	* @param scene 変更するシーンのenum
+	* @param stackClear 現在のシーンのスタックをクリアするか
 	*/
 	void onSceneChange(const Scene::SceneName& scene, const Parameter* parame, const Scene::StackPopFlag stackClear) override;
-	//!���ׂẴV�[���X�^�b�N���N���A���܂�
+	//!すべてのシーンスタックをクリアします
 	void stackClear() override;
-	//!Entity�̍X�V�������s���܂�
+	//!Entityの更新処理を行います
 	void update();
-	//!Entity�̕`����s���܂�
+	//!Entityの描画を行います
 	void draw();
 };

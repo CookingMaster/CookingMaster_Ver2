@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file Test.hpp
-* @brief ƒGƒ“ƒeƒBƒeƒB‚ÌŒ´Œ^‚ðì‚éƒeƒXƒg
+* @brief ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã®åŽŸåž‹ã‚’ä½œã‚‹ãƒ†ã‚¹ãƒˆ
 * @author tonarinohito
 * @date 2018/10/05
 */
@@ -9,11 +9,12 @@
 #include "../Components/Renderer.hpp"
 #include "../Components/Animator.hpp"
 #include "../Components/PlayerController.hpp"
+#include "../Components/UIComponents.hpp"
 namespace ECS
 {
 	struct ArcheType
 	{
-		//!ƒGƒ“ƒeƒBƒeƒB‚Ì¶¬ƒeƒXƒg
+		//!ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã®ç”Ÿæˆãƒ†ã‚¹ãƒˆ
 		static Entity* CreateTestEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -26,7 +27,7 @@ namespace ECS
 			return entity;
 		}
 
-		//!BPMƒAƒjƒ[ƒVƒ‡ƒ“ƒeƒXƒg
+		//!BPMã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ†ã‚¹ãƒˆ
 		static Entity* CreateAnimationEntity(const char* graphicName, const char* soundName, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -40,7 +41,7 @@ namespace ECS
 			return entity;
 		}
 
-		//!ƒtƒŒ[ƒ€ƒAƒjƒ[ƒVƒ‡ƒ“ƒeƒXƒg
+		//!ãƒ•ãƒ¬ãƒ¼ãƒ ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ†ã‚¹ãƒˆ
 		static Entity* CreateFrameAnimationEntity(const char* graphicName, const Vec2 pos, const int frame, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -54,7 +55,7 @@ namespace ECS
 			return entity;
 		}
 
-		//!ƒvƒŒƒCƒ„ƒGƒ“ƒeƒBƒeƒBƒeƒXƒg
+		//!ãƒ—ãƒ¬ã‚¤ãƒ¤ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ãƒ†ã‚¹ãƒˆ
 		static Entity* CreatePlayerEntity(const char* graphicName, const char* soundName, const Vec2 pos, const int frame, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -66,6 +67,45 @@ namespace ECS
 			entity->addComponent<PlayerState>(PlayerState::State::Idle);
 			entity->addComponent<AnimatorPlayer>(soundName, 130, frame).setSpriteNum(6, 4);
 			entity->addComponent<PlayerController>();
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
+
+
+		//!ãƒãƒ¼
+		static Entity* CreateEmptyBarUI(const char* graphicName,const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(0, 0, rect.x, rect.y);
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
+		//!ãƒãƒ¼
+		static Entity* CreateFullBarUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(0, 0, 0, rect.y);
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<BarComponentSystemX>(rect.x, 0, 200);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
+		//!æ™‚è¨ˆ
+		static Entity* CreateClockUI(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(1);
+			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}

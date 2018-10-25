@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file UIComponents.hpp
-* @brief UI‚ÌƒRƒ“ƒ|[ƒlƒ“ƒgŒQ‚Å‚·B
+* @brief UIã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆç¾¤ã§ã™ã€‚
 * @author moon
 * @date 2018/10/11
 */
@@ -9,12 +9,13 @@
 #include "../Utility/Vec.hpp"
 #include "../Utility/Counter.hpp"
 #include "Renderer.hpp"
+#include "../Utility/Easing.hpp"
 #include <DxLib.h>
 #include <functional>
 namespace ECS
 {
 	/*!
-	@brief Œv‚Ìj‚Ì“®‚«‚Å‚·
+	@brief æ™‚è¨ˆã®é‡ã®å‹•ãã§ã™
 	*/
 	class TimerNeedleMove final : public ComponentSystem
 	{
@@ -24,7 +25,7 @@ namespace ECS
 
 		int speed_;
 	public:
-		//!‘¬“x‚ğ‰Šú‰»‚µ‚Ü‚·B‚‚¢‚Ù‚Ç‘‚¢ Å‘å360
+		//!é€Ÿåº¦ã‚’åˆæœŸåŒ–ã—ã¾ã™ã€‚é«˜ã„ã»ã©æ—©ã„ æœ€å¤§360
 		TimerNeedleMove(const int speed)
 		{
 			speed_ = speed;
@@ -44,7 +45,7 @@ namespace ECS
 	};
 
 	/*!
-	@brief ƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·
+	@brief ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ã—ã¾ã™
 	*/
 	class FadeInComponentSystem final : public ComponentSystem
 	{
@@ -54,7 +55,7 @@ namespace ECS
 
 		int speed_;
 	public:
-		//!ƒtƒFƒCƒh‚Ì‘¬“x‚ğ‰Šú‰»‚µ‚Ü‚·B‚‚¢‚Ù‚Ç‘‚¢@Å‘å255
+		//!ãƒ•ã‚§ã‚¤ãƒ‰ã®é€Ÿåº¦ã‚’åˆæœŸåŒ–ã—ã¾ã™ã€‚é«˜ã„ã»ã©æ—©ã„ã€€æœ€å¤§255
 		FadeInComponentSystem(const int speed)
 		{
 			speed_ = speed;
@@ -74,7 +75,7 @@ namespace ECS
 	};
 
 	/*!
-	@brief ƒtƒF[ƒhƒAƒEƒg‚µ‚Ü‚·
+	@brief ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã—ã¾ã™
 	*/
 	class FadeOutComponentSystem final : public ComponentSystem
 	{
@@ -84,7 +85,7 @@ namespace ECS
 
 		int speed_;
 	public:
-		//!ƒtƒFƒCƒh‚Ì‘¬“x‚ğ‰Šú‰»‚µ‚Ü‚·B‚‚¢‚Ù‚Ç‘‚¢@Å‘å255
+		//!ãƒ•ã‚§ã‚¤ãƒ‰ã®é€Ÿåº¦ã‚’åˆæœŸåŒ–ã—ã¾ã™ã€‚é«˜ã„ã»ã©æ—©ã„ã€€æœ€å¤§255
 		FadeOutComponentSystem(const int speed)
 		{
 			speed_ = speed;
@@ -103,7 +104,7 @@ namespace ECS
 	};
 
 	/*!
-	@brief ‰æ‘œ‚ğŠg‘å‚µA‚Ü‚½k¬‚µ‚Ü‚·
+	@brief ç”»åƒã‚’æ‹¡å¤§ã—ã€ã¾ãŸå…ƒã®ç”»åƒã«æˆ»ã‚Šã¾ã™
 	*/
 	class ExpandReduceComponentSystem final : public ComponentSystem
 	{
@@ -116,9 +117,9 @@ namespace ECS
 		int frame_;
 	public:
 		/**
-		*@brief ‰æ‘œ‚ğŠg‘å‚µA‚Ü‚½k¬‚µ‚Ü‚·
-		* @param magni ”{—¦
-		* @param speed ‘¬‚³i‘å‚«‚¢‚Ù‚Ç‘¬‚¢j
+		*@brief ç”»åƒã‚’æ‹¡å¤§ã—ã€ã¾ãŸç¸®å°ã—ã¾ã™
+		* @param magni å€ç‡
+		* @param speed é€Ÿã•ï¼ˆå¤§ãã„ã»ã©é€Ÿã„ï¼‰
 		*/
 		ExpandReduceComponentSystem(float magni, float speed)
 		{
@@ -158,10 +159,10 @@ namespace ECS
 		float speed_;
 	public:
 		/**
-		*@brief ‰æ‘œ‚ğŠg‘å‚µ‚Ü‚·
-		* @param magni_min_@n‚Ü‚é”’li1‚ªŒ³ƒTƒCƒYj
-		* @param magni_max_ Šg‘å‚·‚é”’li1‚ªŒ³ƒTƒCƒYj
-		* @param speed ‘¬‚³i‘å‚«‚¢‚Ù‚Ç‘¬‚¢j
+		*@brief ç”»åƒã‚’æ‹¡å¤§ã—ã¾ã™
+		* @param magni_min_ã€€å§‹ã¾ã‚‹æ•°å€¤ï¼ˆ1ãŒå…ƒã‚µã‚¤ã‚ºï¼‰
+		* @param magni_max_ æ‹¡å¤§ã™ã‚‹æ•°å€¤ï¼ˆ1ãŒå…ƒã‚µã‚¤ã‚ºï¼‰
+		* @param speed é€Ÿã•ï¼ˆå¤§ãã„ã»ã©é€Ÿã„ï¼‰
 		*/
 		ExpandComponentSystem(float magni_min, float magni_max, float speed)
 		{
@@ -182,4 +183,136 @@ namespace ECS
 			scale_->val = cnt_.getCurrentCount();
 		}
 	};
+
+	/*
+	*@briefã€€Xè»¸ã®ãƒãƒ¼ã‚’æç”»ã—ã¾ã™
+	SpriteRectDrawã€RectãŒãªã„ã¨ã‚¨ãƒ©ãƒ¼ãŒå‡ºã¾ã™
+	*ã€€rect_x_	å…ƒç”»åƒã®å…¨ä½“ã®å¹…
+	*ã€€now_		ç¾åœ¨ã®æ•°å€¤
+	*ã€€max_		æœ€å¤§æ•°å€¤
+	*ã€€size_w_	è¡¨ç¤ºã™ã‚‹ç”»åƒã®å¹…
+	*/
+	class BarComponentSystemX final : public ComponentSystem
+	{
+	private:
+		Rectangle* rectangle_;
+		Easing eas_;
+
+		int rect_x_;
+		int score_;
+		int atScore_;
+		int max_;
+
+	public:
+		BarComponentSystemX(int rectX, int now, int max)
+		{
+			rect_x_ = rectX;
+			score_ = now;
+			max_ = max;
+		}
+		
+		void initialize() override
+		{
+			rectangle_ = &entity->getComponent<Rectangle>();
+			
+		}
+		void update() override
+		{
+			if (atScore_ < score_) {
+				eas_.run(Easing::CircIn, 10);
+			}
+			if (eas_.isEaseEnd()) {
+				atScore_ = score_;
+				eas_.reset();
+			}
+			float size_w_ = score_ * rect_x_ / (float)max_;
+			rectangle_->w = eas_.getVolume(rectangle_->w, size_w_- rectangle_->w);
+			
+		}
+		void addScore(int score)
+		{
+			atScore_ = score_;
+			score_ += score;
+		}
+	};
+
+	/*
+	*@briefã€€Yè»¸ã®ãƒãƒ¼ã‚’æç”»ã—ã¾ã™
+	SpriteRectDrawã€RectãŒãªã„ã¨ã‚¨ãƒ©ãƒ¼ãŒå‡ºã¾ã™
+	*ã€€rect_y_	å…ƒç”»åƒã®å…¨ä½“ã®é«˜ã•
+	*ã€€now_		ç¾åœ¨ã®æ•°å€¤
+	*ã€€max_		æœ€å¤§æ•°å€¤
+	*ã€€size_h_	è¡¨ç¤ºã™ã‚‹ç”»åƒã®é«˜ã•
+	*/
+	/*class BarComponentSystemY final : public ComponentSystem
+	{
+	private:
+		SpriteRectDraw* rect_;
+		Rectangle* rectangle_;
+
+		int rect_y_;
+		int now_;
+		int max_;
+		int size_h_;
+
+	public:
+
+		BarComponentSystemY(int rectY, int now, int max)
+		{
+			rect_y_ = rectY;
+			now_ = now;
+			max_ = max;
+		}
+
+		void initialize() override
+		{
+			rect_ = &entity->getComponent<SpriteRectDraw>();
+			rectangle_ = &entity->getComponent<Rectangle>();
+
+			size_h_ = (int)(now_ * rectangle_->h / (float)max_);
+		}
+		void update() override
+		{
+			rect_->setRect(rectangle_->x, rectangle_->y, rectangle_->w, size_h_);
+		}
+	};*/
+
+	/*
+	*@brief ãƒ•ã‚©ãƒ³ãƒˆç”»åƒã‚’æç”»ã—ã¾ã™
+	SpriteRectDrawã€RectãŒãªã„ã¨ã‚¨ãƒ©ãƒ¼ãŒå‡ºã¾ã™
+	*ã€€rect_w	ãƒ•ã‚©ãƒ³ãƒˆ1å€‹ã®æ¨ªå¹…
+	*ã€€num		è¡¨ç¤ºã™ã‚‹æ•°å­—
+	*/
+	class DrawFont final : public ComponentSystem
+	{
+	private:
+		Rectangle* rectangle_;
+		
+		int rectW_;
+		int num_;
+		int srcX_;
+
+	public:
+
+		DrawFont(int rect_w, int num)
+		{
+			rectW_ = rect_w;
+			num_ = num;
+		}
+
+		void initialize() override
+		{
+			rectangle_ = &entity->getComponent<Rectangle>();
+
+			srcX_ = rectW_ * num_;
+		}
+
+		void update() override
+		{
+			rectangle_->x = srcX_;
+			rectangle_->w = rectW_;
+		}
+	};
+
+
 }
