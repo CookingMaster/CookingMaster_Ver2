@@ -200,8 +200,8 @@ namespace ECS
 
 		int rect_x_;
 		int score_;
+		int atScore_;
 		int max_;
-		float sizeW_;
 
 	public:
 		BarComponentSystemX(int rectX, int now, int max)
@@ -218,13 +218,20 @@ namespace ECS
 		}
 		void update() override
 		{
+			if (atScore_ < score_) {
 				eas_.run(Easing::CircIn, 10);
-				float size_w_ = score_ * rect_x_ / (float)max_;
-				rectangle_->w = eas_.getVolume(rectangle_->w, size_w_- rectangle_->w);
+			}
+			if (eas_.isEaseEnd()) {
+				atScore_ = score_;
+				eas_.reset();
+			}
+			float size_w_ = score_ * rect_x_ / (float)max_;
+			rectangle_->w = eas_.getVolume(rectangle_->w, size_w_- rectangle_->w);
 			
 		}
 		void addScore(int score)
 		{
+			atScore_ = score_;
 			score_ += score;
 		}
 	};

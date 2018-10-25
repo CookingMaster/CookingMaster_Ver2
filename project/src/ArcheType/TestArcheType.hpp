@@ -93,7 +93,19 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(0, 0, 0, rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
-			entity->addComponent<BarComponentSystemX>(rect.x, 0, 100);
+			entity->addComponent<BarComponentSystemX>(rect.x, 0, 200);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
+		//!ŽžŒv
+		static Entity* CreateClockUI(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(1);
+			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
