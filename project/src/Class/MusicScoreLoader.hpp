@@ -147,7 +147,10 @@ private:
 			>> notesData_.back().hitJudge[0]
 			>> notesData_.back().hitJudge[1]
 			>> notesData_.back().hitJudge[2]
-			>> notesData_.back().hitJudge[3];
+			>> notesData_.back().hitJudge[3]
+			>> notesData_.back().xsize >> notesData_.back().ysize
+			>> notesData_.back().animFlame
+			>> notesData_.back().xnum >> notesData_.back().ynum;
 		notesData_.shrink_to_fit();
 
 		//リソースの読み込み
@@ -193,19 +196,19 @@ private:
 			//IDに付属しているアルファベットからノーツの種類を取得
 			switch (tmpid)
 			{
-			case 'L':
+			case 'L':	//左
 				scoreData_.back()[i].dir = ECS::Direction::Dir::L;
 				break;
 
-			case 'R':
+			case 'R':	//右	
 				scoreData_.back()[i].dir = ECS::Direction::Dir::R;
 				break;
 
-			case 'U':
+			case 'U':	//上
 				scoreData_.back()[i].dir = ECS::Direction::Dir::U;
 				break;
 
-			case 'D':
+			case 'D':	//下
 				scoreData_.back()[i].dir = ECS::Direction::Dir::D;
 				break;
 
@@ -216,7 +219,6 @@ private:
 			}
 
 			//取得したノーツ番号を代入
-			int tmtmt = int(idstr[i][1] - '0');
 			scoreData_.back()[i].notesID = int(idstr[i][1] - '0');
 		}
 	}

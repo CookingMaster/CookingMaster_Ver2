@@ -18,6 +18,12 @@ struct NotesData
 	std::string seName;		//切った時の効果音名
 	int arrivalBeatTime;	//マーカーへの到達拍数
 	float hitJudge[4];		//接触判定時間(MISSを除く評価4段階分)
+	
+	int xsize;		//画像のX方向のサイズ
+	int ysize;		//画像のY方向のサイズ
+	int animFlame;	//アニメーションのフレーム数
+	int xnum;		//アニメーションのX方向の枚数
+	int ynum;		//アニメーションのY方向の枚数
 };
 
 //一つの音符のデータ
