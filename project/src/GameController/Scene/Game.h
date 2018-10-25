@@ -21,6 +21,7 @@ namespace Scene
 		MusicScoreLoader msl;
 		NotesCreator nc;
 		ECS::Entity* bar;
+		ECS::Entity* needle;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, const Parameter& parame, ECS::EntityManager* entityManager);
 		~Game();

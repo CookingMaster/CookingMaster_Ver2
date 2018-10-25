@@ -21,12 +21,12 @@ namespace ECS
 	{
 	private:
 		Rotation* rotate_;
-		Counter cnt_;
+		Counter_f cnt_;
 
-		int speed_;
+		float speed_;
 	public:
 		//!‘¬“x‚ð‰Šú‰»‚µ‚Ü‚·B‚‚¢‚Ù‚Ç‘‚¢ Å‘å360
-		TimerNeedleMove(const int speed)
+		TimerNeedleMove(const float speed)
 		{
 			speed_ = speed;
 		}
@@ -226,7 +226,7 @@ namespace ECS
 				eas_.reset();
 			}
 			float size_w_ = score_ * rect_x_ / (float)max_;
-			rectangle_->w = eas_.getVolume(rectangle_->w, size_w_- rectangle_->w);
+			rectangle_->w = (int)eas_.getVolume((float)rectangle_->w, size_w_- (float)rectangle_->w);
 			
 		}
 		void addScore(int score)
