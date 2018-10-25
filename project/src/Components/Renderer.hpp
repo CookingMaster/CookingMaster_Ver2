@@ -403,7 +403,8 @@ namespace ECS
 		std::string name_;
 		Vec2_i size_;
 		bool isDraw_ = true;
-		bool isCenter_ = true;
+		bool isCenter_ = false;
+		Vec2 pivot_;
 	public:
 		//!登録した画像名を指定して初期化します
 		SpriteDraw(const char* name)
@@ -418,6 +419,7 @@ namespace ECS
 			rota_ = &entity->getComponent<Rotation>();
 			scale_ = &entity->getComponent<Scale>();
 			GetGraphSize(ResourceManager::GetGraph().getHandle(name_), &size_.x, &size_.y);
+			pivot_ = size_ / 2;
 			RenderUtility::SatRenderDetail(entity, &color_, &blend_);
 		}
 		void draw2D() override
@@ -427,30 +429,19 @@ namespace ECS
 			{
 				RenderUtility::SetColor(color_);
 				RenderUtility::SetBlend(blend_);
-				if (!isCenter_)
+				if (isCenter_)
 				{
-					DrawRotaGraph3F(
-						pos_->val.x,
-						pos_->val.y,
-						0,
-						0,
-						scale_->val.x,
-						scale_->val.y,
-						DirectX::XMConvertToRadians(rota_->val),
-						ResourceManager::GetGraph().getHandle(name_), true);
+					pivot_ = size_ / 2;
 				}
-				else
-				{
-					DrawRotaGraph3F(
-						pos_->val.x,
-						pos_->val.y,
-						static_cast<float>(size_.x) / 2,
-						static_cast<float>(size_.y) / 2,
-						scale_->val.x,
-						scale_->val.y,
-						DirectX::XMConvertToRadians(rota_->val),
-						ResourceManager::GetGraph().getHandle(name_), true);
-				}
+				DrawRotaGraph3F(
+					pos_->val.x,
+					pos_->val.y,
+					pivot_.x,
+					pivot_.y,
+					scale_->val.x,
+					scale_->val.y,
+					DirectX::XMConvertToRadians(rota_->val),
+					ResourceManager::GetGraph().getHandle(name_), true);
 				RenderUtility::ResetRenderState();
 			}
 
@@ -469,6 +460,11 @@ namespace ECS
 		void doCenter(const bool isCenter)
 		{
 			isCenter_ = isCenter;
+		}
+		//!描画する基準座標を引数で指定します
+		void setPivot(const Vec2& pivot)
+		{
+			pivot_ = pivot;
 		}
 	};
 

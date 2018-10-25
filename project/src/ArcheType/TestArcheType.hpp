@@ -108,7 +108,7 @@ namespace ECS
 			entity->addComponent<SimpleDraw>(graphicName);
 			return entity;
 		}
-		//!Œv‚Ìj
+		//!æ™‚è¨ˆã®é‡
 		static Entity* CreateNeedleUI(const char* graphicName, const Vec2 pos, EntityManager& entityManager_, int speed)
 		{
 			auto* entity = &entityManager_.addEntity();
