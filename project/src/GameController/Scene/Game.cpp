@@ -46,9 +46,9 @@ namespace Scene
 		//時計
 		ECS::Entity* clock = ECS::ArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
 		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
-		needle = ECS::ArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 30.f);
-
+		needle = ECS::ArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
 	}
+
 	void Game::update()
 	{
 		entityManager_->update();

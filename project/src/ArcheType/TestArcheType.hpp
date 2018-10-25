@@ -117,7 +117,7 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			entity->addComponent<TimerNeedleMove>(speed);
-			entity->addComponent<SpriteDraw>(graphicName);
+			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2{ 7.f,48.f });
 			return entity;
 		}
 	};

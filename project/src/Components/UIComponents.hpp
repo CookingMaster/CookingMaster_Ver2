@@ -26,7 +26,7 @@ namespace ECS
 		float speed_;
 	public:
 		//!速度を初期化します。高いほど早い 最大360
-		TimerNeedleMove(const int speed)
+		TimerNeedleMove(const float speed)
 		{
 			speed_ = speed;
 		}
