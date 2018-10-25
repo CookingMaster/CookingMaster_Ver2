@@ -7,6 +7,8 @@
 * @par History
 - 2018/10/12 tonarinohito
 -# SpriteRectDraw追加
+- 2018/10/25 tonarinohito
+-# SpriteDrawもsetPivot()追加
 */
 #pragma once
 #include "../ECS/ECS.hpp"
