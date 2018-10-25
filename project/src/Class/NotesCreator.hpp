@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file NotesCreator.hpp
-* @brief ƒf[ƒ^‚ğó‚¯æ‚èA‚»‚ê‚ğŠî‚Éƒm[ƒc‚ğ¶¬‚·‚é
+* @brief ãƒ‡ãƒ¼ã‚¿ã‚’å—ã‘å–ã‚Šã€ãã‚Œã‚’åŸºã«ãƒãƒ¼ãƒ„ã‚’ç”Ÿæˆã™ã‚‹
 * @author feveleK5563
 * @date 2018/10/12
 */
@@ -15,15 +15,15 @@ class NotesCreator
 #undef max
 private:
 	int bpm_;					//BPM
-	int offsetTime_;			//ƒIƒtƒZƒbƒgŠÔ
-	TCounter<int> cntTime_;		//ŠÔŒv‘ª
-	TCounter<int> cntBar_;		//¬ß‚ÌŒv‘ª
+	int offsetTime_;			//ã‚ªãƒ•ã‚»ãƒƒãƒˆæ™‚é–“
+	TCounter<int> cntTime_;		//æ™‚é–“è¨ˆæ¸¬
+	TCounter<int> cntBar_;		//å°ç¯€ã®è¨ˆæ¸¬
 
 public:
 	/**
-	* @brief BPM, OffsetTime‚ğİ’è‚µAŒo‰ßŠÔ‚ğ0‚É‚·‚é
+	* @brief BPM, OffsetTimeã‚’è¨­å®šã—ã€çµŒéæ™‚é–“ã‚’0ã«ã™ã‚‹
 	* @param bpm BPM
-	* @param offsetTime ƒIƒtƒZƒbƒgŠÔ
+	* @param offsetTime ã‚ªãƒ•ã‚»ãƒƒãƒˆæ™‚é–“
 	*/
 	void resetData(int bpm, int offsetTime)
 	{
@@ -34,33 +34,33 @@ public:
 	}
 
 	/**
-	* @brief XVˆ—
-	* @param notesData g—p‚·‚éƒm[ƒc‚Ìƒf[ƒ^
-	* @param scoreData •ˆ–Êƒf[ƒ^
-	* @param entityManager ƒGƒ“ƒeƒBƒeƒBƒ}ƒl[ƒWƒƒ
+	* @brief æ›´æ–°å‡¦ç†
+	* @param notesData ä½¿ç”¨ã™ã‚‹ãƒãƒ¼ãƒ„ã®ãƒ‡ãƒ¼ã‚¿
+	* @param scoreData è­œé¢ãƒ‡ãƒ¼ã‚¿
+	* @param entityManager ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ãƒãƒãƒ¼ã‚¸ãƒ£
 	*/
 	void run(const std::vector<NotesData>& notesData, const ScoreData& scoreData, ECS::EntityManager& entityManager)
 	{
 		CalcurationBeat beat((float)bpm_);
 
-		//ˆê¬ß–ˆ‚Éƒm[ƒc‚ğ¶¬‚·‚é
+		//ä¸€å°ç¯€æ¯ã«ãƒãƒ¼ãƒ„ã‚’ç”Ÿæˆã™ã‚‹
 		if (cntTime_.getCurrentCount() % int(beat.calcOneBar_Frame()) == 0)
 		{
-			//ƒm[ƒc¶¬
+			//ãƒãƒ¼ãƒ„ç”Ÿæˆ
 			createNotes(notesData, scoreData, entityManager);
 		}
 		++cntTime_;
 	}
 
 private:
-	//ƒm[ƒc‚ğ¶¬‚·‚é
+	//ãƒãƒ¼ãƒ„ã‚’ç”Ÿæˆã™ã‚‹
 	void createNotes(const std::vector<NotesData>& notesData, const ScoreData& scoreData, ECS::EntityManager& entityManager)
 	{
-		//Ÿ‚Ì¬ß‚Ì•ˆ–Ê‚ğŒ©‚é
+		//æ¬¡ã®å°ç¯€ã®è­œé¢ã‚’è¦‹ã‚‹
 		int nextBar = cntBar_.getCurrentCount() + 1;
 		if ((unsigned int)nextBar >= scoreData.size()) return;
 		
-		//‚»‚Ì¬ß“à‚Å¶¬‚³‚ê‚éƒm[ƒc”‚©‚ç‰¹‚Ì’·‚³‚ğŒvZ
+		//ãã®å°ç¯€å†…ã§ç”Ÿæˆã•ã‚Œã‚‹ãƒãƒ¼ãƒ„æ•°ã‹ã‚‰éŸ³ã®é•·ã•ã‚’è¨ˆç®—
 		CalcurationBeat beat((float)bpm_);
 		float noteFlame = beat.calcNote_Frame(float(scoreData[nextBar].size()));
 
@@ -71,10 +71,10 @@ private:
 				continue;
 
 			float arrivalBeatTime = beat.calcNote_Frame(float(nd.arrivalBeatTime));
-			//‚»‚Ìƒm[ƒc‚ª‰æ–Ê“à‚ÉoŒ»‚·‚é‚Ü‚Å‚Ì‘Ò‚¿ŠÔ‚ğŒvZ
+			//ãã®ãƒãƒ¼ãƒ„ãŒç”»é¢å†…ã«å‡ºç¾ã™ã‚‹ã¾ã§ã®å¾…ã¡æ™‚é–“ã‚’è¨ˆç®—
 			float waitTime = beat.calcOneBar_Frame() * 2.f - (float(scoreData[nextBar].size() - i) * noteFlame) - arrivalBeatTime;
 
-			//¶¬
+			//ç”Ÿæˆ
 			ECS::NotesArcheType::CreateNotes(
 				nd,
 				scoreData[nextBar][i].dir,

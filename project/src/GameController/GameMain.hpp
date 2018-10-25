@@ -1,6 +1,6 @@
-/**
+ï»¿/**
  * @file GameMain.hpp
- * @brief Dxlib‚ÌXV‚ÆƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌXV‚ğs‚¢‚Ü‚·
+ * @brief Dxlibã®æ›´æ–°ã¨ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®æ›´æ–°ã‚’è¡Œã„ã¾ã™
  * @author tonarinohito
  * @date 2018/10/05
  */
@@ -10,7 +10,7 @@
 #include "../Utility/FPS.hpp"
 #include <memory>
 
-//!ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğ¶¬‚µ‚Ü‚·
+//!ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ç”Ÿæˆã—ã¾ã™
 class GameMain final
 {
 private:
@@ -31,7 +31,7 @@ public:
 		system = std::make_unique<System>();
 		game = std::make_unique<GameController>();
 	}
-	//!ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌXV‚ğs‚¢‚Ü‚·
+	//!ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®æ›´æ–°ã‚’è¡Œã„ã¾ã™
 	void run()
 	{
 		while (system->isOk())

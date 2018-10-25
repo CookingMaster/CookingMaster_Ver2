@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file Test.hpp
-* @brief ƒGƒ“ƒeƒBƒeƒB‚ÌŒ´Œ^‚ðì‚éƒeƒXƒg
+* @brief ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã®åŽŸåž‹ã‚’ä½œã‚‹ãƒ†ã‚¹ãƒˆ
 * @author tonarinohito
 * @date 2018/10/05
 */
@@ -14,7 +14,7 @@ namespace ECS
 {
 	struct ArcheType
 	{
-		//!ƒGƒ“ƒeƒBƒeƒB‚Ì¶¬ƒeƒXƒg
+		//!ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã®ç”Ÿæˆãƒ†ã‚¹ãƒˆ
 		static Entity* CreateTestEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -27,7 +27,7 @@ namespace ECS
 			return entity;
 		}
 
-		//!BPMƒAƒjƒ[ƒVƒ‡ƒ“ƒeƒXƒg
+		//!BPMã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ†ã‚¹ãƒˆ
 		static Entity* CreateAnimationEntity(const char* graphicName, const char* soundName, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -41,7 +41,7 @@ namespace ECS
 			return entity;
 		}
 
-		//!ƒtƒŒ[ƒ€ƒAƒjƒ[ƒVƒ‡ƒ“ƒeƒXƒg
+		//!ãƒ•ãƒ¬ãƒ¼ãƒ ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ†ã‚¹ãƒˆ
 		static Entity* CreateFrameAnimationEntity(const char* graphicName, const Vec2 pos, const int frame, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -55,7 +55,7 @@ namespace ECS
 			return entity;
 		}
 
-		//!ƒvƒŒƒCƒ„ƒGƒ“ƒeƒBƒeƒBƒeƒXƒg
+		//!ãƒ—ãƒ¬ã‚¤ãƒ¤ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ãƒ†ã‚¹ãƒˆ
 		static Entity* CreatePlayerEntity(const char* graphicName, const char* soundName, const Vec2 pos, const int frame, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -72,7 +72,7 @@ namespace ECS
 		}
 
 
-		//!ƒo[
+		//!ãƒãƒ¼
 		static Entity* CreateEmptyBarUI(const char* graphicName,const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -84,7 +84,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
-		//!ƒo[
+		//!ãƒãƒ¼
 		static Entity* CreateFullBarUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -97,7 +97,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
-		//!ŽžŒv
+		//!æ™‚è¨ˆ
 		static Entity* CreateClockUI(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();

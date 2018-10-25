@@ -1,4 +1,4 @@
-/**
+﻿/**
 * @file NotesArcheType.hpp
 * @brief �m�[�c�̌��^�𐶐�����
 * @author feveleK5563

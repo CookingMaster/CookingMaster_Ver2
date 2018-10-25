@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file PlayerController.hpp
-* @brief ƒvƒŒƒCƒ„‚Ì—‚Ìq‚ğ§Œä‚·‚éƒRƒ“ƒ|[ƒlƒ“ƒg
+* @brief ãƒ—ãƒ¬ã‚¤ãƒ¤ã®å¥³ã®å­ã‚’åˆ¶å¾¡ã™ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 * @author yokota0717
 * @date 2018.10.16
 */
@@ -17,21 +17,21 @@
 
 namespace ECS {
 	/**
-	* @brief ƒvƒŒƒCƒ„‚Ìó‘Ô‚ğ•Û‚·‚é
+	* @brief ãƒ—ãƒ¬ã‚¤ãƒ¤ã®çŠ¶æ…‹ã‚’ä¿æŒã™ã‚‹
 	*/
 	struct PlayerState final : public ComponentData
 	{
 		enum class State : short
 		{
-			Non,	//!–¢’è‹`
-			Idle,	//!—§‚¿
-			Left,	//!¶Ø‚è
-			Right,	//!‰EØ‚è
-			Up,		//!ãØ‚è
-			Down,	//!‰ºØ‚è
-			Miss,	//!ƒ~ƒX(‚ ‚ê‚Î)
-			Enter,	//!“üê
-			Clear,	//!‹ÈI—¹
+			Non,	//!æœªå®šç¾©
+			Idle,	//!ç«‹ã¡
+			Left,	//!å·¦åˆ‡ã‚Š
+			Right,	//!å³åˆ‡ã‚Š
+			Up,		//!ä¸Šåˆ‡ã‚Š
+			Down,	//!ä¸‹åˆ‡ã‚Š
+			Miss,	//!ãƒŸã‚¹(ã‚ã‚Œã°)
+			Enter,	//!å…¥å ´
+			Clear,	//!æ›²çµ‚äº†
 		};
 		State val;
 		PlayerState() : val(State::Non) {}
@@ -43,8 +43,8 @@ namespace ECS {
 
 
 	/**
-	* @brief ƒvƒŒƒCƒ„ê—pƒAƒjƒ[ƒ^[
-	* - SpriteAnimationDrawAPlayerState‚ª•K—v
+	* @brief ãƒ—ãƒ¬ã‚¤ãƒ¤å°‚ç”¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼
+	* - SpriteAnimationDrawã€PlayerStateãŒå¿…è¦
 	*/
 	class AnimatorPlayer final : public ComponentSystem
 	{
@@ -52,16 +52,16 @@ namespace ECS {
 		PlayerState* state_;
 		SpriteAnimationDraw* animation_ = nullptr;
 		Counter counter_;
-		int frame_ = 0;					//!ƒAƒjƒ[ƒVƒ‡ƒ“‚·‚éƒtƒŒ[ƒ€”
-		int bpm_ = 0;					//!Œ»İ‚ÌBPM
-		DWORD beat_ = 0;				//!ˆê”‚Ì’·‚³(ms)
+		int frame_ = 0;					//!ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
+		int bpm_ = 0;					//!ç¾åœ¨ã®BPM
+		DWORD beat_ = 0;				//!ä¸€æ‹ã®é•·ã•(ms)
 		DWORD start_ = 0;
-		std::string soundname_ = "";	//!Œ»İ‚ÌBGM‚Ì“o˜^–¼
-		int indexX_BPM_ = 0;			//!BPM‚É‡‚í‚¹‚Ä‚¢‚é‚ÌX•ûŒü‚ÌƒCƒ“ƒfƒbƒNƒX
-		int indexX_Frame_ = 0;			//!ƒtƒŒ[ƒ€‚É‡‚í‚¹‚Ä‚¢‚é‚ÌX•ûŒü‚ÌƒCƒ“ƒfƒbƒNƒX
-		int indexY_ = 0;				//!Y•ûŒü‚ÌƒCƒ“ƒfƒbƒNƒX
-		int maxXnum_BPM_ = 0;			//!BPM‚É‡‚í‚¹‚Ä‚¢‚é‚Ì•`‰æ‚·‚é‰æ‘œ‚ÌX•ûŒü‚Ì–‡”
-		int maxXnum_Frame_ = 0;			//!ƒtƒŒ[ƒ€‚É‡‚í‚¹‚Ä‚¢‚é‚Ì•`‰æ‚·‚é‰æ‘œ‚ÌX•ûŒü‚Ì–‡”
+		std::string soundname_ = "";	//!ç¾åœ¨ã®BGMã®ç™»éŒ²å
+		int indexX_BPM_ = 0;			//!BPMã«åˆã‚ã›ã¦ã„ã‚‹æ™‚ã®Xæ–¹å‘ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		int indexX_Frame_ = 0;			//!ãƒ•ãƒ¬ãƒ¼ãƒ ã«åˆã‚ã›ã¦ã„ã‚‹æ™‚ã®Xæ–¹å‘ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		int indexY_ = 0;				//!Yæ–¹å‘ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		int maxXnum_BPM_ = 0;			//!BPMã«åˆã‚ã›ã¦ã„ã‚‹æ™‚ã®æç”»ã™ã‚‹ç”»åƒã®Xæ–¹å‘ã®æšæ•°
+		int maxXnum_Frame_ = 0;			//!ãƒ•ãƒ¬ãƒ¼ãƒ ã«åˆã‚ã›ã¦ã„ã‚‹æ™‚ã®æç”»ã™ã‚‹ç”»åƒã®Xæ–¹å‘ã®æšæ•°
 	public:
 		AnimatorPlayer(const char* soundname, const int bpm, const int frame)
 			:
@@ -89,7 +89,7 @@ namespace ECS {
 				initFrameAnimator();
 			}
 		}
-		//!BPM‚É‡‚í‚¹‚½XVˆ—‚ğ‚·‚é
+		//!BPMã«åˆã‚ã›ãŸæ›´æ–°å‡¦ç†ã‚’ã™ã‚‹
 		void updateByBPM()
 		{
 			DWORD now = GetSoundCurrentTime(ResourceManager::GetSound().getHandle(soundname_));
@@ -104,10 +104,10 @@ namespace ECS {
 			}
 			animation_->setIndex(indexX_BPM_);
 		}
-		//!ƒtƒŒ[ƒ€‚É‡‚í‚¹‚½XVˆ—‚ğ‚·‚é
+		//!ãƒ•ãƒ¬ãƒ¼ãƒ ã«åˆã‚ã›ãŸæ›´æ–°å‡¦ç†ã‚’ã™ã‚‹
 		void updateByFrame()
 		{
-			//!X•ûŒü‚ÌƒCƒ“ƒfƒbƒNƒXXV
+			//!Xæ–¹å‘ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æ›´æ–°
 			if (++counter_ >= frame_)
 			{
 				++indexX_Frame_;
@@ -116,7 +116,7 @@ namespace ECS {
 					indexX_Frame_ = 0;
 				}
 			}
-			//!Y•ûŒü‚ÌƒCƒ“ƒfƒbƒNƒXİ’è
+			//!Yæ–¹å‘ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹è¨­å®š
 			switch (state_->val)
 			{
 			case PlayerState::State::Left:
@@ -128,23 +128,23 @@ namespace ECS {
 			default:
 				indexY_ = 0; break;
 			}
-			//!•`‰æ‰æ‘œw’è
+			//!æç”»ç”»åƒæŒ‡å®š
 			animation_->setIndex(indexX_Frame_ + (indexY_ * maxXnum_BPM_));
 		}
-		//!ƒtƒŒ[ƒ€‚É‡‚í‚¹‚½ƒAƒjƒ[ƒVƒ‡ƒ“ŠÖ˜A‚Ì‰Šú‰»
+		//!ãƒ•ãƒ¬ãƒ¼ãƒ ã«åˆã‚ã›ãŸã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–¢é€£ã®åˆæœŸåŒ–
 		void initFrameAnimator()
 		{
 			indexX_Frame_ = 0;
 			counter_.reset();
 			indexY_ = 0;
 		}
-		//!BPM‚ğİ’è‚·‚é
+		//!BPMã‚’è¨­å®šã™ã‚‹
 		void setBPM(const int bpm)
 		{
 			bpm_ = bpm;
 		}
 		/**
-		* @brief 1”‚Ì’·‚³(ms)‚ğŒvZ‚·‚é
+		* @brief 1æ‹ã®é•·ã•(ms)ã‚’è¨ˆç®—ã™ã‚‹
 		* @note 1000(ms) * 60(sec/min) / bpm(beat/min)
 		*/
 		void calcBeat()
@@ -152,9 +152,9 @@ namespace ECS {
 			beat_ = static_cast<DWORD>(1000 * (60.f / bpm_));
 		}
 		/**
-		* @brief ‰æ‘œ–‡”‚Ìİ’è
-		* @param xmaxBPM BPM‚É‡‚í‚¹‚½ƒAƒjƒ[ƒVƒ‡ƒ“‚ğ‚·‚é‚Æ‚«‚Ì‰æ‘œ–‡”
-		* @param xmaxFrame ƒtƒŒ[ƒ€‚É‡‚í‚¹‚½ƒAƒjƒ[ƒVƒ‡ƒ“‚ğ‚·‚é‚Æ‚«‚Ì‰æ‘œ–‡”
+		* @brief ç”»åƒæšæ•°ã®è¨­å®š
+		* @param xmaxBPM BPMã«åˆã‚ã›ãŸã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã™ã‚‹ã¨ãã®ç”»åƒæšæ•°
+		* @param xmaxFrame ãƒ•ãƒ¬ãƒ¼ãƒ ã«åˆã‚ã›ãŸã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã™ã‚‹ã¨ãã®ç”»åƒæšæ•°
 		*/
 		void setSpriteNum(const int xmaxBPM, const int xmaxFrame)
 		{
@@ -165,8 +165,8 @@ namespace ECS {
 
 
 	/**
-	* @brief ƒvƒŒƒCƒ„‚Ì—‚Ìq‚ğ§Œä‚·‚éƒRƒ“ƒ|[ƒlƒ“ƒg
-	* - AnimatorPlayer‚ª•K—v
+	* @brief ãƒ—ãƒ¬ã‚¤ãƒ¤ã®å¥³ã®å­ã‚’åˆ¶å¾¡ã™ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
+	* - AnimatorPlayerãŒå¿…è¦
 	*/
 	class PlayerController final : public ComponentSystem
 	{
@@ -174,7 +174,7 @@ namespace ECS {
 		AnimatorPlayer* animator_ = nullptr;
 		PlayerState* state_;
 		Counter counter_;
-		int cutAnimMaxTime_ = 180;	//!Ø‚éƒ‚[ƒVƒ‡ƒ“‚Ì‘S‘Ì‚Ì’·‚³(ƒtƒŒ[ƒ€”)A‚±‚ê‚ğ’´‚¦‚é‚ÆIdle‚É–ß‚é
+		int cutAnimMaxTime_ = 180;	//!åˆ‡ã‚‹ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®å…¨ä½“ã®é•·ã•(ãƒ•ãƒ¬ãƒ¼ãƒ æ•°)ã€ã“ã‚Œã‚’è¶…ãˆã‚‹ã¨Idleã«æˆ»ã‚‹
 	public:
 		PlayerController()
 		{
@@ -192,14 +192,14 @@ namespace ECS {
 			actionByState();
 			
 		}
-		//!•`‰æ‚·‚é‰æ‘œ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğİ’è‚·‚é
+		//!æç”»ã™ã‚‹ç”»åƒã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’è¨­å®šã™ã‚‹
 		void setGraphIndex()
 		{
 
 		}
 		/**
-		* @brief Œ»İ‚Ìó‘Ô‚É‡‚í‚¹‚Ä“ü—Í‚ğó‚¯•t‚¯‚é
-		* @note —v‚·‚é‚ÉƒQ[ƒvƒ‚ÌThink()
+		* @brief ç¾åœ¨ã®çŠ¶æ…‹ã«åˆã‚ã›ã¦å…¥åŠ›ã‚’å—ã‘ä»˜ã‘ã‚‹
+		* @note è¦ã™ã‚‹ã«ã‚²ãƒ¼ãƒ—ãƒ­ã®Think()
 		*/
 		void tryAction()
 		{
@@ -269,8 +269,8 @@ namespace ECS {
 			}
 		}
 		/**
-		* @briefó‘Ô‚ğ•ÏX‚·‚é
-		* @param state •ÏX‚·‚éó‘Ô
+		* @briefçŠ¶æ…‹ã‚’å¤‰æ›´ã™ã‚‹
+		* @param state å¤‰æ›´ã™ã‚‹çŠ¶æ…‹
 		*/
 		void changeState(PlayerState::State state)
 		{

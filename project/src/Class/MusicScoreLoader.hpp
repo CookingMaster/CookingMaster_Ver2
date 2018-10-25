@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file MusicScoreLoader.hpp
-* @brief ƒm[ƒc‚ÌoŒ»ƒ^ƒCƒ~ƒ“ƒO‚âƒf[ƒ^‚ğ“Ç‚İ‚İAŠO•”‚É’ñ‹Ÿ‚·‚é
+* @brief ãƒãƒ¼ãƒ„ã®å‡ºç¾ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‚„ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿ã€å¤–éƒ¨ã«æä¾›ã™ã‚‹
 * @author feveleK5563
 * @date 2018/10/11
 */
@@ -13,7 +13,7 @@
 #include "ResourceManager.hpp"
 
 //-----------------------------------------------------------------------------
-//“Ç‚İ‚İ&’ñ‹Ÿ‚­‚ñ
+//èª­ã¿è¾¼ã¿&æä¾›ãã‚“
 class MusicScoreLoader
 {
 private:
@@ -24,22 +24,22 @@ private:
 
 public:
 	/**
-	* @brief •ˆ–Êƒf[ƒ^‚ğ“Ç‚İ‚Ş
-	* @param musicScoreDataPath •ˆ–Êî•ñƒtƒ@ƒCƒ‹‚Ö‚ÌƒpƒX
+	* @brief è­œé¢ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€
+	* @param musicScoreDataPath è­œé¢æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‘ã‚¹
 	*/
 	void loadMusicScoreData(const std::string& musicScoreDataPath)
 	{
-		std::string tmpstr;	//•¶š—ñ‚ğˆê“I‚ÉŠi”[‚·‚é‚½‚ß‚Ì‚â‚Â
+		std::string tmpstr;	//æ–‡å­—åˆ—ã‚’ä¸€æ™‚çš„ã«æ ¼ç´ã™ã‚‹ãŸã‚ã®ã‚„ã¤
 		std::ifstream fin(musicScoreDataPath);
 		assert(fin && "ScoreDataFile was not found!");
 
-		//BPM“Ç‚İ‚İ
+		//BPMèª­ã¿è¾¼ã¿
 		fin >> tmpstr >> bpm_;
 
-		//OffsetTime“Ç‚İ‚İ
+		//OffsetTimeèª­ã¿è¾¼ã¿
 		fin >> tmpstr >> offsetTime_;
 
-		//NotesData“Ç‚İ‚İ
+		//NotesDataèª­ã¿è¾¼ã¿
 		addRestNotes();
 		while (std::getline(fin, tmpstr))
 		{
@@ -48,7 +48,7 @@ public:
 			loadNotesData(tmpstr);
 		}
 
-		//•ˆ–Ê“Ç‚İ‚İ
+		//è­œé¢èª­ã¿è¾¼ã¿
 		addRestScoreData();
 		while(std::getline(fin, tmpstr))
 		{
@@ -60,7 +60,7 @@ public:
 	}
 
 	/**
-	* @brief ‘S‚Ä‚Ìƒf[ƒ^‚ğíœ‚·‚é
+	* @brief å…¨ã¦ã®ãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ã™ã‚‹
 	*/
 	void allDataClear()
 	{
@@ -80,7 +80,7 @@ public:
 	}
 
 	/**
-	* @brief BPM‚ğæ“¾‚·‚é
+	* @brief BPMã‚’å–å¾—ã™ã‚‹
 	* @return int BPM
 	*/
 	[[nodiscard]]int GetBPM()
@@ -88,24 +88,24 @@ public:
 		return bpm_;
 	}
 	/**
-	* @brief ƒIƒtƒZƒbƒg‚Ì’l(ƒtƒŒ[ƒ€)‚ğæ“¾‚·‚é
-	* @return float ƒIƒtƒZƒbƒgŠÔ
+	* @brief ã‚ªãƒ•ã‚»ãƒƒãƒˆã®å€¤(ãƒ•ãƒ¬ãƒ¼ãƒ )ã‚’å–å¾—ã™ã‚‹
+	* @return float ã‚ªãƒ•ã‚»ãƒƒãƒˆæ™‚é–“
 	*/
 	[[nodiscard]]int GetOffsetTime()
 	{
 		return offsetTime_;
 	}
 	/**
-	* @brief g—p‚·‚éƒm[ƒc‚Ìƒf[ƒ^‚ğæ“¾‚·‚é
-	* @return const std::vector<NotesData>& g—p‚·‚éƒm[ƒc‚Ìƒf[ƒ^
+	* @brief ä½¿ç”¨ã™ã‚‹ãƒãƒ¼ãƒ„ã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
+	* @return const std::vector<NotesData>& ä½¿ç”¨ã™ã‚‹ãƒãƒ¼ãƒ„ã®ãƒ‡ãƒ¼ã‚¿
 	*/
 	[[nodiscard]]const std::vector<NotesData>& GetNotesData()
 	{
 		return notesData_;
 	}
 	/**
-	* @brief •ˆ–Êƒf[ƒ^‚ğæ“¾‚·‚é
-	* @return const ScoreData& •ˆ–Êƒf[ƒ^
+	* @brief è­œé¢ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
+	* @return const ScoreData& è­œé¢ãƒ‡ãƒ¼ã‚¿
 	*/
 	[[nodiscard]]const ScoreData& GetScoreData()
 	{
@@ -113,7 +113,7 @@ public:
 	}
 
 private:
-	//‹x•„‚Ìƒm[ƒcƒf[ƒ^‚ğ’Ç‰Á‚·‚é
+	//ä¼‘ç¬¦ã®ãƒãƒ¼ãƒ„ãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹
 	void addRestNotes()
 	{
 		notesData_.emplace_back();
@@ -128,7 +128,7 @@ private:
 		notesData_.shrink_to_fit();
 	}
 
-	//ƒm[ƒcƒf[ƒ^‚ğ“Ç‚İ‚Ş
+	//ãƒãƒ¼ãƒ„ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€
 	void loadNotesData(const std::string& note)
 	{
 		std::stringstream ss;
@@ -150,14 +150,14 @@ private:
 			>> notesData_.back().hitJudge[3];
 		notesData_.shrink_to_fit();
 
-		//ƒŠƒ\[ƒX‚Ì“Ç‚İ‚İ
+		//ãƒªã‚½ãƒ¼ã‚¹ã®èª­ã¿è¾¼ã¿
 		ResourceManager::GetGraph().load(notesData_.back().imagePath, notesData_.back().imageName);	//Image
 		//SE
 
 		fin.close();
 	}
 
-	//‘S‹x•„‚Ì‚İ‚Ì¬ß‚ğ•ˆ–Êƒf[ƒ^‚É’Ç‰Á‚·‚é
+	//å…¨ä¼‘ç¬¦ã®ã¿ã®å°ç¯€ã‚’è­œé¢ãƒ‡ãƒ¼ã‚¿ã«è¿½åŠ ã™ã‚‹
 	void addRestScoreData()
 	{
 		scoreData_.emplace_back();
@@ -167,7 +167,7 @@ private:
 		scoreData_.back().back() = {0, OneNoteData::Direction::LEFT};
 	}
 
-	//•ˆ–Êƒf[ƒ^‚ğ’Ç‰Á‚·‚é
+	//è­œé¢ãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹
 	void addScoreData(const std::string& score)
 	{
 		std::stringstream ss;
@@ -180,8 +180,8 @@ private:
 		while (true)
 		{
 			idstr.emplace_back();
-			ss >> idstr.back();	//•¶š—ñ‚ğæ“¾
-			if (idstr.back() == ",") break;	//ƒRƒƒ“‚ª‚ ‚Á‚½‚çŸ‚Ö
+			ss >> idstr.back();	//æ–‡å­—åˆ—ã‚’å–å¾—
+			if (idstr.back() == ",") break;	//ã‚³ãƒ­ãƒ³ãŒã‚ã£ãŸã‚‰æ¬¡ã¸
 		}
 		idstr.pop_back();
 		scoreData_.back().resize(idstr.size());
@@ -191,9 +191,9 @@ private:
 		{
 			id = std::stoi(idstr[i]);
 
-			scoreData_.back()[i].notesID = abs(id);	//æ“¾‚µ‚½ƒm[ƒc”Ô†‚ğ‘ã“ü
-			if (id > 0) scoreData_.back()[i].dir = OneNoteData::Direction::RIGHT;	//³‚Ì”‚¾‚Á‚½‚ç‰E‚©‚ç
-			else scoreData_.back()[i].dir = OneNoteData::Direction::LEFT;			//•‰‚Ì”‚¾‚Á‚½‚ç¶‚©‚ç
+			scoreData_.back()[i].notesID = abs(id);	//å–å¾—ã—ãŸãƒãƒ¼ãƒ„ç•ªå·ã‚’ä»£å…¥
+			if (id > 0) scoreData_.back()[i].dir = OneNoteData::Direction::RIGHT;	//æ­£ã®æ•°ã ã£ãŸã‚‰å³ã‹ã‚‰
+			else scoreData_.back()[i].dir = OneNoteData::Direction::LEFT;			//è² ã®æ•°ã ã£ãŸã‚‰å·¦ã‹ã‚‰
 		}
 	}
 };

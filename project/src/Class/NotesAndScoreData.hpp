@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file MusicScoreLoader.hpp
-* @brief ƒm[ƒcE•ˆ–Ê‚ÉŠÖ‚·‚é\‘¢‘Ì
+* @brief ãƒãƒ¼ãƒ„ãƒ»è­œé¢ã«é–¢ã™ã‚‹æ§‹é€ ä½“
 * @author feveleK5563
 * @date 2018/10/12
 */
@@ -9,22 +9,22 @@
 #include <string>
 #include <vector>
 
-//ƒm[ƒc‚Ég—p‚³‚ê‚éŠeíƒf[ƒ^
+//ãƒãƒ¼ãƒ„ã«ä½¿ç”¨ã•ã‚Œã‚‹å„ç¨®ãƒ‡ãƒ¼ã‚¿
 struct NotesData
 {
-	std::string imagePath;	//‰æ‘œ‚Ö‚ÌƒpƒX
-	std::string imageName;	//g—p‚·‚é‰æ‘œ–¼
-	std::string seName;		//Ø‚Á‚½‚ÌŒø‰Ê‰¹–¼
-	int arrivalBeatTime;	//ƒ}[ƒJ[‚Ö‚Ì“’B””
-	float hitJudge[4];		//ÚG”»’èŠÔ(MISS‚ğœ‚­•]‰¿4’iŠK•ª)
+	std::string imagePath;	//ç”»åƒã¸ã®ãƒ‘ã‚¹
+	std::string imageName;	//ä½¿ç”¨ã™ã‚‹ç”»åƒå
+	std::string seName;		//åˆ‡ã£ãŸæ™‚ã®åŠ¹æœéŸ³å
+	int arrivalBeatTime;	//ãƒãƒ¼ã‚«ãƒ¼ã¸ã®åˆ°é”æ‹æ•°
+	float hitJudge[4];		//æ¥è§¦åˆ¤å®šæ™‚é–“(MISSã‚’é™¤ãè©•ä¾¡4æ®µéšåˆ†)
 };
 
-//ˆê‚Â‚Ì‰¹•„‚Ìƒf[ƒ^
+//ä¸€ã¤ã®éŸ³ç¬¦ã®ãƒ‡ãƒ¼ã‚¿
 struct OneNoteData
 {
-	int notesID;								//ƒm[ƒc‚Ì”Ô†
-	enum class Direction { LEFT, RIGHT } dir;	//”ò‚ñ‚Å‚­‚é•ûŒü
+	int notesID;								//ãƒãƒ¼ãƒ„ã®ç•ªå·
+	enum class Direction { LEFT, RIGHT } dir;	//é£›ã‚“ã§ãã‚‹æ–¹å‘
 };
 
-//•ˆ–Êƒf[ƒ^
+//è­œé¢ãƒ‡ãƒ¼ã‚¿
 typedef std::vector<std::vector<OneNoteData>> ScoreData;
