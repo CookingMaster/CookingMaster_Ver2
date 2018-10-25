@@ -1,6 +1,6 @@
 ﻿/**
 * @file NotesArcheType.hpp
-* @brief �m�[�c�̌��^�𐶐�����
+* @brief ノーツの原型を生成する
 * @author feveleK5563
 * @date 2018/10/12
 */
@@ -9,26 +9,26 @@
 #include "../GameController/GameController.h"
 #include "../Components/Renderer.hpp"
 #include "../Components/ReplayPhysics.hpp"
+#include "../Components/Animator.hpp"
 #include "../Class/NotesAndScoreData.hpp"
 
 namespace ECS
 {
 	struct NotesArcheType
 	{
-		//�m�[�c�𐶐�
-		static Entity* CreateNotes(const NotesData& notesData, const ECS::Direction::Dir& dir, float wait, float arrivalBeatTime, int imgSize, float targetPosX, EntityManager& entityManager_)
+		static Entity* CreateNotes(const NotesData& notesData, const ECS::Direction::Dir& dir, float wait, float arrivalBeatTime, float targetPosX, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 
 			float posX;
 			if (dir == ECS::Direction::Dir::L)
 			{
-				posX = -float(imgSize / 2);
+				posX = notesData.xsize / -2.f;
 				entity->addComponent<Transform>().setPosition(posX, float(System::SCREEN_HEIGHT) / 2.f);
 			}
 			else
 			{
-				posX = float(System::SCREEN_WIDIH + imgSize / 2);
+				posX = System::SCREEN_WIDIH + (notesData.xsize / 2.f);
 				entity->addComponent<Transform>().setPosition(posX, float(System::SCREEN_HEIGHT) / 2.f);
 			}
 			float grav = 0.5f;
@@ -40,8 +40,11 @@ namespace ECS
 			entity->addComponent<Physics>();
 
 			entity->addComponent<Color>();
-
-			entity->addComponent<SpriteDraw>(notesData.imageName.c_str());
+			
+			entity->addComponent<SpriteAnimationDraw>(notesData.imageName.c_str()).setPivot(
+				Vec2(notesData.xsize / 2, notesData.ysize / 2));
+			entity->addComponent<AnimatorByFrame>(notesData.animFlame).setSpriteNum(
+				0, 0, notesData.xnum, notesData.ynum);
 
 			entity->addComponent<KillEntity>(int(arrivalBeatTime));
 			entity->addComponent<ReplayPhysics>(int(wait));

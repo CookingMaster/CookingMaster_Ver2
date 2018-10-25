@@ -154,7 +154,15 @@ private:
 		notesData_.shrink_to_fit();
 
 		//リソースの読み込み
-		ResourceManager::GetGraph().load(notesData_.back().imagePath, notesData_.back().imageName);	//Image
+		//Image
+		ResourceManager::GetGraph().loadDiv(
+			notesData_.back().imagePath,
+			notesData_.back().imageName,
+			notesData_.back().xnum * notesData_.back().ynum,
+			notesData_.back().xnum,
+			notesData_.back().ynum,
+			notesData_.back().xsize,
+			notesData_.back().ysize);
 		//SE
 
 		fin.close();
@@ -193,32 +201,32 @@ private:
 		{
 			char tmpid = idstr[i][0];
 
-			//ID�ɕt�����Ă���A���t�@�x�b�g����m�[�c�̎�ނ�擾
+			//ノーツに付属するアルファベットからノーツの種類を決める
 			switch (tmpid)
 			{
-			case 'L':	//��
+			case 'L':	//左
 				scoreData_.back()[i].dir = ECS::Direction::Dir::L;
 				break;
 
-			case 'R':	//�E	
+			case 'R':	//右
 				scoreData_.back()[i].dir = ECS::Direction::Dir::R;
 				break;
 
-			case 'U':	//��
+			case 'U':	//上
 				scoreData_.back()[i].dir = ECS::Direction::Dir::U;
 				break;
 
-			case 'D':	//��
+			case 'D':	//下
 				scoreData_.back()[i].dir = ECS::Direction::Dir::D;
 				break;
 
-			default:	//ID��'0'��������~�X���Ă��ꍇ�͋x���Ƃ���
+			default:	//数字が'0'だった場合や、間違っていた場合は休符として扱う
 				scoreData_.back()[i].dir = ECS::Direction::Dir::L;
 				scoreData_.back()[i].notesID = 0;
 				continue;
 			}
 
-			//�擾�����m�[�c�ԍ�����
+			//ノーツの番号を取得
 			scoreData_.back()[i].notesID = int(idstr[i][1] - '0');
 		}
 	}

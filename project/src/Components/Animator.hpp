@@ -132,13 +132,13 @@ namespace ECS {
 			if (++counter_ >= frame_)
 			{
 				++indexX_;
-				if (indexX_ > maxXnum_)		//
+				if (indexX_ >= maxXnum_)		//
 				{
 					indexX_ = xmin_;
 					if (maxYnum_ > 1)
 					{
 						++indexY_;
-						if (indexY_ > maxYnum_)
+						if (indexY_ >= maxYnum_)
 						{
 							indexY_ = ymin_;
 						}

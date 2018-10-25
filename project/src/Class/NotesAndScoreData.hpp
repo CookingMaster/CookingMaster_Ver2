@@ -13,24 +13,24 @@
 //ノーツに使用される各種データ
 struct NotesData
 {
-	std::string imagePath;	//�摜�ւ̃p�X
-	std::string imageName;	//�g�p����摜��
-	std::string seName;		//�؂������̌��ʉ���
-	int arrivalBeatTime;	//�}�[�J�[�ւ̓��B����
-	float hitJudge[4];		//�ڐG���莞��(MISS����]��4�i�K��)
+	std::string imagePath;	//画像のパス
+	std::string imageName;	//画像名
+	std::string seName;		//SE名
+	int arrivalBeatTime;	//ターゲットまでの到達時間
+	float hitJudge[4];		//判定時間
 	
-	int xsize;		//�摜��X�����̃T�C�Y
-	int ysize;		//�摜��Y�����̃T�C�Y
-	int animFlame;	//�A�j���[�V�����̃t���[����
-	int xnum;		//�A�j���[�V������X�����̖���
-	int ynum;		//�A�j���[�V������Y�����̖���
+	int xsize;		//画像のX方向のサイズ
+	int ysize;		//画像のY方向のサイズ
+	int animFlame;	//アニメーションのフレーム数
+	int xnum;		//アニメーションのX方向の枚数
+	int ynum;		//アニメーションのY方向の枚数
 };
 
 //一つの音符のデータ
 struct OneNoteData
 {
-	int notesID;				//�m�[�c�̔ԍ�
-	ECS::Direction::Dir dir;	//���ł������
+	int notesID;				//ノーツ番号
+	ECS::Direction::Dir dir;	//ノーツの向き
 };
 
 //譜面データ
