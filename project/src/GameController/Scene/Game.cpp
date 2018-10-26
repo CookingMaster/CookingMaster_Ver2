@@ -3,6 +3,7 @@
 #include "../../ArcheType/TestArcheType.hpp"
 #include "../../Input/Input.hpp"
 #include "../../Class/Sound.hpp"
+#include "../../ArcheType/UIArcheType.hpp"
 namespace Scene
 {
 	Game::Game(IOnSceneChangeCallback* sceneTitleChange, const Parameter& parame, ECS::EntityManager* entityManager)
@@ -41,14 +42,14 @@ namespace Scene
 		//プレイヤテスト
 		ECS::ArcheType::CreatePlayerEntity("chara", "BGM", Vec2{ 300, 100 }, 20, *entityManager_);
 		//バー
-		ECS::ArcheType::CreateEmptyBarUI("bar_empty", Vec2{ 431.f,44.f }, Vec2{ 300.f,300.f }, *entityManager_);
-		bar = ECS::ArcheType::CreateFullBarUI("bar_full", Vec2{ 424.f,38.f }, Vec2{ 300.f,300.f }, *entityManager_);
+		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2{ 431.f,44.f }, Vec2{ 300.f,300.f }, *entityManager_);
+		bar = ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2{ 424.f,38.f }, Vec2{ 300.f,300.f }, *entityManager_);
 		//時計
-		ECS::Entity* clock = ECS::ArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
+		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
 		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
-		needle = ECS::ArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 30.f);
-
+		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
 	}
+
 	void Game::update()
 	{
 		entityManager_->update();
