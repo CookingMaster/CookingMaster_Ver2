@@ -8,22 +8,30 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <array>
+#include "../Components/BasicComponents.hpp"
 
 //ノーツに使用される各種データ
 struct NotesData
 {
-	std::string imagePath;	//画像へのパス
-	std::string imageName;	//使用する画像名
-	std::string seName;		//切った時の効果音名
-	int arrivalBeatTime;	//マーカーへの到達拍数
-	float hitJudge[4];		//接触判定時間(MISSを除く評価4段階分)
+	std::string imagePath;	//画像のパス
+	std::string imageName;	//画像名
+	std::string seName;		//SE名
+	int arrivalBeatTime;	//ターゲットまでの到達時間
+	std::array<float, 4> hitJudge;		//判定時間
+	
+	int xsize;		//画像のX方向のサイズ
+	int ysize;		//画像のY方向のサイズ
+	int animFlame;	//アニメーションのフレーム数
+	int xnum;		//アニメーションのX方向の枚数
+	int ynum;		//アニメーションのY方向の枚数
 };
 
 //一つの音符のデータ
 struct OneNoteData
 {
-	int notesID;								//ノーツの番号
-	enum class Direction { LEFT, RIGHT } dir;	//飛んでくる方向
+	int notesID;				//ノーツ番号
+	ECS::Direction::Dir dir;	//ノーツの向き
 };
 
 //譜面データ

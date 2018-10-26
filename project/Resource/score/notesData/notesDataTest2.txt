@@ -1,8 +1,11 @@
 Resource/image/notesTestImg.png
 notesTest
 se.ogg
-1
+4
 0
 0
 0
 0
+64 64
+60
+2 1
