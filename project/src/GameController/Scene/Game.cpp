@@ -21,6 +21,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/clock.png", "clock");
 		ResourceManager::GetGraph().load("Resource/image/needle.png", "needle");
+		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "BGM", SoundType::BGM);
 		if (playerDetail.get<std::string>("名前") == "たかし")
 		{
@@ -50,9 +51,8 @@ namespace Scene
 		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
 		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
 		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
-
-
 		ECS::ScoreArcheType::CreateScore("font", Vec2{100,0},100,*entityManager);
+		font = ECS::UIArcheType::CreateFontUI("font", Vec2{25.f, 45.f}, Vec2{ 450.f,350.f }, *entityManager_);
 	}
 
 	void Game::update()
@@ -66,7 +66,12 @@ namespace Scene
 
 		if (Input::Get().getKeyFrame(KEY_INPUT_V) == 1)
 		{
-			bar->getComponent<ECS::BarComponentSystemX>().addScore(30);
+			bar->getComponent<ECS::BarComponentSystemX>().addScore(100);
+		}
+		//フォント
+		{
+			int num = bar->getComponent<ECS::BarComponentSystemX>().getScore();
+			font->getComponent<ECS::DrawFont>().setNumber(num);
 		}
 		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
 	}

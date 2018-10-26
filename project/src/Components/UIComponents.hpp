@@ -234,6 +234,10 @@ namespace ECS
 			atScore_ = score_;
 			score_ += score;
 		}
+		int getScore()
+		{
+			return score_;
+		}
 	};
 
 	/*
@@ -286,14 +290,31 @@ namespace ECS
 	class DrawFont final : public ComponentSystem
 	{
 	private:
+		Position* pos_;
 		Rectangle* rectangle_;
+		SpriteRectDraw* rectDraw_;
 		
 		int rectW_;
 		int num_;
-		int srcX_;
+		int posX_;
+		
+		int font_[4];
+		
+		void setRect()
+		{
+			for (int i = 0; i < 4; ++i) 
+			{
+				if ((i == 0 && num_ < 100) || i == 1 && num_ < 10) 
+				{
+					continue;
+				}
+				rectangle_->x = font_[i] * rectW_;
+				pos_->val.x = posX_ + (i * rectW_);
+				rectDraw_->draw2D();
+			}
+		}
 
 	public:
-
 		DrawFont(int rect_w, int num)
 		{
 			rectW_ = rect_w;
@@ -302,15 +323,28 @@ namespace ECS
 
 		void initialize() override
 		{
+			pos_ = &entity->getComponent<Position>();
 			rectangle_ = &entity->getComponent<Rectangle>();
+			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
 
-			srcX_ = rectW_ * num_;
+			posX_ = pos_->val.x;
+			rectangle_->x = rectW_ * num_;
+			rectangle_->w = rectW_;
 		}
 
 		void update() override
 		{
-			rectangle_->x = srcX_;
-			rectangle_->w = rectW_;
+			rectangle_->x = rectW_ * num_;
+			setRect();
+		}
+
+		void setNumber(int num)
+		{
+			num_ = num;
+			font_[3] = 10;
+			font_[2] = num % 10;
+			font_[1] = num % 100 / 10;
+			font_[0] = num / 100;
 		}
 	};
 

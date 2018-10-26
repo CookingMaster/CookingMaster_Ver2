@@ -22,6 +22,7 @@ namespace Scene
 		NotesCreator nc;
 		ECS::Entity* bar;
 		ECS::Entity* needle;
+		ECS::Entity* font;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, const Parameter& parame, ECS::EntityManager* entityManager);
 		~Game();
