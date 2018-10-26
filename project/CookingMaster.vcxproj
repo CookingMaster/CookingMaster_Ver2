@@ -39,6 +39,7 @@
     <ClInclude Include="src\Components\Animator.hpp" />
     <ClInclude Include="src\Components\BasicComponents.hpp" />
     <ClInclude Include="src\Components\Collider.hpp" />
+    <ClInclude Include="src\Components\NoteStateTransition.hpp" />
     <ClInclude Include="src\Components\PlayerController.hpp" />
     <ClInclude Include="src\Components\RankingSystem.hpp" />
     <ClInclude Include="src\Components\Renderer.hpp" />

@@ -121,9 +121,9 @@ private:
 		notesData_.back().imageName = "rest";
 		notesData_.back().seName = "rest";
 		notesData_.back().arrivalBeatTime = 0;
-		for (int i = 0; i < 4; ++i)
+		for (auto& it : notesData_.back().hitJudge)
 		{
-			notesData_.back().hitJudge[i] = 0.f;
+			it = 0.f;
 		}
 		notesData_.shrink_to_fit();
 	}
@@ -144,14 +144,25 @@ private:
 			>> notesData_.back().imageName
 			>> notesData_.back().seName
 			>> notesData_.back().arrivalBeatTime
-			>> notesData_.back().hitJudge[0]
-			>> notesData_.back().hitJudge[1]
-			>> notesData_.back().hitJudge[2]
-			>> notesData_.back().hitJudge[3];
+			>> notesData_.back().hitJudge[0]	//BAD
+			>> notesData_.back().hitJudge[1]	//GOOD
+			>> notesData_.back().hitJudge[2]	//GREAT
+			>> notesData_.back().hitJudge[3]	//PARFECT
+			>> notesData_.back().xsize >> notesData_.back().ysize
+			>> notesData_.back().animFlame
+			>> notesData_.back().xnum >> notesData_.back().ynum;
 		notesData_.shrink_to_fit();
 
 		//リソースの読み込み
-		ResourceManager::GetGraph().load(notesData_.back().imagePath, notesData_.back().imageName);	//Image
+		//Image
+		ResourceManager::GetGraph().loadDiv(
+			notesData_.back().imagePath,
+			notesData_.back().imageName,
+			notesData_.back().xnum * notesData_.back().ynum,
+			notesData_.back().xnum,
+			notesData_.back().ynum,
+			notesData_.back().xsize,
+			notesData_.back().ysize);
 		//SE
 
 		fin.close();
@@ -164,7 +175,7 @@ private:
 		scoreData_.shrink_to_fit();
 
 		scoreData_.back().resize(1);
-		scoreData_.back().back() = {0, OneNoteData::Direction::LEFT};
+		scoreData_.back().back() = {0, ECS::Direction::Dir::L};
 	}
 
 	//譜面データを追加する
@@ -186,14 +197,37 @@ private:
 		idstr.pop_back();
 		scoreData_.back().resize(idstr.size());
 
-		int id;
 		for (unsigned int i = 0; i < idstr.size(); ++i)
 		{
-			id = std::stoi(idstr[i]);
+			char tmpid = idstr[i][0];
 
-			scoreData_.back()[i].notesID = abs(id);	//取得したノーツ番号を代入
-			if (id > 0) scoreData_.back()[i].dir = OneNoteData::Direction::RIGHT;	//正の数だったら右から
-			else scoreData_.back()[i].dir = OneNoteData::Direction::LEFT;			//負の数だったら左から
+			//ノーツに付属するアルファベットからノーツの種類を決める
+			switch (tmpid)
+			{
+			case 'L':	//左
+				scoreData_.back()[i].dir = ECS::Direction::Dir::L;
+				break;
+
+			case 'R':	//右
+				scoreData_.back()[i].dir = ECS::Direction::Dir::R;
+				break;
+
+			case 'U':	//上
+				scoreData_.back()[i].dir = ECS::Direction::Dir::U;
+				break;
+
+			case 'D':	//下
+				scoreData_.back()[i].dir = ECS::Direction::Dir::D;
+				break;
+
+			default:	//数字が'0'だった場合や、間違っていた場合は休符として扱う
+				scoreData_.back()[i].dir = ECS::Direction::Dir::L;
+				scoreData_.back()[i].notesID = 0;
+				continue;
+			}
+
+			//ノーツの番号を取得
+			scoreData_.back()[i].notesID = int(idstr[i][1] - '0');
 		}
 	}
 };
