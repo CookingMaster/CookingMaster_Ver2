@@ -112,7 +112,8 @@
     <ClInclude Include="src\ArcheType\UIArcheType.hpp">
       <Filter>src\ArcheType</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\RankingSystem.hpp">
+    <ClInclude Include="src\Components\NoteStateTransition.hpp" />
+    <ClInclude Include="src\Components\ScoreSystem.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\ArcheType\ScoreArcheType.hpp">

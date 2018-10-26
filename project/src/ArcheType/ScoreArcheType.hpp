@@ -9,13 +9,14 @@
 #include "../GameController/GameController.h"
 #include "../Components/Renderer.hpp"
 #include "../Components/UIComponents.hpp"
-#include "../Components/RankingSystem.hpp"
+#include "../Components/ScoreSystem.hpp"
 
 namespace ECS
 {
 	struct ScoreArcheType
 	{
-		static Entity* CreateScore(const char* grapName, const Vec2& pos, const int score, EntityManager& entityManager_)
+		//!リザルト画面で得点を表示するためのエンティティです。生成時にハイスコアを保存します
+		static Entity* CreateScoreEntity(const char* grapName, const Vec2& pos, const StageHighScore& stageName, const int score, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -23,10 +24,11 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(0,0,0,45);
 			entity->addComponent<ScoreData>(score);
-			entity->addComponent<RankingSystem>();
-			entity->addComponent<SpriteRectDraw>(grapName);
+			entity->addComponent<ScoreSystem>(stageName);
+			entity->addComponent<ResultEffect>();
+			entity->addComponent<SpriteRectDraw>(grapName).setPivot(Vec2{12.5f,22.5f});
 			entity->addComponent<DrawFont>(25,0).setNumber(score);
-			entity->addGroup(ENTITY_GROUP::LAYER1);
+			entity->addGroup(ENTITY_GROUP::FADE);
 			return entity;
 		}
 	};
