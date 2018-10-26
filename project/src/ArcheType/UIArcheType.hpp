@@ -73,8 +73,8 @@ namespace ECS
 			entity->addComponent<SpriteRectDraw>(graphicName);
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			entity->addComponent<DrawFont>(rect.x, 0);
+			entity->addComponent<ExpandReduceComponentSystem>(0.f, 0.f);
 			return entity;
 		}
-
 	};
 }
