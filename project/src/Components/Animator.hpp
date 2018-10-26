@@ -101,7 +101,7 @@ namespace ECS {
 	};
 
 	/*!
-	@brief 指定フレーム毎にアニメーションする描画機能です。画像の中心が基準です
+	@brief 画像の横一列をアニメーションさせる描画機能です。
 	* - SpriteAnimationDrawが必要です。
 	*/
 	class AnimatorByFrame final : public ComponentSystem
@@ -116,11 +116,13 @@ namespace ECS {
 		int ymin_ = 0;		//!描画する画像のY方向のインデックスの最小
 		int maxXnum_ = 0;	//!描画する画像のX方向の枚数
 		int maxYnum_ = 0;	//!描画する画像のY方向の枚数
+		bool isEndStopAnim_;	//!アニメーションが一巡したら停止するか否か
 	public:
-		//!曲名とBPMを指定して初期化します
+		//!アニメーションの遷移フレーム数を設定する
 		AnimatorByFrame(const int frame)
 			:
-			frame_(frame)
+			frame_(frame),
+			isEndStopAnim_(false)
 		{}
 		void initialize() override
 		{
@@ -132,16 +134,15 @@ namespace ECS {
 			if (++counter_ >= frame_)
 			{
 				++indexX_;
-				if (indexX_ > maxXnum_)		//
+				if (indexX_ >= maxXnum_)
 				{
-					indexX_ = xmin_;
-					if (maxYnum_ > 1)
+					if (isEndStopAnim_)
 					{
-						++indexY_;
-						if (indexY_ > maxYnum_)
-						{
-							indexY_ = ymin_;
-						}
+						--indexX_;
+					}
+					else
+					{
+						indexX_ = xmin_;
 					}
 				}
 			}
@@ -164,6 +165,27 @@ namespace ECS {
 			indexY_ = ymin;
 			maxXnum_ = xnum;
 			maxYnum_ = ynum;
+		}
+
+		/**
+		* @brief 現在のインデックスを指定値に設定する
+		* @param indexY 設定するインデックス値
+		* -
+		*/
+		void setIndex(int indexX, int indexY)
+		{
+			indexX_ = indexX;
+			indexY_ = indexY;
+		}
+
+		/**
+		* @brief アニメーションが一巡したら停止するか否かを設定する
+		* @param isEndStopAnim アニメーションを停止するか否か
+		* -
+		*/
+		void setIsEndStopAnim(bool isEndStopAnim)
+		{
+			isEndStopAnim_ = isEndStopAnim;
 		}
 	};
 }
