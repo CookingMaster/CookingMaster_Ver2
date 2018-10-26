@@ -19,12 +19,6 @@
     <ClInclude Include="src\Collision\Collision.hpp">
       <Filter>src\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\BasicComponents.hpp">
-      <Filter>src\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\Collider.hpp">
-      <Filter>src\Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\ECS.hpp">
       <Filter>src\ECS</Filter>
     </ClInclude>
@@ -55,9 +49,6 @@
     <ClInclude Include="src\Input\Input.hpp">
       <Filter>src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Renderer.hpp">
-      <Filter>src\Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\System\System.hpp">
       <Filter>src\System</Filter>
     </ClInclude>
@@ -82,9 +73,6 @@
     <ClInclude Include="src\GameController\Scene\Parameter.hpp">
       <Filter>src\GameController\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\UIComponents.hpp">
-      <Filter>src\Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\Class\MusicScoreLoader.hpp">
       <Filter>src\Class</Filter>
     </ClInclude>
@@ -100,17 +88,32 @@
     <ClInclude Include="src\Utility\CalcurationBeat.hpp">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\ReplayPhysics.hpp">
-      <Filter>src\Components</Filter>
+    <ClInclude Include="src\ArcheType\UIArcheType.hpp">
+      <Filter>src\ArcheType</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Animator.hpp">
+    <ClInclude Include="src\Components\Collider.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\PlayerController.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\ArcheType\UIArcheType.hpp">
-      <Filter>src\ArcheType</Filter>
+    <ClInclude Include="src\Components\Renderer.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\ReplayPhysics.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\UIComponents.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Animator.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\BasicComponents.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\NoteStateTransition.hpp">
+      <Filter>src\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -122,9 +125,6 @@
     </Filter>
     <Filter Include="src\Class">
       <UniqueIdentifier>{caf1bb25-97b3-4e71-9f84-4a724b7c5c2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Components">
-      <UniqueIdentifier>{2639e889-fa43-480f-9538-3defb631a90a}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Collision">
       <UniqueIdentifier>{52c2041c-70b1-4e13-8c85-f8d585d13fad}</UniqueIdentifier>
@@ -146,6 +146,9 @@
     </Filter>
     <Filter Include="src\GameController\Scene">
       <UniqueIdentifier>{3ddaa9fc-d561-4af4-a0fc-f1621d5f01de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Components">
+      <UniqueIdentifier>{37f85e85-5938-4a2a-aa96-4138ba49eafc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -146,7 +146,7 @@ namespace ECS {
 					}
 				}
 			}
-			animation_->setIndex(indexX_ * (indexY_ + 1));
+			animation_->setIndex(indexX_ + (indexY_ + maxXnum_));
 		}
 		/**
 		* @brief アニメーションのインデックス情報を設定する
@@ -176,6 +176,7 @@ namespace ECS {
 		{
 			indexX_ = indexX;
 			indexY_ = indexY;
+			counter_.reset();
 		}
 
 		/**

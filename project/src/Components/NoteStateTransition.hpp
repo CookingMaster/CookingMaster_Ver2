@@ -9,6 +9,7 @@
 #include <array>
 #include "../ECS/ECS.hpp"
 #include "Animator.hpp"
+#include "../Utility/Counter.hpp"
 
 namespace ECS
 {
@@ -40,6 +41,8 @@ namespace ECS
 		NoteState* noteState_;
 		AnimatorByFrame* animator_;
 		std::array<float, 9> hitTimeLine_;
+		Counter transCounter_;
+		Counter_f flameCounter_;
 
 	public:
 		NoteStateTransition(std::array<float, 4> hitJudge, float arrivalBeatTime)
@@ -51,6 +54,7 @@ namespace ECS
 			NON → BAD → GOOD → GREAT → PARFECT → GREAT → GOOD → BAD → NON → MISSED という風に遷移する
 			BADの時に入力があるとGRAZEDへ移行する
 			GOOD,GREAT,PARFECTの時に入力があるとHITTEDへ移行する
+			以下の羅列は各判定開始時間の計算
 			*/
 			hitTimeLine_[0] = arrivalBeatTime - (hitJudge[3] / 2.f) - hitJudge[2] - hitJudge[1] - hitJudge[0];
 			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge[0];
@@ -62,7 +66,58 @@ namespace ECS
 			hitTimeLine_[7] = hitTimeLine_[6] + hitJudge[0];
 			hitTimeLine_[8] = arrivalBeatTime * 2.f;
 
+			//ミリ秒をフレームに変換
+			for (auto& it : hitTimeLine_)
+			{
+				it = millisecondToFlame(it);
+			}
+
 			noteState_->val = NoteState::State::NON;
+		}
+
+		void update() override
+		{
+			if (int(flameCounter_.getCurrentCount()) > hitTimeLine_[transCounter_.getCurrentCount()])
+			{
+				transition();
+			}
+			++flameCounter_;
+		}
+
+	private:
+		//ミリ秒をフレーム数に変換
+		float millisecondToFlame(float ms)
+		{
+			return ms * (60.f / 1000.f);
+		}
+
+		//状態を遷移させる
+		void transition()
+		{
+			switch (transCounter_.getCurrentCount())
+			{
+			case 0:	noteState_->val = NoteState::State::BAD;		break;
+			case 1:	noteState_->val = NoteState::State::GOOD;		break;
+			case 2:	noteState_->val = NoteState::State::GREAT;		break;
+			case 3:	noteState_->val = NoteState::State::PARFECT;	break;
+			case 4:	noteState_->val = NoteState::State::GREAT;		break;
+			case 5:	noteState_->val = NoteState::State::GOOD;		break;
+			case 6:	noteState_->val = NoteState::State::BAD;		break;
+			case 7:	noteState_->val = NoteState::State::NON;		break;
+			case 8:	noteState_->val = NoteState::State::MISSED;		break;
+			default: return;
+			}
+			++transCounter_;
+		}
+
+		//現在の状態から動作を行う
+		void move()
+		{
+			switch (noteState_->val)
+			{
+			case NoteState::State::BAD:
+				break;
+			}
 		}
 	};
 }
