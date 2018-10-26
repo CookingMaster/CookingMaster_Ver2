@@ -17,13 +17,22 @@ GameController::GameController()
 	sceneStack.push(std::make_unique<Scene::Title >(this, param, &entityManager_));	//タイトルシーンを作成し、プッシュ
 }
 
-void GameController::onSceneChange(const Scene::SceneName& scene, const Parameter* parame, const Scene::StackPopFlag stackClear)
+void GameController::onSceneChange(const Scene::SceneName& scene, const Parameter* parame, const Scene::StackPopFlag stackClearFlag)
 {
-
-	if (stackClear == Scene::StackPopFlag::POP || scene == Scene::SceneName::BACK_TO_SCENE)
+	switch (stackClearFlag)
 	{
-		sceneStack.pop();
+	case Scene::StackPopFlag::NON:
+		break;
+	case Scene::StackPopFlag::POP:
 		DOUT << "poped the scene stack" << std::endl;
+		sceneStack.pop();
+		break;
+	case Scene::StackPopFlag::ALL_CLEAR:
+		DOUT << "poped the scene stack all" << std::endl;
+		stackClear();
+		break;
+	default:
+		break;
 	}
 	switch (scene)
 	{

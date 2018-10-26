@@ -109,8 +109,8 @@
     <ClInclude Include="src\Components\PlayerController.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\NoteStateTransition.hpp">
-      <Filter>src\Components</Filter>
+    <ClInclude Include="src\ArcheType\UIArcheType.hpp">
+      <Filter>src\ArcheType</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
