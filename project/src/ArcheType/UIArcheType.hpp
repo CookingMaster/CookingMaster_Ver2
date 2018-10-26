@@ -14,7 +14,7 @@ namespace ECS
 {
 	struct UIArcheType
 	{
-		//!バー
+		//!バー(スコア)
 		static Entity* CreateEmptyBarUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -26,7 +26,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
-		//!バー
+		//!バー（スコア）
 		static Entity* CreateFullBarUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -60,6 +60,20 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			entity->addComponent<TimerNeedleMove>(speed);
 			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2{ 7.f,48.f });
+			return entity;
+		}
+		//!フォント
+		static Entity* CreateFontUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			entity->addComponent<DrawFont>(rect.x, 0);
+			entity->addComponent<ExpandReduceComponentSystem>(0.f, 0.f);
 			return entity;
 		}
 	};
