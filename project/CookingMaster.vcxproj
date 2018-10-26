@@ -27,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ArcheType\NotesArcheType.hpp" />
+    <ClInclude Include="src\ArcheType\ScoreArcheType.hpp" />
     <ClInclude Include="src\ArcheType\TestArcheType.hpp" />
     <ClInclude Include="src\ArcheType\UIArcheType.hpp" />
     <ClInclude Include="src\Class\MusicScoreLoader.hpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="src\Components\Collider.hpp" />
     <ClInclude Include="src\Components\NoteStateTransition.hpp" />
     <ClInclude Include="src\Components\PlayerController.hpp" />
+    <ClInclude Include="src\Components\ScoreSystem.hpp" />
     <ClInclude Include="src\Components\Renderer.hpp" />
     <ClInclude Include="src\Components\ReplayPhysics.hpp" />
     <ClInclude Include="src\Components\UIComponents.hpp" />
