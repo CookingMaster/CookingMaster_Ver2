@@ -4,6 +4,7 @@
 #include "../../Input/Input.hpp"
 #include "../../Class/Sound.hpp"
 #include "../../ArcheType/UIArcheType.hpp"
+#include "../../ArcheType/ScoreArcheType.hpp"
 namespace Scene
 {
 	Game::Game(IOnSceneChangeCallback* sceneTitleChange, const Parameter& parame, ECS::EntityManager* entityManager)
@@ -17,6 +18,7 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/Chara_Test.png", "chara", 18, 6, 3, 64, 64);
 		ResourceManager::GetGraph().load("Resource/image/bar_empty.png", "bar_empty");
 		ResourceManager::GetGraph().load("Resource/image/bar_full.png", "bar_full");
+		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/clock.png", "clock");
 		ResourceManager::GetGraph().load("Resource/image/needle.png", "needle");
 		ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "BGM", SoundType::BGM);
@@ -48,6 +50,9 @@ namespace Scene
 		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
 		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
 		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
+
+
+		ECS::ScoreArcheType::CreateScore("font", Vec2{100,0},100,*entityManager);
 	}
 
 	void Game::update()
