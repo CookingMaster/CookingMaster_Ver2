@@ -21,11 +21,11 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0,0,0,0);
+			entity->addComponent<Rectangle>(0,0,0,45);
 			entity->addComponent<ScoreData>(score);
 			entity->addComponent<RankingSystem>();
 			entity->addComponent<SpriteRectDraw>(grapName);
-			entity->addComponent<DrawFont>(25,0);
+			entity->addComponent<DrawFont>(25,0).setNumber(score);
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
