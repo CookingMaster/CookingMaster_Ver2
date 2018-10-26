@@ -8,6 +8,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <array>
 #include "../Components/BasicComponents.hpp"
 
 //ノーツに使用される各種データ
@@ -17,7 +18,7 @@ struct NotesData
 	std::string imageName;	//画像名
 	std::string seName;		//SE名
 	int arrivalBeatTime;	//ターゲットまでの到達時間
-	float hitJudge[4];		//判定時間
+	std::array<float, 4> hitJudge;		//判定時間
 	
 	int xsize;		//画像のX方向のサイズ
 	int ysize;		//画像のY方向のサイズ

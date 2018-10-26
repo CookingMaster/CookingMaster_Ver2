@@ -121,9 +121,9 @@ private:
 		notesData_.back().imageName = "rest";
 		notesData_.back().seName = "rest";
 		notesData_.back().arrivalBeatTime = 0;
-		for (int i = 0; i < 4; ++i)
+		for (auto& it : notesData_.back().hitJudge)
 		{
-			notesData_.back().hitJudge[i] = 0.f;
+			it = 0.f;
 		}
 		notesData_.shrink_to_fit();
 	}
@@ -144,10 +144,10 @@ private:
 			>> notesData_.back().imageName
 			>> notesData_.back().seName
 			>> notesData_.back().arrivalBeatTime
-			>> notesData_.back().hitJudge[0]
-			>> notesData_.back().hitJudge[1]
-			>> notesData_.back().hitJudge[2]
-			>> notesData_.back().hitJudge[3]
+			>> notesData_.back().hitJudge[0]	//BAD
+			>> notesData_.back().hitJudge[1]	//GOOD
+			>> notesData_.back().hitJudge[2]	//GREAT
+			>> notesData_.back().hitJudge[3]	//PARFECT
 			>> notesData_.back().xsize >> notesData_.back().ysize
 			>> notesData_.back().animFlame
 			>> notesData_.back().xnum >> notesData_.back().ynum;

@@ -109,6 +109,9 @@
     <ClInclude Include="src\Components\PlayerController.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\NoteStateTransition.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
