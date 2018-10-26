@@ -64,12 +64,12 @@ namespace Scene
 		if (Input::Get().getKeyFrame(KEY_INPUT_V) == 1)
 		{
 			bar->getComponent<ECS::BarComponentSystemX>().addScore(43);
+			font->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
 		}
 		//フォント
 		{
 			int num = bar->getComponent<ECS::BarComponentSystemX>().getScore();
 			font->getComponent<ECS::DrawFont>().setNumber(num);
-			//font->getComponent<ECS::ExpandReduceComponentSystem>().
 		}
 		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
 	}
