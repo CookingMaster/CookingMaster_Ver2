@@ -21,7 +21,7 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, rect.x, rect.y);
+			entity->addComponent<Rectangle>(0, 0, (int)rect.x, (int)rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
@@ -33,9 +33,9 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, 0, rect.y);
+			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
-			entity->addComponent<BarComponentSystemX>(rect.x, 0, 200);
+			entity->addComponent<BarComponentSystemX>((int)rect.x, 0, 200);
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
@@ -51,7 +51,7 @@ namespace ECS
 			return entity;
 		}
 		//!ŽžŒv‚Ìj
-		static Entity* CreateNeedleUI(const char* graphicName, const Vec2 pos, EntityManager& entityManager_, int speed)
+		static Entity* CreateNeedleUI(const char* graphicName, const Vec2 pos, EntityManager& entityManager_, float speed)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);

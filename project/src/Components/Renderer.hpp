@@ -421,7 +421,8 @@ namespace ECS
 			rota_ = &entity->getComponent<Rotation>();
 			scale_ = &entity->getComponent<Scale>();
 			GetGraphSize(ResourceManager::GetGraph().getHandle(name_), &size_.x, &size_.y);
-			pivot_ = size_ / 2;
+			pivot_.x = float(size_.x) / 2.f;
+			pivot_.y = float(size_.y) / 2.f;
 			RenderUtility::SatRenderDetail(entity, &color_, &blend_);
 		}
 		void draw2D() override
@@ -433,7 +434,8 @@ namespace ECS
 				RenderUtility::SetBlend(blend_);
 				if (isCenter_)
 				{
-					pivot_ = size_ / 2;
+					pivot_.x = float(size_.x) / 2.f;
+					pivot_.y = float(size_.y) / 2.f;
 				}
 				DrawRotaGraph3F(
 					pos_->val.x,
