@@ -330,6 +330,8 @@ namespace ECS
 			posX_ = pos_->val.x;
 			rectangle_->x = rectW_ * num_;
 			rectangle_->w = rectW_;
+			font_[3] = 10;
+			setRect();
 		}
 
 		void update() override

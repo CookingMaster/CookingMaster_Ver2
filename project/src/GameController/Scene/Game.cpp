@@ -50,8 +50,10 @@ namespace Scene
 		//時計
 		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
 		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
-		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
 		ECS::ScoreArcheType::CreateScore("font", Vec2{100,0},100,*entityManager);
+		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
+		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
+		clock->getComponent<ECS::SimpleDraw>().doCenter(true);        
 		font = ECS::UIArcheType::CreateFontUI("font", Vec2{25.f, 45.f}, Vec2{ 450.f,350.f }, *entityManager_);
 	}
 
@@ -66,12 +68,13 @@ namespace Scene
 
 		if (Input::Get().getKeyFrame(KEY_INPUT_V) == 1)
 		{
-			bar->getComponent<ECS::BarComponentSystemX>().addScore(100);
+			bar->getComponent<ECS::BarComponentSystemX>().addScore(43);
 		}
 		//フォント
 		{
 			int num = bar->getComponent<ECS::BarComponentSystemX>().getScore();
 			font->getComponent<ECS::DrawFont>().setNumber(num);
+			//font->getComponent<ECS::ExpandReduceComponentSystem>().
 		}
 		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
 	}
