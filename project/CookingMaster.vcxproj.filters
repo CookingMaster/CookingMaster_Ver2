@@ -115,6 +115,13 @@
     <ClInclude Include="src\Components\NoteStateTransition.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\NoteStateTransition.hpp" />
+    <ClInclude Include="src\Components\ScoreSystem.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ArcheType\ScoreArcheType.hpp">
+      <Filter>src\ArcheType</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

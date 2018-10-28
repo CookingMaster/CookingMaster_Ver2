@@ -300,7 +300,7 @@ namespace ECS
 		
 		int font_[4];
 		
-		void setRect()
+		void setRect(SpriteRectDraw* draw)
 		{
 			for (int i = 0; i < 4; ++i) 
 			{
@@ -309,8 +309,12 @@ namespace ECS
 					continue;
 				}
 				rectangle_->x = font_[i] * rectW_;
-				pos_->val.x = posX_ + (i * rectW_);
-				rectDraw_->draw2D();
+				pos_->val.x = posX_ + (i * rectW_) * entity->getComponent<Scale>().val.x;
+				if (draw != nullptr)
+				{
+					draw->draw2D();
+				}
+			
 			}
 		}
 
@@ -331,15 +335,18 @@ namespace ECS
 			rectangle_->x = rectW_ * num_;
 			rectangle_->w = rectW_;
 			font_[3] = 10;
-			setRect();
+			setRect(nullptr);
 		}
 
 		void update() override
 		{
-			rectangle_->x = rectW_ * num_;
-			setRect();
+			//rectangle_->x = rectW_ * num_;
+			setRect(nullptr);
 		}
-
+		void draw2D() override
+		{
+			setRect(rectDraw_);
+		}
 		void setNumber(int num)
 		{
 			num_ = num;
@@ -349,6 +356,5 @@ namespace ECS
 			font_[0] = num / 100;
 		}
 	};
-
 
 }
