@@ -49,7 +49,7 @@ namespace ECS
 			entity->addComponent<KillEntity>(int(arrivalBeatTime));
 			entity->addComponent<ReplayPhysics>(int(wait));
 
-			entity->addGroup(ENTITY_GROUP::LAYER1);
+			entity->addGroup(ENTITY_GROUP::NOTE);
 			return entity;
 		}
 	};

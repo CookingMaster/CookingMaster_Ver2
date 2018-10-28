@@ -84,6 +84,11 @@ namespace ECS
 			++flameCounter_;
 		}
 
+		NoteState::State getNoteState()
+		{
+			return noteState_->val;
+		}
+
 	private:
 		//ミリ秒をフレーム数に変換
 		float millisecondToFlame(float ms)
@@ -108,16 +113,6 @@ namespace ECS
 			default: return;
 			}
 			++transCounter_;
-		}
-
-		//現在の状態から動作を行う
-		void move()
-		{
-			switch (noteState_->val)
-			{
-			case NoteState::State::BAD:
-				break;
-			}
 		}
 	};
 }
