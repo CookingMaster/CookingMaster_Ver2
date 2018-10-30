@@ -77,16 +77,43 @@ namespace ECS
 			return entity;
 		}
 
-		static Entity* CreatePauseUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		static Entity* CreatePauseBG(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
-			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<SimpleDraw>(graphicName);
 			entity->addGroup(ENTITY_GROUP::LAYER1);
-			entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 0.1f);
+			return entity;
+		}
+
+		static Entity* CreatePauseUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Transform>().setScale(rect.x, rect.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(0, 0, 522, 255);
+			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 261.f,128.f });
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 0.05f);
+			return entity;
+		}
+
+		static Entity* CreateButtonUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Transform>().setScale(rect.x, rect.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(0, 0, rect.x, rect.y);
+			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{rect.x/2, rect.y/2});
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			entity->addComponent<ButtonCommponent>(0, 138);
+			entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 0.05f);
 			return entity;
 		}
 	};

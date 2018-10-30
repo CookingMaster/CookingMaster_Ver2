@@ -15,7 +15,9 @@ namespace Scene
 	class Pause : public AbstractScene
 	{
 	private:
-		ECS::EntityManager* entitytManager_;
+		ECS::EntityManager* entityManager_;
+		ECS::Entity* slide;
+		ECS::Entity* button;
 	public:
 		Pause(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]]const Parameter& parame, ECS::EntityManager* entityManager);
 		Pause() = default;

@@ -70,5 +70,17 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
+
+		//!ゲームBGエンティティテキスト
+		static Entity* CreateGameBG(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SimpleDraw>(graphicName);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
 	};
 }

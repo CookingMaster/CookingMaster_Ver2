@@ -30,21 +30,20 @@ namespace Scene
 		msl.loadMusicScoreData("Resource/score/musicScoreTest.txt");
 		nc.resetData(msl.GetBPM(), msl.GetOffsetTime());
 		s.play(false,false);
+		//背景
+		ECS::ArcheType::CreateGameBG("game_bg", Vec2{ 0.f,0.f }, *entityManager);
 		//プレイヤテスト
 		ECS::ArcheType::CreatePlayerEntity("chara", "BGM", Vec2{ 300, 100 }, 20, *entityManager_);
-		//バー
+		//スコアのバー
 		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2{ 431.f,44.f }, Vec2{ 300.f,300.f }, *entityManager_);
 		bar = ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2{ 424.f,38.f }, Vec2{ 300.f,300.f }, *entityManager_);
 		//時計
 		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
 		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
-
 		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
-		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
-		clock->getComponent<ECS::SimpleDraw>().doCenter(true);        
+		//スコアのフォント
 		font = ECS::UIArcheType::CreateFontUI("font", Vec2{25.f, 45.f}, Vec2{ 450.f,350.f }, *entityManager_);
 		ECS::ScoreArcheType::CreateScoreEntity("font", Vec2{ 200.f,300 }, ECS::StageHighScore::STAGE2, 100, *entityManager);
-		//pause = ECS::UIArcheType::CreatePauseUI("pause", Vec2)
 	}
 
 	void Game::update()

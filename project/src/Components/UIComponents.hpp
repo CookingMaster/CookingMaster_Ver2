@@ -194,6 +194,11 @@ namespace ECS
 			cnt_.add();
 			scale_->val = cnt_.getCurrentCount();
 		}
+
+		bool endFlag()
+		{
+			return cnt_.isMax();
+		}
 	};
 
 	/*
@@ -308,7 +313,7 @@ namespace ECS
 		
 		int rectW_;
 		int num_;
-		int posX_;
+		float posX_;
 		
 		int font_[4];
 		
@@ -366,6 +371,71 @@ namespace ECS
 			font_[2] = num % 10;
 			font_[1] = num % 100 / 10;
 			font_[0] = num / 100;
+		}
+	};
+
+	class ButtonCommponent final : public ComponentSystem
+	{
+	private:
+		Position* pos_;
+		Rectangle* rectangle_;
+		SpriteRectDraw* rectDraw_;
+
+		int select_;
+		bool button_[3];
+		float posX_;
+		int rectW_;
+
+		void setRect(SpriteRectDraw* draw)
+		{
+			for (int i = 0; i < std::size(button_); ++i)
+			{
+				//隙間をもってボタン三つを描く
+				//select_に当たっているボタンはrectが1個右に
+				pos_->val.x = posX_ + (i * rectW_ + i * 30) * entity->getComponent<Scale>().val.x;
+				if (draw != nullptr)
+				{
+					draw->draw2D();
+				}
+				if (select_ == i) {
+					rectangle_->x = rectW_;
+				}
+				else {
+					rectangle_->x = 0;
+				}
+			}
+		}
+	public:
+		ButtonCommponent(int select, int rect_w)
+		{
+			select_ = select;
+			rectW_ = rect_w;
+		}
+
+		void initialize() override
+		{
+			pos_ = &entity->getComponent<Position>();
+			rectangle_ = &entity->getComponent<Rectangle>();
+			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
+
+			posX_ = pos_->val.x;
+			rectangle_->w = rectW_;
+			setRect(nullptr);
+		}
+		void update() override
+		{
+			setRect(nullptr);
+		}
+		void draw2D() override
+		{
+			setRect(rectDraw_);
+		}
+		void setSelect(int num)
+		{
+			//方向によて1か-1を受ける
+			select_ = (select_ + num + 3) % 3;
+			//select_が0,1,2の中ひとつがなるように
+
 		}
 	};
 
