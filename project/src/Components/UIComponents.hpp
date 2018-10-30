@@ -160,6 +160,12 @@ namespace ECS
 		}
 	};
 
+	/**
+	*@brief 画像を拡大します
+	* @param magni_min_　始まる数値（1が元サイズ）
+	* @param magni_max_ 拡大する数値（1が元サイズ）
+	* @param speed 速さ（大きいほど速い）
+	*/
 	class ExpandComponentSystem final : public ComponentSystem
 	{
 	private:
@@ -170,12 +176,6 @@ namespace ECS
 		float magni_max_;
 		float speed_;
 	public:
-		/**
-		*@brief 画像を拡大します
-		* @param magni_min_　始まる数値（1が元サイズ）
-		* @param magni_max_ 拡大する数値（1が元サイズ）
-		* @param speed 速さ（大きいほど速い）
-		*/
 		ExpandComponentSystem(float magni_min, float magni_max, float speed)
 		{
 			magni_min_ = magni_min;
