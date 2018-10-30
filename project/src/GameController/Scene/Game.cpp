@@ -4,6 +4,7 @@
 #include "../../Input/Input.hpp"
 #include "../../Class/Sound.hpp"
 #include "../../ArcheType/UIArcheType.hpp"
+#include "../../ArcheType/ScoreArcheType.hpp"
 namespace Scene
 {
 	Game::Game(IOnSceneChangeCallback* sceneTitleChange, const Parameter& parame, ECS::EntityManager* entityManager)
@@ -17,25 +18,12 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/Chara_Test.png", "chara", 18, 6, 3, 64, 64);
 		ResourceManager::GetGraph().load("Resource/image/bar_empty.png", "bar_empty");
 		ResourceManager::GetGraph().load("Resource/image/bar_full.png", "bar_full");
+		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/clock.png", "clock");
 		ResourceManager::GetGraph().load("Resource/image/needle.png", "needle");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "BGM", SoundType::BGM);
-		if (playerDetail.get<std::string>("名前") == "たかし")
-		{
-			ECS::ArcheType::CreateTestEntity("test", Vec2{ 100.f,300.f }, *entityManager_);
-		}
-		if (playerDetail.get<std::string>("名前") == "まゆみ")
-		{
-			ECS::Entity* entity = ECS::ArcheType::CreateTestEntity("test", Vec2{ 100.f,300.f }, *entityManager_);
-			entity->getComponent<ECS::Color>().blue = 0;
-			entity->getComponent<ECS::Color>().green = 0;
-		}
-		if (playerDetail.get<std::string>("名前") == "みつひこ")
-		{
-			ECS::Entity* entity = ECS::ArcheType::CreateTestEntity("test", Vec2{ 100.f,300.f }, *entityManager_);
-			entity->getComponent<ECS::AlphaBlend>().blendMode = ECS::AlphaBlend::INVSRC;
-		}
+		
 		Sound s("BGM");
 		msl.loadMusicScoreData("Resource/score/musicScoreTest.txt");
 		nc.resetData(msl.GetBPM(), msl.GetOffsetTime());
@@ -47,9 +35,14 @@ namespace Scene
 		bar = ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2{ 424.f,38.f }, Vec2{ 300.f,300.f }, *entityManager_);
 		//時計
 		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
-		clock->getComponent<ECS::SimpleDraw>().doCenter(true);        
+		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
+
 		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
+		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
+		clock->getComponent<ECS::SimpleDraw>().doCenter(true);        
 		font = ECS::UIArcheType::CreateFontUI("font", Vec2{25.f, 45.f}, Vec2{ 450.f,350.f }, *entityManager_);
+
+		ECS::ScoreArcheType::CreateScoreEntity("font", Vec2{ 200.f,300 }, ECS::StageHighScore::STAGE2, 100, *entityManager);
 	}
 
 	void Game::update()
@@ -76,10 +69,8 @@ namespace Scene
 
 	void Game::draw()
 	{
-		SetDrawMode(DX_DRAWMODE_BILINEAR);
 		//グループ順に描画
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		SetDrawMode(DX_DRAWMODE_NEAREST);
 		DrawFormatString(0, 0, 0xffffffff, "ゲーム画面");
 		DrawFormatString(300, 50, 0xffffffff, "%s\n", playerDetail.get<std::string>("名前").c_str());
 	}
