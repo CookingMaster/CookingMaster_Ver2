@@ -11,7 +11,8 @@ namespace Scene
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
 	{
-		
+		if (parame != nullptr)
+			name = (parame->get<std::string>("名前"));
 	}
 	void Game::initialize()
 	{
@@ -49,7 +50,6 @@ namespace Scene
 		ECS::ScoreArcheType::CreateScoreEntity("font", Vec2{ 200.f,300 }, ECS::StageHighScore::STAGE2, 100, *entityManager_);
 		//pause = ECS::UIArcheType::CreatePauseUI("pause", Vec2)
 		ECS::ArcheType::CreateAA("bar_full", Vec2{0,0},*entityManager_);
-
 	}
 
 	void Game::update()
@@ -88,6 +88,7 @@ namespace Scene
 			//BGM止めること
 			return;
 		}
+		
 	}
 
 	void Game::draw()
@@ -95,6 +96,10 @@ namespace Scene
 		//グループ順に描画
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
 		DrawFormatString(0, 0, 0xffffffff, "ゲーム画面");
+		if (!name.empty())
+		{
+			DrawFormatString(0, 100, 0xffffffff, "%s", name.c_str());
+		}
 	}
 
 	Game::~Game()

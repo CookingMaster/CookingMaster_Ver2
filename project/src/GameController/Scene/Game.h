@@ -16,11 +16,11 @@ namespace Scene
 	class Game : public AbstractScene
 	{
 	private:
-		Parameter* playerDetail;
 		ECS::EntityManager* entityManager_;
 		MusicScoreLoader msl;
 		NotesCreator nc;
 		int num_;
+		std::string name;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();

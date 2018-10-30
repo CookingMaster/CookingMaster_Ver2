@@ -19,7 +19,7 @@ namespace Scene
 		{
 			auto playerDetail = std::make_unique<Parameter>();
 			playerDetail->add<std::string>("名前", "たかし");
-			getCallBack().onSceneChange(SceneName::GAME, playerDetail.get(), StackPopFlag::POP, false);
+			getCallBack().onSceneChange(SceneName::GAME, playerDetail.get(), StackPopFlag::POP, true);
 		}
 	}
 	void Title::draw()
