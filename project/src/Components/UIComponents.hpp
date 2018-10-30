@@ -105,6 +105,8 @@ namespace ECS
 
 	/*!
 	@brief 画像を拡大し、また元の画像に戻ります
+	* @param magni 倍率
+	* @param speed 速さ（大きいほど速い）、倍率で割れる数値ですること（0.1とか）　
 	*/
 	class ExpandReduceComponentSystem final : public ComponentSystem
 	{
@@ -114,18 +116,14 @@ namespace ECS
 
 		float magni_;
 		float speed_;
-		int frame_;
+		float frame_;
+		bool flag_;
 	public:
-		/**
-		*@brief 画像を拡大し、また縮小します
-		* @param magni 倍率
-		* @param speed 速さ（大きいほど速い）
-		*/
 		ExpandReduceComponentSystem(float magni, float speed)
 		{
 			magni_ = magni;
 			speed_ = speed;
-			frame_ = 0;
+			frame_ = 0.f;
 		}
 		
 		void initialize() override
@@ -133,18 +131,32 @@ namespace ECS
 			scale_ = &entity->getComponent<Scale>();
 			cnt_.SetCounter(1.f, speed_, 1.f, magni_);
 		}
+
 		void update() override
 		{
-			++frame_;
-			if (frame_ < magni_ / speed_)
-			{
-				cnt_.add();
+			frame_ = cnt_.getCurrentCount();
+			if (flag_ == true) {
+				if (frame_ < magni_ / speed_ && !cnt_.isMax())
+				{
+					cnt_.add();
+					frame_ = cnt_.getCurrentCount();
+				}
+				if (cnt_.isMax())
+				{
+					cnt_.sub();
+					frame_ = cnt_.getCurrentCount();
+					if (frame_ <= 1.f) {
+						flag_ = false;
+						cnt_.reset(1.f);
+					}
+				}
+				scale_->val = frame_;
 			}
-			if (cnt_.isMax())
-			{
-				cnt_.sub();
-			}
-			scale_->val = cnt_.getCurrentCount();
+		}
+		
+		void onExpand(bool flag)
+		{
+			flag_ = flag;
 		}
 	};
 
@@ -302,7 +314,7 @@ namespace ECS
 		
 		void setRect(SpriteRectDraw* draw)
 		{
-			for (int i = 0; i < 4; ++i) 
+			for (int i = 0; i < std::size(font_); ++i) 
 			{
 				if ((i == 0 && num_ < 100) || i == 1 && num_ < 10) 
 				{

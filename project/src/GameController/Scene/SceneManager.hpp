@@ -20,6 +20,8 @@ namespace Scene
 	{
 		TITLE,
 		GAME,
+		PAUSE,
+		RESULT,
 		BACK_TO_SCENE	//前のスタック(シーン)が残っていれば戻る
 	};
 

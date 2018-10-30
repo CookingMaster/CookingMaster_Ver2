@@ -4,6 +4,7 @@
 #include "../Input/Input.hpp"
 #include "Scene/Title.h"
 #include "Scene/Game.h"
+#include "Scene/Pause.h"
 void GameController::resourceLoad()
 {
 	
@@ -40,6 +41,12 @@ void GameController::onSceneChange(const Scene::SceneName& scene, const Paramete
 		sceneStack.push(std::make_unique<Scene::Title>(this, *parame, &entityManager_));
 		break;
 	case Scene::SceneName::GAME:
+		sceneStack.push(std::make_unique<Scene::Game>(this, *parame, &entityManager_));
+		break;
+	case Scene::SceneName::PAUSE:
+		sceneStack.push(std::make_unique<Scene::Pause>(this, *parame, &entityManager_));
+		break;
+	case Scene::SceneName::RESULT:
 		sceneStack.push(std::make_unique<Scene::Game>(this, *parame, &entityManager_));
 		break;
 	default:
