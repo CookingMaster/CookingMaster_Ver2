@@ -22,6 +22,7 @@
     <ClCompile Include="src\ECS\ECS.cpp" />
     <ClCompile Include="src\GameController\GameController.cpp" />
     <ClCompile Include="src\GameController\Scene\Game.cpp" />
+    <ClCompile Include="src\GameController\Scene\Pause.cpp" />
     <ClCompile Include="src\GameController\Scene\Title.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
@@ -50,6 +51,7 @@
     <ClInclude Include="src\GameController\GameMain.hpp" />
     <ClInclude Include="src\GameController\Scene\Game.h" />
     <ClInclude Include="src\GameController\Scene\Parameter.hpp" />
+    <ClInclude Include="src\GameController\Scene\Pause.h" />
     <ClInclude Include="src\GameController\Scene\SceneManager.hpp" />
     <ClInclude Include="src\GameController\Scene\Title.h" />
     <ClInclude Include="src\Input\Input.hpp" />

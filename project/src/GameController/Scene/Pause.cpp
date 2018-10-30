@@ -3,6 +3,7 @@
 #include "SceneManager.hpp"
 #include "../GameController.h"
 #include "../../System/System.hpp"
+#include "../../ArcheType/UIArcheType.hpp"
 
 
 namespace Scene
@@ -11,6 +12,8 @@ namespace Scene
 		: AbstractScene(scenePauseChange)
 		, entitytManager_(entityManager)
 	{
+		ResourceManager::GetGraph().load("Resource/image/pause_black.png", "pause_bg");
+		ResourceManager::GetGraph().load("Resource/image/pause.png", "pause");
 
 	}
 	void Pause::update()
@@ -20,9 +23,11 @@ namespace Scene
 			Parameter a;
 			a.add("non",true);
 			__super::getCallBack().onSceneChange(SceneName::GAME, &a, StackPopFlag::NON);
-			//BGMé~ÇﬂÇÈÇ±Ç∆
+			//BGMçƒäJÇ∑ÇÈÇ±Ç∆
 			return;
 		}
+
+
 	}
 	void Pause::draw()
 	{

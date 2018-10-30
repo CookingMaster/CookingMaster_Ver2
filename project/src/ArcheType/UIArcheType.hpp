@@ -86,7 +86,7 @@ namespace ECS
 			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
 			entity->addGroup(ENTITY_GROUP::LAYER1);
-			
+			entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 0.1f);
 			return entity;
 		}
 	};
