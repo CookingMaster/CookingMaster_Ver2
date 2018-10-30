@@ -10,25 +10,23 @@
 #include "../Scene/SceneManager.hpp"
 #include "../../Class/MusicScoreLoader.hpp"
 #include "../../Class/NotesCreator.hpp"
-
+#include "../src/ArcheType/UIArcheType.hpp"
 namespace Scene
 {
 	class Game : public AbstractScene
 	{
 	private:
-		Parameter playerDetail;
+		Parameter* playerDetail;
 		ECS::EntityManager* entityManager_;
 		MusicScoreLoader msl;
 		NotesCreator nc;
-		ECS::Entity* bar;
-		ECS::Entity* needle;
-		ECS::Entity* font;
-		ECS::Entity* pause;
+		int num_;
 	public:
-		Game(IOnSceneChangeCallback* sceneTitleChange, const Parameter& parame, ECS::EntityManager* entityManager);
+		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();
-		virtual void update() override;
-		virtual void draw() override;
+		void initialize() override;
+		void update() override;
+		void draw() override;
 	
 	};
 }

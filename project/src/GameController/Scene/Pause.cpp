@@ -8,7 +8,7 @@
 
 namespace Scene
 {
-	Pause::Pause(IOnSceneChangeCallback* scenePauseChange, [[maybe_unused]] const Parameter& parame, ECS::EntityManager* entityManager)
+	Pause::Pause(IOnSceneChangeCallback* scenePauseChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
 		: AbstractScene(scenePauseChange)
 		, entitytManager_(entityManager)
 	{
@@ -20,9 +20,7 @@ namespace Scene
 	{
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
-			Parameter a;
-			a.add("non",true);
-			__super::getCallBack().onSceneChange(SceneName::GAME, &a, StackPopFlag::NON);
+			__super::getCallBack().onSceneChange(SceneName::GAME, nullptr, StackPopFlag::NON, false);
 			//BGMçƒäJÇ∑ÇÈÇ±Ç∆
 			return;
 		}

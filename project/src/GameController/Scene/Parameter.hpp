@@ -36,6 +36,13 @@ public:
 		
 		return std::any_cast<ValueType>(it->second);
 	}
+	 /*!
+	* @brief 指定したキーが存在するか返します
+	*/
+	 [[nodiscard]] const bool isKey(const std::string& key) const
+	 {
+		 return  map.count(key);
+	 }
 private:
 	std::unordered_map<std::string, std::any> map;
 };

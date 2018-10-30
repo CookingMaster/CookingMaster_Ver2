@@ -17,10 +17,10 @@ namespace Scene
 	private:
 		ECS::EntityManager* entitytManager_;
 	public:
-		Pause(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]]const Parameter& parame, ECS::EntityManager* entityManager);
-		Pause() = default;
-		virtual void update() override;
-		virtual void draw() override;
+		Pause(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
+		void initialize() override {};
+		void update() override;
+		void draw() override;
 	};
 
 }
