@@ -15,6 +15,7 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/Act_Chara2.png", "test", 48, 6, 8, 64, 64);
 		ResourceManager::GetSound().load("Resource/sound/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
+		ResourceManager::GetGraph().load("Resource/image/1280.png", "game_bg");
 		ResourceManager::GetGraph().loadDiv("Resource/image/Chara_Test.png", "chara", 18, 6, 3, 64, 64);
 		ResourceManager::GetGraph().load("Resource/image/bar_empty.png", "bar_empty");
 		ResourceManager::GetGraph().load("Resource/image/bar_full.png", "bar_full");
@@ -22,6 +23,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/clock.png", "clock");
 		ResourceManager::GetGraph().load("Resource/image/needle.png", "needle");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
+		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
 		ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "BGM", SoundType::BGM);
 		
 		Sound s("BGM");
@@ -41,8 +43,8 @@ namespace Scene
 		needle = ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
 		clock->getComponent<ECS::SimpleDraw>().doCenter(true);        
 		font = ECS::UIArcheType::CreateFontUI("font", Vec2{25.f, 45.f}, Vec2{ 450.f,350.f }, *entityManager_);
-
 		ECS::ScoreArcheType::CreateScoreEntity("font", Vec2{ 200.f,300 }, ECS::StageHighScore::STAGE2, 100, *entityManager);
+		//pause = ECS::UIArcheType::CreatePauseUI("pause", Vec2)
 	}
 
 	void Game::update()
@@ -57,14 +59,21 @@ namespace Scene
 		if (Input::Get().getKeyFrame(KEY_INPUT_V) == 1)
 		{
 			bar->getComponent<ECS::BarComponentSystemX>().addScore(43);
+			font->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
 		}
-		//フォント
+		//スコアのフォント
 		{
 			int num = bar->getComponent<ECS::BarComponentSystemX>().getScore();
 			font->getComponent<ECS::DrawFont>().setNumber(num);
-			//font->getComponent<ECS::ExpandReduceComponentSystem>().
 		}
 		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
+
+		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
+		{
+			__super::getCallBack().onSceneChange(SceneName::PAUSE, nullptr, StackPopFlag::NON);
+			//BGM止めること
+			return;
+		}
 	}
 
 	void Game::draw()
@@ -72,7 +81,7 @@ namespace Scene
 		//グループ順に描画
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
 		DrawFormatString(0, 0, 0xffffffff, "ゲーム画面");
-		DrawFormatString(300, 50, 0xffffffff, "%s\n", playerDetail.get<std::string>("名前").c_str());
+	//	DrawFormatString(300, 50, 0xffffffff, "%s\n", playerDetail.get<std::string>("名前").c_str());
 	}
 
 	Game::~Game()

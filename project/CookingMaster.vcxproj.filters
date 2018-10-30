@@ -14,6 +14,9 @@
     <ClCompile Include="src\GameController\GameController.cpp">
       <Filter>src\GameController</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameController\Scene\Pause.cpp">
+      <Filter>src\GameController\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Collision\Collision.hpp">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="src\ArcheType\ScoreArcheType.hpp">
       <Filter>src\ArcheType</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameController\Scene\Pause.h">
+      <Filter>src\GameController\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -126,11 +126,11 @@ public:
 		now_ -= add_;
 	}
 	//!経過時間を0にし、フラグを再セットします
-	void reset() 
+	void reset(const T& resetNow = 0) 
 	{
 		isMax_ = false;
 		isMin_ = false;
-		now_ = 0;
+		now_ = resetNow;
 	}
 
 	//!現在のカウンターの値をミリ秒で返します
