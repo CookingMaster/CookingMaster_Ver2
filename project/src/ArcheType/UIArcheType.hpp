@@ -76,5 +76,18 @@ namespace ECS
 			entity->addComponent<ExpandReduceComponentSystem>(1.3f, 0.1f);
 			return entity;
 		}
+
+		static Entity* CreatePauseUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			
+			return entity;
+		}
 	};
 }
