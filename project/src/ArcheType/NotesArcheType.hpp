@@ -8,7 +8,7 @@
 #pragma once
 #include "../GameController/GameController.h"
 #include "../Components/Renderer.hpp"
-#include "../Components/ReplayPhysics.hpp"
+#include "../Components/ReplayNotesComponents.hpp"
 #include "../Components/Animator.hpp"
 #include "../Class/NotesAndScoreData.hpp"
 
@@ -38,18 +38,21 @@ namespace ECS
 			
 			entity->addComponent<Gravity>(grav);
 			entity->addComponent<Physics>();
-
-			entity->addComponent<Color>();
 			
 			entity->addComponent<SpriteAnimationDraw>(notesData.imageName.c_str()).setPivot(
-				Vec2(notesData.xsize / 2, notesData.ysize / 2));
+				Vec2(notesData.xsize / 2.f, notesData.ysize / 2.f));
 			entity->addComponent<AnimatorByFrame>(notesData.animFlame).setSpriteNum(
 				0, 0, notesData.xnum, notesData.ynum);
 
-			entity->addComponent<KillEntity>(int(arrivalBeatTime));
-			entity->addComponent<ReplayPhysics>(int(wait));
+			entity->addComponent<NoteState>();
+			entity->addComponent<NoteStateTransition>(notesData.hitJudge, arrivalBeatTime);
 
-			entity->addGroup(ENTITY_GROUP::LAYER1);
+			entity->addComponent<ReplayNotesComponents>(int(wait));
+
+			entity->addComponent<KillEntity>(30);
+			entity->stopComponent<KillEntity>();
+
+			entity->addGroup(ENTITY_GROUP::NOTE);
 			return entity;
 		}
 	};

@@ -5,6 +5,7 @@
 #include "../../Class/Sound.hpp"
 #include "../../ArcheType/UIArcheType.hpp"
 #include "../../ArcheType/ScoreArcheType.hpp"
+#include "../../Components/NoteStateTransition.hpp"
 namespace Scene
 {
 	Game::Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
@@ -54,6 +55,15 @@ namespace Scene
 
 	void Game::update()
 	{
+		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
+		{
+			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE))
+			{
+				
+			}
+		}
+
+
 		entityManager_->update();
 		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 		{

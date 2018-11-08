@@ -20,7 +20,7 @@ namespace Scene
 	{
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
-			__super::getCallBack().onSceneChange(SceneName::GAME, nullptr, StackPopFlag::NON, false);
+			__super::getCallBack().onSceneChange(SceneName::BACK_TO_SCENE, nullptr, StackPopFlag::POP, false);
 			//BGMçƒäJÇ∑ÇÈÇ±Ç∆
 			return;
 		}

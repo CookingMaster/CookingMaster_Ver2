@@ -45,7 +45,7 @@ namespace ECS
 	}
 
 	//!最大コンポーネント数。必要に応じて限界値は変える
-	constexpr std::size_t MaxComponents = 32;
+	constexpr std::size_t MaxComponents = 64;
 	//!最大グループ数。必要に応じて限界値は変える
 	constexpr std::size_t MaxGroups = 32;
 
