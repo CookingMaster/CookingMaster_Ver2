@@ -55,9 +55,6 @@ namespace Scene
 
 	void Game::update()
 	{
-		//死亡予定のノーツエンティティにKillEntityを追加する
-		ECS::NoteStateTransition::KillNotesEntity(entityManager_);
-
 		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
 		{
 			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE))

@@ -38,8 +38,6 @@ namespace ECS
 			
 			entity->addComponent<Gravity>(grav);
 			entity->addComponent<Physics>();
-
-			entity->addComponent<Color>();
 			
 			entity->addComponent<SpriteAnimationDraw>(notesData.imageName.c_str()).setPivot(
 				Vec2(notesData.xsize / 2.f, notesData.ysize / 2.f));
@@ -50,6 +48,9 @@ namespace ECS
 			entity->addComponent<NoteStateTransition>(notesData.hitJudge, arrivalBeatTime);
 
 			entity->addComponent<ReplayNotesComponents>(int(wait));
+
+			entity->addComponent<KillEntity>(30);
+			entity->stopComponent<KillEntity>();
 
 			entity->addGroup(ENTITY_GROUP::NOTE);
 			return entity;
