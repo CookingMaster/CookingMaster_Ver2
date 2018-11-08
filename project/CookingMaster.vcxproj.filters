@@ -125,6 +125,9 @@
     <ClInclude Include="src\GameController\Scene\Pause.h">
       <Filter>src\GameController\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\ReplayNotesComponents.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
