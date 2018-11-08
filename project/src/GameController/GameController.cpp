@@ -4,6 +4,7 @@
 #include "../Input/Input.hpp"
 #include "Scene/Title.h"
 #include "Scene/Game.h"
+#include "Scene/Pause.h"
 void GameController::resourceLoad()
 {
 	
@@ -14,10 +15,10 @@ GameController::GameController()
 	//最初に必要なリソースやEntityの生成、ロードを行う
 	resourceLoad();
 	//初期シーンの設定
-	sceneStack.push(std::make_unique<Scene::Title >(this, param, &entityManager_));	//タイトルシーンを作成し、プッシュ
+	sceneStack.push(std::make_unique<Scene::Title >(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
 }
 
-void GameController::onSceneChange(const Scene::SceneName& scene, const Parameter* parame, const Scene::StackPopFlag stackClearFlag)
+void GameController::onSceneChange(const Scene::SceneName& scene, Parameter* parame, const Scene::StackPopFlag stackClearFlag, const bool isInitialize)
 {
 	switch (stackClearFlag)
 	{
@@ -37,13 +38,24 @@ void GameController::onSceneChange(const Scene::SceneName& scene, const Paramete
 	switch (scene)
 	{
 	case Scene::SceneName::TITLE:
-		sceneStack.push(std::make_unique<Scene::Title>(this, *parame, &entityManager_));
+		sceneStack.push(std::make_unique<Scene::Title>(this, parame, &entityManager_));
 		break;
 	case Scene::SceneName::GAME:
-		sceneStack.push(std::make_unique<Scene::Game>(this, *parame, &entityManager_));
+		sceneStack.push(std::make_unique<Scene::Game>(this, parame, &entityManager_));
+		break;
+	case Scene::SceneName::PAUSE:
+		sceneStack.push(std::make_unique<Scene::Pause>(this, parame, &entityManager_));
+		break;
+	case Scene::SceneName::RESULT:
+		sceneStack.push(std::make_unique<Scene::Game>(this, parame, &entityManager_));
 		break;
 	default:
 		break;
+	}
+
+	if(isInitialize)	
+	{
+		sceneStack.top()->initialize();
 	}
 }
 

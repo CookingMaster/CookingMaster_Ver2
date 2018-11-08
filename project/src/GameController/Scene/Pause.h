@@ -1,8 +1,8 @@
-ï»¿/**
-* @file Title.hpp
-* @brief ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³ã§ã®å‹•ä½œã‚’è¨˜è¿°ã—ã¾ã™
-* @author 
-* @date 
+/**
+* @file Pause.hpp
+* @brief ƒ|[ƒYƒV[ƒ“‚Å‚Ì“®ì‚ğ‹Lq‚µ‚Ü‚·
+* @author
+* @date
 */
 #pragma once
 #include "../../ECS/ECS.hpp"
@@ -12,12 +12,12 @@
 
 namespace Scene
 {
-	class Title : public AbstractScene
+	class Pause : public AbstractScene
 	{
 	private:
 		ECS::EntityManager* entitytManager_;
 	public:
-		Title(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
+		Pause(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		void initialize() override {};
 		void update() override;
 		void draw() override;

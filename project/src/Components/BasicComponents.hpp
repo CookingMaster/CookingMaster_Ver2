@@ -269,4 +269,23 @@ namespace ECS
 			cnt_ = limit;
 		}
 	};
+
+	/*!
+	@brief このコンポーネントがついているEntityにイベント(関数)を追加し,マネージャーから呼び出せるようにします
+	* テンプレート引数   1戻り値,2タグとして扱う型(ただの識別子なので重複しなければなんでもよい、Defaultでvoid)
+	*/
+	template<class T, class Tag = void>
+	class EventFunctionSystem final : public ComponentSystem
+	{
+	private:
+		std::function<T(Entity*)> func_;
+	public:
+		EventFunctionSystem(std::function<T(Entity*)> addFunc) :func_(addFunc) {}
+
+		void update() override
+		{
+			func_(entity);
+		}
+
+	};
 }

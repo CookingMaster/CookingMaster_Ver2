@@ -20,6 +20,8 @@ namespace Scene
 	{
 		TITLE,
 		GAME,
+		PAUSE,
+		RESULT,
 		BACK_TO_SCENE	//前のスタック(シーン)が残っていれば戻る
 	};
 
@@ -45,7 +47,7 @@ namespace Scene
 		* @param parame 次のシーンに渡したい値。不要ならnullptrを指定します
 		* @param stackClear 現在のシーンのスタックをクリアするか
 		*/
-		virtual void onSceneChange(const SceneName& scene, const Parameter* parame, const StackPopFlag stackClear) = 0;
+		virtual void onSceneChange(const SceneName& scene, Parameter* parame, const StackPopFlag stackClear, const bool isInitialize) = 0;
 		//!スタックオールクリア
 		virtual void stackClear() = 0;
 	};
@@ -59,6 +61,7 @@ namespace Scene
 			callBack = sceneCallback;
 		}
 		virtual ~AbstractScene() = default;
+		virtual void initialize() = 0;
 		virtual void update() = 0;
 		virtual void draw() = 0;
 		IOnSceneChangeCallback& getCallBack() const { return *callBack; }
