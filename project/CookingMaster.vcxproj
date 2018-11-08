@@ -43,7 +43,7 @@
     <ClInclude Include="src\Components\PlayerController.hpp" />
     <ClInclude Include="src\Components\ScoreSystem.hpp" />
     <ClInclude Include="src\Components\Renderer.hpp" />
-    <ClInclude Include="src\Components\ReplayPhysics.hpp" />
+    <ClInclude Include="src\Components\ReplayNotesComponents.hpp" />
     <ClInclude Include="src\Components\UIComponents.hpp" />
     <ClInclude Include="src\ECS\ECS.hpp" />
     <ClInclude Include="src\GameController\GameController.h" />

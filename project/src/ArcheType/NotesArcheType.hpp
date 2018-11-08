@@ -8,7 +8,7 @@
 #pragma once
 #include "../GameController/GameController.h"
 #include "../Components/Renderer.hpp"
-#include "../Components/ReplayPhysics.hpp"
+#include "../Components/ReplayNotesComponents.hpp"
 #include "../Components/Animator.hpp"
 #include "../Class/NotesAndScoreData.hpp"
 
@@ -46,8 +46,10 @@ namespace ECS
 			entity->addComponent<AnimatorByFrame>(notesData.animFlame).setSpriteNum(
 				0, 0, notesData.xnum, notesData.ynum);
 
-			entity->addComponent<KillEntity>(int(arrivalBeatTime));
-			entity->addComponent<ReplayPhysics>(int(wait));
+			entity->addComponent<NoteState>();
+			entity->addComponent<NoteStateTransition>(notesData.hitJudge, arrivalBeatTime);
+
+			entity->addComponent<ReplayNotesComponents>(int(wait));
 
 			entity->addGroup(ENTITY_GROUP::NOTE);
 			return entity;

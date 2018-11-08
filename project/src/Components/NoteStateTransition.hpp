@@ -10,6 +10,8 @@
 #include "../ECS/ECS.hpp"
 #include "Animator.hpp"
 #include "../Utility/Counter.hpp"
+#include "BasicComponents.hpp"
+#include "../ECS/ECS.hpp"
 
 namespace ECS
 {
@@ -38,6 +40,9 @@ namespace ECS
 	class NoteStateTransition : public ComponentSystem
 	{
 	private:
+		std::array<float, 4> hitJudge_;
+		float arrivalBeatTime_;
+
 		NoteState* noteState_;
 		AnimatorByFrame* animator_;
 		std::array<float, 9> hitTimeLine_;
@@ -45,60 +50,109 @@ namespace ECS
 		Counter_f flameCounter_;
 
 	public:
-		NoteStateTransition(std::array<float, 4> hitJudge, float arrivalBeatTime)
+		NoteStateTransition(const std::array<float, 4>& hitJudge, float arrivalBeatTime) :
+			hitJudge_(hitJudge),
+			arrivalBeatTime_(arrivalBeatTime),
+			transCounter_(0, 9) {}
+
+		void initialize() override
 		{
 			noteState_ = &entity->getComponent<NoteState>();
 			animator_ = &entity->getComponent<AnimatorByFrame>();
 
-			/*
-			NON → BAD → GOOD → GREAT → PARFECT → GREAT → GOOD → BAD → NON → MISSED という風に遷移する
-			BADの時に入力があるとGRAZEDへ移行する
-			GOOD,GREAT,PARFECTの時に入力があるとHITTEDへ移行する
-			以下の羅列は各判定開始時間の計算
-			*/
-			hitTimeLine_[0] = arrivalBeatTime - (hitJudge[3] / 2.f) - hitJudge[2] - hitJudge[1] - hitJudge[0];
-			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge[0];
-			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge[1];
-			hitTimeLine_[3] = hitTimeLine_[2] + hitJudge[2];
-			hitTimeLine_[4] = hitTimeLine_[3] + hitJudge[3];
-			hitTimeLine_[5] = hitTimeLine_[4] + hitJudge[2];
-			hitTimeLine_[6] = hitTimeLine_[5] + hitJudge[1];
-			hitTimeLine_[7] = hitTimeLine_[6] + hitJudge[0];
-			hitTimeLine_[8] = arrivalBeatTime * 2.f;
 
 			//ミリ秒をフレームに変換
-			for (auto& it : hitTimeLine_)
+			for (auto& it : hitJudge_)
 			{
 				it = millisecondToFlame(it);
-			}
+			} 
+
+			/*NON → BAD → GOOD → GREAT → PARFECT → GREAT → GOOD → BAD → NON → MISSED という風に遷移する
+			BADの時に入力があるとGRAZEDへ移行する
+			GOOD,GREAT,PARFECTの時に入力があるとHITTEDへ移行する
+			以下の羅列は各判定開始時間の計算*/
+			hitTimeLine_[0] = arrivalBeatTime_ - ((hitJudge_[3] / 2.f) + hitJudge_[2] + hitJudge_[1] + hitJudge_[0]);
+			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge_[0];
+			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge_[1];
+			hitTimeLine_[3] = hitTimeLine_[2] + hitJudge_[2];
+			hitTimeLine_[4] = hitTimeLine_[3] + hitJudge_[3];
+			hitTimeLine_[5] = hitTimeLine_[4] + hitJudge_[2];
+			hitTimeLine_[6] = hitTimeLine_[5] + hitJudge_[1];
+			hitTimeLine_[7] = hitTimeLine_[6] + hitJudge_[0];
+			hitTimeLine_[8] = hitTimeLine_[7] + 10.f;
 
 			noteState_->val = NoteState::State::NON;
 		}
 
 		void update() override
 		{
-			if (int(flameCounter_.getCurrentCount()) > hitTimeLine_[transCounter_.getCurrentCount()])
+			if (transCounter_.isMax()) return;
+
+			if (flameCounter_.getCurrentCount() > hitTimeLine_[transCounter_.getCurrentCount()])
 			{
 				transition();
 			}
 			++flameCounter_;
 		}
 
-		NoteState::State getNoteState()
+		/**
+		* @brief 入力を受けた後のノーツの状態遷移を行う
+		* @return bool 判定が有効だったか否か(有効だったらtrueが返る)
+		*/
+		bool ActionToChangeNoteState()
+		{
+			switch (noteState_->val)
+			{
+			case NoteState::State::NON:
+			case NoteState::State::MISSED:
+			case NoteState::State::GRAZED:
+			case NoteState::State::HITTED:
+				return false;
+
+			case NoteState::State::BAD:
+				noteState_->val = NoteState::State::GRAZED;
+				break;
+
+			case NoteState::State::GOOD:
+			case NoteState::State::GREAT:
+			case NoteState::State::PARFECT:
+				noteState_->val = NoteState::State::HITTED;
+				break;
+			}
+			return true;
+		}
+
+		NoteState::State getNoteState() const
 		{
 			return noteState_->val;
+		}
+
+		static void KillNotesEntity(EntityManager* entityManager_)
+		{
+			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE))
+			{
+				if (it->getComponent<NoteStateTransition>().getNoteState() == NoteState::State::MISSED)
+				{
+					it->addComponent<KillEntity>(30);
+				}
+			}
 		}
 
 	private:
 		//ミリ秒をフレーム数に変換
 		float millisecondToFlame(float ms)
 		{
-			return ms * (60.f / 1000.f);
+			return (ms / 1000.f) * 60.f;
 		}
 
 		//状態を遷移させる
 		void transition()
 		{
+			if (noteState_->val == NoteState::State::MISSED ||
+				noteState_->val == NoteState::State::GRAZED ||
+				noteState_->val == NoteState::State::HITTED)
+				return;
+
 			switch (transCounter_.getCurrentCount())
 			{
 			case 0:	noteState_->val = NoteState::State::BAD;		break;
@@ -109,7 +163,10 @@ namespace ECS
 			case 5:	noteState_->val = NoteState::State::GOOD;		break;
 			case 6:	noteState_->val = NoteState::State::BAD;		break;
 			case 7:	noteState_->val = NoteState::State::NON;		break;
-			case 8:	noteState_->val = NoteState::State::MISSED;		break;
+			case 8:	noteState_->val = NoteState::State::MISSED;
+					/*animator_->setIndex(0, 1);*/ animator_->setIsEndStopAnim(true);
+					entity->stopComponent<Physics>();
+					break;
 			default: return;
 			}
 			++transCounter_;
