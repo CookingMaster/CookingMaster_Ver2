@@ -127,17 +127,6 @@ namespace ECS
 			return noteState_->val;
 		}
 
-		static void KillNotesEntity(EntityManager* entityManager_)
-		{
-			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE))
-			{
-				if (it->getComponent<NoteStateTransition>().getNoteState() == NoteState::State::MISSED)
-				{
-					it->addComponent<KillEntity>(30);
-				}
-			}
-		}
-
 	private:
 		//ƒ~ƒŠ•b‚ðƒtƒŒ[ƒ€”‚É•ÏŠ·
 		float millisecondToFlame(float ms)
@@ -166,6 +155,7 @@ namespace ECS
 			case 8:	noteState_->val = NoteState::State::MISSED;
 					/*animator_->setIndex(0, 1);*/ animator_->setIsEndStopAnim(true);
 					entity->stopComponent<Physics>();
+					entity->updateComponent<KillEntity>();
 					break;
 			default: return;
 			}
