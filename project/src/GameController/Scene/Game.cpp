@@ -97,6 +97,7 @@ namespace Scene
 		{
 			__super::getCallBack().onSceneChange(SceneName::PAUSE, nullptr, StackPopFlag::NON, true);
 			//BGM止めること
+			Sound("BGM").stop();
 			return;
 		}
 		

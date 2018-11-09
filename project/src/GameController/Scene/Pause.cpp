@@ -4,7 +4,7 @@
 #include "../GameController.h"
 #include "../../System/System.hpp"
 #include "../../ArcheType/UIArcheType.hpp"
-
+#include "../src/Class/Sound.hpp"
 
 namespace Scene
 {
@@ -25,11 +25,14 @@ namespace Scene
 	}
 	void Pause::update()
 	{
-		entityManager_->update();
+		//entityManager_->update();
+		button->update();
+		slide->update();
+		bg->update();
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
 			__super::getCallBack().onSceneChange(SceneName::BACK_TO_SCENE, nullptr, StackPopFlag::POP, false);
-			//
+			Sound("BGM").play(false,false);
 
 			return;
 		}
