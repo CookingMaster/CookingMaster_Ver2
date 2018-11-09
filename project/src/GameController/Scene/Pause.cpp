@@ -8,7 +8,7 @@
 
 namespace Scene
 {
-	Pause::Pause(IOnSceneChangeCallback* scenePauseChange, [[maybe_unused]] const Parameter& parame, ECS::EntityManager* entityManager)
+	Pause::Pause(IOnSceneChangeCallback* scenePauseChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
 		: AbstractScene(scenePauseChange)
 		, entityManager_(entityManager)
 	{
@@ -16,11 +16,11 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "slide");
 		ResourceManager::GetGraph().load("Resource/image/button.png", "button");
 
-		//”wŒi
+		//ï¿½wï¿½i
 		ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
-		//ƒ|[ƒYUI‚ÌƒXƒ‰ƒCƒh
+		//ï¿½|ï¿½[ï¿½YUIï¿½ÌƒXï¿½ï¿½ï¿½Cï¿½h
 		slide = ECS::UIArcheType::CreatePauseUI("slide", Vec2{ 522.f,255.f }, Vec2{ 640.f,360.f }, *entityManager);
-		//ƒ{ƒ^ƒ“
+		//ï¿½{ï¿½^ï¿½ï¿½
 		button = ECS::UIArcheType::CreateButtonUI("button", Vec2{ 138.f, 56.f }, Vec2{ 470.f, 430.f }, *entityManager);
 	}
 	void Pause::update()
@@ -28,14 +28,12 @@ namespace Scene
 		entityManager_->update();
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
-			Parameter param;
-			param.add("non",true);
-			__super::getCallBack().onSceneChange(SceneName::GAME, &param, StackPopFlag::NON);
-			//BGMÄŠJ‚·‚é‚±‚Æ
+			__super::getCallBack().onSceneChange(SceneName::BACK_TO_SCENE, nullptr, StackPopFlag::POP, false);
+			//BGMï¿½ÄŠJï¿½ï¿½ï¿½é‚±ï¿½ï¿½
 			return;
 		}
 
-		//Šg‘å‚ªI‚í‚Á‚½‚ç
+		//ï¿½gï¿½å‚ªï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (slide->getComponent<ECS::ExpandComponentSystem>().endFlag())
 		{
 			//ECS::UIArcheType::CreateButtonUI("continue", Vec2{138.f, 56.f}, Vec2{ 400.f, 400.f }, 0, *entityManager_);
@@ -52,7 +50,7 @@ namespace Scene
 	void Pause::draw()
 	{
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		DrawFormatString(0, 0, 0xffffffff, "PAUSE‰æ–Ê");
+		DrawFormatString(0, 0, 0xffffffff, "PAUSEï¿½ï¿½ï¿½");
 	}
 
 }

@@ -146,7 +146,7 @@ namespace ECS {
 					}
 				}
 			}
-			animation_->setIndex(indexX_ * (indexY_ + 1));
+			animation_->setIndex(indexX_ + (indexY_ * maxXnum_));
 		}
 		/**
 		* @brief アニメーションのインデックス情報を設定する
@@ -170,18 +170,17 @@ namespace ECS {
 		/**
 		* @brief 現在のインデックスを指定値に設定する
 		* @param indexY 設定するインデックス値
-		* -
 		*/
 		void setIndex(int indexX, int indexY)
 		{
 			indexX_ = indexX;
 			indexY_ = indexY;
+			counter_.reset();
 		}
 
 		/**
 		* @brief アニメーションが一巡したら停止するか否かを設定する
 		* @param isEndStopAnim アニメーションを停止するか否か
-		* -
 		*/
 		void setIsEndStopAnim(bool isEndStopAnim)
 		{
