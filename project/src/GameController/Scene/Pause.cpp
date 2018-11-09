@@ -16,11 +16,11 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "slide");
 		ResourceManager::GetGraph().load("Resource/image/button.png", "button");
 
-		//�w�i
-		ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
-		//�|�[�YUI�̃X���C�h
+		
+		bg = ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
+		
 		slide = ECS::UIArcheType::CreatePauseUI("slide", Vec2{ 522.f,255.f }, Vec2{ 640.f,360.f }, *entityManager);
-		//�{�^��
+		
 		button = ECS::UIArcheType::CreateButtonUI("button", Vec2{ 138.f, 56.f }, Vec2{ 470.f, 430.f }, *entityManager);
 	}
 	void Pause::update()
@@ -29,11 +29,12 @@ namespace Scene
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
 			__super::getCallBack().onSceneChange(SceneName::BACK_TO_SCENE, nullptr, StackPopFlag::POP, false);
-			//BGM�ĊJ���邱��
+			//
+
 			return;
 		}
 
-		//�g�傪�I�������
+		//
 		if (slide->getComponent<ECS::ExpandComponentSystem>().endFlag())
 		{
 			//ECS::UIArcheType::CreateButtonUI("continue", Vec2{138.f, 56.f}, Vec2{ 400.f, 400.f }, 0, *entityManager_);
@@ -50,7 +51,14 @@ namespace Scene
 	void Pause::draw()
 	{
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		DrawFormatString(0, 0, 0xffffffff, "PAUSE���");
+		DrawFormatString(0, 0, 0xffffffff, "PAUSE");
+	}
+
+	Pause::~Pause()
+	{
+		button->destroy();
+		slide->destroy();
+		bg->destroy();
 	}
 
 }

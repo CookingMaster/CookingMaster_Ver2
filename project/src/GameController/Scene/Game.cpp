@@ -36,7 +36,7 @@ namespace Scene
 		nc.resetData(msl.GetBPM(), msl.GetOffsetTime());
 		s.play(false,false);
 		//背景
-		ECS::ArcheType::CreateGameBG("game_bg", Vec2{ 0.f,0.f }, *entityManager);
+		ECS::ArcheType::CreateGameBG("game_bg", Vec2{ 0.f,0.f }, *entityManager_);
 		//プレイヤテスト
 		ECS::ArcheType::CreatePlayerEntity("chara", "BGM", Vec2{ 300, 100 }, 20, *entityManager_);
 		//スコアのバー
