@@ -60,7 +60,28 @@ namespace Scene
 		{
 			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE))
 			{
-				
+				auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
+				auto nowstate = itnotestate.getNoteState();
+
+				if (itnotestate.ActionToChangeNoteState())
+				{
+					switch (nowstate)
+					{
+					case ECS::NoteState::State::BAD:
+						DOUT << "BAD" << std::endl;
+						break;
+					case ECS::NoteState::State::GOOD:
+						DOUT << "GOOD" << std::endl;
+						break;
+					case ECS::NoteState::State::GREAT:
+						DOUT << "GREAT" << std::endl;
+						break;
+					case ECS::NoteState::State::PARFECT:
+						DOUT << "PARFECT" << std::endl;
+						break;
+					}
+					break;
+				}
 			}
 		}
 
