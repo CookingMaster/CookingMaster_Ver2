@@ -19,6 +19,12 @@ namespace Scene
 		ECS::Entity* slide;
 		ECS::Entity* button;
 		ECS::Entity* bg;
+		ECS::Entity* moji;
+
+		int const CONTINUE = 0;
+		int const RESTART = 1;
+		int const TITLE = 2;
+
 	public:
 		Pause(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		void initialize() override {};

@@ -15,6 +15,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/pause_black.png", "pause_bg");
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "slide");
 		ResourceManager::GetGraph().load("Resource/image/button.png", "button");
+		ResourceManager::GetGraph().load("Resource/image/pause_moji.png", "moji");
 
 		
 		bg = ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
@@ -22,6 +23,7 @@ namespace Scene
 		slide = ECS::UIArcheType::CreatePauseUI("slide", Vec2{ 522.f,255.f }, Vec2{ 640.f,360.f }, *entityManager);
 		
 		button = ECS::UIArcheType::CreateButtonUI("button", Vec2{ 138.f, 56.f }, Vec2{ 470.f, 430.f }, *entityManager);
+		moji = ECS::UIArcheType::CreateButtonMojiUI("moji", Vec2{ 109.f, 27.f }, Vec2{ 470.f, 430.f }, *entityManager);
 	}
 	void Pause::update()
 	{
@@ -32,7 +34,7 @@ namespace Scene
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
 			__super::getCallBack().onSceneChange(SceneName::BACK_TO_SCENE, nullptr, StackPopFlag::POP, false);
-			Sound("BGM").play(false,false);
+			Sound("BGM").play(false, false);
 
 			return;
 		}
@@ -49,7 +51,18 @@ namespace Scene
 		if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1) {
 			button->getComponent<ECS::ButtonCommponent>().setSelect(1);
 		}
-
+		if (Input::Get().getKeyFrame(KEY_INPUT_Z)) {
+			int select = button->getComponent<ECS::ButtonCommponent>().getSelect();
+			switch (select)
+			{
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			}
+		}
 	}
 	void Pause::draw()
 	{

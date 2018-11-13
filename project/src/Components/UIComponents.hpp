@@ -331,7 +331,6 @@ namespace ECS
 				{
 					draw->draw2D();
 				}
-			
 			}
 		}
 
@@ -395,6 +394,7 @@ namespace ECS
 				pos_->val.x = posX_ + (i * rectW_ + i * 30) * entity->getComponent<Scale>().val.x;
 				if (draw != nullptr)
 				{
+					//draw->setPivot(Vec2{ rectW_ / 2, 56 / 2 });
 					draw->draw2D();
 				}
 				if (select_ == i) {
@@ -435,8 +435,71 @@ namespace ECS
 			//方向によて1か-1を受ける
 			select_ = (select_ + num + 3) % 3;
 			//select_が0,1,2の中ひとつがなるように
-
 		}
+
+		int getSelect()
+		{
+			return select_;
+		}
+	};
+
+	class ButtonMojiCommponent  final : public ComponentSystem
+	{
+	private:
+		Position* pos_;
+		Rectangle* rectangle_;
+		SpriteRectDraw* rectDraw_;
+
+		int moji_[3];
+		float posX_;
+		int rectW_;
+		int rectH_;
+
+		void setRect(SpriteRectDraw* draw)
+		{
+			for (int i = 0; i < std::size(moji_); ++i)
+			{
+				//隙間をもってボタン三つを描く
+				//select_に当たっているボタンはrectが1個右に
+				pos_->val.x = posX_ + (i * rectW_ + i * 30) * entity->getComponent<Scale>().val.x;
+				if (draw != nullptr)
+				{
+					//draw->setPivot(Vec2{ rectW_ / 2, 56 / 2 });
+					draw->draw2D();
+				}
+			}
+		}
+	public:
+		ButtonMojiCommponent(int rect_w)
+		{
+			pos_ = &entity->getComponent<Position>();
+			rectangle_ = &entity->getComponent<Rectangle>();
+			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
+
+			posX_ = pos_->val.x;
+			rectW_ = rectangle_->w;
+			rectH_ = rectangle_->h;
+			setRect(nullptr);
+		}
+		void initialize() override
+		{
+			pos_ = &entity->getComponent<Position>();
+			rectangle_ = &entity->getComponent<Rectangle>();
+			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
+
+			posX_ = pos_->val.x;
+			rectangle_->w = rectW_;
+			setRect(nullptr);
+		}
+		void update() override
+		{
+			setRect(nullptr);
+		}
+		void draw2D() override
+		{
+			setRect(rectDraw_);
+		}
+
 	};
 
 }
