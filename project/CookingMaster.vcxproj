@@ -31,6 +31,7 @@
     <ClInclude Include="src\ArcheType\NotesArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ScoreArcheType.hpp" />
     <ClInclude Include="src\ArcheType\TestArcheType.hpp" />
+    <ClInclude Include="src\ArcheType\TitleUIArcheType.hpp" />
     <ClInclude Include="src\ArcheType\UIArcheType.hpp" />
     <ClInclude Include="src\Class\MusicScoreLoader.hpp" />
     <ClInclude Include="src\Class\NotesAndScoreData.hpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="src\Components\ScoreSystem.hpp" />
     <ClInclude Include="src\Components\Renderer.hpp" />
     <ClInclude Include="src\Components\ReplayNotesComponents.hpp" />
+    <ClInclude Include="src\Components\TitleUIComponents.hpp" />
     <ClInclude Include="src\Components\UIComponents.hpp" />
     <ClInclude Include="src\ECS\ECS.hpp" />
     <ClInclude Include="src\GameController\GameController.h" />
