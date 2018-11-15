@@ -187,7 +187,6 @@ namespace ECS {
 		}
 		void update() override
 		{
-			std::cout << (int)state_->val << std::endl;
 			tryAction();
 			actionByState();
 			
