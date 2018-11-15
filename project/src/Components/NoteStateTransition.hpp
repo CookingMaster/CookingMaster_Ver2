@@ -122,7 +122,8 @@ namespace ECS
 			return true;
 		}
 
-		NoteState::State getNoteState() const
+		//Œ»Ý‚Ìƒm[ƒc‚Ìó‘Ô‚ðŽæ“¾‚·‚é
+		[[nodiscard]]NoteState::State getNoteState() const
 		{
 			return noteState_->val;
 		}
