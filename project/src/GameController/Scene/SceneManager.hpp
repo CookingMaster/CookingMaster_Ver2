@@ -19,6 +19,7 @@ namespace Scene
 	enum class SceneName
 	{
 		TITLE,
+		SELECT,
 		GAME,
 		PAUSE,
 		RESULT,
