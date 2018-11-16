@@ -13,6 +13,10 @@ namespace Scene
 	{
 		
 	}
+	void Title::initialize()
+	{
+
+	}
 	void Title::update()
 	{
 		if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
