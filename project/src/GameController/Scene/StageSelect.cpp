@@ -9,7 +9,7 @@ namespace Scene
 		, entitytManager_(entityManager)
 	{
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
-		
+
 	}
 
 	void StageSelect::initialize()
@@ -21,9 +21,18 @@ namespace Scene
 		entitytManager_->update();
 		if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
 		{
-			auto playerDetail = std::make_unique<Parameter>();
-			playerDetail->add<std::string>("名前", "たかし");
-			getCallBack().onSceneChange(SceneName::GAME, playerDetail.get(), StackPopFlag::POP, true);
+			auto stage_name = std::make_unique<Parameter>();
+			stage_name->add<std::string>("BGM_name", "Stage1");
+			ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "Stage1", SoundType::BGM);
+			getCallBack().onSceneChange(SceneName::GAME, stage_name.get(), StackPopFlag::POP, true);
+			return;
+		}
+		if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+		{
+			auto stage_name = std::make_unique<Parameter>();
+			stage_name->add<std::string>("BGM_name", "Stage2");
+			ResourceManager::GetSound().load("Resource/sound/act_bgm.wav", "Stage2", SoundType::BGM);
+			ON_SCENE_CHANGE(SceneName::GAME, stage_name.get(), StackPopFlag::POP, true);
 		}
 		
 	}

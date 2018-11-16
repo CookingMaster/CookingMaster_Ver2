@@ -13,7 +13,6 @@
 #include "Scene/Parameter.hpp"
 #include <stack>
 #define ENTITY_GROUP (ECS::Group)GameController::GameGroup
-
 class GameController final : public Scene::IOnSceneChangeCallback
 {
 private:

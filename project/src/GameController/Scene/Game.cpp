@@ -13,7 +13,7 @@ namespace Scene
 		, entityManager_(entityManager)
 	{
 		if (parame != nullptr)
-			name = (parame->get<std::string>("名前"));
+			name = (parame->get<std::string>("BGM_name"));
 	}
 	void Game::initialize()
 	{
@@ -29,16 +29,16 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/needle.png", "needle");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
-		ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "BGM", SoundType::BGM);
+		
 
-		Sound s("BGM");
+		Sound s(name);
 		msl.loadMusicScoreData("Resource/score/musicScoreTest.txt");
 		nc.resetData(msl.GetBPM(), msl.GetOffsetTime());
 		s.play(false,false);
 		//背景
 		ECS::ArcheType::CreateGameBG("game_bg", Vec2{ 0.f,0.f }, *entityManager_);
 		//プレイヤテスト
-		ECS::ArcheType::CreatePlayerEntity("chara", "BGM", Vec2{ 300.f, 100.f }, 20, *entityManager_);
+		ECS::ArcheType::CreatePlayerEntity("chara", name.c_str(), Vec2{ 300.f, 100.f }, 20, *entityManager_);
 		//スコアのバー
 		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2{ 431.f,44.f }, Vec2{ 300.f,300.f }, *entityManager_);
 		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2{ 424.f,38.f }, Vec2{ 300.f,300.f }, *entityManager_);
@@ -116,10 +116,11 @@ namespace Scene
 
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
-			__super::getCallBack().onSceneChange(SceneName::PAUSE, nullptr, StackPopFlag::NON, true);
+			auto bgm_name = std::make_unique<Parameter>();
+			bgm_name->add<std::string>("BGM_name",name);
 			//BGM止めること
-			Sound("BGM").stop();
-			return;
+			Sound(name).stop();
+			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
 		}
 		
 	}
@@ -139,7 +140,7 @@ namespace Scene
 	{
 		ResourceManager::GetGraph().removeDivGraph("test");
 		ResourceManager::GetSound().remove("onion");
-		ResourceManager::GetSound().remove("BGM");
+		ResourceManager::GetSound().remove(name);
 		entityManager_->allDestory();
 	}
 	
