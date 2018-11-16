@@ -17,7 +17,7 @@ namespace Scene
 	{
 		if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
 		{
-			getCallBack().onSceneChange(SceneName::SELECT, nullptr, StackPopFlag::POP, true);
+			ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::POP, true);
 		}
 	}
 	void Title::draw()
