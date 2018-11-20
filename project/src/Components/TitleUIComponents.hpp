@@ -33,18 +33,19 @@ namespace ECS
 		{
 			if (bright_)
 			{
-				ease_.run(Easing::CircIn, 60.f);
+				ease_.run(Easing::CubicOut, 60.f);
 				alpha_->alpha = int(ease_.getVolume(150.f, 255.f));
 			}
 			else
 			{
-				ease_.run(Easing::CircOut, 60.f);
-				alpha_->alpha = int(ease_.getVolume(255.f, 150.f));
+				ease_.run(Easing::CubicIn, 60.f);
+				alpha_->alpha = int(ease_.getVolume(255.f, 150 - 255.f));
 			}
 
 			if (ease_.isEaseEnd())
 			{
 				bright_ = !bright_;
+				ease_.reset();
 			}
 		}
 	};
