@@ -17,6 +17,7 @@ GameController::GameController()
 	resourceLoad();
 	//初期シーンの設定
 	sceneStack.push(std::make_unique<Scene::Title >(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
+	sceneStack.top()->initialize();
 }
 
 void GameController::onSceneChange(const Scene::SceneName& scene, Parameter* parame, const Scene::StackPopFlag stackClearFlag, const bool isInitialize)
