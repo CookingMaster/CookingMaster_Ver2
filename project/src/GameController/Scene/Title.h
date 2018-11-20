@@ -18,7 +18,7 @@ namespace Scene
 		ECS::EntityManager* entitytManager_;
 	public:
 		Title(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
-		void initialize() override {};
+		void initialize() override;
 		void update() override;
 		void draw() override;
 	};
