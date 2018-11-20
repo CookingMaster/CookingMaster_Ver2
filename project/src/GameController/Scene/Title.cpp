@@ -32,4 +32,9 @@ namespace Scene
 		DrawFormatString(0, 0, 0xffffffff, "タイトル画面");
 	}
 
+	Title::~Title()
+	{
+		entityManager_->allDestory();
+		ResourceManager::GetSound().remove("pak");
+	}
 }
