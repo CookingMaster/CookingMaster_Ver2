@@ -134,6 +134,12 @@
     <ClInclude Include="src\GameController\Scene\StageSelect.h">
       <Filter>src\GameController\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\ArcheType\TitleUIArcheType.hpp">
+      <Filter>src\ArcheType</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\TitleUIComponents.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
