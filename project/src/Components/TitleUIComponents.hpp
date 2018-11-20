@@ -39,7 +39,7 @@ namespace ECS
 			else
 			{
 				ease_.run(Easing::CubicIn, 60.f);
-				alpha_->alpha = int(ease_.getVolume(255.f, 150 - 255.f));
+				alpha_->alpha = int(ease_.getVolume(255.f, 150.f));
 			}
 
 			if (ease_.isEaseEnd())
