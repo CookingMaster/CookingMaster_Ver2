@@ -16,7 +16,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "slide");
 		ResourceManager::GetGraph().load("Resource/image/button.png", "button");
 
-		
+		name = parame->get<std::string>("BGM_name");
 		bg = ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
 		
 		slide = ECS::UIArcheType::CreatePauseUI("slide", Vec2{ 522.f,255.f }, Vec2{ 640.f,360.f }, *entityManager);
@@ -31,10 +31,10 @@ namespace Scene
 		bg->update();
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
-			__super::getCallBack().onSceneChange(SceneName::BACK_TO_SCENE, nullptr, StackPopFlag::POP, false);
-			Sound("BGM").play(false,false);
-
-			return;
+			auto bgm_name = std::make_unique<Parameter>();
+			bgm_name->add<std::string>("BGM_name", name);
+			Sound(name).play(false, false);
+			ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
 		}
 
 		//

@@ -8,7 +8,16 @@
 #include "../../ECS/ECS.hpp"
 #include "../../Utility/Utility.hpp"
 #include "../Scene/Parameter.hpp"
-
+/**
+* @brief
+* @param  SceneName	   切り替えたい次のシーン
+* @param  Param_ptr	   次のシーンに送りたい値、不要ならnullptrを指定してください
+* @param  StackFlag	   シーンを削除するか
+* @param  IsInitialize シーンの初期化を行うか
+* この処理を呼び出した後には何も記述しないように注意してください
+* enum class SceneName::NAME, Parameter::get(), enum class StackPopFlag::FLAG, bool
+*/
+#define ON_SCENE_CHANGE(SceneName,Param_ptr,StackFlag,IsInitialize) getCallBack().onSceneChange(SceneName, Param_ptr, StackFlag, IsInitialize); return;
 namespace Scene
 {
 	/**
