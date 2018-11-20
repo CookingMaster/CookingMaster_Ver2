@@ -15,7 +15,7 @@ namespace Scene
 	class Title : public AbstractScene
 	{
 	private:
-		ECS::EntityManager* entitytManager_;
+		ECS::EntityManager* entityManager_;
 	public:
 		Title(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		void initialize() override;

@@ -9,7 +9,7 @@ namespace ECS
 	@brief 画像を点滅させる（強調させる）
 	* - AlphaBlendが必要、なければ勝手に作る
 	*/
-	class FlashImage final : ComponentSystem
+	class FlashImage final : public ComponentSystem
 	{
 	private:
 		AlphaBlend* alpha_;
