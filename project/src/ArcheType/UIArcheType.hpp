@@ -94,13 +94,11 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
-			//entity->addComponent<Transform>().setScale(rect.x, rect.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, rect.x, rect.y);
+			entity->addComponent<Rectangle>(0, 0, static_cast<int>(rect.x), static_cast<int>(rect.y));
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 261.f,128.f });
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
-			entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 0.05f);
 			return entity;
 		}
 		//ポーズ画面のボタン
@@ -108,13 +106,11 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
-			entity->addComponent<Transform>().setScale(rect.x, rect.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, rect.x, rect.y);
-			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{rect.x, rect.y});
-			entity->addComponent<ButtonCommponent>(0, 138);
-			entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 0.05f);
+			entity->addComponent<Rectangle>(0, 0, static_cast<int>(rect.x), static_cast<int>(rect.y));
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<ButtonCommponent>(138);
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
@@ -123,14 +119,25 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
-			entity->addComponent<Transform>().setScale(rect.x, rect.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, rect.x, rect.y);
-			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{rect.x, rect.y});
+			entity->addComponent<Rectangle>(0, 0, static_cast<int>(rect.x), static_cast<int>(rect.y));
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<ButtonMojiCommponent>(static_cast<int>(rect.x));
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
-			entity->addComponent<ButtonMojiCommponent>(rect.x);
-			entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 0.05f);
+			return entity;
+		}
+		//ポーズ画面の選択肢フレーム
+		static Entity* CreateSelectFrame(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(0, 0, 137, 56);
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<SelectFrame>();
+			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
 	};

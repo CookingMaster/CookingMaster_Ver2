@@ -18,6 +18,8 @@ namespace Scene
 		ECS::EntityManager* entityManager_;
 		ECS::Entity* slide;
 		ECS::Entity* button;
+		ECS::Entity* moji;
+		ECS::Entity* frame;
 		ECS::Entity* bg;
 		std::string name;
 	public:
