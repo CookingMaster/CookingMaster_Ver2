@@ -3,6 +3,7 @@
 #include "Scene/SceneManager.hpp"
 #include "../Input/Input.hpp"
 #include "Scene/Title.h"
+#include "Scene/StageSelect.h"
 #include "Scene/Game.h"
 #include "Scene/Pause.h"
 void GameController::resourceLoad()
@@ -39,6 +40,9 @@ void GameController::onSceneChange(const Scene::SceneName& scene, Parameter* par
 	{
 	case Scene::SceneName::TITLE:
 		sceneStack.push(std::make_unique<Scene::Title>(this, parame, &entityManager_));
+		break;
+	case Scene::SceneName::SELECT:
+		sceneStack.push(std::make_unique<Scene::StageSelect>(this, parame, &entityManager_));
 		break;
 	case Scene::SceneName::GAME:
 		sceneStack.push(std::make_unique<Scene::Game>(this, parame, &entityManager_));

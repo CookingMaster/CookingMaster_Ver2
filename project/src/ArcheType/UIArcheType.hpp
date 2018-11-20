@@ -72,7 +72,7 @@ namespace ECS
 			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
 			entity->addGroup(ENTITY_GROUP::UI);
-			entity->addComponent<DrawFont>(rect.x, 0);
+			entity->addComponent<DrawFont>((int)rect.x, 0);
 			entity->addComponent<ExpandReduceComponentSystem>(1.3f, 0.1f);
 			return entity;
 		}

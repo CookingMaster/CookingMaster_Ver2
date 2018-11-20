@@ -17,9 +17,7 @@ namespace Scene
 	{
 		if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
 		{
-			auto playerDetail = std::make_unique<Parameter>();
-			playerDetail->add<std::string>("名前", "たかし");
-			getCallBack().onSceneChange(SceneName::GAME, playerDetail.get(), StackPopFlag::POP, true);
+			ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::POP, true);
 		}
 	}
 	void Title::draw()
