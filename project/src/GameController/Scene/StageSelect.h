@@ -15,8 +15,13 @@ namespace Scene
 	class StageSelect : public AbstractScene
 	{
 	private:
-		ECS::EntityManager* entitytManager_;
-		ECS::Entity* e;
+		static constexpr int UI_HEIGHT = 120;
+		ECS::EntityManager* entityManager_ = nullptr;
+		ECS::Entity* point = nullptr;
+		ECS::Entity* book = nullptr;
+		std::unordered_map<std::string, ECS::Entity*> stageMap;
+		int score = 0;
+		void selectStageMove(ECS::Entity* pEntity);
 	public:
 		StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~StageSelect();
