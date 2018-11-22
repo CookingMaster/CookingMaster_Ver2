@@ -6,16 +6,21 @@ namespace ECS
 {
 	struct TitleUIArcheType
 	{
-		static Entity* CreateLogoArchetype(const std::string& imgName, const Vec2& pos, EntityManager& entityManager_)
+		static Entity* CreateMessageArchetype(const std::string& imgName, const Vec2& pos, EntityManager& entityManager_)
 		{
-			auto* entity = &entityManager_.addEntityAddTag("unko");
-			//entity->addComponent<FlashImage>();
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<FlashImage>();
 
 			entity->addComponent<Position>(pos);
 			entity->addComponent<SimpleDraw>(imgName.c_str()).doCenter(true);
 			entity->addGroup(ENTITY_GROUP::TITLE_PRESS);
 
 			return entity;
+		}
+
+		static Entity* CreateLogoArchetype(const std::string& imgName, const Vec2& pos, EntityManager& entityManager_)
+		{
+
 		}
 	};
 }

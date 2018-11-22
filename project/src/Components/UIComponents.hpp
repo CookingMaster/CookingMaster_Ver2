@@ -247,7 +247,7 @@ namespace ECS
 				eas_.reset();
 			}
 			float size_w_ = score_ * rect_x_ / (float)max_;
-			rectangle_->w = (int)eas_.getVolume((float)rectangle_->w, size_w_- (float)rectangle_->w);
+			rectangle_->w = (int)eas_.getVolume((float)rectangle_->w, size_w_/*- (float)rectangle_->w*/);
 			
 		}
 		void addScore(int score)

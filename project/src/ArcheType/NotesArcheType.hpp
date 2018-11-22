@@ -42,7 +42,7 @@ namespace ECS
 			entity->addComponent<SpriteAnimationDraw>(notesData.imageName.c_str()).setPivot(
 				Vec2(notesData.xsize / 2.f, notesData.ysize / 2.f));
 			entity->addComponent<AnimatorByFrame>(notesData.animFlame).setSpriteNum(
-				0, 0, notesData.xnum, notesData.ynum);
+				0, 0, 2, 1);
 
 			entity->addComponent<NoteState>();
 			entity->addComponent<NoteStateTransition>(notesData.hitJudge, arrivalBeatTime);
