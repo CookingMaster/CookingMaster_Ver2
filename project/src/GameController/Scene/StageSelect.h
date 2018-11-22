@@ -27,7 +27,7 @@ namespace Scene
 			size_t selectNum = 0u;
 			void selectStageMove(ECS::Entity* pEntity, std::vector<ECS::Entity*> uiMap);
 		}pointEntityMove;
-
+		void selectStage();
 		int score_ = 0;
 		
 	public:

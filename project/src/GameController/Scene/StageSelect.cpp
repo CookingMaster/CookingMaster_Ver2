@@ -40,43 +40,8 @@ namespace Scene
 		DOUT << pos->val.y << std::endl;
 	}
 
-	StageSelect::StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
-		: AbstractScene(sceneTitleChange)
-		, entityManager_(entityManager)
+	void StageSelect::selectStage()
 	{
-		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
-		ResourceManager::GetGraph().load("Resource/image/1280.png", "back");
-		ResourceManager::GetGraph().load("Resource/image/book.png", "book");
-		ResourceManager::GetGraph().load("Resource/image/point.png", "point");
-		ResourceManager::GetGraph().load("Resource/image/option.png", "option");
-		ResourceManager::GetGraph().load("Resource/image/stage.png", "stage");
-		ResourceManager::GetSound().load("Resource/sound/Welcome.ogg", "selectBGM",SoundType::BGM);
-	}
-
-	void StageSelect::initialize()
-	{
-		//ハイスコアの取得テスト
-		score_ = ECS::ScoreArcheType::CreateSelectScoreEntity("font", Vec2{ 100,200 }, ECS::StageHighScore::STAGE2, *entityManager_)->
-			getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE2);
-
-		ECS::ArcheType::CreateGameBG("back",  Vec2{ 0.f,0.f},*entityManager_);
-
-		auto book_ = ECS::ArcheType::CreateEntity("book",  Vec2{ System::SCREEN_WIDIH / 2, System::SCREEN_HEIGHT * 0.6f },
-			*entityManager_,  ENTITY_GROUP::BACK);
-		auto bookPos = book_->getComponent<ECS::Position>();
-
-		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y - UI_HEIGHT * 2 }, *entityManager_, ENTITY_GROUP::UI));
-		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y - UI_HEIGHT },  *entityManager_, ENTITY_GROUP::UI));
-		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y },       *entityManager_, ENTITY_GROUP::UI));
-		UIMap_.push_back(ECS::ArcheType::CreateEntity("option", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y + UI_HEIGHT}, *entityManager_, ENTITY_GROUP::UI));
-		point_ = ECS::ArcheType::CreateEntity("point", Vec2{ bookPos.val.x * 0.4f, bookPos.val.y - UI_HEIGHT * 2 }, *entityManager_, ENTITY_GROUP::UI);
-
-		Sound bgm("selectBGM");
-		bgm.play(true,false);
-	}
-	void StageSelect::update()
-	{
-		entityManager_->update();
 		if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 		{
 			switch (pointEntityMove.selectNum)
@@ -108,10 +73,50 @@ namespace Scene
 			}
 			}
 		}
-		
+	}
 
+	StageSelect::StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
+		: AbstractScene(sceneTitleChange)
+		, entityManager_(entityManager)
+	{
+		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
+		ResourceManager::GetGraph().load("Resource/image/cook.png", "cook");
+		ResourceManager::GetGraph().load("Resource/image/1280.png", "back");
+		ResourceManager::GetGraph().load("Resource/image/book.png", "book");
+		ResourceManager::GetGraph().load("Resource/image/point.png", "point");
+		ResourceManager::GetGraph().load("Resource/image/option.png", "option");
+		ResourceManager::GetGraph().load("Resource/image/stage.png", "stage");
+		ResourceManager::GetSound().load("Resource/sound/Welcome.ogg", "selectBGM",SoundType::BGM);
+	}
+
+	void StageSelect::initialize()
+	{
+		//ハイスコアの取得テスト
+		score_ = ECS::ScoreArcheType::CreateSelectScoreEntity("font", Vec2{ 100,200 }, ECS::StageHighScore::STAGE2, *entityManager_)->
+			getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE2);
+
+		ECS::ArcheType::CreateGameBG("back",  Vec2{ 0.f,0.f},*entityManager_);
+
+		auto book_ = ECS::ArcheType::CreateEntity("book",  Vec2{ System::SCREEN_WIDIH / 2, System::SCREEN_HEIGHT * 0.6f },
+			*entityManager_,  ENTITY_GROUP::BACK);
+		auto bookPos = book_->getComponent<ECS::Position>();
+
+		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y - UI_HEIGHT * 2 }, *entityManager_, ENTITY_GROUP::UI));
+		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y - UI_HEIGHT }, *entityManager_, ENTITY_GROUP::UI));
+		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI));
+		UIMap_.push_back(ECS::ArcheType::CreateEntity("option",Vec2{ bookPos.val.x * 0.7f, bookPos.val.y + UI_HEIGHT}, *entityManager_, ENTITY_GROUP::UI));
+		ECS::ArcheType::CreateEntity("cook", Vec2{ bookPos.val.x * 1.3f, bookPos.val.y - 60}, *entityManager_, ENTITY_GROUP::UI);
+		point_ = ECS::ArcheType::CreateEntity("point", Vec2{ bookPos.val.x * 0.4f, bookPos.val.y - UI_HEIGHT * 2 }, *entityManager_, ENTITY_GROUP::UI);
+
+		Sound bgm("selectBGM");
+		bgm.play(true,false);
+	}
+	void StageSelect::update()
+	{
+		entityManager_->update();
 		
 		pointEntityMove.selectStageMove(point_,UIMap_);
+		selectStage();
 	}
 	void StageSelect::draw()
 	{
