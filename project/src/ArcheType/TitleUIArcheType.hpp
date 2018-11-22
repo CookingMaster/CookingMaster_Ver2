@@ -8,7 +8,7 @@ namespace ECS
 	{
 		static Entity* CreateLogoArchetype(const std::string& imgName, const Vec2& pos, EntityManager& entityManager_)
 		{
-			auto* entity = &entityManager_.addEntityAddTag("unko");
+			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<FlashImage>();
 
 			entity->addComponent<Position>(pos);
