@@ -136,9 +136,19 @@ namespace ECS {
 				++indexX_;
 				if (indexX_ >= maxXnum_)
 				{
-					if (isEndStopAnim_)
+					++indexY_;
+					if (indexY_ >= maxYnum_)
 					{
-						--indexX_;
+						if (isEndStopAnim_)
+						{
+							indexX_ = maxXnum_ - 1;
+							indexY_ = maxYnum_ - 1;
+						}
+						else
+						{
+							indexX_ = xmin_;
+							indexY_ = ymin_;
+						}
 					}
 					else
 					{
@@ -165,6 +175,7 @@ namespace ECS {
 			indexY_ = ymin;
 			maxXnum_ = xnum;
 			maxYnum_ = ynum;
+			counter_.reset();
 		}
 
 		/**
@@ -185,6 +196,16 @@ namespace ECS {
 		void setIsEndStopAnim(bool isEndStopAnim)
 		{
 			isEndStopAnim_ = isEndStopAnim;
+		}
+
+		/**
+		* @brief アニメーションが一巡したら停止するか否かを設定する
+		* @param isEndStopAnim アニメーションを停止するか否か
+		*/
+		void changeFrame(int frame)
+		{
+			frame_ = frame;
+			counter_.SetCounter(0, 1, 0, frame);
 		}
 	};
 }

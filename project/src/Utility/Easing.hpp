@@ -40,12 +40,12 @@ public:
 	/**
 	* @brief 実行中のイージングの現在値を取得
 	* @param startPoint 始点(float)
-	* @param endPoint 終点(float)-始点(float)
+	* @param endPoint 終点(float)
 	* @details run()を呼び出さなければ機能しない
 	*/
 	[[nodiscard]] const float getVolume(const float startPoint, const float endPoint)
 	{
-		return startPoint + (vol_ * endPoint);
+		return startPoint + (vol_ * (endPoint - startPoint));
 	}
 
 	//!イージングが終了したらtrueが返る
