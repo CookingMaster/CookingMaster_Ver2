@@ -41,7 +41,7 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(0, 0, 0, 45);
 			entity->addComponent<ScoreData>();
-			int hi = entity->addComponent<ScoreSystem>(stageName).getHighScore(StageHighScore::STAGE1);
+			int hi = entity->addComponent<ScoreSystem>(stageName).getHighScore(stageName);
 			entity->addComponent<SpriteRectDraw>(grapName).setPivot(Vec2{ 12.5f,22.5f });
 			entity->addComponent<DrawFont>(25, 0).setNumber(hi);
 			entity->addGroup(ENTITY_GROUP::UI);
