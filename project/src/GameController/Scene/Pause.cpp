@@ -35,32 +35,11 @@ namespace Scene
 		slide->update();
 		moji->update();
 		bg->update();
-		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
-		{
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", name);
-			Sound(name).play(false, false);
-			ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
-		}
 
-		if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1) {
-			frame->getComponent<ECS::SelectFrame>().setSelect(-1);
-		}
-		if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1) {
-			frame->getComponent<ECS::SelectFrame>().setSelect(1);
-		}
-		if (Input::Get().getKeyFrame(KEY_INPUT_Z)) {
-			int select = frame->getComponent<ECS::SelectFrame>().getSelect();
-			switch (select)
-			{
-			case 0:
-				break;
-			case 1:
-				break;
-			case 2:
-				break;
-			}
-		}
+		moveCursor();
+		backToGame();
+		selectButton();
+
 	}
 	void Pause::draw()
 	{
@@ -74,6 +53,53 @@ namespace Scene
 		slide->destroy();
 		moji->destroy();
 		bg->destroy();
+		frame->destroy();
+	}
+
+
+	void Pause::selectButton()
+	{
+		if (Input::Get().getKeyFrame(KEY_INPUT_Z)) {
+			int select = frame->getComponent<ECS::SelectFrame>().getSelect();
+			auto bgm_name = std::make_unique<Parameter>();
+			switch (select)
+			{
+			case 0:
+				DOUT << "Game Continue" << std::endl;
+				bgm_name->add<std::string>("BGM_name", name);
+				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
+				break;
+			case 1:
+				DOUT << "Restart" << std::endl;
+				bgm_name->add<std::string>("BGM_name", name);
+				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, true);
+				break;
+			case 2:
+				DOUT << "Back To Title" << std::endl;
+				ON_SCENE_CHANGE(SceneName::TITLE, nullptr, StackPopFlag::ALL_CLEAR, true);
+				break;
+			}
+		}
+	}
+	void Pause::backToGame()
+	{
+		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
+		{
+			auto bgm_name = std::make_unique<Parameter>();
+			bgm_name->add<std::string>("BGM_name", name);
+			Sound(name).play(false, false);
+			ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
+		}
+	}
+
+	void Pause::moveCursor()
+	{
+		if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1) {
+			frame->getComponent<ECS::SelectFrame>().setSelect(-1);
+		}
+		if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1) {
+			frame->getComponent<ECS::SelectFrame>().setSelect(1);
+		}
 	}
 
 }
