@@ -123,6 +123,14 @@ namespace Scene
 			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
 		}
 		
+
+		if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1) {
+			auto bgm_name = std::make_unique<Parameter>();
+			bgm_name->add<std::string>("BGM_name", name);
+			//BGM止めること
+			Sound(name).stop();
+			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
+		}
 	}
 
 	void Game::draw()

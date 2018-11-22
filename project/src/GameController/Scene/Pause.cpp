@@ -76,6 +76,7 @@ namespace Scene
 				break;
 			case 2:
 				DOUT << "Back To Title" << std::endl;
+				Sound(name).stop();
 				ON_SCENE_CHANGE(SceneName::TITLE, nullptr, StackPopFlag::ALL_CLEAR, true);
 				break;
 			}
