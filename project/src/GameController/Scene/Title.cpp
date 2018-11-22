@@ -16,7 +16,7 @@ namespace Scene
 	}
 	void Title::initialize()
 	{
-		ECS::TitleUIArcheType::CreateLogoArchetype("pak", Vec2(200, 100), *entityManager_);
+		ECS::TitleUIArcheType::CreateMessageArchetype("pak", Vec2(200, 100), *entityManager_);
 	}
 	void Title::update()
 	{
