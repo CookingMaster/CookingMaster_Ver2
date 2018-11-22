@@ -1,3 +1,10 @@
+/**
+* @file TitleUIComponents.hpp
+* @brief タイトルシーンで使用するUIのために作ったコンポーネントの方々
+* @author feveleK5563
+* @date 2018/11/22
+*/
+
 #pragma once
 #include "../ECS/ECS.hpp"
 #include "Renderer.hpp"
@@ -47,6 +54,51 @@ namespace ECS
 				bright_ = !bright_;
 				ease_.reset();
 			}
+		}
+	};
+
+	/*!
+	@brief イージングで座標を操作する
+	* - Positionが必要、なければ勝手に作る
+	*/
+	class EasingPosMove final : public ComponentSystem
+	{
+	private:
+		Position* pos_;		//座標
+		Easing ease_;		//イージング
+		Vec2 start_;	//スタート位置
+		Vec2 goal_;		//ゴール位置
+		float durationTime;	//経過時間1
+
+	public:
+		EasingPosMove(): 
+			start_(0, 0),
+			goal_(0, 0),
+			durationTime(60.f){}
+
+		void initialize() override
+		{
+
+		}
+
+		void update() override
+		{
+			ease_.run(ease_.BackIn, durationTime);
+			pos_->val.x = ease_.getVolume(start_.x, goal_.x);
+			pos_->val.y = ease_.getVolume(start_.y, start_.y);
+		}
+
+		void setDest(const Vec2& start, const Vec2& goal, float time)
+		{
+			start_ = start;
+			goal_ = goal;
+			durationTime = time;
+			ease_.reset();
+		}
+
+		bool getIsEaseEnd()
+		{
+			return ease_.isEaseEnd();
 		}
 	};
 }
