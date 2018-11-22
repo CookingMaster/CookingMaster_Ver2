@@ -8,15 +8,28 @@
 #include "../../ECS/ECS.hpp"
 #include "Parameter.hpp"
 #include "../Scene/SceneManager.hpp"
-
+#include "../src/Components/BasicComponents.hpp"
 
 namespace Scene
 {
 	class StageSelect : public AbstractScene
 	{
 	private:
-		ECS::EntityManager* entitytManager_;
-		ECS::Entity* e;
+		static constexpr int UI_HEIGHT = 120;
+		ECS::EntityManager* entityManager_ = nullptr;
+		ECS::Entity* point_ = nullptr;
+		std::vector<ECS::Entity*> UIMap_{};
+		//選択用アイコンの移動処理に必要なデータ
+		class Point
+		{
+		public:
+			ECS::Position* pos = nullptr;
+			size_t selectNum = 0u;
+			void selectStageMove(ECS::Entity* pEntity, std::vector<ECS::Entity*> uiMap);
+		}pointEntityMove;
+
+		int score_ = 0;
+		
 	public:
 		StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~StageSelect();
