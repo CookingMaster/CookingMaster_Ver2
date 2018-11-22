@@ -18,8 +18,15 @@ namespace Scene
 		ECS::EntityManager* entityManager_;
 		ECS::Entity* slide;
 		ECS::Entity* button;
+		ECS::Entity* moji;
+		ECS::Entity* frame;
 		ECS::Entity* bg;
 		std::string name;
+
+		void selectButton();
+		void backToGame();
+		void moveCursor();
+
 	public:
 		Pause(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		void initialize() override {};
