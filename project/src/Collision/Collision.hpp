@@ -120,10 +120,10 @@ public:
 			return false;
 		}
 		const auto& circle = e1.getComponent<T>();
-		const auto& point = e2.getComponent<T2>();
+		const auto& point_ = e2.getComponent<T2>();
 
 		Vec2 buttonPos = Vec2(circle.x(), circle.y());
-		Vec2 distance = buttonPos - point.val();
+		Vec2 distance = buttonPos - point_.val();
 		if (distance.Length() <= circle.radius())
 		{
 			return true;

@@ -44,7 +44,7 @@ public:
 		PAUSE_UI,		//ポーズ用UI
 		TOP_FADE,		//最前面フェード
 		TITLE_PRESS,	//タイトル画面のPRESS_ANY_KEY	
-		MAX,			//最大数
+		MAX,			//最大数-----------------------------------------ここより上に記述
 	};
 	GameController();
 	~GameController() = default;
