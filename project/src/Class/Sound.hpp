@@ -21,11 +21,13 @@ private:
 		//!すべてのSEサウンドの音量を0.0f~1.fで指定
 		void setAllSEGain(float gain)
 		{
+			if (gain >= 1.f || gain <= 0) { return; }
 			seGain_ = gain;
 		}
 		//!すべてのBGMサウンドの音量を0.0f~1.fで指定
 		void setAllBGMGain(float gain)
 		{
+			if (gain >= 1.f || gain <= 0) { return; }
 			bgmGain_ = gain;
 		}
 		//!登録されているサウンドの更新を行います

@@ -12,7 +12,7 @@ namespace Scene
 		pointEntityMove.pos = &point_->getComponent<ECS::Position>();
 		
 		//ステージ選択時の挙動
-		if (!pointEntityMove.isOption)
+		if (!pointEntityMove.isOptionSelected)
 		{
 			//下方向
 			if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
@@ -46,9 +46,51 @@ namespace Scene
 		//オプション時の操作
 		else
 		{
+			auto& bgmPos = bgmSlider_.barEntity->getComponent<ECS::Position>();
+			auto& sePos = seSlider_.barEntity->getComponent<ECS::Position>();
+			
 			if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
 			{
-				pointEntityMove.isOption = false;
+				pointEntityMove.isOptionSelected = false;
+				bgmSlider_.isSelect = false;
+				seSlider_.isSelect = false;
+			}
+
+			if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
+			{
+				bgmSlider_.isSelect = !bgmSlider_.isSelect;
+				seSlider_.isSelect = !seSlider_.isSelect;
+			}
+
+			//BGMスライダー
+			if (bgmSlider_.isSelect)
+			{
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && !(bgmSlider_.volume >= 1.f))
+				{
+
+					bgmPos.val.x++;
+					bgmSlider_.volume += 0.005f;
+				}
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && !(bgmSlider_.volume <= 0.f))
+				{
+					bgmPos.val.x--;
+					bgmSlider_.volume -= 0.005f;
+				}
+			}
+			//SEスライダー
+			if (seSlider_.isSelect)
+			{
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && !(seSlider_.volume >= 1.f))
+				{
+
+					sePos.val.x++;
+					seSlider_.volume += 0.005f;
+				}
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && !(seSlider_.volume <= 0.f))
+				{
+					sePos.val.x--;
+					seSlider_.volume -= 0.005f;
+				}
 			}
 		}
 		DOUT << pointEntityMove.selectNum << std::endl;
@@ -98,25 +140,34 @@ namespace Scene
 		}
 		case 3:
 		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1
+				&& !pointEntityMove.isOptionSelected)
 			{
-				pointEntityMove.isOption = true;
+				Sound se("onion");
+				se.play(false, true);
+				pointEntityMove.isOptionSelected = true;
+				bgmSlider_.isSelect = true;
+				seSlider_.isSelect = false;
 			}
-			bgmSlider_.entity->getComponent<ECS::SpriteDraw>().drawEnable();
-			seSlider_.entity->getComponent<ECS::SpriteDraw>().drawEnable();
+			bgmSlider_.gaugeEntity->getComponent<ECS::SpriteDraw>().drawEnable();
+			seSlider_.gaugeEntity->getComponent<ECS::SpriteDraw>().drawEnable();
+			bgmSlider_.barEntity->getComponent<ECS::SpriteDraw>().drawEnable();
+			seSlider_.barEntity->getComponent<ECS::SpriteDraw>().drawEnable();
 			break;
 		}
 		}
-
 	}
+
 	void StageSelect::UIReset()
 	{
 		for (auto& it : cookMap_)
 		{
 			it->getComponent<ECS::SpriteDraw>().drawDisable();
 		}
-		bgmSlider_.entity->getComponent<ECS::SpriteDraw>().drawDisable();
-		seSlider_.entity->getComponent<ECS::SpriteDraw>().drawDisable();
+		bgmSlider_.gaugeEntity->getComponent<ECS::SpriteDraw>().drawDisable();
+		seSlider_.gaugeEntity->getComponent<ECS::SpriteDraw>().drawDisable();
+		bgmSlider_.barEntity->getComponent<ECS::SpriteDraw>().drawDisable();
+		seSlider_.barEntity->getComponent<ECS::SpriteDraw>().drawDisable();
 	}
 
 	
@@ -124,6 +175,7 @@ namespace Scene
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
 	{
+		ResourceManager::GetSound().load("Resource/sound/onion.ogg", "onion", SoundType::SE);
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		//仮料理画像とUI
 		ResourceManager::GetGraph().load("Resource/image/cook.png", "tkg");
@@ -131,7 +183,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/cook3.png", "tkg3");
 		//スライダー
 		ResourceManager::GetGraph().load("Resource/image/slider.png", "slider");
-
+		ResourceManager::GetGraph().load("Resource/image/slider_bar.png", "slider_bar");
 		ResourceManager::GetGraph().load("Resource/image/1280.png", "back");
 		ResourceManager::GetGraph().load("Resource/image/book.png", "book");
 		ResourceManager::GetGraph().load("Resource/image/point.png", "point");
@@ -163,8 +215,10 @@ namespace Scene
 		cookMap_.push_back(ECS::ArcheType::CreateEntity("tkg3", Vec2{ bookPos.val.x * 1.3f, bookPos.val.y - 60 }, *entityManager_, ENTITY_GROUP::UI));
 		//スライダー
 		{
-			bgmSlider_.entity = ECS::ArcheType::CreateEntity("slider", Vec2{ bookPos.val.x * 1.4f,  bookPos.val.y - UI_HEIGHT }, *entityManager_, ENTITY_GROUP::UI);
-			seSlider_.entity = ECS::ArcheType::CreateEntity("slider", Vec2{ bookPos.val.x * 1.4f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI);
+			bgmSlider_.gaugeEntity = ECS::ArcheType::CreateEntity("slider", Vec2{ bookPos.val.x * 1.4f,  bookPos.val.y - UI_HEIGHT }, *entityManager_, ENTITY_GROUP::UI);
+			bgmSlider_.barEntity = ECS::ArcheType::CreateEntity("slider_bar", Vec2{ bookPos.val.x * 1.4f,  bookPos.val.y - UI_HEIGHT }, *entityManager_, ENTITY_GROUP::UI);
+			seSlider_.gaugeEntity = ECS::ArcheType::CreateEntity("slider", Vec2{ bookPos.val.x * 1.4f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI);
+			seSlider_.barEntity = ECS::ArcheType::CreateEntity("slider_bar", Vec2{ bookPos.val.x * 1.4f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI);
 			bgmSlider_.type = Slider::BGM;
 			seSlider_.type = Slider::SE;
 		}
@@ -177,7 +231,10 @@ namespace Scene
 	void StageSelect::update()
 	{
 		entityManager_->update();
-		
+		MasterSound::Get().setAllBGMGain(bgmSlider_.volume);
+		MasterSound::Get().setAllSEGain(seSlider_.volume);
+		bgmSlider_.select();
+		seSlider_.select();
 		selectStageMove();
 		selectStage();
 	}
