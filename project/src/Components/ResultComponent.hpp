@@ -22,10 +22,10 @@ namespace ECS
 		Position* position_;
 		Rotation* rotate_;
 		Counter_f cnt_;
-		Counter counter_;
 
 		//! ˆÚ“®‚·‚é‚Æ‚«‚Ì‰ñ“]’†S
 		Vec2 center_;
+		//! ‰ñ“]‘¬“x
 		float speed_;
 
 		static constexpr float PI = 3.141592653589793f;
@@ -41,19 +41,54 @@ namespace ECS
 		{
 			position_ = &entity->getComponent<Position>();
 			rotate_ = &entity->getComponent<Rotation>();
-			cnt_.SetCounter(0, speed_, 0, 360);
-			counter_.SetCounter(0, 10, 0, 360);
+			cnt_.SetCounter(0.f, speed_, 0.f, 360.f);
 		}
 
 		void update() override
 		{
 			cnt_.add();
-			counter_.add();
+			//‰æ‘œŽ©‘Ì‚Ì‰ñ“]
 			rotate_->val = cnt_.getCurrentCount();
-			float angle = counter_.getCurrentCount() * PI / 180.f;
+			//‰æ‘œ‚Ì‰ñ“]ˆÚ“®ˆ—
+			double angle = PI / 180.0;
+			position_->val.x = static_cast<float>(
+				center_.x 
+				+ (position_->val.x - center_.x) * cos(angle) 
+				- (position_->val.y - center_.y) * sin(angle)
+				);
+			position_->val.y = static_cast<float>(
+				center_.y 
+				+ (position_->val.x - center_.x) * sin(angle) 
+				+ (position_->val.y - center_.y) * cos(angle)
+				);
+		}
+	};
 
-			position_->val.x += cos(static_cast<double>(angle));
-			position_->val.y -= sin(static_cast<double>(angle));
+	/**
+	* @brief ‰æ‘œ‚ÌŠg‘å‚ðs‚¤
+	*- Žw’è‚µ‚½ƒC[ƒWƒ“ƒO‚ÅŠg‘å(‚µ‚½‚¢‚¯‚Ç¡‚Ì‚Æ‚±‚ëSina)
+	*/
+	class Expand final : public ComponentSystem 
+	{
+	private:
+		Scale* scale_;
+		Easing ease_;
+		Vec2 endSize_;
+		Ease em_;
+		float durationTime_;
+	public:
+		Expand(const Vec2 endSize, const Ease em, float durationTime) {
+			endSize_ = endSize;
+			em_ = em;
+			durationTime_ = durationTime;
+		}
+		void initialize() override {
+			scale_ = &entity->getComponent<Scale>();
+		}
+		void update() override {
+			ease_.run(em_, durationTime_);
+			scale_->val.x = ease_.getVolume(1, endSize_.x);
+			scale_->val.y = ease_.getVolume(1, endSize_.y);
 		}
 	};
 }

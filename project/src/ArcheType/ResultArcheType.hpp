@@ -21,7 +21,6 @@ namespace ECS
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SpriteDraw>(graphicName);
-			entity->addComponent<FlyAway>(Vec2{ 1920,600 }, 1);
 			entity->addGroup(ENTITY_GROUP::COOKING_AREA);	//‚æ‚³‚°‚È‚ÌŽg‚¢‚Ü‚í‚µ
 			return entity;
 		}
@@ -32,7 +31,7 @@ namespace ECS
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(0, 0, (int)rect.x, (int)rect.y);
-			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<SpriteRectDraw>(graphicName).setPivot({ 200,125 });
 			entity->addGroup(ENTITY_GROUP::KITCHENWARE);	//‚æ‚³‚°‚È‚ÌŽg‚¢‚Ü‚í‚µ
 			return entity;
 		}
