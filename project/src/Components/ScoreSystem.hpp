@@ -111,9 +111,9 @@ namespace ECS
 		void update() override
 		{
 			ease_.run(Easing::ExpoIn,100.f);
-			scale_->val.x = ease_.getVolume(0.f ,3.f - 0.f);
+			scale_->val.x = ease_.getVolume(0.f ,3.f/* - 0.f*/);
 			ease_.run(Easing::ExpoIn, 100.f);
-			scale_->val.y = ease_.getVolume(0.f, 3.f - 0.f);
+			scale_->val.y = ease_.getVolume(0.f, 3.f/* - 0.f*/);
 		}
 	};
 }
