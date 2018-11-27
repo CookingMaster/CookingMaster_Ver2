@@ -6,6 +6,7 @@
 #include "Scene/StageSelect.h"
 #include "Scene/Game.h"
 #include "Scene/Pause.h"
+#include "Scene/Result.h"
 #include "../Class/Sound.hpp"
 void GameController::resourceLoad()
 {
@@ -54,7 +55,7 @@ void GameController::onSceneChange(const Scene::SceneName& scene, Parameter* par
 		sceneStack.push(std::make_unique<Scene::Pause>(this, parame, &entityManager_));
 		break;
 	case Scene::SceneName::RESULT:
-		sceneStack.push(std::make_unique<Scene::Game>(this, parame, &entityManager_));
+		sceneStack.push(std::make_unique<Scene::Result>(this, parame, &entityManager_));
 		break;
 	default:
 		break;
