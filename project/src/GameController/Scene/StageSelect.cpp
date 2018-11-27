@@ -4,83 +4,134 @@
 #include "../src/ArcheType/ScoreArcheType.hpp"
 #include "../src/Class/Sound.hpp"
 #include "../src/ArcheType/TestArcheType.hpp"
+
 namespace Scene
 {
-	void StageSelect::Point::selectStageMove(ECS::Entity* pEntity, std::vector<ECS::Entity*> uiMap)
+	void StageSelect::selectStageMove()
 	{
-		pos = &pEntity->getComponent<ECS::Position>();
-		//下方向
-		if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
+		pointEntityMove.pos = &point_->getComponent<ECS::Position>();
+		
+		//ステージ選択時の挙動
+		if (!pointEntityMove.isOption)
 		{
-			if (selectNum < uiMap.size()-1)
+			//下方向
+			if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
 			{
-				++selectNum;
-				pos->val.y = uiMap[selectNum]->getComponent<ECS::Position>().val.y;
+				if (pointEntityMove.selectNum < UIMap_.size() - 1)
+				{
+					++pointEntityMove.selectNum;
+					pointEntityMove.pos->val.y = UIMap_[pointEntityMove.selectNum]->getComponent<ECS::Position>().val.y;
+				}
+				else
+				{
+					pointEntityMove.pos->val.y = UIMap_.front()->getComponent<ECS::Position>().val.y;
+					pointEntityMove.selectNum = 0;
+				}
 			}
-			else
+			//上方向
+			if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
 			{
-				pos->val.y = uiMap.front()->getComponent<ECS::Position>().val.y;
-				selectNum = 0;
+				if (pointEntityMove.selectNum > 0)
+				{
+					--pointEntityMove.selectNum;
+					pointEntityMove.pos->val.y = UIMap_[pointEntityMove.selectNum]->getComponent<ECS::Position>().val.y;
+				}
+				else
+				{
+					pointEntityMove.pos->val.y = UIMap_.back()->getComponent<ECS::Position>().val.y;
+					pointEntityMove.selectNum = UIMap_.size() - 1;
+				}
 			}
 		}
-		//上方向
-		if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
+		//オプション時の操作
+		else
 		{
-			if (selectNum > 0)
+			if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
 			{
-				--selectNum;
-				pos->val.y = uiMap[selectNum]->getComponent<ECS::Position>().val.y;
-			}
-			else
-			{
-				pos->val.y = uiMap.back()->getComponent<ECS::Position>().val.y;
-				selectNum = uiMap.size() - 1;
+				pointEntityMove.isOption = false;
 			}
 		}
-		DOUT << pos->val.y << std::endl;
+		DOUT << pointEntityMove.selectNum << std::endl;
 	}
 
 	void StageSelect::selectStage()
 	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+		UIReset();
+		switch (pointEntityMove.selectNum)
 		{
-			switch (pointEntityMove.selectNum)
-			{
-			case 0:
+		case 0:
+		{
+			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 			{
 				auto stage_name = std::make_unique<Parameter>();
 				stage_name->add<std::string>("BGM_name", "Stage1");
 				ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "Stage1", SoundType::BGM);
 				ON_SCENE_CHANGE(SceneName::GAME, stage_name.get(), StackPopFlag::POP, true);
-				break;
 			}
-			case 1:
+			cookMap_[pointEntityMove.selectNum]->getComponent<ECS::SpriteDraw>().drawEnable();
+			break;
+		}
+		case 1:
+		{
+			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 			{
 				auto stage_name = std::make_unique<Parameter>();
 				stage_name->add<std::string>("BGM_name", "Stage2");
 				ResourceManager::GetSound().load("Resource/sound/act_bgm.wav", "Stage2", SoundType::BGM);
 				ON_SCENE_CHANGE(SceneName::GAME, stage_name.get(), StackPopFlag::POP, true);
-				break;
 			}
+			cookMap_[pointEntityMove.selectNum]->getComponent<ECS::SpriteDraw>().drawEnable();
+			break;
+		}
 
-			case 2:
+		case 2:
+		{
+			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 			{
 				auto stage_name = std::make_unique<Parameter>();
 				stage_name->add<std::string>("BGM_name", "Stage3");
 				ResourceManager::GetSound().load("Resource/sound/Grass.wav", "Stage3", SoundType::BGM);
 				ON_SCENE_CHANGE(SceneName::GAME, stage_name.get(), StackPopFlag::POP, true);
-				break;
 			}
-			}
+			cookMap_[pointEntityMove.selectNum]->getComponent<ECS::SpriteDraw>().drawEnable();
+			break;
 		}
+		case 3:
+		{
+			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+			{
+				pointEntityMove.isOption = true;
+			}
+			bgmSlider_.entity->getComponent<ECS::SpriteDraw>().drawEnable();
+			seSlider_.entity->getComponent<ECS::SpriteDraw>().drawEnable();
+			break;
+		}
+		}
+
+	}
+	void StageSelect::UIReset()
+	{
+		for (auto& it : cookMap_)
+		{
+			it->getComponent<ECS::SpriteDraw>().drawDisable();
+		}
+		bgmSlider_.entity->getComponent<ECS::SpriteDraw>().drawDisable();
+		seSlider_.entity->getComponent<ECS::SpriteDraw>().drawDisable();
 	}
 
+	
 	StageSelect::StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
 	{
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
-		ResourceManager::GetGraph().load("Resource/image/cook.png", "cook");
+		//仮料理画像とUI
+		ResourceManager::GetGraph().load("Resource/image/cook.png", "tkg");
+		ResourceManager::GetGraph().load("Resource/image/cook2.png", "tkg2");
+		ResourceManager::GetGraph().load("Resource/image/cook3.png", "tkg3");
+		//スライダー
+		ResourceManager::GetGraph().load("Resource/image/slider.png", "slider");
+
 		ResourceManager::GetGraph().load("Resource/image/1280.png", "back");
 		ResourceManager::GetGraph().load("Resource/image/book.png", "book");
 		ResourceManager::GetGraph().load("Resource/image/point.png", "point");
@@ -101,11 +152,23 @@ namespace Scene
 			*entityManager_,  ENTITY_GROUP::BACK);
 		auto bookPos = book_->getComponent<ECS::Position>();
 
+		//ボタンUI
 		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y - UI_HEIGHT * 2 }, *entityManager_, ENTITY_GROUP::UI));
 		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y - UI_HEIGHT }, *entityManager_, ENTITY_GROUP::UI));
 		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI));
 		UIMap_.push_back(ECS::ArcheType::CreateEntity("option",Vec2{ bookPos.val.x * 0.7f, bookPos.val.y + UI_HEIGHT}, *entityManager_, ENTITY_GROUP::UI));
-		ECS::ArcheType::CreateEntity("cook", Vec2{ bookPos.val.x * 1.3f, bookPos.val.y - 60}, *entityManager_, ENTITY_GROUP::UI);
+		//料理画像
+		cookMap_.push_back(ECS::ArcheType::CreateEntity("tkg",  Vec2{ bookPos.val.x * 1.3f, bookPos.val.y - 60}, *entityManager_, ENTITY_GROUP::UI));
+		cookMap_.push_back(ECS::ArcheType::CreateEntity("tkg2", Vec2{ bookPos.val.x * 1.3f, bookPos.val.y - 60 }, *entityManager_, ENTITY_GROUP::UI));
+		cookMap_.push_back(ECS::ArcheType::CreateEntity("tkg3", Vec2{ bookPos.val.x * 1.3f, bookPos.val.y - 60 }, *entityManager_, ENTITY_GROUP::UI));
+		//スライダー
+		{
+			bgmSlider_.entity = ECS::ArcheType::CreateEntity("slider", Vec2{ bookPos.val.x * 1.4f,  bookPos.val.y - UI_HEIGHT }, *entityManager_, ENTITY_GROUP::UI);
+			seSlider_.entity = ECS::ArcheType::CreateEntity("slider", Vec2{ bookPos.val.x * 1.4f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI);
+			bgmSlider_.type = Slider::BGM;
+			seSlider_.type = Slider::SE;
+		}
+		UIReset();
 		point_ = ECS::ArcheType::CreateEntity("point", Vec2{ bookPos.val.x * 0.4f, bookPos.val.y - UI_HEIGHT * 2 }, *entityManager_, ENTITY_GROUP::UI);
 
 		Sound bgm("selectBGM");
@@ -115,7 +178,7 @@ namespace Scene
 	{
 		entityManager_->update();
 		
-		pointEntityMove.selectStageMove(point_,UIMap_);
+		selectStageMove();
 		selectStage();
 	}
 	void StageSelect::draw()
@@ -131,4 +194,4 @@ namespace Scene
 		entityManager_->allDestory();
 		ResourceManager::GetSound().remove("selectBGM");
 	}
-}
+}// namespace StageSelect
