@@ -9,6 +9,7 @@
 #include "../ECS/ECS.hpp"
 #include "Renderer.hpp"
 #include "../Utility/Easing.hpp"
+#include "../Input/Input.hpp"
 
 namespace ECS
 {
@@ -66,9 +67,9 @@ namespace ECS
 	private:
 		Position* pos_;		//座標
 		Easing ease_;		//イージング
-		Vec2 start_;	//スタート位置
-		Vec2 goal_;		//ゴール位置
-		float durationTime;	//経過時間1
+		Vec2 start_;		//スタート位置
+		Vec2 goal_;			//ゴール位置
+		float durationTime;	//経過時間
 
 	public:
 		EasingPosMove(): 
@@ -105,5 +106,30 @@ namespace ECS
 			return ease_.isEaseEnd();
 		}
 
+	};
+
+	/*!
+	@brief なんかのボタン入力があったら、引数に指定した関数を実行する
+	*/
+	class AnyInputFunction final : public ComponentSystem
+	{
+	public:
+		typedef void(*Func)(ECS::Entity*);
+
+	private:
+		Func func_;
+
+	public:
+		AnyInputFunction(Func func):
+			func_(func) {}
+
+		void update() override
+		{
+			auto& input = Input::Get();
+			if (input.getIsAnyInput())
+			{
+				func_(entity);
+			}
+		}
 	};
 }

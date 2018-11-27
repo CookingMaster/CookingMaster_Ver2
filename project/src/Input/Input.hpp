@@ -31,18 +31,18 @@ private:
 		{
 			char tmpKey[256];
 			GetHitKeyStateAll(tmpKey);	//現在のキーの状態を格納
-			isAnyInput = true;
+			isAnyInput = false;
 			for (int i = 0; i < 256; ++i)
 			{
 				if (tmpKey[i] != 0)
 				{
 					++key_[i];
-					isAnyInput = isAnyInput && true;
+					isAnyInput = true;
 				}
 				else  //押されていなければ
 				{
 					key_[i] = 0;
-					isAnyInput = false;
+					isAnyInput = isAnyInput || false;
 				}
 			}
 		}
