@@ -9,7 +9,7 @@
 #include "Parameter.hpp"
 #include "../Scene/SceneManager.hpp"
 #include "../src/Components/BasicComponents.hpp"
-
+#include "../src/Components/BasicComponents.hpp"
 namespace Scene
 {
 	class StageSelect : public AbstractScene
@@ -28,16 +28,28 @@ namespace Scene
 				BGM,
 				SE
 			};
-			ECS::Entity* entity;
+			ECS::Entity* gaugeEntity;
+			ECS::Entity* barEntity;
+			bool isSelect = false;
 			Type type;
-			float volume = 1;	//0~1
-
+			float volume = 0.5f;	//0~1
+			void select()
+			{
+				if (isSelect)
+				{
+					barEntity->getComponent<ECS::Scale>().val = Vec2{1.5f,1.5f};
+				}
+				else
+				{
+					barEntity->getComponent<ECS::Scale>().val = Vec2{ 1.f,1.f };
+				}
+			}
 		};
 		Slider bgmSlider_, seSlider_;
 		//選択用アイコンの移動処理に必要なデータ
 		struct Point
 		{
-			bool isOption = false;
+			bool isOptionSelected = false;
 			ECS::Position* pos = nullptr;
 			size_t selectNum = 0u;
 			
