@@ -43,7 +43,7 @@ public:
 		FADE,			//フェード用
 		PAUSE_UI,		//ポーズ用UI
 		TOP_FADE,		//最前面フェード
-		TITLE_PRESS,	//タイトル画面のPRESS_ANY_KEY	
+		TITLE_UI,		//タイトル画面で使用するUI
 		MAX,			//最大数-----------------------------------------ここより上に記述
 	};
 	GameController();

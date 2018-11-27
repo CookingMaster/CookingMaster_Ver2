@@ -78,14 +78,18 @@ namespace ECS
 
 		void initialize() override
 		{
-
+			if (!entity->hasComponent<Position>())
+			{
+				entity->addComponent<Position>();
+			}
+			pos_ = &entity->getComponent<Position>();
 		}
 
 		void update() override
 		{
-			ease_.run(ease_.BackIn, durationTime);
+			ease_.run(ease_.CircOut, durationTime);
 			pos_->val.x = ease_.getVolume(start_.x, goal_.x);
-			pos_->val.y = ease_.getVolume(start_.y, start_.y);
+			pos_->val.y = ease_.getVolume(start_.y, goal_.y);
 		}
 
 		void setDest(const Vec2& start, const Vec2& goal, float time)
@@ -100,5 +104,6 @@ namespace ECS
 		{
 			return ease_.isEaseEnd();
 		}
+
 	};
 }

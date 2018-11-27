@@ -18,6 +18,7 @@ private:
 	private:
 		//キーの入力状態を格納する
 		int key_[256];
+		bool isAnyInput;
 	public:
 		Singleton() = default;
 		Singleton(const Singleton&) = delete;
@@ -30,15 +31,18 @@ private:
 		{
 			char tmpKey[256];
 			GetHitKeyStateAll(tmpKey);	//現在のキーの状態を格納
+			isAnyInput = true;
 			for (int i = 0; i < 256; ++i)
 			{
 				if (tmpKey[i] != 0)
 				{
 					++key_[i];
+					isAnyInput = isAnyInput && true;
 				}
 				else  //押されていなければ
 				{
 					key_[i] = 0;
+					isAnyInput = false;
 				}
 			}
 		}
@@ -50,6 +54,15 @@ private:
 		[[nodiscard]] int getKeyFrame(int keycode)
 		{
 			return key_[keycode];	
+		}
+
+		/**
+		* @brief いずれかのキーが入力されていたらtrueを返す
+		* @return 押されているか否か
+		*/
+		[[nodiscard]] bool getIsAnyInput()
+		{
+			return isAnyInput;
 		}
 	};
 public:
