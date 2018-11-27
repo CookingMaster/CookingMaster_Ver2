@@ -17,6 +17,7 @@ void Scene::Result::initialize()
 	ResourceManager::GetGraph().load("Resource/image/cloche.png", "cloche");
 	ResourceManager::GetGraph().load("Resource/image/1280.png", "game_bg");
 	ResourceManager::GetGraph().load("Resource/image/dish.png", "dish");
+	ResourceManager::GetGraph().load("Resource/image/confetti.png", "confetti");
 
 	counter_.setEndTime(300, 0);
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity("cloche", Vec2{ 600,400 }, *entityManager_);
@@ -29,6 +30,11 @@ void Scene::Result::update()
 	counter_.add();
 	entityManager_->update();
 
+	if (counter_.getCurrentCount() == 100) {
+		for (int i = 0; i < 50; ++i) {
+			confetties_.push_back(ECS::ResultArcheType::CreateConfettiEntity("confetti", Vec2_i{ 100 * (i%5),0 }, Vec2_i{ 100,100 }, *entityManager_));
+		}
+	}
 	if (counter_.getCurrentCount() >= 100) {
 		cloche_->addComponent<ECS::FlyAway>(Vec2{ 1920,600 }, 3.f);
 	}

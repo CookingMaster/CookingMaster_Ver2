@@ -23,6 +23,8 @@ namespace Scene
 		ECS::Entity* cloche_;
 		//! 料理
 		ECS::Entity* dish_;
+		//! 紙吹雪
+		std::vector<ECS::Entity*> confetties_;
 		//! スコア
 		int score_;
 		//! 経過フレームカウンタ

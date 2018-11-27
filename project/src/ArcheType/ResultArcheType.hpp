@@ -9,6 +9,7 @@
 #include "../GameController/GameController.h"
 #include "../Components/Renderer.hpp"
 #include "../Components/ResultComponent.hpp"
+#include "../Utility/Random.hpp"
 
 namespace ECS
 {
@@ -43,6 +44,20 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SimpleDraw>(graphicName);
 			entity->addGroup(ENTITY_GROUP::BACK);
+			return entity;
+		}
+		static Entity* CreateConfettiEntity(const char* graphicName, const Vec2_i srcXY, const Vec2_i srcWH, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			Random rand;
+			entity->addComponent<Transform>().setPosition(rand.getRand(0.f, 1280.f), rand.getRand(-800.f, -100.f));
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(srcXY.x, srcXY.y, srcWH.x, srcWH.y);
+			entity->addComponent<SpriteRectDraw>(graphicName).setPivot({ 50,50 });
+			entity->addComponent<Rotate>(1.f);
+			entity->addComponent<FallDance>(rand.getRand(-5.f, 5.f), rand.getRand(0.f,180.f));
+			entity->addGroup(ENTITY_GROUP::EFFECT);
 			return entity;
 		}
 	};
