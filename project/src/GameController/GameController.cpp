@@ -7,6 +7,7 @@
 #include "Scene/Game.h"
 #include "Scene/Pause.h"
 #include "Scene/Result.h"
+#include "../Class/Sound.hpp"
 void GameController::resourceLoad()
 {
 	
@@ -19,6 +20,7 @@ GameController::GameController()
 	//初期シーンの設定
 	sceneStack.push(std::make_unique<Scene::Title >(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
 	sceneStack.top()->initialize();
+	
 }
 
 void GameController::onSceneChange(const Scene::SceneName& scene, Parameter* parame, const Scene::StackPopFlag stackClearFlag, const bool isInitialize)
@@ -75,6 +77,7 @@ void GameController::stackClear()
 
 void GameController::update()
 {
+	MasterSound::Get().update();
 	entityManager_.refresh();
 	Input::Get().updateKey();
 	//シーン更新
