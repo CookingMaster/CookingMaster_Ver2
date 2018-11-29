@@ -122,6 +122,9 @@ namespace ECS
 	/**
 	* @brief x方向に往復しながら下に落ちる
 	* @param shift 左右にずれる量
+	* @param angleInit 移動に使う角度の初期値
+	* @param rotateSpeed 左右に振れる速度
+	* @note これは画像の回転には関係ない、回転は別Component
 	*/
 	class FallDance final : public ComponentSystem
 	{
@@ -130,11 +133,11 @@ namespace ECS
 		float shift_;
 		Counter_f angleCnt_;
 	public:
-		FallDance(float shift, float angleInit)
+		FallDance(float shift, float angleInit, float rotateSpeed)
 			:
 			shift_(shift)
 		{
-			angleCnt_.SetCounter(angleInit, 0.1f, 0.f, 360.f);
+			angleCnt_.SetCounter(angleInit, rotateSpeed, 0.f, 360.f);
 		}
 		void initialize() override
 		{
