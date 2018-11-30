@@ -79,7 +79,7 @@ namespace ECS
 		static Entity* CreateFade(const std::string& imgName, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Position>(0, 0);
+			entity->addComponent<Position>(0.f ,0.f);
 			entity->addComponent<FadeComponent>().reset(255.f, 0.f, 60.f);
 			entity->addComponent<SimpleDraw>(imgName.c_str());
 
