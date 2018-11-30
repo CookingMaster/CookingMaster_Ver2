@@ -9,7 +9,7 @@
 #include "Parameter.hpp"
 #include "../Scene/SceneManager.hpp"
 #include "../src/Components/BasicComponents.hpp"
-
+#include "../src/Components/BasicComponents.hpp"
 namespace Scene
 {
 	class StageSelect : public AbstractScene
@@ -19,17 +19,35 @@ namespace Scene
 		ECS::EntityManager* entityManager_ = nullptr;
 		ECS::Entity* point_ = nullptr;
 		std::vector<ECS::Entity*> UIMap_{};
-		//選択用アイコンの移動処理に必要なデータ
-		class Point
+		std::vector<ECS::Entity*> cookMap_{};
+		//スライダーパラメーター
+		struct Slider
 		{
-		public:
+			enum Type
+			{
+				BGM,
+				SE
+			};
+			ECS::Entity* gaugeEntity;
+			ECS::Entity* barEntity;
+			bool isSelect = false;
+			Type type;
+			float volume;	//0~1
+			void select();
+		};
+		Slider bgmSlider_, seSlider_;
+		//選択用アイコンの移動処理に必要なデータ
+		struct Point
+		{
+			bool isOptionSelected = false;
 			ECS::Position* pos = nullptr;
 			size_t selectNum = 0u;
-			void selectStageMove(ECS::Entity* pEntity, std::vector<ECS::Entity*> uiMap);
+			
 		}pointEntityMove;
-
+		void selectStage();
 		int score_ = 0;
-		
+		void selectStageMove();
+		void UIReset();	//UIを隠す
 	public:
 		StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~StageSelect();

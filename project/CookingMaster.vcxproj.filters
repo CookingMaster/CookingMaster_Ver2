@@ -20,6 +20,7 @@
     <ClCompile Include="src\GameController\Scene\StageSelect.cpp">
       <Filter>src\GameController\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameController\Scene\Result.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Collision\Collision.hpp">
@@ -140,6 +141,9 @@
     <ClInclude Include="src\Components\TitleUIComponents.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameController\Scene\Result.h" />
+    <ClInclude Include="src\ArcheType\ResultArcheType.hpp" />
+    <ClInclude Include="src\Components\ResultComponent.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
