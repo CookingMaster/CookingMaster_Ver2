@@ -16,6 +16,9 @@
 
 namespace ECS
 {
+	/**
+	* @brief クロッシュが回転しながらびゅーん
+	*/
 	class FlyAway final : public ComponentSystem
 	{
 	private:
@@ -32,10 +35,10 @@ namespace ECS
 	public:
 		//!移動の回転中心と速度を初期化します
 		FlyAway(const Vec2 center, const float speed)
-		{
-			center_ = center;
-			speed_ = speed;
-		}
+			:
+			center_(center),
+			speed_(speed)
+		{}
 
 		void initialize() override
 		{
@@ -66,7 +69,7 @@ namespace ECS
 
 	/**
 	* @brief 画像の拡大を行う
-	*- 指定したイージングで拡大(したいけど今のところSina)
+	*- 指定したイージングで拡大
 	*/
 	class Expand final : public ComponentSystem 
 	{
@@ -77,11 +80,12 @@ namespace ECS
 		Ease em_;
 		float durationTime_;
 	public:
-		Expand(const Vec2 endSize, const Ease em, float durationTime) {
-			endSize_ = endSize;
-			em_ = em;
-			durationTime_ = durationTime;
-		}
+		Expand(const Vec2 endSize, const Ease em, float durationTime) 
+			:
+			endSize_(endSize),
+			em_(em),
+			durationTime_(durationTime)
+		{}
 		void initialize() override {
 			scale_ = &entity->getComponent<Scale>();
 		}
@@ -89,6 +93,60 @@ namespace ECS
 			ease_.run(em_, durationTime_);
 			scale_->val.x = ease_.getVolume(1, endSize_.x);
 			scale_->val.y = ease_.getVolume(1, endSize_.y);
+		}
+	};
+
+	/**
+	* @brief 指定スピードで回転させるだけ
+	*/
+	class Rotate final : public ComponentSystem 
+	{
+	private:
+		Rotation* rotation_;
+		float speed_;
+	public:
+		Rotate(float speed)
+			:
+			speed_(speed)
+		{}
+		void initialize() override 
+		{
+			rotation_ = &entity->getComponent<Rotation>();
+		}
+		void update() override 
+		{
+			rotation_->val += speed_;
+		}
+	};
+	
+	/**
+	* @brief x方向に往復しながら下に落ちる
+	* @param shift 左右にずれる量
+	* @param angleInit 移動に使う角度の初期値
+	* @param rotateSpeed 左右に振れる速度
+	* @note これは画像の回転には関係ない、回転は別Component
+	*/
+	class FallDance final : public ComponentSystem
+	{
+	private:
+		Position* position_;
+		float shift_;
+		Counter_f angleCnt_;
+	public:
+		FallDance(float shift, float angleInit, float rotateSpeed)
+			:
+			shift_(shift)
+		{
+			angleCnt_.SetCounter(angleInit, rotateSpeed, 0.f, 360.f);
+		}
+		void initialize() override
+		{
+			position_ = &entity->getComponent<Position>();
+		}
+		void update() override 
+		{
+			position_->val.x += static_cast<float>(sin(++angleCnt_) * 10.f) + shift_;
+			position_->val.y += 10;
 		}
 	};
 }
