@@ -7,33 +7,34 @@ namespace ECS
 {
 	struct TitleUIArcheType
 	{
-		static Entity* CreateMessageArchetype(const std::string& imgName, const Vec2& goalpos, EntityManager& entityManager_)
+		static Entity* CreateMessageArchetype(const std::string& imgName, const Vec2& goalpos, EntityManager& entityManager)
 		{
-			auto* entity = &entityManager_.addEntity();
+			auto* entity = &entityManager.addEntity();
 			entity->addComponent<FlashImage>();
 
-			entity->addComponent<Position>();
+			entity->addComponent<Position>(-1000.f, -1000.f);
 			entity->addComponent<SimpleDraw>(imgName.c_str()).doCenter(true);
 			entity->addComponent<EasingPosMove>().setDest(
-				Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT + 20.f),
+				Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT + 100.f),
 				goalpos,
 				90.f);
-			
-			//イージングが終了したら遷移フラグを立てる
-			auto func = [](ECS::Entity* entity)
+
+			//イージングが終了したらロゴと一緒に消える
+			auto func = [](ECS::Entity* entity, EntityManager& entityManager)
 			{
 				if (entity->getComponent<EasingPosMove>().getIsEaseEnd())
 				{
-					entity->getComponent<EasingPosMove>().setDest(
-						Vec2(System::SCREEN_WIDIH / 2.f, -20.f),
-						Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT + 20.f),
-						90.f);
+					entity->getComponent<FlashImage>().setIsDelete(true);
+
+					auto& logo = entityManager.getEntitiesByGroup(ENTITY_GROUP::TITLE_LOGO);
+					logo[0]->updateComponent<FlashImage>();
+					logo[0]->getComponent<FlashImage>().setIsDelete(true);
 				}
 				return;
 			};
 
-			entity->addComponent<AnyInputFunction>(func);
-			entity->addGroup(ENTITY_GROUP::TITLE_UI);
+			entity->addComponent<AnyInputFunction>(func, entityManager);
+			entity->addGroup(ENTITY_GROUP::TITLE_MESSAGE);
 
 			return entity;
 		}
@@ -42,13 +43,30 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 
-			entity->addComponent<Position>();
+			entity->addComponent<Position>(-1000.f, -1000.f);
+			entity->addComponent<FlashImage>();
+			entity->stopComponent<FlashImage>();
 			entity->addComponent<SimpleDraw>(imgName.c_str()).doCenter(true);
 			entity->addComponent<EasingPosMove>().setDest(
 				Vec2(System::SCREEN_WIDIH / 2.f, -50.f),
 				goalpos,
 				60.f);
-			entity->addGroup(ENTITY_GROUP::TITLE_UI);
+
+			entity->addGroup(ENTITY_GROUP::TITLE_LOGO);
+
+			return entity;
+		}
+
+		static Entity* CreateTitleBGArchetype(const std::string& imgName, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+
+			entity->addComponent<Transform>();
+			entity->addComponent<SpriteDraw>(imgName.c_str());
+			entity->addComponent<ZoomIn>(0.01f, Vec2(1280.f, 720.f));
+			entity->stopComponent<ZoomIn>();
+
+			entity->addGroup(ENTITY_GROUP::TITLE_BG);
 
 			return entity;
 		}

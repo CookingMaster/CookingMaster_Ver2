@@ -1,8 +1,8 @@
 ﻿/**
 * @file Title.hpp
 * @brief タイトルシーンでの動作を記述します
-* @author 
-* @date 
+* @author
+* @date
 */
 #pragma once
 #include "../../ECS/ECS.hpp"

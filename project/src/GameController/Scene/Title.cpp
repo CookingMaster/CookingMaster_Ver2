@@ -15,12 +15,15 @@ namespace Scene
 	{
 		ResourceManager::GetGraph().load("Resource/image/press_any_key.png", "pak");
 		ResourceManager::GetGraph().load("Resource/image/kari_titlelogo.png", "logo");
+		ResourceManager::GetGraph().load("Resource/image/title_backImage.png", "tbi");
 	}
 	void Title::initialize()
 	{
 		ECS::TitleUIArcheType::CreateLogoArchetype("logo",
 			Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f - 200.f),
 			*entityManager_);
+
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("tbi", *entityManager_);
 	}
 	void Title::update()
 	{
@@ -46,15 +49,22 @@ namespace Scene
 
 	void Title::BehaviorForProgress()
 	{
+		auto& logo = entityManager_->getEntitiesByGroup(ENTITY_GROUP::TITLE_LOGO);
 		switch (progress)
 		{
 		case 0:
-			auto& logo = entityManager_->getEntitiesByGroup(ENTITY_GROUP::TITLE_UI);
 			if (logo[0]->getComponent<ECS::EasingPosMove>().getIsEaseEnd())
 			{
 				ECS::TitleUIArcheType::CreateMessageArchetype("pak",
 					Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 200.f),
 					*entityManager_);
+				++progress;
+			}
+			break;
+
+		case 1:
+			if (logo[0]->getComponent<ECS::EasingPosMove>().getIsEaseEnd())
+			{
 				++progress;
 			}
 			break;
