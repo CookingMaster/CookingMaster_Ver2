@@ -49,61 +49,49 @@ namespace ECS
 	};
 
 	/*!
-	@brief フェードインします
+	@brief フェードイン・アウトを行う
+	* - AlphaBlendが必要、なければ勝手に作る
 	*/
-	class FadeInComponentSystem final : public ComponentSystem
+	class FadeComponent final : public ComponentSystem
 	{
 	private:
 		AlphaBlend* alpha_;
-		Counter cnt_;
+		Easing ease;
+		float start_, end_, spd_;
 
-		int speed_;
 	public:
-		//!フェイドの速度を初期化します。高いほど早い　最大255
-		FadeInComponentSystem(const int speed)
-		{
-			speed_ = speed;
-		}
+		//!フェードの遷移(0~255)と継続時間を設定
+		FadeComponent():
+			start_(0.f),
+			end_(0.f),
+			spd_(0.f){}
 
 		void initialize() override
 		{
+			if (!entity->hasComponent<AlphaBlend>())
+			{
+				entity->addComponent<AlphaBlend>();
+			}
 			alpha_ = &entity->getComponent<AlphaBlend>();
-			cnt_.SetCounter(0, speed_, 0, 255);
 		}
 
 		void update() override
 		{
-			cnt_.add();
-			alpha_->alpha = cnt_.getCurrentCount();
-		}
-	};
-
-	/*!
-	@brief フェードアウトします
-	*/
-	class FadeOutComponentSystem final : public ComponentSystem
-	{
-	private:
-		AlphaBlend* alpha_;
-		Counter cnt_;
-
-		int speed_;
-	public:
-		//!フェイドの速度を初期化します。高いほど早い　最大255
-		FadeOutComponentSystem(const int speed)
-		{
-			speed_ = speed;
+			ease.run(ease.LinearIn, spd_);
+			alpha_->alpha = (int)ease.getVolume(start_, end_);
 		}
 
-		void initialize() override
+		bool isFadeEnd()
 		{
-			alpha_ = &entity->getComponent<AlphaBlend>();
-			cnt_.SetCounter(255, speed_, 0, 255);
+			return ease.isEaseEnd();
 		}
-		void update() override
+
+		void reset(float start, float end, float speed)
 		{
-			cnt_.sub();
-			alpha_->alpha = cnt_.getCurrentCount();
+			start_ = start;
+			end_ = end;
+			spd_ = speed;
+			ease.reset();
 		}
 	};
 
