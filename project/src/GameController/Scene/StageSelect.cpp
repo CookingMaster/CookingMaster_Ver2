@@ -10,7 +10,6 @@ namespace Scene
 	void StageSelect::selectStageMove()
 	{
 		pointEntityMove.pos = &point_->getComponent<ECS::Position>();
-		
 		//ステージ選択時の挙動
 		if (!pointEntityMove.isOptionSelected)
 		{
@@ -46,14 +45,16 @@ namespace Scene
 		//オプション時の操作
 		else
 		{
-			auto& bgmPos = bgmSlider_.barEntity->getComponent<ECS::Position>();
-			auto& sePos = seSlider_.barEntity->getComponent<ECS::Position>();
+			auto& bgmBarPos = bgmSlider_.barEntity->getComponent<ECS::Position>();
+			auto& seBarPos = seSlider_.barEntity->getComponent<ECS::Position>();
 			
 			if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
 			{
 				pointEntityMove.isOptionSelected = false;
 				bgmSlider_.isSelect = false;
 				seSlider_.isSelect = false;
+				std::ofstream ofs("Resource/system/gain.bin");
+				ofs << bgmSlider_.volume <<  seSlider_.volume;
 			}
 
 			if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
@@ -65,35 +66,42 @@ namespace Scene
 			//BGMスライダー
 			if (bgmSlider_.isSelect)
 			{
-				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && !(bgmSlider_.volume >= 1.f))
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 
+					&& !(bgmSlider_.volume >= MasterSound::MAX_GAIN))
 				{
-
-					bgmPos.val.x++;
+					bgmBarPos.val.x++;
 					bgmSlider_.volume += 0.005f;
 				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && !(bgmSlider_.volume <= 0.f))
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 
+					&& !(bgmSlider_.volume <= MasterSound::MIN_GAIN))
 				{
-					bgmPos.val.x--;
+					bgmBarPos.val.x--;
 					bgmSlider_.volume -= 0.005f;
 				}
 			}
 			//SEスライダー
 			if (seSlider_.isSelect)
 			{
-				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && !(seSlider_.volume >= 1.f))
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 
+					&& !(seSlider_.volume >= MasterSound::MAX_GAIN))
 				{
-
-					sePos.val.x++;
+					seBarPos.val.x++;
 					seSlider_.volume += 0.005f;
 				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && !(seSlider_.volume <= 0.f))
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1
+					&& !(seSlider_.volume <= MasterSound::MIN_GAIN))
 				{
-					sePos.val.x--;
+					seBarPos.val.x--;
 					seSlider_.volume -= 0.005f;
 				}
 			}
 		}
-		DOUT << pointEntityMove.selectNum << std::endl;
+		//バーの位置をセットMasterSound::MIN_GAIN
+		constexpr float MAX_GAUGE_SIZE = 270;
+		bgmSlider_.barEntity->getComponent<ECS::Position>().val.x = 
+			bgmSlider_.volume * MAX_GAUGE_SIZE + (bgmSlider_.gaugeEntity->getComponent<ECS::Position>().val.x) -MAX_GAUGE_SIZE / 2;
+		seSlider_.barEntity->getComponent<ECS::Position>().val.x =
+			seSlider_.volume * MAX_GAUGE_SIZE + (seSlider_.gaugeEntity->getComponent<ECS::Position>().val.x) - MAX_GAUGE_SIZE / 2;
 	}
 
 	void StageSelect::selectStage()
@@ -157,7 +165,6 @@ namespace Scene
 		}
 		}
 	}
-
 	void StageSelect::UIReset()
 	{
 		for (auto& it : cookMap_)
@@ -221,6 +228,8 @@ namespace Scene
 			seSlider_.barEntity = ECS::ArcheType::CreateEntity("slider_bar", Vec2{ bookPos.val.x * 1.4f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI);
 			bgmSlider_.type = Slider::BGM;
 			seSlider_.type = Slider::SE;
+			bgmSlider_.volume = MasterSound::Get().getBGMGain();
+			seSlider_.volume = MasterSound::Get().getSEGain();
 		}
 		UIReset();
 		point_ = ECS::ArcheType::CreateEntity("point", Vec2{ bookPos.val.x * 0.4f, bookPos.val.y - UI_HEIGHT * 2 }, *entityManager_, ENTITY_GROUP::UI);
@@ -250,5 +259,16 @@ namespace Scene
 	{
 		entityManager_->allDestory();
 		ResourceManager::GetSound().remove("selectBGM");
+	}
+	void StageSelect::Slider::select()
+	{
+		if (isSelect)
+		{
+			barEntity->getComponent<ECS::Scale>().val = Vec2{ 1.5f,1.5f };
+		}
+		else
+		{
+			barEntity->getComponent<ECS::Scale>().val = Vec2{ 1.f,1.f };
+		}
 	}
 }// namespace StageSelect

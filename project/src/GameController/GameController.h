@@ -42,8 +42,10 @@ public:
 		UI,				//時計やスコアゲージ等のUI
 		FADE,			//フェード用
 		PAUSE_UI,		//ポーズ用UI
+		TITLE_BG,		//タイトル画面背景
+		TITLE_MESSAGE,	//タイトル画面の「PRESS ANY KEY」
+		TITLE_LOGO,		//タイトルロゴ
 		TOP_FADE,		//最前面フェード
-		TITLE_PRESS,	//タイトル画面のPRESS_ANY_KEY	
 		MAX,			//最大数-----------------------------------------ここより上に記述
 	};
 	GameController();
