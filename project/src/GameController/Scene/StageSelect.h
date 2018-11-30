@@ -32,18 +32,8 @@ namespace Scene
 			ECS::Entity* barEntity;
 			bool isSelect = false;
 			Type type;
-			float volume = 0.5f;	//0~1
-			void select()
-			{
-				if (isSelect)
-				{
-					barEntity->getComponent<ECS::Scale>().val = Vec2{1.5f,1.5f};
-				}
-				else
-				{
-					barEntity->getComponent<ECS::Scale>().val = Vec2{ 1.f,1.f };
-				}
-			}
+			float volume;	//0~1
+			void select();
 		};
 		Slider bgmSlider_, seSlider_;
 		//選択用アイコンの移動処理に必要なデータ

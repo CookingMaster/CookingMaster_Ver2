@@ -17,6 +17,15 @@ GameController::GameController()
 {
 	//最初に必要なリソースやEntityの生成、ロードを行う
 	resourceLoad();
+	//サウンド情報の読み込み
+	std::ifstream ifs("Resource/system/gain.bin");
+	float BGM;
+	float SE;
+
+	ifs >> BGM >> SE;
+
+	MasterSound::Get().setAllBGMGain(BGM);
+	MasterSound::Get().setAllSEGain(SE);
 	//初期シーンの設定
 	sceneStack.push(std::make_unique<Scene::Title >(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
 	sceneStack.top()->initialize();
