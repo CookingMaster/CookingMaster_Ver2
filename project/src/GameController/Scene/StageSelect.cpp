@@ -46,7 +46,6 @@ namespace Scene
 		else
 		{
 			auto& bgmBarPos = bgmSlider_.barEntity->getComponent<ECS::Position>();
-			auto& bgmGaugePos = bgmSlider_.gaugeEntity->getComponent<ECS::Position>();
 			auto& seBarPos = seSlider_.barEntity->getComponent<ECS::Position>();
 			
 			if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
