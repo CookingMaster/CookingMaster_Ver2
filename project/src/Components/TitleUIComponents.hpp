@@ -135,24 +135,31 @@ namespace ECS
 	class AnyInputFunction final : public ComponentSystem
 	{
 	public:
-		typedef void(*Func)(ECS::Entity*, EntityManager&);
+		typedef void(*Func)(ECS::Entity*, EntityManager&, bool&);
 
 	private:
 		Func func_;
 		EntityManager& entityManager_;
+		bool isPushed;
 
 	public:
 		AnyInputFunction(Func func, EntityManager& entityManager) :
 			func_(func),
-			entityManager_(entityManager) {}
+			entityManager_(entityManager),
+			isPushed(false){}
 
 		void update() override
 		{
 			auto& input = Input::Get();
 			if (input.getIsAnyInput())
 			{
-				func_(entity, entityManager_);
+				func_(entity, entityManager_, isPushed);
 			}
+		}
+
+		bool getIsPushed()
+		{
+			return isPushed;
 		}
 	};
 
