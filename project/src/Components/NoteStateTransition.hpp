@@ -28,9 +28,9 @@ namespace ECS
 			MISSED,		//“–‚½‚ç‚È‚©‚Á‚½
 			GRAZED,		//‚©‚·‚Á‚½
 			HITTED,		//“–‚½‚Á‚½
-		} val;
+		} state;
 
-		NoteState(): val(State::NON){}
+		NoteState(): state(State::NON){}
 	};
 
 	/**
@@ -81,7 +81,7 @@ namespace ECS
 			hitTimeLine_[7] = hitTimeLine_[6] + hitJudge_[0];
 			hitTimeLine_[8] = hitTimeLine_[7] + 10.f;
 
-			noteState_->val = NoteState::State::NON;
+			noteState_->state = NoteState::State::NON;
 		}
 
 		void update() override
@@ -101,7 +101,7 @@ namespace ECS
 		*/
 		bool ActionToChangeNoteState()
 		{
-			switch (noteState_->val)
+			switch (noteState_->state)
 			{
 			case NoteState::State::NON:
 			case NoteState::State::MISSED:
@@ -110,13 +110,13 @@ namespace ECS
 				return false;
 
 			case NoteState::State::BAD:
-				noteState_->val = NoteState::State::GRAZED;
+				noteState_->state = NoteState::State::GRAZED;
 				break;
 
 			case NoteState::State::GOOD:
 			case NoteState::State::GREAT:
 			case NoteState::State::PARFECT:
-				noteState_->val = NoteState::State::HITTED;
+				noteState_->state = NoteState::State::HITTED;
 				break;
 			}
 			return true;
@@ -125,7 +125,7 @@ namespace ECS
 		//Œ»Ý‚Ìƒm[ƒc‚Ìó‘Ô‚ðŽæ“¾‚·‚é
 		[[nodiscard]]NoteState::State getNoteState() const
 		{
-			return noteState_->val;
+			return noteState_->state;
 		}
 
 	private:
@@ -138,22 +138,22 @@ namespace ECS
 		//ó‘Ô‚ð‘JˆÚ‚³‚¹‚é
 		void transition()
 		{
-			if (noteState_->val == NoteState::State::MISSED ||
-				noteState_->val == NoteState::State::GRAZED ||
-				noteState_->val == NoteState::State::HITTED)
+			if (noteState_->state == NoteState::State::MISSED ||
+				noteState_->state == NoteState::State::GRAZED ||
+				noteState_->state == NoteState::State::HITTED)
 				return;
 
 			switch (transCounter_.getCurrentCount())
 			{
-			case 0:	noteState_->val = NoteState::State::BAD;		break;
-			case 1:	noteState_->val = NoteState::State::GOOD;		break;
-			case 2:	noteState_->val = NoteState::State::GREAT;		break;
-			case 3:	noteState_->val = NoteState::State::PARFECT;	break;
-			case 4:	noteState_->val = NoteState::State::GREAT;		break;
-			case 5:	noteState_->val = NoteState::State::GOOD;		break;
-			case 6:	noteState_->val = NoteState::State::BAD;		break;
-			case 7:	noteState_->val = NoteState::State::NON;		break;
-			case 8:	noteState_->val = NoteState::State::MISSED;
+			case 0:	noteState_->state = NoteState::State::BAD;		break;
+			case 1:	noteState_->state = NoteState::State::GOOD;		break;
+			case 2:	noteState_->state = NoteState::State::GREAT;		break;
+			case 3:	noteState_->state = NoteState::State::PARFECT;	break;
+			case 4:	noteState_->state = NoteState::State::GREAT;		break;
+			case 5:	noteState_->state = NoteState::State::GOOD;		break;
+			case 6:	noteState_->state = NoteState::State::BAD;		break;
+			case 7:	noteState_->state = NoteState::State::NON;		break;
+			case 8:	noteState_->state = NoteState::State::MISSED;
 					animator_->setSpriteNum(0, 1, 2, 2);
 					animator_->changeFrame(10);
 					animator_->setIsEndStopAnim(true);
