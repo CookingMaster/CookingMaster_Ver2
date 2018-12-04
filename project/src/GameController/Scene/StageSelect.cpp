@@ -22,7 +22,8 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/slider.png", "slider");
 		ResourceManager::GetGraph().load("Resource/image/slider_bar.png", "slider_bar");
 		ResourceManager::GetGraph().load("Resource/image/1280.png", "back");
-
+		//テーブル
+		ResourceManager::GetGraph().load("Resource/image/table.png", "table");
 		//本
 		ResourceManager::GetGraph().load("Resource/image/menu.png", "menu");
 		//オプション
@@ -37,6 +38,9 @@ namespace Scene
 			getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE2);
 
 		ECS::ArcheType::CreateGameBG("back",  Vec2{ 0.f,0.f},*entityManager_);
+
+		ECS::ArcheType::CreateEntity("table", Vec2{ 0,0 },
+			*entityManager_, ENTITY_GROUP::BACK)->getComponent<ECS::SpriteDraw>().doCenter(false);
 
 		auto book_ = ECS::ArcheType::CreateEntity("menu",  Vec2{ System::SCREEN_WIDIH / 2, System::SCREEN_HEIGHT * 0.6f },
 			*entityManager_,  ENTITY_GROUP::BACK_OBJECT);

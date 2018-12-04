@@ -405,7 +405,7 @@ namespace ECS
 		std::string name_;
 		Vec2_i size_;
 		bool isDraw_ = true;
-		bool isCenter_ = false;
+		bool isCenter_ = true;
 		Vec2 pivot_;
 	public:
 		//!登録した画像名を指定して初期化します
@@ -436,6 +436,10 @@ namespace ECS
 				{
 					pivot_.x = float(size_.x) / 2.f;
 					pivot_.y = float(size_.y) / 2.f;
+				}
+				else
+				{
+					pivot_.zero();
 				}
 				DrawRotaGraph3F(
 					pos_->val.x,
