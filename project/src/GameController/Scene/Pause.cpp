@@ -65,20 +65,28 @@ namespace Scene
 			switch (select)
 			{
 			case 0:
+			{
 				DOUT << "Game Continue" << std::endl;
 				bgm_name->add<std::string>("BGM_name", name);
+				Sound bgm(name);
+				bgm.play(true, false);
 				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
 				break;
+			}
 			case 1:
+			{
 				DOUT << "Restart" << std::endl;
 				bgm_name->add<std::string>("BGM_name", name);
 				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, true);
 				break;
+			}
 			case 2:
+			{
 				DOUT << "Back To Title" << std::endl;
 				Sound(name).stop();
 				ON_SCENE_CHANGE(SceneName::TITLE, nullptr, StackPopFlag::ALL_CLEAR, true);
 				break;
+			}
 			}
 		}
 	}

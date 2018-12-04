@@ -25,7 +25,7 @@ namespace Scene
 		//テーブル
 		ResourceManager::GetGraph().load("Resource/image/table.png", "table");
 		//本
-		ResourceManager::GetGraph().load("Resource/image/menu.png", "menu");
+		ResourceManager::GetGraph().load("Resource/image/menu_kari.png", "menu");
 		//オプション
 		ResourceManager::GetGraph().load("Resource/image/optionmenu.png", "option");
 		ResourceManager::GetSound().load("Resource/sound/Welcome.ogg", "selectBGM",SoundType::BGM);
@@ -40,7 +40,7 @@ namespace Scene
 		ECS::ArcheType::CreateGameBG("back",  Vec2{ 0.f,0.f},*entityManager_);
 
 		ECS::ArcheType::CreateEntity("table", Vec2{ 0,0 },
-			*entityManager_, ENTITY_GROUP::BACK)->getComponent<ECS::SpriteDraw>().doCenter(false);
+			*entityManager_, ENTITY_GROUP::BACK)->getComponent<ECS::SpriteDraw>().setPivot(Vec2{0.f,0.f});
 
 		auto book_ = ECS::ArcheType::CreateEntity("menu",  Vec2{ System::SCREEN_WIDIH / 2, System::SCREEN_HEIGHT * 0.6f },
 			*entityManager_,  ENTITY_GROUP::BACK_OBJECT);
@@ -60,6 +60,13 @@ namespace Scene
 		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 		{
 			option_->changeGroup(ENTITY_GROUP::UI);
+		}
+		if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+		{
+			auto name = std::make_unique<Parameter>();
+			ResourceManager::GetSound().load("Resource/sound/act_bgm.wav","stage1",SoundType::BGM);
+			name->add<std::string>("BGM_name", "stage1");
+			ON_SCENE_CHANGE(SceneName::GAME, name.get(), StackPopFlag::POP, true);
 		}
 	}
 	void StageSelect::draw()
