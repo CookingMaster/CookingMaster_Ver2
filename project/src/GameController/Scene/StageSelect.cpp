@@ -25,7 +25,7 @@ namespace Scene
 		//テーブル
 		ResourceManager::GetGraph().load("Resource/image/table.png", "table");
 		//本
-		ResourceManager::GetGraph().load("Resource/image/menu_kari.png", "menu");
+		ResourceManager::GetGraph().load("Resource/image/menu.png", "menu");
 		//オプション
 		ResourceManager::GetGraph().load("Resource/image/optionmenu.png", "option");
 		ResourceManager::GetSound().load("Resource/sound/Welcome.ogg", "selectBGM",SoundType::BGM);
@@ -33,23 +33,17 @@ namespace Scene
 
 	void StageSelect::initialize()
 	{
-		//ハイスコアの取得テスト
-		score_ = ECS::ScoreArcheType::CreateSelectScoreEntity("font", Vec2{ 100,200 }, ECS::StageHighScore::STAGE2, *entityManager_)->
-			getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE2);
-
-		ECS::ArcheType::CreateGameBG("back",  Vec2{ 0.f,0.f},*entityManager_);
-
-		ECS::ArcheType::CreateEntity("table", Vec2{ 0,0 },
+		ECS::ArcheType::CreateEntity("table", Vec2{ 0.f,0.f },
 			*entityManager_, ENTITY_GROUP::BACK)->getComponent<ECS::SpriteDraw>().setPivot(Vec2{0.f,0.f});
-
-		auto book_ = ECS::ArcheType::CreateEntity("menu",  Vec2{ System::SCREEN_WIDIH / 2, System::SCREEN_HEIGHT * 0.6f },
-			*entityManager_,  ENTITY_GROUP::BACK_OBJECT);
+		auto menu_ = ECS::ArcheType::CreateEntity("menu",  Vec2{ 84.f,134.f},
+			*entityManager_, ENTITY_GROUP::BACK_OBJECT);
+		menu_->getComponent<ECS::SpriteDraw>().setPivot(Vec2{ 0.f,0.f });
 		option_ = ECS::ArcheType::CreateEntity("option", Vec2{ (float)System::SCREEN_WIDIH * 0.8, System::SCREEN_HEIGHT * 0.5f },
 			*entityManager_, ENTITY_GROUP::BACK);
 		
 		
 		
-		auto bookPos = book_->getComponent<ECS::Position>();
+		auto bookPos = menu_->getComponent<ECS::Position>();
 
 		Sound bgm("selectBGM");
 		bgm.play(true,false);
@@ -72,8 +66,6 @@ namespace Scene
 	void StageSelect::draw()
 	{
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		DrawFormatString(0, 0, 0xffffffff, "セレクト画面");
-		DrawFormatString(0, 100, 0xffffffff, "%d", score_);
 		
 	}
 
