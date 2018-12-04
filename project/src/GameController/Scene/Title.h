@@ -1,8 +1,8 @@
 ﻿/**
 * @file Title.hpp
 * @brief タイトルシーンでの動作を記述します
-* @author 
-* @date 
+* @author
+* @date
 */
 #pragma once
 #include "../../ECS/ECS.hpp"
@@ -15,12 +15,18 @@ namespace Scene
 	class Title : public AbstractScene
 	{
 	private:
-		ECS::EntityManager* entitytManager_;
+		ECS::EntityManager* entityManager_;
+		int progress;
+
 	public:
 		Title(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
-		void initialize() override {};
+		~Title();
+		void initialize() override;
 		void update() override;
 		void draw() override;
+
+	private:
+		void BehaviorForProgress();
 	};
 
 }

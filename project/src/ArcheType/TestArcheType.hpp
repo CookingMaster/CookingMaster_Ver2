@@ -13,32 +13,6 @@
 #include "../Input/Input.hpp"
 namespace ECS
 {
-	void BarEvent(Entity* entity)
-	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_Q) == 1)
-		{
-			//バーUIのゲージを進める
-			entity->getComponent<BarComponentSystemX>().addScore(10);
-		}
-		
-	}
-	int BarEvent2(Entity* entity)
-	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_W) == 1)
-		{
-			//バーUIのゲージを進める
-			entity->getComponent<BarComponentSystemX>().addScore(40);
-		}
-		return 0;
-	}
-	void BarEvent3(Entity* entity)
-	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_E) == 1)
-		{
-			//バーUIのゲージを進める
-			entity->getComponent<BarComponentSystemX>().addScore(80);
-		}
-	}
 	struct BarEvent4
 	{
 		void operator()(Entity* e)
@@ -62,23 +36,20 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(0, 0, 0, 38);
 			entity->addComponent<SpriteRectDraw>(graphicName);
-			entity->addComponent<EventFunctionSystem<void>>(BarEvent);
-			entity->addComponent<EventFunctionSystem<int>>(BarEvent2);
 			entity->addComponent<EventFunctionSystem<void, class AAA>>(BarEvent4());
 			entity->addComponent<BarComponentSystemX>(424, 0, 200);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
-		//!エンティティの生成テスト
-		static Entity* CreateTestEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		//!画像を表示できるエンティティの生成
+		static Entity* CreateEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_ ,const Group group)
 		{
 			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Transform>().setPosition(pos.x,pos.y);
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(1);
-			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
-			entity->addGroup(ENTITY_GROUP::LAYER1);
+			entity->addComponent<SpriteDraw>(graphicName);
+			entity->addGroup(group);
 			return entity;
 		}
 

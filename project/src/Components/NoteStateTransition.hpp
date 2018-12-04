@@ -154,7 +154,9 @@ namespace ECS
 			case 6:	noteState_->val = NoteState::State::BAD;		break;
 			case 7:	noteState_->val = NoteState::State::NON;		break;
 			case 8:	noteState_->val = NoteState::State::MISSED;
-					/*animator_->setIndex(0, 1);*/ animator_->setIsEndStopAnim(true);
+					animator_->setSpriteNum(0, 1, 2, 2);
+					animator_->changeFrame(10);
+					animator_->setIsEndStopAnim(true);
 					entity->stopComponent<Physics>();
 					entity->updateComponent<KillEntity>();
 					break;

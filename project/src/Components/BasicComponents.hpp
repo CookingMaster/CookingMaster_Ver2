@@ -98,24 +98,24 @@ namespace ECS
 		std::function<bool(const Entity&, const Entity&)> hitFunc_;
 		void checkMove(Vec2& pos, Vec2& velocity)
 		{
-			Vec2 p(velocity);
+			Vec2 pointEntityMove(velocity);
 			//横軸に対する移動
-			while (p.x != 0.f)
+			while (pointEntityMove.x != 0.f)
 			{
 				float preX = pos.x;
 
-				if (p.x >= 1)
+				if (pointEntityMove.x >= 1)
 				{
-					pos.x += 1; p.x -= 1;
+					pos.x += 1; pointEntityMove.x -= 1;
 				}
-				else if (p.x <= -1)
+				else if (pointEntityMove.x <= -1)
 				{
-					pos.x -= 1; p.x += 1;
+					pos.x -= 1; pointEntityMove.x += 1;
 				}
 				else
 				{
-					pos.x += p.x;
-					p.x = 0;
+					pos.x += pointEntityMove.x;
+					pointEntityMove.x = 0;
 				}
 				for (const auto& it : otherEntity_)
 				{
@@ -129,21 +129,21 @@ namespace ECS
 			
 			}
 			//縦軸に対する移動
-			while (p.y != 0.f)
+			while (pointEntityMove.y != 0.f)
 			{
 				float preY = pos.y;
-				if (p.y >= 1)
+				if (pointEntityMove.y >= 1)
 				{ 
-					pos.y += 1; p.y -= 1; 
+					pos.y += 1; pointEntityMove.y -= 1; 
 				}
-				else if (p.y <= -1)
+				else if (pointEntityMove.y <= -1)
 				{ 
-					pos.y -= 1; p.y += 1; 
+					pos.y -= 1; pointEntityMove.y += 1; 
 				}
 				else
 				{
-					pos.y += p.y;
-					p.y = 0; 
+					pos.y += pointEntityMove.y;
+					pointEntityMove.y = 0; 
 				}
 				for (const auto& it : otherEntity_)
 				{

@@ -23,14 +23,17 @@
     <ClCompile Include="src\GameController\GameController.cpp" />
     <ClCompile Include="src\GameController\Scene\Game.cpp" />
     <ClCompile Include="src\GameController\Scene\Pause.cpp" />
+    <ClCompile Include="src\GameController\Scene\Result.cpp" />
     <ClCompile Include="src\GameController\Scene\StageSelect.cpp" />
     <ClCompile Include="src\GameController\Scene\Title.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ArcheType\NotesArcheType.hpp" />
+    <ClInclude Include="src\ArcheType\ResultArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ScoreArcheType.hpp" />
     <ClInclude Include="src\ArcheType\TestArcheType.hpp" />
+    <ClInclude Include="src\ArcheType\TitleUIArcheType.hpp" />
     <ClInclude Include="src\ArcheType\UIArcheType.hpp" />
     <ClInclude Include="src\Class\MusicScoreLoader.hpp" />
     <ClInclude Include="src\Class\NotesAndScoreData.hpp" />
@@ -43,9 +46,11 @@
     <ClInclude Include="src\Components\Collider.hpp" />
     <ClInclude Include="src\Components\NoteStateTransition.hpp" />
     <ClInclude Include="src\Components\PlayerController.hpp" />
+    <ClInclude Include="src\Components\ResultComponent.hpp" />
     <ClInclude Include="src\Components\ScoreSystem.hpp" />
     <ClInclude Include="src\Components\Renderer.hpp" />
     <ClInclude Include="src\Components\ReplayNotesComponents.hpp" />
+    <ClInclude Include="src\Components\TitleUIComponents.hpp" />
     <ClInclude Include="src\Components\UIComponents.hpp" />
     <ClInclude Include="src\ECS\ECS.hpp" />
     <ClInclude Include="src\GameController\GameController.h" />
@@ -53,6 +58,7 @@
     <ClInclude Include="src\GameController\Scene\Game.h" />
     <ClInclude Include="src\GameController\Scene\Parameter.hpp" />
     <ClInclude Include="src\GameController\Scene\Pause.h" />
+    <ClInclude Include="src\GameController\Scene\Result.h" />
     <ClInclude Include="src\GameController\Scene\SceneManager.hpp" />
     <ClInclude Include="src\GameController\Scene\StageSelect.h" />
     <ClInclude Include="src\GameController\Scene\Title.h" />

@@ -40,12 +40,12 @@ public:
 	/**
 	* @brief 実行中のイージングの現在値を取得
 	* @param startPoint 始点(float)
-	* @param endPoint 終点(float)-始点(float)
+	* @param endPoint 終点(float)
 	* @details run()を呼び出さなければ機能しない
 	*/
 	[[nodiscard]] const float getVolume(const float startPoint, const float endPoint)
 	{
-		return startPoint + (vol_ * endPoint);
+		return startPoint + (vol_ * (endPoint - startPoint));
 	}
 
 	//!イージングが終了したらtrueが返る
@@ -155,33 +155,33 @@ public:
 	static float ElasticIn(float time, float duration)
 	{
 		if (time == 0) return 0.f;  if ((time /= duration) == 1) return 1.f;
-		const float p = duration * 0.3f;
+		const float pointEntityMove = duration * 0.3f;
 		constexpr float a = 1.f;
-		const float s = p / 4;
+		const float s = pointEntityMove / 4;
 		const float postFix = static_cast<float>(a*pow(2, 10 * (time -= 1)));
-		return -static_cast<float>(postFix * sin((time*(duration)-s)*(2 * (PI)) / p));
+		return -static_cast<float>(postFix * sin((time*(duration)-s)*(2 * (PI)) / pointEntityMove));
 	}
 	static float ElasticOut(float time, float duration)
 	{
 		if (time == 0) return 0.f;  if ((time /= duration) == 1) return 1.f;
-		const float p = duration * 0.3f;
+		const float pointEntityMove = duration * 0.3f;
 		constexpr float a = 1.f;
-		const float s = p / 4;
-		return (static_cast<float>(a*pow(2, -10 * time) * sin((time*(duration)-s)*(2 * static_cast<float>(PI)) / p) + 1.f));
+		const float s = pointEntityMove / 4;
+		return (static_cast<float>(a*pow(2, -10 * time) * sin((time*(duration)-s)*(2 * static_cast<float>(PI)) / pointEntityMove) + 1.f));
 	}
 	static float ElasticInOut(float time, float duration)
 	{
 		if (time == 0) return 0.f;  if ((time /= duration / 2) == 2) return 1.f;
-		const float p = duration * (0.3f*1.5f);
+		const float pointEntityMove = duration * (0.3f*1.5f);
 		constexpr float a = 1.f;
-		const float s = p / 4;
+		const float s = pointEntityMove / 4;
 
 		if (time < 1) {
 			const float postFix = static_cast<float>(a*pow(2, 10 * (time -= 1)));
-			return -0.5f*static_cast<float>((postFix* sin((time*(duration)-s)*(2 * (PI)) / p)));
+			return -0.5f*static_cast<float>((postFix* sin((time*(duration)-s)*(2 * (PI)) / pointEntityMove)));
 		}
 		const float postFix = static_cast<float>(a*pow(2, -10 * (time -= 1)));
-		return static_cast<float>(postFix * sin((time*(duration)-s)*(2 * static_cast<float>(PI)) / p)*.5f + 1.f);
+		return static_cast<float>(postFix * sin((time*(duration)-s)*(2 * static_cast<float>(PI)) / pointEntityMove)*.5f + 1.f);
 	}
 
 	static float ExpoIn(float time, float duration)

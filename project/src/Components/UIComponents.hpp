@@ -3,6 +3,10 @@
 * @brief UIのコンポーネント群です。
 * @author moon
 * @date 2018/10/11
+* @history
+- 2018.11.20 yokota0717
+-# ButtonComponent、ButtonMojiComponentの仕様変更
+-# Pauseで使うSelectFrameを追加
 */
 #pragma once
 #include "../ECS/ECS.hpp"
@@ -45,61 +49,49 @@ namespace ECS
 	};
 
 	/*!
-	@brief フェードインします
+	@brief フェードイン・アウトを行う
+	* - AlphaBlendが必要、なければ勝手に作る
 	*/
-	class FadeInComponentSystem final : public ComponentSystem
+	class FadeComponent final : public ComponentSystem
 	{
 	private:
 		AlphaBlend* alpha_;
-		Counter cnt_;
+		Easing ease;
+		float start_, end_, spd_;
 
-		int speed_;
 	public:
-		//!フェイドの速度を初期化します。高いほど早い　最大255
-		FadeInComponentSystem(const int speed)
-		{
-			speed_ = speed;
-		}
+		//!フェードの遷移(0~255)と継続時間を設定
+		FadeComponent():
+			start_(0.f),
+			end_(0.f),
+			spd_(0.f){}
 
 		void initialize() override
 		{
+			if (!entity->hasComponent<AlphaBlend>())
+			{
+				entity->addComponent<AlphaBlend>();
+			}
 			alpha_ = &entity->getComponent<AlphaBlend>();
-			cnt_.SetCounter(0, speed_, 0, 255);
 		}
 
 		void update() override
 		{
-			cnt_.add();
-			alpha_->alpha = cnt_.getCurrentCount();
-		}
-	};
-
-	/*!
-	@brief フェードアウトします
-	*/
-	class FadeOutComponentSystem final : public ComponentSystem
-	{
-	private:
-		AlphaBlend* alpha_;
-		Counter cnt_;
-
-		int speed_;
-	public:
-		//!フェイドの速度を初期化します。高いほど早い　最大255
-		FadeOutComponentSystem(const int speed)
-		{
-			speed_ = speed;
+			ease.run(ease.LinearIn, spd_);
+			alpha_->alpha = (int)ease.getVolume(start_, end_);
 		}
 
-		void initialize() override
+		bool isFadeEnd()
 		{
-			alpha_ = &entity->getComponent<AlphaBlend>();
-			cnt_.SetCounter(255, speed_, 0, 255);
+			return ease.isEaseEnd();
 		}
-		void update() override
+
+		void reset(float start, float end, float speed)
 		{
-			cnt_.sub();
-			alpha_->alpha = cnt_.getCurrentCount();
+			start_ = start;
+			end_ = end;
+			spd_ = speed;
+			ease.reset();
 		}
 	};
 
@@ -243,7 +235,7 @@ namespace ECS
 				eas_.reset();
 			}
 			float size_w_ = score_ * rect_x_ / (float)max_;
-			rectangle_->w = (int)eas_.getVolume((float)rectangle_->w, size_w_- (float)rectangle_->w);
+			rectangle_->w = (int)eas_.getVolume((float)rectangle_->w, size_w_/*- (float)rectangle_->w*/);
 			
 		}
 		void addScore(int score)
@@ -380,7 +372,6 @@ namespace ECS
 		Rectangle* rectangle_;
 		SpriteRectDraw* rectDraw_;
 
-		int select_;
 		bool button_[3];
 		float posX_;
 		int rectW_;
@@ -389,26 +380,27 @@ namespace ECS
 		{
 			for (int i = 0; i < std::size(button_); ++i)
 			{
+				//選択中のボタンの画像変更：仕様変更により消去
+				//if (select_ == i) {
+				//	rectangle_->x = rectW_;
+				//}
+				//else {
+				//	rectangle_->x = 0;
+				//}
+
 				//隙間をもってボタン三つを描く
 				//select_に当たっているボタンはrectが1個右に
-				pos_->val.x = posX_ + (i * rectW_ + i * 30) * entity->getComponent<Scale>().val.x;
+				pos_->val.x = posX_ + i * (rectW_ + 30);
 				if (draw != nullptr)
 				{
 					//draw->setPivot(Vec2{ rectW_ / 2, 56 / 2 });
 					draw->draw2D();
 				}
-				if (select_ == i) {
-					rectangle_->x = rectW_;
-				}
-				else {
-					rectangle_->x = 0;
-				}
 			}
 		}
 	public:
-		ButtonCommponent(int select, int rect_w)
+		ButtonCommponent(int rect_w)
 		{
-			select_ = select;
 			rectW_ = rect_w;
 		}
 
@@ -430,17 +422,6 @@ namespace ECS
 		{
 			setRect(rectDraw_);
 		}
-		void setSelect(int num)
-		{
-			//方向によて1か-1を受ける
-			select_ = (select_ + num + 3) % 3;
-			//select_が0,1,2の中ひとつがなるように
-		}
-
-		int getSelect()
-		{
-			return select_;
-		}
 	};
 
 	class ButtonMojiCommponent  final : public ComponentSystem
@@ -453,15 +434,14 @@ namespace ECS
 		int moji_[3];
 		float posX_;
 		int rectW_;
-		int rectH_;
 
 		void setRect(SpriteRectDraw* draw)
 		{
 			for (int i = 0; i < std::size(moji_); ++i)
 			{
-				//隙間をもってボタン三つを描く
-				//select_に当たっているボタンはrectが1個右に
-				pos_->val.x = posX_ + (i * rectW_ + i * 30) * entity->getComponent<Scale>().val.x;
+				//! 元画像の描画する範囲をずらす
+				rectangle_->x = rectW_ * i;
+				pos_->val.x = posX_ + rectW_ * i;
 				if (draw != nullptr)
 				{
 					//draw->setPivot(Vec2{ rectW_ / 2, 56 / 2 });
@@ -470,16 +450,9 @@ namespace ECS
 			}
 		}
 	public:
-		ButtonMojiCommponent(int rect_w)
+		ButtonMojiCommponent(int rectW)
 		{
-			pos_ = &entity->getComponent<Position>();
-			rectangle_ = &entity->getComponent<Rectangle>();
-			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
-
-			posX_ = pos_->val.x;
-			rectW_ = rectangle_->w;
-			rectH_ = rectangle_->h;
-			setRect(nullptr);
+			rectW_ = rectW;
 		}
 		void initialize() override
 		{
@@ -489,7 +462,6 @@ namespace ECS
 
 			posX_ = pos_->val.x;
 			rectangle_->w = rectW_;
-			setRect(nullptr);
 		}
 		void update() override
 		{
@@ -498,6 +470,48 @@ namespace ECS
 		void draw2D() override
 		{
 			setRect(rectDraw_);
+		}
+
+	};
+
+	class SelectFrame final : public ComponentSystem {
+	private:
+		Position* pos_;
+		Rectangle* rectangle_;
+		SpriteRectDraw* rectDraw_;
+
+		float posX_;
+		int select_;
+	public:
+		SelectFrame() {}
+		void initialize() override {
+			pos_ = &entity->getComponent<Position>();
+			rectangle_ = &entity->getComponent<Rectangle>();
+			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
+			posX_ = pos_->val.x;
+			select_ = 0;
+		}
+		void update() override {}
+		void draw2D() override {}
+
+		/**
+		* @brief 入力によって選択中のボタン識別変数を更新
+		* @param num 左なら‐1、右なら1
+		*/
+		void setSelect(const int num)
+		{
+			if (num != 1 && num != -1) {
+				DOUT << "param is incorrect" << std::endl;
+				return; 
+			}
+			//select_が0,1,2の中ひとつがなるように
+			select_ = (select_ + num + 3) % 3;
+			pos_->val.x = posX_ + ((138/*ボタンのサイズ*/ + 30/*ボタンの間隔*/)* select_);
+		}
+
+		int getSelect()
+		{
+			return select_;
 		}
 
 	};
