@@ -104,6 +104,7 @@ namespace ECS
 		friend class EntityManager;
 		std::string tag_;
 		EntityManager& manager_;
+		Group nowGroup_;
 		bool isActive_ = true;
 		std::vector<std::unique_ptr<ComponentSystem>> components_;
 		ComponentArray  componentArray_;
@@ -191,7 +192,13 @@ namespace ECS
 		{
 			groupBitSet_[group] = false;
 		}
-
+		//!グループを登録しなおします
+		void changeGroup(const Group setGroup) noexcept
+		{
+			removeGroup(nowGroup_);
+			addGroup(setGroup);
+			nowGroup_ = setGroup;
+		}
 		//!Entityに指定したComponentがあるか返します
 		template <typename T> [[nodiscard]] bool hasComponent() const
 		{
@@ -408,6 +415,6 @@ namespace ECS
 	void EntitiesDraw2D(const std::vector<Entity*>& entities);
 	//!vectorに格納されているエンティティの3D描画を行います
 	void EntitiesDraw3D(const std::vector<Entity*>& entities);
-
+	
 }
 

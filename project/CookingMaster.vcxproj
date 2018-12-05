@@ -32,6 +32,7 @@
     <ClInclude Include="src\ArcheType\NotesArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ResultArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ScoreArcheType.hpp" />
+    <ClInclude Include="src\ArcheType\SelectArchetype.hpp" />
     <ClInclude Include="src\ArcheType\TestArcheType.hpp" />
     <ClInclude Include="src\ArcheType\TitleUIArcheType.hpp" />
     <ClInclude Include="src\ArcheType\UIArcheType.hpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="src\Components\Animator.hpp" />
     <ClInclude Include="src\Components\BasicComponents.hpp" />
     <ClInclude Include="src\Components\Collider.hpp" />
+    <ClInclude Include="src\Components\CursorMove.hpp" />
     <ClInclude Include="src\Components\NoteStateTransition.hpp" />
     <ClInclude Include="src\Components\PlayerController.hpp" />
     <ClInclude Include="src\Components\ResultComponent.hpp" />

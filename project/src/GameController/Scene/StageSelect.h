@@ -15,6 +15,7 @@ namespace Scene
 	class StageSelect : public AbstractScene
 	{
 	private:
+		ECS::Entity* option_;
 		static constexpr int UI_HEIGHT = 120;
 		ECS::EntityManager* entityManager_ = nullptr;
 		ECS::Entity* point_ = nullptr;
@@ -33,7 +34,6 @@ namespace Scene
 			bool isSelect = false;
 			Type type;
 			float volume;	//0~1
-			void select();
 		};
 		Slider bgmSlider_, seSlider_;
 		//選択用アイコンの移動処理に必要なデータ
@@ -44,10 +44,8 @@ namespace Scene
 			size_t selectNum = 0u;
 			
 		}pointEntityMove;
-		void selectStage();
 		int score_ = 0;
-		void selectStageMove();
-		void UIReset();	//UIを隠す
+
 	public:
 		StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~StageSelect();
