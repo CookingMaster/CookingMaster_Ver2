@@ -20,7 +20,7 @@ private:
 	int bpm_;
 	int offsetTime_;
 	std::vector<NotesData> notesData_;
-	ScoreData scoreData_;
+	MusicData scoreData_;
 
 public:
 	/**
@@ -107,7 +107,7 @@ public:
 	* @brief 譜面データを取得する
 	* @return const ScoreData& 譜面データ
 	*/
-	[[nodiscard]]const ScoreData& GetScoreData()
+	[[nodiscard]]const MusicData& GetScoreData()
 	{
 		return scoreData_;
 	}
