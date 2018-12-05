@@ -44,7 +44,7 @@ namespace Scene
 		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), *entityManager_);
 		//時計
 		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2(800.f, 100.f), *entityManager_);
-		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
+		clock->getComponent<ECS::SimpleDraw>().isCenter(true);
 		//時計の針
 		ECS::UIArcheType::CreateNeedleUI("needle", Vec2(800.f, 100.f), *entityManager_, 1.f);
 		//得点(パーセンテージ)表示
