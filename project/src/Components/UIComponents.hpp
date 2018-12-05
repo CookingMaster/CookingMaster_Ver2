@@ -242,6 +242,10 @@ namespace ECS
 		{
 			atScore_ = score_;
 			score_ += score;
+			if (score_ > 100)
+			{
+				score_ = 100;
+			}
 		}
 		int getScore()
 		{
@@ -303,34 +307,37 @@ namespace ECS
 		Rectangle* rectangle_;
 		SpriteRectDraw* rectDraw_;
 		
-		int rectW_;
 		int num_;
-		float posX_;
+		Vec2 rect_;
+		Vec2 initPos_;
 		
 		int font_[4];
 		
-		void setRect(SpriteRectDraw* draw)
+		void setRectAndDraw()
 		{
+			int keta = 0;
 			for (int i = 0; i < std::size(font_); ++i) 
 			{
-				if ((i == 0 && num_ < 100) || i == 1 && num_ < 10) 
+				//十の位、百の位が0の時は各値を表示しない
+				if ((i == 1 && num_ < 10) || (i == 0 && num_ < 100))
 				{
+					++keta;
 					continue;
 				}
-				rectangle_->x = font_[i] * rectW_;
-				pos_->val.x = posX_ + (i * rectW_) * entity->getComponent<Scale>().val.x;
-				if (draw != nullptr)
-				{
-					draw->draw2D();
-				}
+				rectangle_->x = font_[i] * (int)rect_.x;
+				
+				pos_->val.x = initPos_.x + (i * rect_.x);
+				rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
+				rectDraw_->draw2D();
 			}
 		}
 
 	public:
-		DrawFont(int rect_w, int num)
+		DrawFont(float rectW, float rectH):
+			num_(0)
 		{
-			rectW_ = rect_w;
-			num_ = num;
+			rect_.x = rectW;
+			rect_.y = rectH;
 		}
 
 		void initialize() override
@@ -339,29 +346,26 @@ namespace ECS
 			rectangle_ = &entity->getComponent<Rectangle>();
 			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
 
-			posX_ = pos_->val.x;
-			rectangle_->x = rectW_ * num_;
-			rectangle_->w = rectW_;
+			initPos_ = pos_->val;
+			rectangle_->x = (int)rect_.x * num_;
+			rectangle_->w = (int)rect_.x;
 			font_[3] = 10;
-			setRect(nullptr);
 		}
 
 		void update() override
 		{
-			//rectangle_->x = rectW_ * num_;
-			setRect(nullptr);
 		}
 		void draw2D() override
 		{
-			setRect(rectDraw_);
+			setRectAndDraw();
 		}
 		void setNumber(int num)
 		{
 			num_ = num;
-			font_[3] = 10;
-			font_[2] = num % 10;
-			font_[1] = num % 100 / 10;
-			font_[0] = num / 100;
+			font_[3] = 10;				//'%' 
+			font_[2] = num % 10;		//一桁目(一の位)
+			font_[1] = num % 100 / 10;	//二桁目(十の位)
+			font_[0] = num / 100;		//三桁目(百の位)
 		}
 	};
 

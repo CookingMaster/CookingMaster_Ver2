@@ -35,4 +35,4 @@ struct OneNoteData
 };
 
 //譜面データ
-typedef std::vector<std::vector<OneNoteData>> ScoreData;
+typedef std::vector<std::vector<OneNoteData>> MusicData;
