@@ -36,10 +36,11 @@ public:
 	/**
 	* @brief 更新処理
 	* @param notesData 使用するノーツのデータ
-	* @param scoreData 譜面データ
+	* @param 
+	譜面データ
 	* @param entityManager エンティティマネージャ
 	*/
-	void run(const std::vector<NotesData>& notesData, const ScoreData& scoreData, ECS::EntityManager& entityManager)
+	void run(const std::vector<NotesData>& notesData, const MusicData& scoreData, ECS::EntityManager& entityManager)
 	{
 		CalcurationBeat beat((float)bpm_);
 
@@ -54,7 +55,7 @@ public:
 
 private:
 	//ノーツを生成する
-	void createNotes(const std::vector<NotesData>& notesData, const ScoreData& scoreData, ECS::EntityManager& entityManager)
+	void createNotes(const std::vector<NotesData>& notesData, const MusicData& scoreData, ECS::EntityManager& entityManager)
 	{
 		//次の小節の譜面を見る
 		int nextBar = cntBar_.getCurrentCount() + 1;

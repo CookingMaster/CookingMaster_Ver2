@@ -36,26 +36,25 @@ namespace Scene
 		nc.resetData(msl.GetBPM(), msl.GetOffsetTime());
 		s.play(false,false);
 		//背景
-		ECS::ArcheType::CreateGameBG("game_bg", Vec2{ 0.f,0.f }, *entityManager_);
+		ECS::ArcheType::CreateGameBG("game_bg", Vec2(0.f, 0.f), *entityManager_);
 		//プレイヤテスト
-		ECS::ArcheType::CreatePlayerEntity("chara", name.c_str(), Vec2{ 300.f, 100.f }, 20, *entityManager_);
+		ECS::ArcheType::CreatePlayerEntity("chara", name.c_str(), Vec2(300.f, 100.f), 20, *entityManager_);
 		//スコアのバー
-		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2{ 431.f,44.f }, Vec2{ 300.f,300.f }, *entityManager_);
-		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2{ 424.f,38.f }, Vec2{ 300.f,300.f }, *entityManager_);
+		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(300.f, 300.f), *entityManager_);
+		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), *entityManager_);
 		//時計
-		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
+		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(450.f, 350.f), *entityManager_);
+		//得点(パーセンテージ)表示
+		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2(800.f, 100.f), *entityManager_);
 		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
-		ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
-		ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
-		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
-		ECS::UIArcheType::CreateFontUI("font", Vec2{ 25.f, 45.f }, Vec2{ 450.f,350.f }, *entityManager_);
-		ECS::ScoreArcheType::CreateResultScoreEntity("font", Vec2{ 200.f,300.f }, ECS::StageHighScore::STAGE2,100, *entityManager_);
-		ECS::ArcheType::CreateAA("bar_full", Vec2{0,0},*entityManager_);
-		//pause = ECS::UIArcheType::CreatePauseUI("pause", Vec2)
+		
+		//時計の針
+		ECS::UIArcheType::CreateNeedleUI("needle", Vec2(800.f, 100.f), *entityManager_, 1.f);
 	}
 
 	void Game::update()
 	{
+		//以下、仮の判定処理↓
 		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
 		{
 			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE))
@@ -84,6 +83,7 @@ namespace Scene
 				}
 			}
 		}
+		//ここまで仮の判定処理↑
 
 
 		entityManager_->update();
@@ -99,7 +99,7 @@ namespace Scene
 			{
 				if (it->hasComponent<ECS::BarComponentSystemX>())
 				{
-					it->getComponent<ECS::BarComponentSystemX>().addScore(43);
+					it->getComponent<ECS::BarComponentSystemX>().addScore(1);
 					num_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
 				}
 				if (it->hasComponent<ECS::ExpandReduceComponentSystem>())

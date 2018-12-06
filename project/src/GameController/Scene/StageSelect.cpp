@@ -66,7 +66,7 @@ namespace Scene
 		if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 		{
 			auto name = std::make_unique<Parameter>();
-			ResourceManager::GetSound().load("Resource/sound/act_bgm.wav","stage1",SoundType::BGM);
+			ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav","stage1",SoundType::BGM);
 			name->add<std::string>("BGM_name", "stage1");
 			ON_SCENE_CHANGE(SceneName::GAME, name.get(), StackPopFlag::POP, true);
 		}
