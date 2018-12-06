@@ -48,11 +48,21 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<SpriteDraw>(graphicName);
+			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2{ 0.f,0.f });
 			entity->addGroup(group);
 			return entity;
 		}
-
+		//!分割画像を表示できるエンティティの生成
+		static Entity* CreateMultiEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_, const Group group)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setPivot(Vec2{0.f,0.f});
+			entity->addGroup(group);
+			return entity;
+		}
 		//!BPMアニメーションテスト
 		static Entity* CreateAnimationEntity(const char* graphicName, const char* soundName, const Vec2 pos, EntityManager& entityManager_)
 		{

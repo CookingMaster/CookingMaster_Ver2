@@ -204,9 +204,9 @@ namespace ECS
 			isDraw_ = false;
 		}
 		//!描画する基準座標を中心にするか引数で指定します
-		void isCenter(const bool isCenter)
+		void doCenter(const bool doCenter)
 		{
-			isCenter_ = isCenter;
+			isCenter_ = doCenter;
 		}
 	};
 
@@ -293,9 +293,9 @@ namespace ECS
 			isDraw_ = false;
 		}
 		//!描画する基準座標を中心にするか引数で指定します
-		void isCenter(const bool isCenter)
+		void doCenter(const bool doCenter)
 		{
-			isCenter_ = isCenter;
+			isCenter_ = doCenter;
 		}
 	};
 
@@ -468,8 +468,8 @@ namespace ECS
 		{
 			isDraw_ = false;
 		}
-		//!描画する基準座標を中心にするか引数で指定します
-		void isCenter()
+		//!描画する基準座標を中心にします
+		void doCenter()
 		{
 			pivot_.x = float(size_.x) / 2.f;
 			pivot_.y = float(size_.y) / 2.f;

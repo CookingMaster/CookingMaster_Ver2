@@ -14,7 +14,7 @@ namespace ECS
 			entity->addComponent<FlashImage>();
 
 			entity->addComponent<Position>(-1000.f, -1000.f);
-			entity->addComponent<SimpleDraw>(imgName.c_str()).isCenter(true);
+			entity->addComponent<SimpleDraw>(imgName.c_str()).doCenter(true);
 			entity->addComponent<EasingPosMove>().setDest(
 				Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT + 100.f),
 				goalpos,
@@ -51,7 +51,7 @@ namespace ECS
 			entity->addComponent<Position>(-1000.f, -1000.f);
 			entity->addComponent<FlashImage>();
 			entity->stopComponent<FlashImage>();
-			entity->addComponent<SimpleDraw>(imgName.c_str()).isCenter(true);
+			entity->addComponent<SimpleDraw>(imgName.c_str()).doCenter(true);
 			entity->addComponent<EasingPosMove>().setDest(
 				Vec2(System::SCREEN_WIDIH / 2.f, -50.f),
 				goalpos,
