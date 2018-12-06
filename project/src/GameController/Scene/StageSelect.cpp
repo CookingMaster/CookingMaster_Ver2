@@ -15,9 +15,8 @@ namespace Scene
 		ResourceManager::GetSound().load("Resource/sound/onion.ogg", "onion", SoundType::SE);
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		//仮料理画像とUI
-		ResourceManager::GetGraph().load("Resource/image/cook.png", "tkg");
-		ResourceManager::GetGraph().load("Resource/image/cook2.png", "tkg2");
-		ResourceManager::GetGraph().load("Resource/image/cook3.png", "tkg3");
+		ResourceManager::GetGraph().load("Resource/image/tamagokake.png", "tkg");
+		ResourceManager::GetGraph().loadDiv("Resource/image/stage_kari.png", "stage",3,1,3,182,89);
 		//スライダー
 		ResourceManager::GetGraph().load("Resource/image/slider.png", "slider");
 		ResourceManager::GetGraph().load("Resource/image/slider_bar.png", "slider_bar");
@@ -35,16 +34,25 @@ namespace Scene
 	{
 		ECS::ArcheType::CreateEntity("table", Vec2{ 0.f,0.f },
 			*entityManager_, ENTITY_GROUP::BACK)->getComponent<ECS::SpriteDraw>().setPivot(Vec2{0.f,0.f});
-		auto menu_ = ECS::ArcheType::CreateEntity("menu",  Vec2{ 84.f,134.f},
-			*entityManager_, ENTITY_GROUP::BACK_OBJECT);
-		menu_->getComponent<ECS::SpriteDraw>().setPivot(Vec2{ 0.f,0.f });
+
+		ECS::ArcheType::CreateEntity("menu",  Vec2{ 84.f,134.f},*entityManager_, ENTITY_GROUP::BACK_OBJECT);
+
 		option_ = ECS::ArcheType::CreateEntity("option", Vec2{ (float)System::SCREEN_WIDIH * 0.8, System::SCREEN_HEIGHT * 0.5f },
 			*entityManager_, ENTITY_GROUP::BACK);
+		option_->getComponent<ECS::SpriteDraw>().doCenter();
 		
+		ECS::ArcheType::CreateEntity("tkg", Vec2{ 692.f, 244.f },*entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		
-		
-		auto bookPos = menu_->getComponent<ECS::Position>();
+		ECS::ArcheType::CreateEntity("tkg", Vec2{ 692.f, 244.f },*entityManager_, ENTITY_GROUP::BACK_OBJECT);
 
+		ECS::ArcheType::CreateMultiEntity("stage", Vec2{ 243.f, 332.f },
+			*entityManager_, ENTITY_GROUP::BACK_OBJECT)->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+
+		ECS::ArcheType::CreateMultiEntity("stage", Vec2{ 243.f, 332.f + 89.f },
+			*entityManager_, ENTITY_GROUP::BACK_OBJECT)->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+
+		ECS::ArcheType::CreateMultiEntity("stage", Vec2{ 243.f, 332.f + 89.f * 2 },
+			*entityManager_, ENTITY_GROUP::BACK_OBJECT)->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
 		Sound bgm("selectBGM");
 		bgm.play(true,false);
 	}

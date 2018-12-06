@@ -44,10 +44,10 @@ namespace Scene
 		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2{ 424.f,38.f }, Vec2{ 300.f,300.f }, *entityManager_);
 		//時計
 		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2{ 800.f,100.f }, *entityManager_);
-		clock->getComponent<ECS::SimpleDraw>().isCenter(true);
+		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
 		ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
 		ECS::UIArcheType::CreateNeedleUI("needle", Vec2{ 800.f,100.f }, *entityManager_, 1.f);
-		clock->getComponent<ECS::SimpleDraw>().isCenter(true);
+		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
 		ECS::UIArcheType::CreateFontUI("font", Vec2{ 25.f, 45.f }, Vec2{ 450.f,350.f }, *entityManager_);
 		ECS::ScoreArcheType::CreateResultScoreEntity("font", Vec2{ 200.f,300.f }, ECS::StageHighScore::STAGE2,100, *entityManager_);
 		ECS::ArcheType::CreateAA("bar_full", Vec2{0,0},*entityManager_);
