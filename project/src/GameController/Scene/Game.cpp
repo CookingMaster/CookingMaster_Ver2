@@ -43,12 +43,13 @@ namespace Scene
 		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(300.f, 300.f), *entityManager_);
 		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), *entityManager_);
 		//時計
+		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(450.f, 350.f), *entityManager_);
+		//得点(パーセンテージ)表示
 		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2(800.f, 100.f), *entityManager_);
-		clock->getComponent<ECS::SimpleDraw>().isCenter(true);
+		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
+		
 		//時計の針
 		ECS::UIArcheType::CreateNeedleUI("needle", Vec2(800.f, 100.f), *entityManager_, 1.f);
-		//得点(パーセンテージ)表示
-		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(450.f, 350.f), *entityManager_);
 	}
 
 	void Game::update()
