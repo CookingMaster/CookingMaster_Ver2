@@ -37,7 +37,7 @@ namespace ECS
 			entity->addComponent<Rectangle>(0, 0, 0, 38);
 			entity->addComponent<SpriteRectDraw>(graphicName);
 			entity->addComponent<EventFunctionSystem<void, class AAA>>(BarEvent4());
-			entity->addComponent<BarComponentSystemX>(424, 0, 200);
+			//entity->addComponent<BarComponentSystemX>(424, 0, 200);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}

@@ -14,7 +14,7 @@ namespace ECS
 {
 	struct UIArcheType
 	{
-		//!バー(スコア)
+		//!空っぽのバー（スコア表示用）
 		static Entity* CreateEmptyBarUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -26,7 +26,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
-		//!バー（スコア）
+		//!バーの中身（スコア表示用）
 		static Entity* CreateFullBarUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -35,7 +35,7 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
-			entity->addComponent<BarComponentSystemX>((int)rect.x, 0, 200);
+			entity->addComponent<BarComponentSystemX>((int)rect.x, 0);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
@@ -62,7 +62,7 @@ namespace ECS
 			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2{ 7.f,48.f });
 			return entity;
 		}
-		//!フォント
+		//!スコア表示用フォント
 		static Entity* CreateFontUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();

@@ -194,7 +194,7 @@ namespace ECS
 	};
 
 	/*
-	*@brief　X軸のバーを描画します
+	*@brief　X軸のバーを指定パーセンテージ分描画する
 	SpriteRectDraw、Rectがないとエラーが出ます
 	*　rect_x_	元画像の全体の幅
 	*　now_		現在の数値
@@ -205,51 +205,52 @@ namespace ECS
 	{
 	private:
 		Rectangle* rectangle_;
-		Easing eas_;
+		Easing ease_;
 
-		int rect_x_;
-		int score_;
-		int atScore_;
-		int max_;
+		int imgRect_x_;
+		int scorePer_;
+		int showScorePer_;
 
 	public:
-		BarComponentSystemX(int rectX, int now, int max)
+		BarComponentSystemX(int rectX, int now)
 		{
-			rect_x_ = rectX;
-			score_ = now;
-			max_ = max;
+			imgRect_x_ = rectX;
+			scorePer_ = now;
 		}
 		
 		void initialize() override
 		{
 			rectangle_ = &entity->getComponent<Rectangle>();
-			
 		}
+
 		void update() override
 		{
-			if (atScore_ < score_) {
-				eas_.run(Easing::CircIn, 10);
-			}
-			if (eas_.isEaseEnd()) {
-				atScore_ = score_;
-				eas_.reset();
-			}
-			float size_w_ = score_ * rect_x_ / (float)max_;
-			rectangle_->w = (int)eas_.getVolume((float)rectangle_->w, size_w_/*- (float)rectangle_->w*/);
-			
-		}
-		void addScore(int score)
-		{
-			atScore_ = score_;
-			score_ += score;
-			if (score_ > 100)
+			if (showScorePer_ < scorePer_)
 			{
-				score_ = 100;
+				ease_.run(Easing::CircIn, 10);
 			}
+			if (ease_.isEaseEnd())
+			{
+				showScorePer_ = scorePer_;
+			}
+
+			float size_w_ = imgRect_x_ * (scorePer_ / 100.f);
+			rectangle_->w = (int)ease_.getVolume((float)rectangle_->w, size_w_);
 		}
+
+		void addScore(int scorePer)
+		{
+			scorePer_ += scorePer;
+			if (scorePer_ > 100)
+			{
+				scorePer_ = 100;
+			}
+			ease_.reset();
+		}
+
 		int getScore()
 		{
-			return score_;
+			return scorePer_;
 		}
 	};
 
