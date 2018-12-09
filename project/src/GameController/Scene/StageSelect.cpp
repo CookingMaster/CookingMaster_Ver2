@@ -12,6 +12,7 @@ namespace Scene
 	StageSelect::StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
+		, cnt_(0,10,0,90)
 	{
 		//セレクト曲
 		ResourceManager::GetSound().load("Resource/sound/Welcome.ogg", "selectBGM",SoundType::BGM);
@@ -91,7 +92,7 @@ namespace Scene
 			*entityManager_,
 			ENTITY_GROUP::UI
 		);
-		cursor_->addComponent<ECS::CursorMove>(cursorTargets[0]);
+		cursor_->addComponent<ECS::CursorMove>(cursorTargets);
 	}
 
 	void StageSelect::initialize()
@@ -102,10 +103,25 @@ namespace Scene
 	}
 	void StageSelect::update()
 	{
-		++option_->getComponent<ECS::Position>().val.x;
-		cursorTargets[3]->getComponent<ECS::Position>().val= OPTION_POSITION + option_->getComponent<ECS::Position>().val;
+		
+		cursorTargets[3]->getComponent<ECS::Position>().val = OPTION_POSITION + option_->getComponent<ECS::Position>().val;
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3)
+		{
+			cnt_.add();
+			if (!cnt_.isMax())
+			{
+				backVal_ += 3;
+				option_->getComponent<ECS::Position>().val.x += 3;
+			}
+			
+		}
+		else
+		{
+			option_->getComponent<ECS::Position>().val.x -= backVal_;
+			backVal_ = 0;
+			cnt_.reset();
+		}
 		entityManager_->update();
-		cursor_->getComponent<ECS::CursorMove>().setPoints(cursorTargets[3]);
 	}
 	void StageSelect::draw()
 	{

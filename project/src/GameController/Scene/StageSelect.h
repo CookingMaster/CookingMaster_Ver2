@@ -5,6 +5,7 @@
 * @date 2018/11/15
 */
 #pragma once
+#include "../src/Utility/Counter.hpp"
 #include "../../ECS/ECS.hpp"
 #include "Parameter.hpp"
 #include "../Scene/SceneManager.hpp"
@@ -16,34 +17,12 @@ namespace Scene
 	{
 	private:
 		const Vec2 OPTION_POSITION{ 400.f,55.f };
+		ECS::Entity* option_ = nullptr;
 		ECS::Entity* cursor_ = nullptr;
 		ECS::EntityManager* entityManager_ = nullptr;
-		ECS::Entity* option_ = nullptr;
-		std::vector<ECS::Entity*> UIMap_{};
 		std::vector<ECS::Entity*> cursorTargets{};
-		//スライダーパラメーター
-		struct Slider
-		{
-			enum Type
-			{
-				BGM,
-				SE
-			};
-			ECS::Entity* gaugeEntity;
-			ECS::Entity* barEntity;
-			bool isSelect = false;
-			Type type;
-			float volume;	//0~1
-		};
-		Slider bgmSlider_, seSlider_;
-		//選択用アイコンの移動処理に必要なデータ
-		struct Point
-		{
-			bool isOptionSelected = false;
-			ECS::Position* pos = nullptr;
-			size_t selectNum = 0u;
-			
-		}pointEntityMove;
+		Counter cnt_;
+		int backVal_ = 0;
 		int score_ = 0;
 		void entitySetUp();
 	public:
