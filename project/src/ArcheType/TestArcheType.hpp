@@ -13,34 +13,8 @@
 #include "../Input/Input.hpp"
 namespace ECS
 {
-	struct BarEvent4
-	{
-		void operator()(Entity* e)
-		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_E) == 1)
-			{
-				//バーUIのゲージを進める
-				e->getComponent<BarComponentSystemX>().addScore(100);
-			}
-		}
-	};
-
 	struct ArcheType
 	{
-		//!エンティティの生成テスト
-		static Entity* CreateAA(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
-		{
-			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
-			entity->addComponent<Color>();
-			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, 0, 38);
-			entity->addComponent<SpriteRectDraw>(graphicName);
-			entity->addComponent<EventFunctionSystem<void, class AAA>>(BarEvent4());
-			entity->addComponent<BarComponentSystemX>(424, 0, 200);
-			entity->addGroup(ENTITY_GROUP::UI);
-			return entity;
-		}
 		//!画像を表示できるエンティティの生成
 		static Entity* CreateEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_ ,const Group group)
 		{
