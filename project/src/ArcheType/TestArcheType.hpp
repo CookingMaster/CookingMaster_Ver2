@@ -15,8 +15,16 @@ namespace ECS
 {
 	struct ArcheType
 	{
+		//!座標だけ持っているエンティティの生成
+		static Entity* CreatePlainEntity(const Vec2& pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Position>(pos);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
 		//!画像を表示できるエンティティの生成
-		static Entity* CreateEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_ ,const Group group)
+		static Entity* CreateEntity(const char* graphicName, const Vec2& pos, EntityManager& entityManager_ ,const Group group)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -27,7 +35,7 @@ namespace ECS
 			return entity;
 		}
 		//!分割画像を表示できるエンティティの生成
-		static Entity* CreateMultiEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_, const Group group)
+		static Entity* CreateMultiEntity(const char* graphicName, const Vec2& pos, EntityManager& entityManager_, const Group group)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
