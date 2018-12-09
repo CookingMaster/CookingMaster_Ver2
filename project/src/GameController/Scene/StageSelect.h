@@ -17,6 +17,9 @@ namespace Scene
 	{
 	private:
 		const Vec2 OPTION_POSITION{ 400.f,55.f };
+		const Vec2 BGM_SLIDER_POSITION{ 110.f, 150.f };
+		const Vec2 SE_SLIDER_POSITION{ 110.f, 330.f};
+		const Vec2 BACK_POSITION{ 115.f, 522.f };
 		ECS::Entity* option_ = nullptr;
 		ECS::Entity* cursor_ = nullptr;
 		ECS::EntityManager* entityManager_ = nullptr;
@@ -25,8 +28,9 @@ namespace Scene
 		int backVal_ = 0;
 		int score_ = 0;
 		void entitySetUp();
+		void optionSheetMove();
 	public:
-		StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
+		StageSelect(IOnSceneChangeCallback* sceneChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~StageSelect();
 		void initialize() override;
 		void update() override;
