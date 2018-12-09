@@ -95,8 +95,8 @@ namespace ECS
 				return;
 			}
 			stageNames[0] = "Let'sCooking.wav";
-			stageNames[1] = "Let'sCooking.wav";
-			stageNames[2] = "Let'sCooking.wav";
+			stageNames[1] = "test.mp3";
+			stageNames[2] = "act_bgm.wav";
 			point_ = setTargetEntity.at(0)->getComponent<ECS::Position>().val;
 		}
 		void initialize() override

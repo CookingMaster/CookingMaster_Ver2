@@ -28,7 +28,7 @@ GameController::GameController()
 	MasterSound::Get().setAllSEGain(SE);
 	MasterSound::Get().update();
 	//初期シーンの設定
-	sceneStack.push(std::make_unique<Scene::StageSelect>(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
+	sceneStack.push(std::make_unique<Scene::Title>(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
 	sceneStack.top()->initialize();
 	
 }
