@@ -27,6 +27,7 @@ namespace ECS
 		Vec2 point_{0.f, 0.f};		//指し示す位置(主にメニューの名前が配置されている座標を格納)
 		size_t index_ = 0;
 		size_t preIndex = 0;
+		std::string stageNames[3];	//とりあえず3つ
 		void select()
 		{
 			if (!isOptionSelect_)
@@ -48,13 +49,11 @@ namespace ECS
 				//左右
 				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
 				{
-
 					if (index_ != 3) { index_ = 3; }
 				}
 				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1)
 				{
 					if (index_ == 3) { index_ = preIndex; }
-
 				}
 				//オプションに移行
 				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == 3)
@@ -95,6 +94,9 @@ namespace ECS
 				DOUT_BY_FUNCTION << FILENAME_AND_LINE << "not found entityes" << std::endl;
 				return;
 			}
+			stageNames[0] = "Let'sCooking.wav";
+			stageNames[1] = "Let'sCooking.wav";
+			stageNames[2] = "Let'sCooking.wav";
 			point_ = setTargetEntity.at(0)->getComponent<ECS::Position>().val;
 		}
 		void initialize() override
@@ -117,6 +119,21 @@ namespace ECS
 		[[nodiscard]] const bool isOptionSelected() const
 		{
 			return isOptionSelect_;
+		}
+
+		//!決定ボタン(Z)を押すと選択したステージ名を返します
+		[[nodiscard]] const std::string getSelectStage() const
+		{
+			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+			{
+				switch (index_)
+				{
+				case 0: return stageNames[index_];
+				case 1: return stageNames[index_];
+				case 2: return stageNames[index_];
+				}
+			}
+			return "";
 		}
 	};
 }

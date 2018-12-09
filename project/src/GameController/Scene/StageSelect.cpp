@@ -94,16 +94,16 @@ namespace Scene
 				Vec2{ BGM_SLIDER_POSITION },
 				*entityManager_
 			));
-			//5 SEスライダー 110 330
+			//5 SEスライダー
 			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
 			(
-				Vec2{ 110.f, 330.f },
+				Vec2{ SE_SLIDER_POSITION },
 				*entityManager_
 			));
-			//6 戻るボタンの位置　115,522
+			//6 戻るボタンの位置
 			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
 			(
-				Vec2{ 115.f, 552.f },
+				Vec2{ BACK_POSITION },
 				*entityManager_
 			));
 		}
@@ -140,11 +140,13 @@ namespace Scene
 		}
 		else
 		{
+			//進めた分を戻す
 			option_->getComponent<ECS::Position>().val.x -= backVal_;
 			backVal_ = 0;
 			cnt_.reset();
 		}
 
+		//レイヤー入れ替え
 		if (cursor_->getComponent<ECS::CursorMove>().isOptionSelected())
 		{
 			option_->changeGroup(ENTITY_GROUP::BACK_OBJECT);
@@ -164,12 +166,19 @@ namespace Scene
 	void StageSelect::update()
 	{
 		optionSheetMove();
+		auto bgmName = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
+		if (bgmName != "")
+		{
+			auto name = std::make_unique<Parameter>();
+			ResourceManager::GetSound().load("Resource/sound/" + bgmName,"stage1", SoundType::BGM);
+			name->add<std::string>("BGM_name", "stage1");
+			ON_SCENE_CHANGE(SceneName::GAME, name.get(), StackPopFlag::POP, true);
+		}
 		entityManager_->update();
 	}
 	void StageSelect::draw()
 	{
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		
 	}
 
 	StageSelect::~StageSelect()
