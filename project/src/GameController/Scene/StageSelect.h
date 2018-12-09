@@ -15,12 +15,12 @@ namespace Scene
 	class StageSelect : public AbstractScene
 	{
 	private:
-		ECS::Entity* option_;
-		static constexpr int UI_HEIGHT = 120;
+		const Vec2 OPTION_POSITION{ 400.f,55.f };
+		ECS::Entity* cursor_ = nullptr;
 		ECS::EntityManager* entityManager_ = nullptr;
-		ECS::Entity* point_ = nullptr;
+		ECS::Entity* option_ = nullptr;
 		std::vector<ECS::Entity*> UIMap_{};
-		std::vector<ECS::Entity*> cookMap_{};
+		std::vector<ECS::Entity*> cursorTargets{};
 		//スライダーパラメーター
 		struct Slider
 		{
@@ -45,7 +45,7 @@ namespace Scene
 			
 		}pointEntityMove;
 		int score_ = 0;
-
+		void entitySetUp();
 	public:
 		StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~StageSelect();

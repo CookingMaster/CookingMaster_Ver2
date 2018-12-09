@@ -27,7 +27,7 @@ namespace ECS
 			entity->addComponent<ScoreSystem>(stageName);
 			entity->addComponent<ResultEffect>();
 			entity->addComponent<SpriteRectDraw>(grapName).setPivot(Vec2{12.5f,22.5f});
-			entity->addComponent<DrawFont>(25,0).setNumber(score);
+			entity->addComponent<DrawFont>(25.f,0.f).setNumber(score);
 			entity->addGroup(ENTITY_GROUP::FADE);
 			return entity;
 		}
@@ -43,7 +43,7 @@ namespace ECS
 			entity->addComponent<ScoreData>();
 			int hi = entity->addComponent<ScoreSystem>(stageName).getHighScore(stageName);
 			entity->addComponent<SpriteRectDraw>(grapName).setPivot(Vec2{ 12.5f,22.5f });
-			entity->addComponent<DrawFont>(25, 0).setNumber(hi);
+			entity->addComponent<DrawFont>(25.f, 0.f).setNumber(hi);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
