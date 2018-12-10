@@ -36,11 +36,11 @@ namespace ECS
 		bool isSliderSelect_ = false;
 		Transform* trans_ = nullptr;
 		AlphaBlend* blend_ = nullptr;
-		std::vector<Entity*> targetEntity_;
+		std::vector<Entity*> targetEntity_{};
 		Vec2 point_{0.f, 0.f};		//指し示す位置(主にメニューの名前が配置されている座標を格納)
 		size_t index_ = 0;
 		size_t preIndex = 0;
-		std::string stageNames[3];	//とりあえず3つ
+		std::string stageNames[3]{};	//とりあえず3つ
 		void select()
 		{
 			if (!isOptionSelect_)

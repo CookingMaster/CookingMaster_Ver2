@@ -96,16 +96,16 @@ namespace Scene
 				*entityManager_
 			));
 
-			//4 BGMスライダー 
+			//4 BGM
 			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
 			(
-				Vec2{ BGM_SLIDER_POSITION },
+				Vec2{ BGM_FONT_POSITION },
 				*entityManager_
 			));
-			//5 SEスライダー
+			//5 SE
 			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
 			(
-				Vec2{ SE_SLIDER_POSITION },
+				Vec2{ SE_FONT_POSITION },
 				*entityManager_
 			));
 			//6 戻るボタンの位置
@@ -114,6 +114,38 @@ namespace Scene
 				Vec2{ BACK_POSITION },
 				*entityManager_
 			));
+		}
+
+		//スライダー生成
+		{
+			bgmSlider_ = ECS::ArcheType::CreateEntity
+			(
+				"slider",
+				Vec2{ BGM_SLIDER_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK
+			);
+			seSlider_ = ECS::ArcheType::CreateEntity
+			(
+				"slider",
+				Vec2{ SE_SLIDER_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK
+			);
+			bgmBar_ = ECS::ArcheType::CreateEntity
+			(
+				"bar",
+				Vec2{ 0.f,0.f },
+				*entityManager_,
+				ENTITY_GROUP::LAYER1
+			);
+			seBar_ = ECS::ArcheType::CreateEntity
+			(
+				"bar",
+				Vec2{ 0.f,0.f },
+				*entityManager_,
+				ENTITY_GROUP::LAYER1
+			);
 		}
 		//カーソル生成
 		{
@@ -134,9 +166,13 @@ namespace Scene
 		//オプションに乗ってるやつをオプションエンティティの相対座標に設定する
 		{
 			cursorTargets[3]->getComponent<ECS::Position>().val = OPTION_POSITION + option_->getComponent<ECS::Position>().val;
-			cursorTargets[4]->getComponent<ECS::Position>().val = BGM_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
-			cursorTargets[5]->getComponent<ECS::Position>().val = SE_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
+			cursorTargets[4]->getComponent<ECS::Position>().val = BGM_FONT_POSITION + option_->getComponent<ECS::Position>().val;
+			cursorTargets[5]->getComponent<ECS::Position>().val = SE_FONT_POSITION + option_->getComponent<ECS::Position>().val;
 			cursorTargets[6]->getComponent<ECS::Position>().val = BACK_POSITION + option_->getComponent<ECS::Position>().val;
+			bgmSlider_->getComponent<ECS::Position>().val = BGM_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
+			bgmBar_->getComponent<ECS::Position>().val.y = bgmSlider_->getComponent<ECS::Position>().val.y;
+			seSlider_->getComponent<ECS::Position>().val = SE_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
+			seBar_->getComponent<ECS::Position>().val.y = seSlider_->getComponent<ECS::Position>().val.y;
 		}
 	
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3)
@@ -161,15 +197,68 @@ namespace Scene
 		if (cursor_->getComponent<ECS::CursorMove>().isOptionSelected())
 		{
 			option_->changeGroup(ENTITY_GROUP::BACK_OBJECT);
+			bgmSlider_->changeGroup(ENTITY_GROUP::UI);
+			seSlider_->changeGroup(ENTITY_GROUP::UI);
+			bgmBar_->changeGroup(ENTITY_GROUP::UI);
+			seBar_->changeGroup(ENTITY_GROUP::UI);
 		}
 		else
 		{
 			option_->changeGroup(ENTITY_GROUP::BACK);
+			bgmSlider_->changeGroup(ENTITY_GROUP::BACK);
+			seSlider_->changeGroup(ENTITY_GROUP::BACK);
+			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
+			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
 		}
+
+		//バーの位置をセット
+		constexpr float MAX_GAUGE_SIZE = 270;
+		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal);
+		seBar_->getComponent<ECS::Position>().val.x = seSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * seVal);
+	}
+
+	void StageSelect::setSoundVolume()
+	{
+		auto& cursorMov = cursor_->getComponent<ECS::CursorMove>();
+		auto is_select = std::make_pair<bool,size_t>(cursorMov.isSiliderSelect(), cursorMov.getIndex());
+		//BGM
+		if (is_select.first && is_select.second == 4u)
+		{
+			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && bgmVal <= 1.f)
+			{
+				bgmVal += 0.005f;
+			}
+			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && bgmVal >= 0.f)
+			{
+				bgmVal -= 0.005f;
+			}
+		}
+		//SE
+		if (is_select.first && is_select.second == 5u)
+		{
+			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && seVal <= 1.f)
+			{
+				seVal += 0.005f;
+			}
+			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && seVal >= 0.f)
+			{
+				seVal -= 0.005f;
+			}
+		}
+		if (cursorMov.getIndex() == 6 && Input().Get().getKeyFrame(KEY_INPUT_Z) == 1)
+		{
+			std::ofstream ofs("Resource/system/gain.bin");
+			ofs << bgmVal << seVal;
+		}
+		MasterSound::Get().setAllBGMGain(bgmVal);
+		MasterSound::Get().setAllSEGain(seVal);
 	}
 
 	void StageSelect::initialize()
 	{
+		//サウンド情報の読み込み
+		std::ifstream ifs("Resource/system/gain.bin");
+		ifs >> bgmVal >> seVal;
 		entitySetUp();
 		Sound bgm("selectBGM");
 		bgm.play(true,false);
@@ -177,6 +266,8 @@ namespace Scene
 	void StageSelect::update()
 	{
 		optionSheetMove();
+		setSoundVolume();
+
 		auto bgmName = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
 		if (bgmName != "")
 		{
