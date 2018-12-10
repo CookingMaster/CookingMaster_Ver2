@@ -273,7 +273,7 @@ private:
 		/**
 		* @brief  メモリに読み込んだ画像リソースを解放します
 		* @param  name 登録名
-		* @return 登録名が存在しない場合何も起きません
+		* @detail 登録名が存在しない場合何も起きません
 		*/
 		void removeDivGraph(const std::string& name)
 		{
@@ -289,7 +289,7 @@ private:
 		/**
 		* @brief  メモリに読み込んだ分割画像リソースを解放します
 		* @param  name 登録名
-		* @return 登録名が存在しない場合何も起きません
+		* @detail 登録名が存在しない場合何も起きません
 		*/
 		void removeGraph(const std::string& name)
 		{
@@ -300,6 +300,23 @@ private:
 			}
 			DeleteGraph(graphs_[name]);
 			graphs_.erase(name);
+		}
+		/**
+		* @brief  メモリに読み込んだ画像リソースをすべて解放します
+		*/
+		void removeAll()
+		{
+			for (const auto&[key, value] : graphs_) 
+			{
+				DeleteGraph(value);
+			}
+			for (const auto&[key, value] : divGraphs_)
+			{
+				DeleteGraph(*value.first);
+			}
+			divGraphs_.clear();
+			graphs_.clear();
+			
 		}
 	};
 
@@ -434,6 +451,19 @@ private:
 			DeleteSoundMem(sounds_[name].first);
 			sounds_.erase(name);
 		}
+
+		/**
+		* @brief  メモリに読み込んだサウンドリソースをすべて解放します
+		*/
+		void removeAll()
+		{
+			for (const auto&[key, value] : sounds_)
+			{
+				DeleteSoundMem(value.first);
+			}
+			sounds_.clear();
+		}
+
 		//!すべてのハンドルをunordered_mapで返します
 		[[nodiscard]] const SoundMap& getSoundMap() const
 		{
