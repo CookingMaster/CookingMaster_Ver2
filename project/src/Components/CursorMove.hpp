@@ -95,7 +95,7 @@ namespace ECS
 					if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == BACK)
 					{
 						isOptionSelect_ = false;
-						index_ = preIndex;
+						index_ = 3;
 					}
 					if (!isSliderSelect_ && (index_ == BGM_SLIDER || index_ == SE_SLIDER))
 					{

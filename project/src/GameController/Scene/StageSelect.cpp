@@ -220,9 +220,8 @@ namespace Scene
 	void StageSelect::setSoundVolume()
 	{
 		auto& cursorMov = cursor_->getComponent<ECS::CursorMove>();
-		auto is_select = std::make_pair<bool,size_t>(cursorMov.isSiliderSelect(), cursorMov.getIndex());
 		//BGM
-		if (is_select.first && is_select.second == 4u)
+		if (cursorMov.isSiliderSelect() && cursorMov.getIndex() == 4u)
 		{
 			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && bgmVal <= 1.f)
 			{
@@ -234,7 +233,7 @@ namespace Scene
 			}
 		}
 		//SE
-		if (is_select.first && is_select.second == 5u)
+		if (cursorMov.isSiliderSelect() && cursorMov.getIndex() == 5u)
 		{
 			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && seVal <= 1.f)
 			{
@@ -245,11 +244,7 @@ namespace Scene
 				seVal -= 0.005f;
 			}
 		}
-		if (cursorMov.getIndex() == 6 && Input().Get().getKeyFrame(KEY_INPUT_Z) == 1)
-		{
-			std::ofstream ofs("Resource/system/gain.bin");
-			ofs << bgmVal << seVal;
-		}
+		
 		MasterSound::Get().setAllBGMGain(bgmVal);
 		MasterSound::Get().setAllSEGain(seVal);
 	}
@@ -265,18 +260,20 @@ namespace Scene
 	}
 	void StageSelect::update()
 	{
+		entityManager_->update();
 		optionSheetMove();
 		setSoundVolume();
-
 		auto bgmName = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
 		if (bgmName != "")
 		{
 			auto name = std::make_unique<Parameter>();
 			ResourceManager::GetSound().load("Resource/sound/MUSIC/" + bgmName,"stage1", SoundType::BGM);
 			name->add<std::string>("BGM_name", "stage1");
+			std::ofstream ofs("Resource/system/gain.bin");
+			ofs << bgmVal << seVal;
 			ON_SCENE_CHANGE(SceneName::GAME, name.get(), StackPopFlag::POP, true);
 		}
-		entityManager_->update();
+		
 	}
 	void StageSelect::draw()
 	{
