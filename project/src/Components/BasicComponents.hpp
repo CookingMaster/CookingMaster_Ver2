@@ -91,10 +91,10 @@ namespace ECS
 	{
 	private:
 		
-		Gravity* gravity_;
-		Velocity* velocity_;
-		Position* pos_;
-		std::vector<Entity*> otherEntity_;
+		Gravity* gravity_ = nullptr;
+		Velocity* velocity_ = nullptr;
+		Position* pos_ = nullptr;
+		std::vector<Entity*> otherEntity_{};
 		std::function<bool(const Entity&, const Entity&)> hitFunc_;
 		void checkMove(Vec2& pos, Vec2& velocity)
 		{
@@ -203,11 +203,11 @@ namespace ECS
 	class Transform final : public ComponentSystem
 	{
 	private:
-		Position* pos_;
-		Rotation* rota_;
-		Scale* scale_;
+		Position* pos_ = nullptr;
+		Rotation* rota_ = nullptr;
+		Scale* scale_ = nullptr;
 	public:
-		Transform() :pos_(nullptr), rota_(nullptr) {}
+		Transform() = default;
 		void initialize() override
 		{
 			if (!entity->hasComponent<Position>())
