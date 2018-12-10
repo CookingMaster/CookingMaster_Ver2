@@ -46,6 +46,7 @@
     <ClInclude Include="src\Components\BasicComponents.hpp" />
     <ClInclude Include="src\Components\Collider.hpp" />
     <ClInclude Include="src\Components\CursorMove.hpp" />
+    <ClInclude Include="src\Components\musicName.hpp" />
     <ClInclude Include="src\Components\NoteStateTransition.hpp" />
     <ClInclude Include="src\Components\PlayerController.hpp" />
     <ClInclude Include="src\Components\ResultComponent.hpp" />

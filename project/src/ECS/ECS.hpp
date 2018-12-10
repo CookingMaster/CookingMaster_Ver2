@@ -147,7 +147,8 @@ namespace ECS
 		//!このEntityについているComponentの3D描画処理を行います
 		void draw3D()
 		{
-			for (auto& c : components_) {
+			for (auto& c : components_)
+			{
 				if (c == nullptr)
 				{
 					continue;
@@ -408,6 +409,8 @@ namespace ECS
 			return *e;
 		}
 	};
+
+	//以下の処理は必要ないかもしれない//
 
 	//!vectorに格納されているエンティティの更新を行います
 	void EntitiesUpdate(const std::vector<Entity*>& entities);

@@ -8,6 +8,7 @@
 #include "../ECS/ECS.hpp"
 #include "../Components/Renderer.hpp"
 #include "../Utility/Vec.hpp"
+#include "musicName.hpp"
 #include <DxLib.h>
 
 namespace ECS
@@ -20,7 +21,19 @@ namespace ECS
 	class CursorMove final :public ComponentSystem
 	{
 	private:
+		enum CursorPosition : size_t
+		{
+			STAGE1,
+			STAGE2,
+			STAGE3,
+			OPTION,
+			BGM_SLIDER,
+			SE_SLIDER,
+			BACK,
+			MAX
+		};
 		bool isOptionSelect_ = false;
+		bool isSliderSelect_ = false;
 		Transform* trans = nullptr;
 		SpriteDraw* sprite = nullptr;
 		std::vector<Entity*> targetEntity_;
@@ -35,48 +48,48 @@ namespace ECS
 				//上下
 				if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
 				{
-					if (index_ > 0) { --index_; }
-					else { index_ = 2; }
+					if (index_ > STAGE1) { --index_; }
+					else { index_ = STAGE3; }
 					preIndex = index_;
 				}
 				if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
 				{
-					if (index_ < 2) { ++index_; }
-					else { index_ = 0; }
+					if (index_ < STAGE3) { ++index_; }
+					else { index_ = STAGE1; }
 					preIndex = index_;
 				}
 
 				//左右
 				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
 				{
-					if (index_ != 3) { index_ = 3; }
+					if (index_ != OPTION) { index_ = OPTION; }
 				}
 				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1)
 				{
-					if (index_ == 3) { index_ = preIndex; }
+					if (index_ == OPTION) { index_ = preIndex; }
 				}
 				//オプションに移行
-				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == 3)
+				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == OPTION)
 				{
 					isOptionSelect_ = true;
 				}
 			}
 			else
 			{
-				if (index_ == 3) { index_ = 4; }
+				if (index_ == OPTION) { index_ = BGM_SLIDER; }
 				//上下
 				if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
 				{
-					if (index_ > 4) { --index_; }
-					else { index_ = 6; }
+					if (index_ > BGM_SLIDER) { --index_; }
+					else { index_ = BACK; }
 				}
 				if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
 				{
-					if (index_ < 6) { ++index_; }
-					else { index_ = 4; }
+					if (index_ < BACK) { ++index_; }
+					else { index_ = BGM_SLIDER; }
 				}
 				//ステージ選択に移行
-				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == 6)
+				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == BACK)
 				{
 					isOptionSelect_ = false;
 					index_ = preIndex;
@@ -94,9 +107,6 @@ namespace ECS
 				DOUT_BY_FUNCTION << FILENAME_AND_LINE << "not found entityes" << std::endl;
 				return;
 			}
-			stageNames[0] = "Let'sCooking.wav";
-			stageNames[1] = "test.mp3";
-			stageNames[2] = "act_bgm.wav";
 			point_ = setTargetEntity.at(0)->getComponent<ECS::Position>().val;
 		}
 		void initialize() override
@@ -106,6 +116,12 @@ namespace ECS
 		}
 		void update() override
 		{
+			//曲名のセット
+			{
+				stageNames[0] = targetEntity_.at(0)->getComponent<ECS::MusicName>().val;
+				stageNames[1] = targetEntity_.at(1)->getComponent<ECS::MusicName>().val;
+				stageNames[2] = targetEntity_.at(2)->getComponent<ECS::MusicName>().val;
+			}
 			select();
 			trans->setPosition(point_.x - 100, point_.y);
 		}
@@ -124,14 +140,9 @@ namespace ECS
 		//!決定ボタン(Z)を押すと選択したステージ名を返します
 		[[nodiscard]] const std::string getSelectStage() const
 		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ < 3)
 			{
-				switch (index_)
-				{
-				case 0: return stageNames[index_];
-				case 1: return stageNames[index_];
-				case 2: return stageNames[index_];
-				}
+				return stageNames[index_];
 			}
 			return "";
 		}

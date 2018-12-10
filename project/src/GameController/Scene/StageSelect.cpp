@@ -5,7 +5,7 @@
 #include "../src/Components/CursorMove.hpp"
 #include "../src/Class/Sound.hpp"
 #include "../src/ArcheType/TestArcheType.hpp"
-
+#include "../src/Components/musicName.hpp"
 namespace Scene
 {
 	
@@ -15,7 +15,7 @@ namespace Scene
 		, cnt_(0,1,0,10)
 	{
 		//セレクト曲
-		ResourceManager::GetSound().load("Resource/sound/Welcome.ogg", "selectBGM",SoundType::BGM);
+		ResourceManager::GetSound().load("Resource/sound/BGM/Welcome.ogg", "selectBGM",SoundType::BGM);
 		//背景
 		ResourceManager::GetGraph().load("Resource/image/menuback.png", "back"); 
 		//本
@@ -56,7 +56,7 @@ namespace Scene
 
 		//ターゲット(アイコンが指すエンティティ)
 		{
-			//0
+			//0 曲
 			cursorTargets.emplace_back(ECS::ArcheType::CreateMultiEntity
 			(
 				"menuname",
@@ -64,7 +64,9 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
-			//1
+			cursorTargets.back()->addComponent<ECS::MusicName>("Let'sCooking.wav");
+
+			//1 曲
 			cursorTargets.emplace_back(ECS::ArcheType::CreateMultiEntity
 			(
 				"menuname",
@@ -72,7 +74,9 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
-			//2
+			cursorTargets.back()->addComponent<ECS::MusicName>("test.mp3");
+
+			//2 曲
 			cursorTargets.emplace_back(ECS::ArcheType::CreateMultiEntity
 			(
 				"menuname",
@@ -80,6 +84,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
+			cursorTargets.back()->addComponent<ECS::MusicName>("act_bgm.wav");
 
 			//3 オプションの文字の位置
 			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
@@ -123,11 +128,14 @@ namespace Scene
 
 	void StageSelect::optionSheetMove()
 	{
-		cursorTargets[3]->getComponent<ECS::Position>().val = OPTION_POSITION + option_->getComponent<ECS::Position>().val;
-		cursorTargets[4]->getComponent<ECS::Position>().val = BGM_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
-		cursorTargets[5]->getComponent<ECS::Position>().val = SE_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
-		cursorTargets[6]->getComponent<ECS::Position>().val = BACK_POSITION + option_->getComponent<ECS::Position>().val;
-
+		//オプションに乗ってるやつをオプションエンティティの相対座標に設定する
+		{
+			cursorTargets[3]->getComponent<ECS::Position>().val = OPTION_POSITION + option_->getComponent<ECS::Position>().val;
+			cursorTargets[4]->getComponent<ECS::Position>().val = BGM_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
+			cursorTargets[5]->getComponent<ECS::Position>().val = SE_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
+			cursorTargets[6]->getComponent<ECS::Position>().val = BACK_POSITION + option_->getComponent<ECS::Position>().val;
+		}
+	
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3)
 		{
 			cnt_.add();
@@ -170,7 +178,7 @@ namespace Scene
 		if (bgmName != "")
 		{
 			auto name = std::make_unique<Parameter>();
-			ResourceManager::GetSound().load("Resource/sound/" + bgmName,"stage1", SoundType::BGM);
+			ResourceManager::GetSound().load("Resource/sound/MUSIC/" + bgmName,"stage1", SoundType::BGM);
 			name->add<std::string>("BGM_name", "stage1");
 			ON_SCENE_CHANGE(SceneName::GAME, name.get(), StackPopFlag::POP, true);
 		}
