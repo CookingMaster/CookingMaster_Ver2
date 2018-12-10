@@ -41,80 +41,89 @@ namespace ECS
 		size_t index_ = 0;
 		size_t preIndex = 0;
 		std::string stageNames[3]{};	//とりあえず3つ
+
+		void selectOption()
+		{
+			//カーソルの動き
+			if (!isSliderSelect_)
+			{
+				if (index_ == OPTION) { index_ = BGM_SLIDER; }
+				//上下
+				if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
+				{
+					if (index_ > BGM_SLIDER) { --index_; }
+					else { index_ = BACK; }
+				}
+				if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
+				{
+					if (index_ < BACK) { ++index_; }
+					else { index_ = BGM_SLIDER; }
+				}
+				//ステージ選択に移行
+				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == BACK)
+				{
+					isOptionSelect_ = false;
+					index_ = OPTION;
+				}
+				if (!isSliderSelect_ && (index_ == BGM_SLIDER || index_ == SE_SLIDER))
+				{
+					if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+					{
+						isSliderSelect_ = true;
+						blend_->alpha = 100;
+					}
+				}
+			}
+			//スライダーの選択
+			else
+			{
+				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+				{
+					isSliderSelect_ = false;
+					blend_->alpha = 255;
+				}
+			}
+		}
+		void selectStage()
+		{
+			//上下
+			if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
+			{
+				if (index_ > STAGE1) { --index_; }
+				else { index_ = STAGE3; }
+				preIndex = index_;
+			}
+			if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
+			{
+				if (index_ < STAGE3) { ++index_; }
+				else { index_ = STAGE1; }
+				preIndex = index_;
+			}
+
+			//左右
+			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
+			{
+				if (index_ != OPTION) { index_ = OPTION; }
+			}
+			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1)
+			{
+				if (index_ == OPTION) { index_ = preIndex; }
+			}
+			//オプションに移行
+			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == OPTION)
+			{
+				isOptionSelect_ = true;
+			}
+		}
 		void select()
 		{
 			if (!isOptionSelect_)
 			{
-				//上下
-				if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
-				{
-					if (index_ > STAGE1) { --index_; }
-					else { index_ = STAGE3; }
-					preIndex = index_;
-				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
-				{
-					if (index_ < STAGE3) { ++index_; }
-					else { index_ = STAGE1; }
-					preIndex = index_;
-				}
-
-				//左右
-				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
-				{
-					if (index_ != OPTION) { index_ = OPTION; }
-				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1)
-				{
-					if (index_ == OPTION) { index_ = preIndex; }
-				}
-				//オプションに移行
-				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == OPTION)
-				{
-					isOptionSelect_ = true;
-				}
+				selectStage();
 			}
 			else
 			{
-				//カーソルの動き
-				if(!isSliderSelect_)
-				{
-					if (index_ == OPTION) { index_ = BGM_SLIDER; }
-					//上下
-					if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
-					{
-						if (index_ > BGM_SLIDER) { --index_; }
-						else { index_ = BACK; }
-					}
-					if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
-					{
-						if (index_ < BACK) { ++index_; }
-						else { index_ = BGM_SLIDER; }
-					}
-					//ステージ選択に移行
-					if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == BACK)
-					{
-						isOptionSelect_ = false;
-						index_ = 3;
-					}
-					if (!isSliderSelect_ && (index_ == BGM_SLIDER || index_ == SE_SLIDER))
-					{
-						if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
-						{
-							isSliderSelect_ = true;
-							blend_->alpha = 100;
-						}
-					}
-				}
-				//スライダーの選択
-				else
-				{
-					if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
-					{
-						isSliderSelect_ = false;
-						blend_->alpha = 255;
-					}
-				}
+				selectOption();
 			}
 			
 			point_ = targetEntity_.at(index_)->getComponent<ECS::Position>().val;

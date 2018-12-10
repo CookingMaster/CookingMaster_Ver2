@@ -211,40 +211,48 @@ namespace Scene
 			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
 		}
 
-		//バーの位置をセット
-		constexpr float MAX_GAUGE_SIZE = 270;
-		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal);
-		seBar_->getComponent<ECS::Position>().val.x = seSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * seVal);
+
 	}
 
 	void StageSelect::setSoundVolume()
 	{
 		auto& cursorMov = cursor_->getComponent<ECS::CursorMove>();
-		//BGM
-		if (cursorMov.isSiliderSelect() && cursorMov.getIndex() == 4u)
+		if (cursorMov.isSiliderSelect())
 		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && bgmVal <= 1.f)
+			//BGM
+			if (cursorMov.getIndex() == 4u)
 			{
-				bgmVal += 0.005f;
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && bgmVal <= 1.f)
+				{
+					bgmVal += 0.01f;
+				}
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && bgmVal >= 0.f)
+				{
+					bgmVal -= 0.01f;
+				}
 			}
-			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && bgmVal >= 0.f)
+			//SE
+			if (cursorMov.getIndex() == 5u)
 			{
-				bgmVal -= 0.005f;
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && seVal <= 1.f)
+				{
+					seVal += 0.01f;
+				}
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && seVal >= 0.f)
+				{
+					seVal -= 0.01f;
+				}
 			}
 		}
-		//SE
-		if (cursorMov.isSiliderSelect() && cursorMov.getIndex() == 5u)
+		if (cursorMov.getIndex() == 6u && Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && seVal <= 1.f)
-			{
-				seVal += 0.005f;
-			}
-			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && seVal >= 0.f)
-			{
-				seVal -= 0.005f;
-			}
+			std::ofstream ofs("Resource/system/gain.bin");
+			ofs << bgmVal << seVal;
 		}
-		
+		//バーの位置をセット
+		constexpr float MAX_GAUGE_SIZE = 270;
+		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal);
+		seBar_->getComponent<ECS::Position>().val.x = seSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * seVal);
 		MasterSound::Get().setAllBGMGain(bgmVal);
 		MasterSound::Get().setAllSEGain(seVal);
 	}
@@ -269,8 +277,7 @@ namespace Scene
 			auto name = std::make_unique<Parameter>();
 			ResourceManager::GetSound().load("Resource/sound/MUSIC/" + bgmName,"stage1", SoundType::BGM);
 			name->add<std::string>("BGM_name", "stage1");
-			std::ofstream ofs("Resource/system/gain.bin");
-			ofs << bgmVal << seVal;
+		
 			ON_SCENE_CHANGE(SceneName::GAME, name.get(), StackPopFlag::POP, true);
 		}
 		
