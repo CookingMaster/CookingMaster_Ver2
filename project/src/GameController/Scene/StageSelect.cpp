@@ -26,6 +26,9 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/option2.png", "option");
 		//カーソル
 		ResourceManager::GetGraph().load("Resource/image/menu_cursor.png", "cursor");
+		//スライダー
+		ResourceManager::GetGraph().load("Resource/image/slider.png", "slider");
+		ResourceManager::GetGraph().load("Resource/image/slider_bar.png", "bar");
 	}
 
 	void StageSelect::entitySetUp()
@@ -192,6 +195,7 @@ namespace Scene
 	StageSelect::~StageSelect()
 	{
 		entityManager_->allDestory();
+		ResourceManager::GetGraph().removeAll();
 		ResourceManager::GetSound().remove("selectBGM");
 	}
 
