@@ -26,7 +26,7 @@ namespace Scene
 		
 		button = ECS::UIArcheType::CreateButtonUI("button", Vec2{ 138.f, 56.f }, Vec2{ 400.f, 397.f }, *entityManager);
 		moji = ECS::UIArcheType::CreateButtonMojiUI("moji", Vec2{ 168.f, 56.f }, Vec2{ 400.f, 397.f }, *entityManager);
-		frame = ECS::UIArcheType::CreateSelectFrame("frame", Vec2{ 400.f - 3.f, 397.f - 3.f }, *entityManager);
+		frame = ECS::UIArcheType::CreateSelectFrame("frame", Vec2{ 400.f - 7.f, 397.f - 7.f }, *entityManager);
 	}
 	void Pause::update()
 	{

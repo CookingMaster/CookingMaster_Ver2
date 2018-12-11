@@ -134,7 +134,7 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, 137, 56);
+			entity->addComponent<Rectangle>(0, 0, 145, 64);
 			entity->addComponent<SpriteRectDraw>(graphicName);
 			entity->addComponent<SelectFrame>();
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
