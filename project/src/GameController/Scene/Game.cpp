@@ -54,52 +54,23 @@ namespace Scene
 
 	void Game::update()
 	{
-		//以下、仮の判定処理↓
-		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
-		{
-			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE))
-			{
-				auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
-				auto nowstate = itnotestate.getNoteState();
-
-				if (itnotestate.ActionToChangeNoteState())
-				{
-					switch (nowstate)
-					{
-					case ECS::NoteState::State::BAD:
-						DOUT << "BAD" << std::endl;
-						break;
-					case ECS::NoteState::State::GOOD:
-						DOUT << "GOOD" << std::endl;
-						break;
-					case ECS::NoteState::State::GREAT:
-						DOUT << "GREAT" << std::endl;
-						break;
-					case ECS::NoteState::State::PARFECT:
-						DOUT << "PARFECT" << std::endl;
-						break;
-					}
-					break;
-				}
-			}
-		}
-		//ここまで仮の判定処理↑
-
-
 		entityManager_->update();
+
+		int score = GetNoteScore();
+
 		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 		{
 			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
 			return;
 		}
 
-		if (Input::Get().getKeyFrame(KEY_INPUT_V) == 1)
+		if (score > 0)
 		{
 			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::UI))
 			{
 				if (it->hasComponent<ECS::BarComponentSystemX>())
 				{
-					it->getComponent<ECS::BarComponentSystemX>().addScore(1);
+					it->getComponent<ECS::BarComponentSystemX>().addScore(score);
 					num_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
 				}
 				if (it->hasComponent<ECS::ExpandReduceComponentSystem>())
@@ -108,29 +79,12 @@ namespace Scene
 					it->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
 					it->getComponent<ECS::DrawFont>().setNumber(num_);
 				}
-
 			}
-				
 		}
 		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
 
-		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
-		{
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name",name);
-			//BGM止めること
-			Sound(name).stop();
-			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
-		}
-		
-
-		if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1) {
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", name);
-			//BGM止めること
-			Sound(name).stop();
-			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
-		}
+		ChangePauseScene();
+		ChangeResultScene();
 	}
 
 	void Game::draw()
@@ -152,4 +106,64 @@ namespace Scene
 		entityManager_->allDestory();
 	}
 	
+	//ノーツ判定処理
+	[[nodiscard]]float Game::GetNoteScore()
+	{
+		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
+		{
+			auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
+			for (auto& it : note)
+			{
+				auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
+				auto nowstate = itnotestate.getNoteState();
+
+				if (itnotestate.ActionToChangeNoteState())
+				{
+					switch (nowstate)
+					{
+					case ECS::NoteState::State::BAD:
+						DOUT << "BAD" << std::endl;
+						return 0;
+					case ECS::NoteState::State::GOOD:
+						DOUT << "GOOD" << std::endl;
+						return 1;
+					case ECS::NoteState::State::GREAT:
+						DOUT << "GREAT" << std::endl;
+						return 2;
+					case ECS::NoteState::State::PARFECT:
+						DOUT << "PARFECT" << std::endl;
+						return 3;
+					}
+					break;
+				}
+			}
+		}
+		return 0;
+	}
+
+	//ポーズ画面遷移
+	void Game::ChangePauseScene()
+	{
+		//ポーズ画面遷移
+		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
+		{
+			auto bgm_name = std::make_unique<Parameter>();
+			bgm_name->add<std::string>("BGM_name", name);
+			//BGMを停止する
+			Sound(name).stop();
+			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
+		}
+	}
+
+	//結果画面遷移
+	void Game::ChangeResultScene()
+	{
+		if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1) {
+			auto bgm_name = std::make_unique<Parameter>();
+			bgm_name->add<std::string>("BGM_name", name);
+			//BGMを停止する
+			Sound(name).stop();
+			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
+		}
+	}
 }

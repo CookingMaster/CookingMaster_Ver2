@@ -207,16 +207,14 @@ namespace ECS
 		Rectangle* rectangle_;
 		Easing ease_;
 
+		int maxScore_;
 		int imgRect_x_;
 		int scorePer_;
-		int showScorePer_;
 
 	public:
-		BarComponentSystemX(int rectX, int now)
-		{
-			imgRect_x_ = rectX;
-			scorePer_ = now;
-		}
+		BarComponentSystemX(int rectX, int maxScore) :
+			maxScore_(maxScore),
+			imgRect_x_(rectX) {}
 		
 		void initialize() override
 		{
@@ -225,20 +223,16 @@ namespace ECS
 
 		void update() override
 		{
-			if (showScorePer_ < scorePer_)
+			if (!ease_.isEaseEnd())
 			{
 				ease_.run(Easing::CircIn, 10);
-			}
-			if (ease_.isEaseEnd())
-			{
-				showScorePer_ = scorePer_;
 			}
 
 			float size_w_ = imgRect_x_ * (scorePer_ / 100.f);
 			rectangle_->w = (int)ease_.getVolume((float)rectangle_->w, size_w_);
 		}
 
-		void addScore(int scorePer)
+		void addScore(float scorePer)
 		{
 			scorePer_ += scorePer;
 			if (scorePer_ > 100)

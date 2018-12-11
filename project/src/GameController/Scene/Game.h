@@ -28,5 +28,9 @@ namespace Scene
 		void update() override;
 		void draw() override;
 	
+	private:
+		float GetNoteScore();
+		void ChangePauseScene();
+		void ChangeResultScene();
 	};
 }
