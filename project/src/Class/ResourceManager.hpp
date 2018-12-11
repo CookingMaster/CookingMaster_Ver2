@@ -314,6 +314,10 @@ private:
 			{
 				DeleteGraph(*value.first);
 			}
+			for (auto& it : divGraphs_)
+			{
+				Utility::SafeDeleteArray(it.second.first);
+			}
 			divGraphs_.clear();
 			graphs_.clear();
 			
