@@ -247,11 +247,7 @@ namespace Scene
 			}
 	
 		}
-		if (cursorMov.getIndex() == 6u && Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
-		{
-			std::ofstream ofs("Resource/system/gain.bin");
-			ofs << bgmVal << seVal;
-		}
+
 		//バーの位置をセット
 		constexpr float MAX_GAUGE_SIZE = 270;
 		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal);
@@ -280,7 +276,8 @@ namespace Scene
 			auto name = std::make_unique<Parameter>();
 			ResourceManager::GetSound().load("Resource/sound/MUSIC/" + bgmName,"stage1", SoundType::BGM);
 			name->add<std::string>("BGM_name", "stage1");
-		
+			std::ofstream ofs("Resource/system/gain.bin");
+			ofs << bgmVal << seVal;
 			ON_SCENE_CHANGE(SceneName::GAME, name.get(), StackPopFlag::POP, true);
 		}
 		
