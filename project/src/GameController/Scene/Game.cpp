@@ -13,7 +13,7 @@ namespace Scene
 		, entityManager_(entityManager)
 	{
 		if (parame != nullptr)
-			name = (parame->get<std::string>("BGM_name"));
+			name_ = (parame->get<std::string>("BGM_name"));
 	}
 	void Game::initialize()
 	{
@@ -31,17 +31,17 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
 		
 
-		Sound s(name);
-		msl.loadMusicScoreData("Resource/score/musicScoreTest.txt");
-		nc.resetData(msl.GetBPM(), msl.GetOffsetTime());
+		Sound s(name_);
+		msl_.loadMusicScoreData("Resource/score/musicScoreTest.txt");
+		nc_.resetData(msl_.GetBPM(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
 		ECS::ArcheType::CreateGameBG("game_bg", Vec2(0.f, 0.f), *entityManager_);
 		//プレイヤテスト
-		ECS::ArcheType::CreatePlayerEntity("chara", name.c_str(), Vec2(300.f, 100.f), 20, *entityManager_);
+		ECS::ArcheType::CreatePlayerEntity("chara", name_.c_str(), Vec2(300.f, 100.f), 20, *entityManager_);
 		//スコアのバー
 		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(300.f, 300.f), *entityManager_);
-		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), *entityManager_);
+		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), msl_.GetMaxPoint(), *entityManager_);
 		//時計
 		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(450.f, 350.f), *entityManager_);
 		//得点(パーセンテージ)表示
@@ -54,10 +54,64 @@ namespace Scene
 
 	void Game::update()
 	{
-		//以下、仮の判定処理↓
+		entityManager_->update();
+
+		int score = getNoteScore();
+
+		if (score > 0)
+		{
+			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::UI))
+			{
+				if (it->hasComponent<ECS::BarComponentSystemX>())
+				{
+					it->getComponent<ECS::BarComponentSystemX>().addScore(score);
+					num_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
+				}
+				if (it->hasComponent<ECS::ExpandReduceComponentSystem>())
+				{
+					//スコアのフォント
+					it->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
+					it->getComponent<ECS::DrawFont>().setNumber(num_);
+				}
+			}
+		}
+		nc_.run(msl_.GetNotesData(), msl_.GetScoreData(), *entityManager_);
+
+		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
+		{
+			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
+			return;
+		}
+		changePauseScene();
+		cangeResultScene();
+	}
+
+	void Game::draw()
+	{
+		//グループ順に描画
+		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
+		DrawFormatString(0, 0, 0xffffffff, "ゲーム画面");
+		if (!name_.empty())
+		{
+			DrawFormatString(0, 100, 0xffffffff, "%s", name_.c_str());
+		}
+	}
+
+	Game::~Game()
+	{
+		ResourceManager::GetGraph().removeDivGraph("test");
+		ResourceManager::GetSound().remove("onion");
+		ResourceManager::GetSound().remove(name_);
+		entityManager_->allDestory();
+	}
+	
+	//ノーツ判定処理
+	[[nodiscard]]int Game::getNoteScore()
+	{
 		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
 		{
-			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE))
+			auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
+			for (auto& it : note)
 			{
 				auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
 				auto nowstate = itnotestate.getNoteState();
@@ -68,88 +122,47 @@ namespace Scene
 					{
 					case ECS::NoteState::State::BAD:
 						DOUT << "BAD" << std::endl;
-						break;
+						return 0;
 					case ECS::NoteState::State::GOOD:
 						DOUT << "GOOD" << std::endl;
-						break;
+						return 5;
 					case ECS::NoteState::State::GREAT:
 						DOUT << "GREAT" << std::endl;
-						break;
+						return 8;
 					case ECS::NoteState::State::PARFECT:
 						DOUT << "PARFECT" << std::endl;
-						break;
+						return 10;
 					}
 					break;
 				}
 			}
 		}
-		//ここまで仮の判定処理↑
+		return 0;
+	}
 
-
-		entityManager_->update();
-		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
-		{
-			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
-			return;
-		}
-
-		if (Input::Get().getKeyFrame(KEY_INPUT_V) == 1)
-		{
-			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::UI))
-			{
-				if (it->hasComponent<ECS::BarComponentSystemX>())
-				{
-					it->getComponent<ECS::BarComponentSystemX>().addScore(1);
-					num_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
-				}
-				if (it->hasComponent<ECS::ExpandReduceComponentSystem>())
-				{
-					//スコアのフォント
-					it->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
-					it->getComponent<ECS::DrawFont>().setNumber(num_);
-				}
-
-			}
-				
-		}
-		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
-
+	//ポーズ画面遷移
+	void Game::changePauseScene()
+	{
+		//ポーズ画面遷移
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
 			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name",name);
-			//BGM止めること
-			Sound(name).stop();
+			bgm_name->add<std::string>("BGM_name", name_);
+			//BGMを停止する
+			Sound(name_).stop();
 			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
 		}
-		
+	}
 
+	//結果画面遷移
+	void Game::cangeResultScene()
+	{
 		if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1) {
 			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", name);
-			//BGM止めること
-			Sound(name).stop();
+			bgm_name->add<std::string>("BGM_name", name_);
+			//BGMを停止する
+			Sound(name_).stop();
 			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
 		}
 	}
-
-	void Game::draw()
-	{
-		//グループ順に描画
-		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		DrawFormatString(0, 0, 0xffffffff, "ゲーム画面");
-		if (!name.empty())
-		{
-			DrawFormatString(0, 100, 0xffffffff, "%s", name.c_str());
-		}
-	}
-
-	Game::~Game()
-	{
-		ResourceManager::GetGraph().removeDivGraph("test");
-		ResourceManager::GetSound().remove("onion");
-		ResourceManager::GetSound().remove(name);
-		entityManager_->allDestory();
-	}
-	
 }

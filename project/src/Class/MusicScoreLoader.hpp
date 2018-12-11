@@ -9,6 +9,7 @@
 #include <sstream>
 #include <fstream>
 #include <assert.h>
+#include <math.h>
 #include "NotesAndScoreData.hpp"
 #include "ResourceManager.hpp"
 
@@ -19,10 +20,16 @@ class MusicScoreLoader
 private:
 	int bpm_;
 	int offsetTime_;
+	int noteNum_;	//休符以外のノーツの数
 	std::vector<NotesData> notesData_;
 	MusicData scoreData_;
 
 public:
+	MusicScoreLoader() :
+		bpm_(0),
+		offsetTime_(0),
+		noteNum_(0){}
+
 	/**
 	* @brief 譜面データを読み込む
 	* @param musicScoreDataPath 譜面情報ファイルへのパス
@@ -66,6 +73,7 @@ public:
 	{
 		bpm_ = 0;
 		offsetTime_ = 0;
+		noteNum_ = 0;
 
 		notesData_.clear();
 		notesData_.shrink_to_fit();
@@ -91,7 +99,7 @@ public:
 	* @brief オフセットの値(フレーム)を取得する
 	* @return float オフセット時間
 	*/
-	[[nodiscard]]int GetOffsetTime()
+	[[nodiscard]]int getOffsetTime()
 	{
 		return offsetTime_;
 	}
@@ -110,6 +118,14 @@ public:
 	[[nodiscard]]const MusicData& GetScoreData()
 	{
 		return scoreData_;
+	}
+	/**
+	* @brief 最高得点を取得する
+	* @return int 最高得点
+	*/
+	[[nodiscard]]int GetMaxPoint()
+	{
+		return noteNum_ * 10;
 	}
 
 private:
@@ -226,6 +242,7 @@ private:
 				continue;
 			}
 
+			++noteNum_;
 			//ノーツの番号を取得
 			scoreData_.back()[i].notesID = int(idstr[i][1] - '0');
 		}

@@ -20,7 +20,7 @@ namespace ECS
 	class FlashImage final : public ComponentSystem
 	{
 	private:
-		AlphaBlend* alpha_;
+		AlphaBlend* alpha_ = nullptr;
 		Easing ease_;
 		bool bright_;
 		bool isDelete_;
@@ -86,7 +86,7 @@ namespace ECS
 	class EasingPosMove final : public ComponentSystem
 	{
 	private:
-		Position* pos_;		//座標
+		Position* pos_ = nullptr;		//座標
 		Easing ease_;		//イージング
 		Vec2 start_;		//スタート位置
 		Vec2 goal_;			//ゴール位置
@@ -170,9 +170,9 @@ namespace ECS
 	class ZoomIn final : public ComponentSystem
 	{
 	private:
-		Position* pos;
-		Scale* scale;
-		SpriteDraw* sd;
+		Position* pos_ = nullptr;
+		Scale* scale_ = nullptr;
+		SpriteDraw* sd = nullptr;
 		Counter_f cnt_;
 		Vec2 zoomPos_;
 
@@ -183,10 +183,10 @@ namespace ECS
 
 		void initialize() override
 		{
-			pos = &entity->getComponent<Position>();
-			pos->val += zoomPos_;
+			pos_ = &entity->getComponent<Position>();
+			pos_->val += zoomPos_;
 
-			scale = &entity->getComponent<Scale>();
+			scale_ = &entity->getComponent<Scale>();
 
 			sd = &entity->getComponent<SpriteDraw>();
 			sd->setPivot(zoomPos_);
@@ -194,8 +194,8 @@ namespace ECS
 
 		void update() override
 		{
-			scale->val.x = cnt_.getCurrentCount();
-			scale->val.y = cnt_.getCurrentCount();
+			scale_->val.x = cnt_.getCurrentCount();
+			scale_->val.y = cnt_.getCurrentCount();
 			++cnt_;
 		}
 	};

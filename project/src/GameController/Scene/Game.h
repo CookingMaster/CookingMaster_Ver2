@@ -16,11 +16,11 @@ namespace Scene
 	class Game : public AbstractScene
 	{
 	private:
-		ECS::EntityManager* entityManager_;
-		MusicScoreLoader msl;
-		NotesCreator nc;
+		ECS::EntityManager* entityManager_ = nullptr;
+		MusicScoreLoader msl_;
+		NotesCreator nc_;
 		int num_;
-		std::string name;
+		std::string name_;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();
@@ -28,5 +28,9 @@ namespace Scene
 		void update() override;
 		void draw() override;
 	
+	private:
+		int getNoteScore();
+		void changePauseScene();
+		void cangeResultScene();
 	};
 }

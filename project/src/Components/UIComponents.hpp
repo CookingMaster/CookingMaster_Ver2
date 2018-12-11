@@ -24,7 +24,7 @@ namespace ECS
 	class TimerNeedleMove final : public ComponentSystem
 	{
 	private:
-		Rotation* rotate_;
+		Rotation* rotate_ = nullptr;
 		Counter_f cnt_;
 
 		float speed_;
@@ -55,7 +55,7 @@ namespace ECS
 	class FadeComponent final : public ComponentSystem
 	{
 	private:
-		AlphaBlend* alpha_;
+		AlphaBlend* alpha_ = nullptr;
 		Easing ease;
 		float start_, end_, spd_;
 
@@ -103,7 +103,7 @@ namespace ECS
 	class ExpandReduceComponentSystem final : public ComponentSystem
 	{
 	private:
-		Scale* scale_;
+		Scale* scale_ = nullptr;
 		Counter_f cnt_;
 
 		float magni_;
@@ -161,7 +161,7 @@ namespace ECS
 	class ExpandComponentSystem final : public ComponentSystem
 	{
 	private:
-		Scale* scale_;
+		Scale* scale_ = nullptr;
 		Counter_f cnt_;
 
 		float magni_min_;
@@ -194,7 +194,7 @@ namespace ECS
 	};
 
 	/*
-	*@brief　X軸のバーを描画します
+	*@brief　X軸のバーを指定パーセンテージ分描画する
 	SpriteRectDraw、Rectがないとエラーが出ます
 	*　rect_x_	元画像の全体の幅
 	*　now_		現在の数値
@@ -205,51 +205,47 @@ namespace ECS
 	{
 	private:
 		Rectangle* rectangle_;
-		Easing eas_;
+		Easing ease_;
 
-		int rect_x_;
+		int maxScore_;
+		int imgRect_x_;
 		int score_;
-		int atScore_;
-		int max_;
 
 	public:
-		BarComponentSystemX(int rectX, int now, int max)
-		{
-			rect_x_ = rectX;
-			score_ = now;
-			max_ = max;
-		}
+		BarComponentSystemX(int rectX, int maxScore) :
+			maxScore_(maxScore),
+			imgRect_x_(rectX),
+			score_(0){}
 		
 		void initialize() override
 		{
 			rectangle_ = &entity->getComponent<Rectangle>();
-			
 		}
+
 		void update() override
 		{
-			if (atScore_ < score_) {
-				eas_.run(Easing::CircIn, 10);
-			}
-			if (eas_.isEaseEnd()) {
-				atScore_ = score_;
-				eas_.reset();
-			}
-			float size_w_ = score_ * rect_x_ / (float)max_;
-			rectangle_->w = (int)eas_.getVolume((float)rectangle_->w, size_w_/*- (float)rectangle_->w*/);
-			
-		}
-		void addScore(int score)
-		{
-			atScore_ = score_;
-			score_ += score;
-			if (score_ > 100)
+			if (!ease_.isEaseEnd())
 			{
-				score_ = 100;
+				ease_.run(Easing::CircIn, 10);
 			}
+
+			float size_w_ = imgRect_x_ * ((float)score_ / (float)maxScore_);
+			rectangle_->w = (int)ease_.getVolume((float)rectangle_->w, size_w_);
 		}
+
+		void addScore(const int addscore)
+		{
+			score_ += addscore;
+			if (score_ > maxScore_)
+			{
+				score_ = maxScore_;
+			}
+			ease_.reset();
+		}
+
 		int getScore()
 		{
-			return score_;
+			return int(((float)score_ / (float)maxScore_) * 100.f);
 		}
 	};
 
@@ -303,9 +299,9 @@ namespace ECS
 	class DrawFont final : public ComponentSystem
 	{
 	private:
-		Position* pos_;
-		Rectangle* rectangle_;
-		SpriteRectDraw* rectDraw_;
+		Position* pos_ = nullptr;
+		Rectangle* rectangle_ = nullptr;
+		SpriteRectDraw* rectDraw_ = nullptr;
 		
 		int num_;
 		Vec2 rect_;
@@ -372,9 +368,9 @@ namespace ECS
 	class ButtonCommponent final : public ComponentSystem
 	{
 	private:
-		Position* pos_;
-		Rectangle* rectangle_;
-		SpriteRectDraw* rectDraw_;
+		Position* pos_ = nullptr;
+		Rectangle* rectangle_ = nullptr;
+		SpriteRectDraw* rectDraw_ = nullptr;
 
 		bool button_[3];
 		float posX_;
@@ -431,9 +427,9 @@ namespace ECS
 	class ButtonMojiCommponent  final : public ComponentSystem
 	{
 	private:
-		Position* pos_;
-		Rectangle* rectangle_;
-		SpriteRectDraw* rectDraw_;
+		Position* pos_ = nullptr;
+		Rectangle* rectangle_ = nullptr;
+		SpriteRectDraw* rectDraw_ = nullptr;
 
 		int moji_[3];
 		float posX_;
@@ -480,9 +476,9 @@ namespace ECS
 
 	class SelectFrame final : public ComponentSystem {
 	private:
-		Position* pos_;
-		Rectangle* rectangle_;
-		SpriteRectDraw* rectDraw_;
+		Position* pos_ = nullptr;
+		Rectangle* rectangle_ = nullptr;
+		SpriteRectDraw* rectDraw_ = nullptr;
 
 		float posX_;
 		int select_;

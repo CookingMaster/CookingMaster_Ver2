@@ -69,7 +69,7 @@ namespace ECS
 		void removeThis() { active_ = false;}
 		bool isStop_ = false;
 	public:
-		Entity* entity;
+		Entity* entity = nullptr;
 		virtual void initialize() {};
 		virtual void update() {};
 		virtual void draw3D() {};
@@ -102,7 +102,7 @@ namespace ECS
 	{
 	private:
 		friend class EntityManager;
-		std::string tag_;
+		std::string tag_ = "";
 		EntityManager& manager_;
 		Group nowGroup_;
 		bool isActive_ = true;

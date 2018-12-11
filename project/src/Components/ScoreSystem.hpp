@@ -38,7 +38,7 @@ namespace ECS
 	class ScoreSystem : public ComponentSystem
 	{
 	private:
-		ScoreData* score_;
+		ScoreData* score_ = nullptr;
 		int saveScore_ = 0;
 		StageHighScore stageName_;
 		//得点保存用ファイルを作成
@@ -99,7 +99,7 @@ namespace ECS
 	class ResultEffect : public ComponentSystem
 	{
 	private:
-		Scale* scale_;
+		Scale* scale_ = nullptr;
 		Easing ease_;
 	public:
 		void initialize() override
