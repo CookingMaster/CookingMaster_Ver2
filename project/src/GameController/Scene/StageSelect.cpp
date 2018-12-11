@@ -194,7 +194,9 @@ namespace Scene
 		}
 
 		//レイヤー入れ替え
-		if (cursor_->getComponent<ECS::CursorMove>().isOptionSelected())
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
+			&& cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
+			&& Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 		{
 			option_->changeGroup(ENTITY_GROUP::BACK_OBJECT);
 			bgmSlider_->changeGroup(ENTITY_GROUP::UI);
@@ -202,7 +204,9 @@ namespace Scene
 			bgmBar_->changeGroup(ENTITY_GROUP::UI);
 			seBar_->changeGroup(ENTITY_GROUP::UI);
 		}
-		else
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
+			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
+			&& Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 		{
 			option_->changeGroup(ENTITY_GROUP::BACK);
 			bgmSlider_->changeGroup(ENTITY_GROUP::BACK);
@@ -210,8 +214,6 @@ namespace Scene
 			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
 			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
 		}
-
-
 	}
 
 	void StageSelect::setSoundVolume()
@@ -222,11 +224,11 @@ namespace Scene
 			//BGM
 			if (cursorMov.getIndex() == 4u)
 			{
-				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && bgmVal <= 1.f)
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && bgmVal <= MasterSound::MAX_GAIN)
 				{
 					bgmVal += 0.01f;
 				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && bgmVal >= 0.f)
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && bgmVal >= MasterSound::MIN_GAIN)
 				{
 					bgmVal -= 0.01f;
 				}
@@ -234,15 +236,16 @@ namespace Scene
 			//SE
 			if (cursorMov.getIndex() == 5u)
 			{
-				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && seVal <= 1.f)
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && seVal <= MasterSound::MAX_GAIN)
 				{
 					seVal += 0.01f;
 				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && seVal >= 0.f)
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && seVal >= MasterSound::MIN_GAIN)
 				{
 					seVal -= 0.01f;
 				}
 			}
+	
 		}
 		if (cursorMov.getIndex() == 6u && Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 		{
