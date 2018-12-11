@@ -41,7 +41,7 @@ namespace Scene
 		ECS::ArcheType::CreatePlayerEntity("chara", name.c_str(), Vec2(300.f, 100.f), 20, *entityManager_);
 		//スコアのバー
 		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(300.f, 300.f), *entityManager_);
-		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), *entityManager_);
+		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), msl.GetMaxPoint(), *entityManager_);
 		//時計
 		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(450.f, 350.f), *entityManager_);
 		//得点(パーセンテージ)表示
@@ -54,52 +54,17 @@ namespace Scene
 
 	void Game::update()
 	{
-		//以下、仮の判定処理↓
-		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
-		{
-			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE))
-			{
-				auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
-				auto nowstate = itnotestate.getNoteState();
-
-				if (itnotestate.ActionToChangeNoteState())
-				{
-					switch (nowstate)
-					{
-					case ECS::NoteState::State::BAD:
-						DOUT << "BAD" << std::endl;
-						break;
-					case ECS::NoteState::State::GOOD:
-						DOUT << "GOOD" << std::endl;
-						break;
-					case ECS::NoteState::State::GREAT:
-						DOUT << "GREAT" << std::endl;
-						break;
-					case ECS::NoteState::State::PARFECT:
-						DOUT << "PARFECT" << std::endl;
-						break;
-					}
-					break;
-				}
-			}
-		}
-		//ここまで仮の判定処理↑
-
-
 		entityManager_->update();
-		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
-		{
-			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
-			return;
-		}
 
-		if (Input::Get().getKeyFrame(KEY_INPUT_V) == 1)
+		int score = GetNoteScore();
+
+		if (score > 0)
 		{
 			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::UI))
 			{
 				if (it->hasComponent<ECS::BarComponentSystemX>())
 				{
-					it->getComponent<ECS::BarComponentSystemX>().addScore(1);
+					it->getComponent<ECS::BarComponentSystemX>().addScore(score);
 					num_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
 				}
 				if (it->hasComponent<ECS::ExpandReduceComponentSystem>())
@@ -108,29 +73,17 @@ namespace Scene
 					it->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
 					it->getComponent<ECS::DrawFont>().setNumber(num_);
 				}
-
 			}
-				
 		}
 		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
 
-		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
+		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 		{
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name",name);
-			//BGM止めること
-			Sound(name).stop();
-			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
+			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
+			return;
 		}
-		
-
-		if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1) {
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", name);
-			//BGM止めること
-			Sound(name).stop();
-			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
-		}
+		ChangePauseScene();
+		ChangeResultScene();
 	}
 
 	void Game::draw()
@@ -152,4 +105,64 @@ namespace Scene
 		entityManager_->allDestory();
 	}
 	
+	//ノーツ判定処理
+	[[nodiscard]]float Game::GetNoteScore()
+	{
+		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
+		{
+			auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
+			for (auto& it : note)
+			{
+				auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
+				auto nowstate = itnotestate.getNoteState();
+
+				if (itnotestate.ActionToChangeNoteState())
+				{
+					switch (nowstate)
+					{
+					case ECS::NoteState::State::BAD:
+						DOUT << "BAD" << std::endl;
+						return 0;
+					case ECS::NoteState::State::GOOD:
+						DOUT << "GOOD" << std::endl;
+						return 5;
+					case ECS::NoteState::State::GREAT:
+						DOUT << "GREAT" << std::endl;
+						return 8;
+					case ECS::NoteState::State::PARFECT:
+						DOUT << "PARFECT" << std::endl;
+						return 10;
+					}
+					break;
+				}
+			}
+		}
+		return 0;
+	}
+
+	//ポーズ画面遷移
+	void Game::ChangePauseScene()
+	{
+		//ポーズ画面遷移
+		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
+		{
+			auto bgm_name = std::make_unique<Parameter>();
+			bgm_name->add<std::string>("BGM_name", name);
+			//BGMを停止する
+			Sound(name).stop();
+			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
+		}
+	}
+
+	//結果画面遷移
+	void Game::ChangeResultScene()
+	{
+		if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1) {
+			auto bgm_name = std::make_unique<Parameter>();
+			bgm_name->add<std::string>("BGM_name", name);
+			//BGMを停止する
+			Sound(name).stop();
+			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
+		}
+	}
 }
