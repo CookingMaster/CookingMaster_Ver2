@@ -18,7 +18,7 @@ namespace Scene
 	void Game::initialize()
 	{
 		ResourceManager::GetGraph().loadDiv("Resource/image/Act_Chara2.png", "test", 48, 6, 8, 64, 64);
-		ResourceManager::GetSound().load("Resource/sound/onion.ogg", "onion", SoundType::SE);
+		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/1280.png", "game_bg");
 		ResourceManager::GetGraph().loadDiv("Resource/image/Chara_Test.png", "chara", 18, 6, 3, 64, 64);
