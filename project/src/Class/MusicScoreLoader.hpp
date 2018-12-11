@@ -99,7 +99,7 @@ public:
 	* @brief オフセットの値(フレーム)を取得する
 	* @return float オフセット時間
 	*/
-	[[nodiscard]]int GetOffsetTime()
+	[[nodiscard]]int getOffsetTime()
 	{
 		return offsetTime_;
 	}

@@ -43,8 +43,8 @@ namespace ECS
 		std::array<float, 4> hitJudge_;
 		float arrivalBeatTime_;
 
-		NoteState* noteState_;
-		AnimatorByFrame* animator_;
+		NoteState* noteState_ = nullptr;
+		AnimatorByFrame* animator_ = nullptr;
 		std::array<float, 9> hitTimeLine_;
 		Counter transCounter_;
 		Counter_f flameCounter_;

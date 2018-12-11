@@ -24,7 +24,7 @@ namespace ECS
 	class TimerNeedleMove final : public ComponentSystem
 	{
 	private:
-		Rotation* rotate_;
+		Rotation* rotate_ = nullptr;
 		Counter_f cnt_;
 
 		float speed_;
@@ -55,7 +55,7 @@ namespace ECS
 	class FadeComponent final : public ComponentSystem
 	{
 	private:
-		AlphaBlend* alpha_;
+		AlphaBlend* alpha_ = nullptr;
 		Easing ease;
 		float start_, end_, spd_;
 
@@ -103,7 +103,7 @@ namespace ECS
 	class ExpandReduceComponentSystem final : public ComponentSystem
 	{
 	private:
-		Scale* scale_;
+		Scale* scale_ = nullptr;
 		Counter_f cnt_;
 
 		float magni_;
@@ -161,7 +161,7 @@ namespace ECS
 	class ExpandComponentSystem final : public ComponentSystem
 	{
 	private:
-		Scale* scale_;
+		Scale* scale_ = nullptr;
 		Counter_f cnt_;
 
 		float magni_min_;
@@ -233,7 +233,7 @@ namespace ECS
 			rectangle_->w = (int)ease_.getVolume((float)rectangle_->w, size_w_);
 		}
 
-		void addScore(float addscore)
+		void addScore(const int addscore)
 		{
 			score_ += addscore;
 			if (score_ > maxScore_)
@@ -299,9 +299,9 @@ namespace ECS
 	class DrawFont final : public ComponentSystem
 	{
 	private:
-		Position* pos_;
-		Rectangle* rectangle_;
-		SpriteRectDraw* rectDraw_;
+		Position* pos_ = nullptr;
+		Rectangle* rectangle_ = nullptr;
+		SpriteRectDraw* rectDraw_ = nullptr;
 		
 		int num_;
 		Vec2 rect_;
@@ -368,9 +368,9 @@ namespace ECS
 	class ButtonCommponent final : public ComponentSystem
 	{
 	private:
-		Position* pos_;
-		Rectangle* rectangle_;
-		SpriteRectDraw* rectDraw_;
+		Position* pos_ = nullptr;
+		Rectangle* rectangle_ = nullptr;
+		SpriteRectDraw* rectDraw_ = nullptr;
 
 		bool button_[3];
 		float posX_;
@@ -427,9 +427,9 @@ namespace ECS
 	class ButtonMojiCommponent  final : public ComponentSystem
 	{
 	private:
-		Position* pos_;
-		Rectangle* rectangle_;
-		SpriteRectDraw* rectDraw_;
+		Position* pos_ = nullptr;
+		Rectangle* rectangle_ = nullptr;
+		SpriteRectDraw* rectDraw_ = nullptr;
 
 		int moji_[3];
 		float posX_;
@@ -476,9 +476,9 @@ namespace ECS
 
 	class SelectFrame final : public ComponentSystem {
 	private:
-		Position* pos_;
-		Rectangle* rectangle_;
-		SpriteRectDraw* rectDraw_;
+		Position* pos_ = nullptr;
+		Rectangle* rectangle_ = nullptr;
+		SpriteRectDraw* rectDraw_ = nullptr;
 
 		float posX_;
 		int select_;

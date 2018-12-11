@@ -49,7 +49,7 @@ namespace ECS {
 	class AnimatorPlayer final : public ComponentSystem
 	{
 	private:
-		PlayerState* state_;
+		PlayerState* state_ = nullptr;
 		SpriteAnimationDraw* animation_ = nullptr;
 		Counter counter_;
 		int frame_ = 0;					//!アニメーションするフレーム数
@@ -172,7 +172,7 @@ namespace ECS {
 	{
 	private:
 		AnimatorPlayer* animator_ = nullptr;
-		PlayerState* state_;
+		PlayerState* state_ = nullptr;
 		Counter counter_;
 		int cutAnimMaxTime_ = 180;	//!切るモーションの全体の長さ(フレーム数)、これを超えるとIdleに戻る
 	public:

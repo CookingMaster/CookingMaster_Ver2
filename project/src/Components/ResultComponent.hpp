@@ -22,8 +22,8 @@ namespace ECS
 	class FlyAway final : public ComponentSystem
 	{
 	private:
-		Position* position_;
-		Rotation* rotate_;
+		Position* position_ = nullptr;
+		Rotation* rotate_ = nullptr;
 		Counter_f cnt_;
 
 		//! à⁄ìÆÇ∑ÇÈÇ∆Ç´ÇÃâÒì]íÜêS
@@ -74,7 +74,7 @@ namespace ECS
 	class Expand final : public ComponentSystem 
 	{
 	private:
-		Scale* scale_;
+		Scale* scale_ = nullptr;
 		Easing ease_;
 		Vec2 endSize_;
 		Ease em_;
@@ -102,7 +102,7 @@ namespace ECS
 	class Rotate final : public ComponentSystem 
 	{
 	private:
-		Rotation* rotation_;
+		Rotation* rotation_ = nullptr;
 		float speed_;
 	public:
 		Rotate(float speed)
@@ -129,7 +129,7 @@ namespace ECS
 	class FallDance final : public ComponentSystem
 	{
 	private:
-		Position* position_;
+		Position* position_ = nullptr;
 		float shift_;
 		Counter_f angleCnt_;
 	public:
