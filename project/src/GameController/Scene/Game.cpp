@@ -41,7 +41,7 @@ namespace Scene
 		ECS::ArcheType::CreatePlayerEntity("chara", name.c_str(), Vec2(300.f, 100.f), 20, *entityManager_);
 		//スコアのバー
 		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(300.f, 300.f), *entityManager_);
-		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), *entityManager_);
+		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), msl.GetMaxPoint(), *entityManager_);
 		//時計
 		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(450.f, 350.f), *entityManager_);
 		//得点(パーセンテージ)表示
@@ -57,12 +57,6 @@ namespace Scene
 		entityManager_->update();
 
 		int score = GetNoteScore();
-
-		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
-		{
-			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
-			return;
-		}
 
 		if (score > 0)
 		{
@@ -83,6 +77,11 @@ namespace Scene
 		}
 		nc.run(msl.GetNotesData(), msl.GetScoreData(), *entityManager_);
 
+		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
+		{
+			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
+			return;
+		}
 		ChangePauseScene();
 		ChangeResultScene();
 	}
@@ -126,13 +125,13 @@ namespace Scene
 						return 0;
 					case ECS::NoteState::State::GOOD:
 						DOUT << "GOOD" << std::endl;
-						return 1;
+						return 5;
 					case ECS::NoteState::State::GREAT:
 						DOUT << "GREAT" << std::endl;
-						return 2;
+						return 8;
 					case ECS::NoteState::State::PARFECT:
 						DOUT << "PARFECT" << std::endl;
-						return 3;
+						return 10;
 					}
 					break;
 				}

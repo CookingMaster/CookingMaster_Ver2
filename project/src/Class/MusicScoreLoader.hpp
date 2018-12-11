@@ -120,12 +120,12 @@ public:
 		return scoreData_;
 	}
 	/**
-	* @brief ノート一つ分の最高得点を取得する
-	* @return int 点数
+	* @brief 最高得点を取得する
+	* @return int 最高得点
 	*/
-	[[nodiscard]]int GetNoteNum()
+	[[nodiscard]]int GetMaxPoint()
 	{
-		return noteNum_;
+		return noteNum_ * 10;
 	}
 
 private:

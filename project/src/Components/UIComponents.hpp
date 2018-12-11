@@ -209,12 +209,13 @@ namespace ECS
 
 		int maxScore_;
 		int imgRect_x_;
-		int scorePer_;
+		int score_;
 
 	public:
 		BarComponentSystemX(int rectX, int maxScore) :
 			maxScore_(maxScore),
-			imgRect_x_(rectX) {}
+			imgRect_x_(rectX),
+			score_(0){}
 		
 		void initialize() override
 		{
@@ -228,23 +229,23 @@ namespace ECS
 				ease_.run(Easing::CircIn, 10);
 			}
 
-			float size_w_ = imgRect_x_ * (scorePer_ / 100.f);
+			float size_w_ = imgRect_x_ * ((float)score_ / (float)maxScore_);
 			rectangle_->w = (int)ease_.getVolume((float)rectangle_->w, size_w_);
 		}
 
-		void addScore(float scorePer)
+		void addScore(float addscore)
 		{
-			scorePer_ += scorePer;
-			if (scorePer_ > 100)
+			score_ += addscore;
+			if (score_ > maxScore_)
 			{
-				scorePer_ = 100;
+				score_ = maxScore_;
 			}
 			ease_.reset();
 		}
 
 		int getScore()
 		{
-			return scorePer_;
+			return int(((float)score_ / (float)maxScore_) * 100.f);
 		}
 	};
 
