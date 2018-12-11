@@ -197,6 +197,7 @@ namespace ECS
 		void changeGroup(const Group setGroup) noexcept
 		{
 			removeGroup(nowGroup_);
+
 			addGroup(setGroup);
 			nowGroup_ = setGroup;
 		}
