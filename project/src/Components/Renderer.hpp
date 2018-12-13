@@ -565,8 +565,10 @@ namespace ECS
 				RenderUtility::SetColor(color_);
 				RenderUtility::SetBlend(blend_);
 				DrawRectRotaGraph3F(
-					__super::pos_->val.x, pos_->val.y,
-					rect_->x, rect_->y,
+					__super::pos_->val.x,
+					__super::pos_->val.y,
+					rect_->x,
+					rect_->y,
 					rect_->w,
 					rect_->h,
 					__super::pivot_.x,

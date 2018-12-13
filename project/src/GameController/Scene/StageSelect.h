@@ -26,6 +26,8 @@ namespace Scene
 		ECS::Entity* cursor_ = nullptr;
 		ECS::Entity* bgmSlider_ = nullptr;
 		ECS::Entity* seSlider_ = nullptr;
+		ECS::Entity* bgmFullSlider_ = nullptr;
+		ECS::Entity* seFullSlider_ = nullptr;
 		ECS::Entity* bgmBar_ = nullptr;
 		ECS::Entity* seBar_ = nullptr;
 		ECS::EntityManager* entityManager_ = nullptr;
