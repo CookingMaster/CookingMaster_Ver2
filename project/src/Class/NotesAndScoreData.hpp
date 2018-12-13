@@ -11,6 +11,12 @@
 #include <array>
 #include "../Components/BasicComponents.hpp"
 
+//アニメーションのスタート位置と枚数
+struct AnimSheetData
+{
+	int xmin, ymin, xmax, ymax;
+};
+
 //ノーツに使用される各種データ
 struct NotesData
 {
@@ -25,6 +31,7 @@ struct NotesData
 	int animFlame;	//アニメーションのフレーム数
 	int xnum;		//アニメーションのX方向の枚数
 	int ynum;		//アニメーションのY方向の枚数
+	std::array<AnimSheetData, 3> animSData;	//通常、切断、落下のアニメーション
 };
 
 //一つの音符のデータ

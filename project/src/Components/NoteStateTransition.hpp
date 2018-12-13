@@ -40,20 +40,22 @@ namespace ECS
 	class NoteStateTransition : public ComponentSystem
 	{
 	private:
+		std::array<AnimSheetData, 3> asd_;	//アニメーション遷移のやつ
 		std::array<float, 4> hitJudge_;
 		float arrivalBeatTime_;
 
 		NoteState* noteState_ = nullptr;
 		AnimatorByFrame* animator_ = nullptr;
-		std::array<float, 9> hitTimeLine_;
+		std::array<float, 8> hitTimeLine_;
 		Counter transCounter_;
 		Counter_f flameCounter_;
 
 	public:
-		NoteStateTransition(const std::array<float, 4>& hitJudge, float arrivalBeatTime) :
-			hitJudge_(hitJudge),
+		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
+			asd_(nd.animSData),
+			hitJudge_(nd.hitJudge),
 			arrivalBeatTime_(arrivalBeatTime),
-			transCounter_(0, 9) {}
+			transCounter_(0, 8) {}
 
 		void initialize() override
 		{
@@ -67,7 +69,7 @@ namespace ECS
 				it = millisecondToFlame(it);
 			} 
 
-			/*NON → BAD → GOOD → GREAT → PARFECT → GREAT → GOOD → BAD → NON → MISSED という風に遷移する
+			/*NON → BAD → GOOD → GREAT → PARFECT → GREAT → GOOD → BAD → MISSED という風に遷移する
 			BADの時に入力があるとGRAZEDへ移行する
 			GOOD,GREAT,PARFECTの時に入力があるとHITTEDへ移行する
 			以下の羅列は各判定開始時間の計算*/
@@ -78,8 +80,7 @@ namespace ECS
 			hitTimeLine_[4] = hitTimeLine_[3] + hitJudge_[3];
 			hitTimeLine_[5] = hitTimeLine_[4] + hitJudge_[2];
 			hitTimeLine_[6] = hitTimeLine_[5] + hitJudge_[1];
-			hitTimeLine_[7] = hitTimeLine_[6] + hitJudge_[0];
-			hitTimeLine_[8] = hitTimeLine_[7] + 10.f;
+			hitTimeLine_[7] = hitTimeLine_[6] + 10.f;
 
 			noteState_->state = NoteState::State::NON;
 		}
@@ -106,6 +107,8 @@ namespace ECS
 			case NoteState::State::NON:
 			case NoteState::State::MISSED:
 			case NoteState::State::GRAZED:
+				return false;
+
 			case NoteState::State::HITTED:
 				return false;
 
@@ -116,6 +119,7 @@ namespace ECS
 			case NoteState::State::GOOD:
 			case NoteState::State::GREAT:
 			case NoteState::State::PARFECT:
+				changeNoteAnim(1, false);
 				noteState_->state = NoteState::State::HITTED;
 				break;
 			}
@@ -146,23 +150,34 @@ namespace ECS
 			switch (transCounter_.getCurrentCount())
 			{
 			case 0:	noteState_->state = NoteState::State::BAD;		break;
-			case 1:	noteState_->state = NoteState::State::GOOD;		break;
-			case 2:	noteState_->state = NoteState::State::GREAT;		break;
-			case 3:	noteState_->state = NoteState::State::PARFECT;	break;
-			case 4:	noteState_->state = NoteState::State::GREAT;		break;
+			case 1:	noteState_->state = NoteState::State::GOOD;
+					break;
+			case 2:	noteState_->state = NoteState::State::GREAT;
+					break;
+			case 3:	noteState_->state = NoteState::State::PARFECT;	
+					break;
+			case 4:	noteState_->state = NoteState::State::GREAT;	break;
 			case 5:	noteState_->state = NoteState::State::GOOD;		break;
 			case 6:	noteState_->state = NoteState::State::BAD;		break;
-			case 7:	noteState_->state = NoteState::State::NON;		break;
-			case 8:	noteState_->state = NoteState::State::MISSED;
-					animator_->setSpriteNum(0, 1, 2, 2);
-					animator_->changeFrame(10);
-					animator_->setIsEndStopAnim(true);
-					entity->stopComponent<Physics>();
-					entity->updateComponent<KillEntity>();
+			case 7:	noteState_->state = NoteState::State::MISSED;
+					changeNoteAnim(2, true);
 					break;
 			default: return;
 			}
 			++transCounter_;
+		}
+
+		void changeNoteAnim(int animMode, bool isStopMove)
+		{
+			animator_->setSpriteNum(
+				asd_[animMode].xmin,
+				asd_[animMode].ymin,
+				asd_[animMode].xmax,
+				asd_[animMode].ymax);
+			//animator_->changeFrame(10);
+			animator_->setIsEndStopAnim(isStopMove);
+			entity->stopComponent<Physics>();
+			entity->updateComponent<KillEntity>();
 		}
 	};
 }
