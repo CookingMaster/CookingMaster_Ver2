@@ -18,14 +18,19 @@ private:
 		float seGain_ = 1.0f;
 		float bgmGain_ = 1.0f;
 	public:
+		//!BGM音量の読み込み
+		const float getBGMGain() { return bgmGain_; }
+		const float getSEGain() { return seGain_; }
 		//!すべてのSEサウンドの音量を0.0f~1.fで指定
 		void setAllSEGain(float gain)
 		{
+			if (gain >= 1.f || gain <= 0) { return; }
 			seGain_ = gain;
 		}
 		//!すべてのBGMサウンドの音量を0.0f~1.fで指定
 		void setAllBGMGain(float gain)
 		{
+			if (gain >= 1.f || gain <= 0) { return; }
 			bgmGain_ = gain;
 		}
 		//!登録されているサウンドの更新を行います
@@ -47,6 +52,9 @@ private:
 		}
 	};
 public:
+	//!デフォルトの音量
+	static constexpr float MAX_GAIN = 1.f;
+	static constexpr float MIN_GAIN = 0.f;
 	inline static Singleton& Get()
 	{
 		static auto inst = std::make_unique<Singleton>();
@@ -62,7 +70,6 @@ private:
 	int handle_;
 	float gain_ = 1.f;
 public:
-
 	//!コンストラクタで登録したサウンドハンドル名を指定します
 	Sound(const std::string& soundName)
 	{

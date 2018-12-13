@@ -9,7 +9,7 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(7087);
+	//_CrtSetBreakAlloc(884);
 	ShowConsole();
 	GameMain main;
 	main.run();

@@ -14,8 +14,8 @@ namespace ECS
 {
 	struct UIArcheType
 	{
-		//!バー(スコア)
-		static Entity* CreateEmptyBarUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		//!空っぽのバー（スコア表示用）
+		static Entity* CreateEmptyBarUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -26,8 +26,8 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
-		//!バー（スコア）
-		static Entity* CreateFullBarUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		//!バーの中身（スコア表示用）
+		static Entity* CreateFullBarUI(const char* graphicName, const Vec2& rect, const Vec2& pos, int maxScore, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -35,12 +35,12 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
-			entity->addComponent<BarComponentSystemX>((int)rect.x, 0, 200);
+			entity->addComponent<BarComponentSystemX>((int)rect.x, maxScore);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
 		//!時計
-		static Entity* CreateClockUI(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		static Entity* CreateClockUI(const char* graphicName, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -51,7 +51,7 @@ namespace ECS
 			return entity;
 		}
 		//!時計の針
-		static Entity* CreateNeedleUI(const char* graphicName, const Vec2 pos, EntityManager& entityManager_, float speed)
+		static Entity* CreateNeedleUI(const char* graphicName, const Vec2& pos, EntityManager& entityManager_, float speed)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -62,8 +62,8 @@ namespace ECS
 			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2{ 7.f,48.f });
 			return entity;
 		}
-		//!フォント
-		static Entity* CreateFontUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		//!スコア表示用フォント
+		static Entity* CreateFontUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -71,13 +71,15 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<DrawFont>(rect.x, rect.y);
+			entity->addComponent<ExpandReduceComponentSystem>(1.5f, 0.1f);
 			entity->addGroup(ENTITY_GROUP::UI);
-			entity->addComponent<DrawFont>(rect.x, 0);
-			entity->addComponent<ExpandReduceComponentSystem>(1.3f, 0.1f);
 			return entity;
 		}
 
-		static Entity* CreatePauseBG(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		//---------- ポーズ画面
+		//ポーズ画面の背景
+		static Entity* CreatePauseBG(const char* graphicName, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -87,33 +89,55 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
-
-		static Entity* CreatePauseUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		//ポーズ画面のパンネル
+		static Entity* CreatePauseUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
-			entity->addComponent<Transform>().setScale(rect.x, rect.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, 522, 255);
+			entity->addComponent<Rectangle>(0, 0, static_cast<int>(rect.x), static_cast<int>(rect.y));
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 261.f,128.f });
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
-			entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 0.05f);
 			return entity;
 		}
-
-		static Entity* CreateButtonUI(const char* graphicName, const Vec2 rect, const Vec2 pos, EntityManager& entityManager_)
+		//ポーズ画面のボタン
+		static Entity* CreateButtonUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
-			entity->addComponent<Transform>().setScale(rect.x, rect.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, rect.x, rect.y);
-			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{rect.x/2, rect.y/2});
+			entity->addComponent<Rectangle>(0, 0, static_cast<int>(rect.x), static_cast<int>(rect.y));
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<ButtonCommponent>(138);
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
-			entity->addComponent<ButtonCommponent>(0, 138);
-			entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 0.05f);
+			return entity;
+		}
+		//ポーズ画面のボタンの上にのせる文字
+		static Entity* CreateButtonMojiUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(0, 0, static_cast<int>(rect.x), static_cast<int>(rect.y));
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<ButtonMojiCommponent>(static_cast<int>(rect.x));
+			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
+			return entity;
+		}
+		//ポーズ画面の選択肢フレーム
+		static Entity* CreateSelectFrame(const char* graphicName, const Vec2& pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Rectangle>(0, 0, 145, 64);
+			entity->addComponent<SpriteRectDraw>(graphicName);
+			entity->addComponent<SelectFrame>();
+			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
 	};

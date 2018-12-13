@@ -13,7 +13,6 @@
 #include "Scene/Parameter.hpp"
 #include <stack>
 #define ENTITY_GROUP (ECS::Group)GameController::GameGroup
-
 class GameController final : public Scene::IOnSceneChangeCallback
 {
 private:
@@ -43,8 +42,11 @@ public:
 		UI,				//時計やスコアゲージ等のUI
 		FADE,			//フェード用
 		PAUSE_UI,		//ポーズ用UI
+		TITLE_BG,		//タイトル画面背景
+		TITLE_MESSAGE,	//タイトル画面の「PRESS ANY KEY」
+		TITLE_LOGO,		//タイトルロゴ
 		TOP_FADE,		//最前面フェード
-		MAX,			//最大数
+		MAX,			//最大数-----------------------------------------ここより上に記述
 	};
 	GameController();
 	~GameController() = default;

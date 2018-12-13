@@ -34,11 +34,16 @@ public:
 	//!アプリケーションの更新を行います
 	void run()
 	{
+
 		while (system->isOk())
 		{
 			Fps::Get().update();
 			update();
-			draw();
+			{
+				Utility::ProcessingTime a;
+				draw();
+			}
+			
 			Fps::Get().wait();
 		}
 	}
