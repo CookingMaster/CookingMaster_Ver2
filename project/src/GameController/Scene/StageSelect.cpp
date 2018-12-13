@@ -173,7 +173,6 @@ namespace Scene
 			);
 			cursor_->addComponent<ECS::CursorMove>(cursorTargets);
 		}
-		
 	}
 
 	void StageSelect::optionSheetMove()
@@ -266,7 +265,6 @@ namespace Scene
 					seVal -= 0.01f;
 				}
 			}
-	
 		}
 
 		//バーの位置をセット
@@ -298,7 +296,7 @@ namespace Scene
 		entityManager_->update();
 		optionSheetMove();
 		setSoundVolume();
-		auto bgmName = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
+		const auto bgmName = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
 		if (bgmName != "")
 		{
 			auto name = std::make_unique<Parameter>();

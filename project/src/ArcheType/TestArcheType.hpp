@@ -3,6 +3,9 @@
 * @brief エンティティの原型を作るテスト
 * @author tonarinohito
 * @date 2018/10/05
+* @par History
+- 2018/12/13 tonarinohito
+-# 矩形で指定できるEntityとアニメーションで指定できるEntity追加
 */
 #pragma once
 #include "../GameController/GameController.h"
