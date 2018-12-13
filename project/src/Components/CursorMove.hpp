@@ -87,13 +87,13 @@ namespace ECS
 		void selectStage()
 		{
 			//上下
-			if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
+			if (index_ != OPTION && Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
 			{
 				if (index_ > STAGE1) { --index_; }
 				else { index_ = STAGE3; }
 				preIndex = index_;
 			}
-			if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
+			if (index_ != OPTION && Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
 			{
 				if (index_ < STAGE3) { ++index_; }
 				else { index_ = STAGE1; }

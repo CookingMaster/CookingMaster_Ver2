@@ -30,6 +30,7 @@ namespace Scene
 		ECS::Entity* seFullSlider_ = nullptr;
 		ECS::Entity* bgmBar_ = nullptr;
 		ECS::Entity* seBar_ = nullptr;
+		ECS::Entity* star_[3]{};
 		ECS::EntityManager* entityManager_ = nullptr;
 		std::vector<ECS::Entity*> cursorTargets{};
 		Counter cnt_;

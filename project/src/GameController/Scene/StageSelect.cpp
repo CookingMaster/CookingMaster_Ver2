@@ -30,6 +30,10 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/sliderempty.png", "slider");
 		ResourceManager::GetGraph().load("Resource/image/sliderfull.png", "slider_full");
 		ResourceManager::GetGraph().load("Resource/image/sliderbutton.png", "bar");
+		//難易度の星
+		ResourceManager::GetGraph().loadDiv("Resource/image/star.png", "star", 2,2,1,55,53);
+		//フォント
+		ResourceManager::GetGraph().loadDiv("Resource/image/number.png", "number", 10, 10, 1, 50, 100);
 	}
 
 	void StageSelect::entitySetUp()
@@ -173,6 +177,32 @@ namespace Scene
 			);
 			cursor_->addComponent<ECS::CursorMove>(cursorTargets);
 		}
+
+		//星生成
+		{
+			float i = 0;
+			for (auto& it : star_)
+			{
+				it = ECS::ArcheType::CreateMultiEntity
+				(
+					"star",
+					Vec2{ 740.f + 55.f * i, 420.f },
+					*entityManager_,
+					ENTITY_GROUP::BACK_OBJECT
+				);
+				it->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+				++i;
+			}	
+		}
+		//数字
+		ECS::ArcheType::CreateMultiEntity
+		(
+			"number",
+			Vec2{ 720.f,580.f },
+			*entityManager_,
+			ENTITY_GROUP::UI
+		);
+
 	}
 
 	void StageSelect::optionSheetMove()
@@ -266,7 +296,7 @@ namespace Scene
 				}
 			}
 		}
-
+		
 		//バーの位置をセット
 		constexpr float MAX_GAUGE_SIZE = 250;
 		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal);
@@ -294,6 +324,28 @@ namespace Scene
 	void StageSelect::update()
 	{
 		entityManager_->update();
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() != 3u)
+		{
+			for (auto& it : star_)
+			{
+				it->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+			}
+		}
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 0u)
+		{
+			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+		}
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 1u)
+		{
+			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+		}
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 2u)
+		{
+			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+		}
 		optionSheetMove();
 		setSoundVolume();
 		const auto bgmName = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
