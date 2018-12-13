@@ -27,8 +27,9 @@ namespace Scene
 		//カーソル
 		ResourceManager::GetGraph().load("Resource/image/menu_cursor.png", "cursor");
 		//スライダー
-		ResourceManager::GetGraph().load("Resource/image/slider.png", "slider");
-		ResourceManager::GetGraph().load("Resource/image/slider_bar.png", "bar");
+		ResourceManager::GetGraph().load("Resource/image/sliderempty.png", "slider");
+		ResourceManager::GetGraph().load("Resource/image/sliderfull.png", "slider_full");
+		ResourceManager::GetGraph().load("Resource/image/sliderbutton.png", "bar");
 	}
 
 	void StageSelect::entitySetUp()
@@ -132,6 +133,20 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK
 			);
+			bgmFullSlider_ = ECS::ArcheType::CreateRectEntity
+			(
+				"slider_full",
+				Vec2{ BGM_SLIDER_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK
+			);
+			seFullSlider_ = ECS::ArcheType::CreateRectEntity
+			(
+				"slider_full",
+				Vec2{ SE_SLIDER_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK
+			);
 			bgmBar_ = ECS::ArcheType::CreateEntity
 			(
 				"bar",
@@ -170,6 +185,8 @@ namespace Scene
 			cursorTargets[5]->getComponent<ECS::Position>().val = SE_FONT_POSITION + option_->getComponent<ECS::Position>().val;
 			cursorTargets[6]->getComponent<ECS::Position>().val = BACK_POSITION + option_->getComponent<ECS::Position>().val;
 			bgmSlider_->getComponent<ECS::Position>().val = BGM_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
+			bgmFullSlider_->getComponent<ECS::Position>().val = bgmSlider_->getComponent<ECS::Position>().val;
+			seFullSlider_->getComponent<ECS::Position>().val = seSlider_->getComponent<ECS::Position>().val;
 			bgmBar_->getComponent<ECS::Position>().val.y = bgmSlider_->getComponent<ECS::Position>().val.y;
 			seSlider_->getComponent<ECS::Position>().val = SE_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
 			seBar_->getComponent<ECS::Position>().val.y = seSlider_->getComponent<ECS::Position>().val.y;
@@ -201,6 +218,8 @@ namespace Scene
 			option_->changeGroup(ENTITY_GROUP::BACK_OBJECT);
 			bgmSlider_->changeGroup(ENTITY_GROUP::UI);
 			seSlider_->changeGroup(ENTITY_GROUP::UI);
+			bgmFullSlider_->changeGroup(ENTITY_GROUP::UI);
+			seFullSlider_->changeGroup(ENTITY_GROUP::UI);
 			bgmBar_->changeGroup(ENTITY_GROUP::UI);
 			seBar_->changeGroup(ENTITY_GROUP::UI);
 		}
@@ -211,6 +230,8 @@ namespace Scene
 			option_->changeGroup(ENTITY_GROUP::BACK);
 			bgmSlider_->changeGroup(ENTITY_GROUP::BACK);
 			seSlider_->changeGroup(ENTITY_GROUP::BACK);
+			bgmFullSlider_->changeGroup(ENTITY_GROUP::BACK);
+			seFullSlider_->changeGroup(ENTITY_GROUP::BACK);
 			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
 			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
 		}
@@ -249,9 +270,16 @@ namespace Scene
 		}
 
 		//バーの位置をセット
-		constexpr float MAX_GAUGE_SIZE = 270;
+		constexpr float MAX_GAUGE_SIZE = 250;
 		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal);
 		seBar_->getComponent<ECS::Position>().val.x = seSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * seVal);
+		//赤いゲージ増減
+		constexpr int ADJUST = 20;	//座標をいい感じにする補正値
+		bgmFullSlider_->getComponent<ECS::Rectangle>().w = static_cast<int>(bgmBar_->getComponent<ECS::Position>().val.x -
+			option_->getComponent<ECS::Position>().val.x - ADJUST);
+		seFullSlider_->getComponent<ECS::Rectangle>().w = static_cast<int>(seBar_->getComponent<ECS::Position>().val.x -
+			option_->getComponent<ECS::Position>().val.x - ADJUST);
+		//音量更新
 		MasterSound::Get().setAllBGMGain(bgmVal);
 		MasterSound::Get().setAllSEGain(seVal);
 	}

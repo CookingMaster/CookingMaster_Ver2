@@ -39,11 +39,7 @@ public:
 		{
 			Fps::Get().update();
 			update();
-			{
-				Utility::ProcessingTime a;
-				draw();
-			}
-			
+			draw();
 			Fps::Get().wait();
 		}
 	}
