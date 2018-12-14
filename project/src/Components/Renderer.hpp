@@ -33,7 +33,12 @@ namespace ECS
 		int y;
 		int w;
 		int h;
-
+		Rectangle():
+			x(0),
+			y(0),
+			w(0),
+			h(0)
+		{}
 		Rectangle(const int setX, const int setY, const int setW, const int setH) :
 			x(setX),
 			y(setY),

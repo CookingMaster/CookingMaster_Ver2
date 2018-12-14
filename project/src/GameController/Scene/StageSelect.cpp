@@ -33,9 +33,11 @@ namespace Scene
 		//難易度の星
 		ResourceManager::GetGraph().loadDiv("Resource/image/star.png", "star", 2,2,1,55,53);
 		//フォント
-		ResourceManager::GetGraph().loadDiv("Resource/image/number.png", "number", 10, 10, 1, 50, 100);
+		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
 		//料理
 		ResourceManager::GetGraph().load("Resource/image/antipasto.png", "antipasto");
+
+	
 	}
 
 	void StageSelect::entitySetUp()
@@ -222,27 +224,16 @@ namespace Scene
 		}
 		//数字
 		{
-			numbers_[0] = ECS::ArcheType::CreateMultiEntity
+			score_ = ECS::ArcheType::CreateRectEntity
 			(
 				"number",
-				Vec2{ 720.f,580.f },
+				Vec2{ 740.f,620.f },
 				*entityManager_,
 				ENTITY_GROUP::UI
 			);
-			numbers_[1] = ECS::ArcheType::CreateMultiEntity
-			(
-				"number",
-				Vec2{ 780.f,580.f },
-				*entityManager_,
-				ENTITY_GROUP::UI
-			);
-			numbers_[2] = ECS::ArcheType::CreateMultiEntity
-			(
-				"number",
-				Vec2{ 840.f,580.f },
-				*entityManager_,
-				ENTITY_GROUP::UI
-			);
+			score_->getComponent<ECS::Rectangle>().w = 500;
+			score_->getComponent<ECS::Rectangle>().h = 100;
+			score_->addComponent<ECS::DrawFont2>(50.f,100.f).setNumber(100);
 		}
 	}
 

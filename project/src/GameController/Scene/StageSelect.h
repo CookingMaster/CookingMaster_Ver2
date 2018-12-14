@@ -33,14 +33,14 @@ namespace Scene
 		ECS::Entity* seBar_ = nullptr;
 		ECS::Entity* star_[3]{};
 		ECS::Entity* dish_[3]{};
-		ECS::Entity* numbers_[3]{};
+		ECS::Entity* score_{};
 		ECS::EntityManager* entityManager_ = nullptr;
 		std::vector<ECS::Entity*> cursorTargets{};
+	
 		Counter cnt_;
 		float bgmVal = 0;
 		float seVal = 0;
 		int backVal_ = 0;
-		int score_ = 0;
 		void entitySetUp();
 		void optionSheetMove();
 		void setSoundVolume();

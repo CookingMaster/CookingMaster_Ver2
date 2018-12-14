@@ -44,7 +44,7 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0,0,0,80);
+			entity->addComponent<Rectangle>(0,0,0,0);
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 0.f,0.f });
 			entity->addGroup(group);
 			return entity;
