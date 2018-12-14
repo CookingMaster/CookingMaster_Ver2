@@ -7,6 +7,9 @@
 - 2018.11.20 yokota0717
 -# ButtonComponent、ButtonMojiComponentの仕様変更
 -# Pauseで使うSelectFrameを追加
+- 2018/12/14 tonarinohito
+-# DrawFont2を追加(DrawFontの%なしバージョン)
+-# DrawFontの初期化処理を修正
 */
 #pragma once
 #include "../ECS/ECS.hpp"
@@ -309,7 +312,7 @@ namespace ECS
 		
 		int font_[4];
 		
-		void setRectAndDraw()
+		void setRectAndDraw(const bool isDraw = true)
 		{
 			int keta = 0;
 			for (int i = 0; i < std::size(font_); ++i) 
@@ -346,6 +349,7 @@ namespace ECS
 			rectangle_->x = (int)rect_.x * num_;
 			rectangle_->w = (int)rect_.x;
 			font_[3] = 10;
+			setRectAndDraw(false);
 		}
 
 		void update() override
@@ -515,5 +519,82 @@ namespace ECS
 		}
 
 	};
+	/*
+	*@brief フォント画像を描画します
+	SpriteRectDraw、Rectがないとエラーが出ます
+	*　rect_w	フォント1個の横幅
+	*　num		表示する数字
+	*/
+	class DrawFont2 final : public ComponentSystem
+	{
+	private:
+		Position* pos_ = nullptr;
+		Rectangle* rectangle_ = nullptr;
+		SpriteRectDraw* rectDraw_ = nullptr;
 
-}
+		int num_;
+		Vec2 rect_;
+		Vec2 initPos_;
+
+		int font_[3];
+
+		void setRectAndDraw(const bool isDraw = true)
+		{
+			int keta = 0;
+			for (int i = 0; i < std::size(font_); ++i)
+			{
+				//十の位、百の位が0の時は各値を表示しない
+				if ((i == 1 && num_ < 10) || (i == 0 && num_ < 100))
+				{
+					++keta;
+					continue;
+				}
+				rectangle_->x = font_[i] * (int)rect_.x;
+
+				pos_->val.x = initPos_.x + (i * rect_.x);
+				rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
+				if (isDraw)
+				{
+					rectDraw_->draw2D();
+				}
+				
+			}
+		}
+
+	public:
+		DrawFont2(float rectW, float rectH) :
+			num_(0)
+		{
+			rect_.x = rectW;
+			rect_.y = rectH;
+		}
+
+		void initialize() override
+		{
+			pos_ = &entity->getComponent<Position>();
+			rectangle_ = &entity->getComponent<Rectangle>();
+			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
+
+			initPos_ = pos_->val;
+			rectangle_->x = (int)rect_.x * num_;
+			rectangle_->w = (int)rect_.x;
+			setRectAndDraw(false);
+		}
+
+		void update() override
+		{
+		}
+		void draw2D() override
+		{
+			setRectAndDraw();
+		}
+		void setNumber(int num)
+		{
+			num_ = num;
+			font_[2] = num % 10;		//一桁目(一の位)
+			font_[1] = num % 100 / 10;	//二桁目(十の位)
+			font_[0] = num / 100;		//三桁目(百の位)
+		}
+	};
+} //namespce ECS
+
