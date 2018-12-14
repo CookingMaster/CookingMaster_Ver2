@@ -327,7 +327,10 @@ namespace ECS
 				
 				pos_->val.x = initPos_.x + (i * rect_.x);
 				rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
-				rectDraw_->draw2D();
+				if (isDraw)
+				{
+					rectDraw_->draw2D();
+				}
 			}
 		}
 
@@ -557,7 +560,6 @@ namespace ECS
 				{
 					rectDraw_->draw2D();
 				}
-				
 			}
 		}
 
