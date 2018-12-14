@@ -9,6 +9,7 @@
 -# Pauseで使うSelectFrameを追加
 - 2018/12/14 tonarinohito
 -# DrawFont2を追加(DrawFontの%なしバージョン)
+-# DrawFontの初期化処理を修正
 */
 #pragma once
 #include "../ECS/ECS.hpp"
@@ -311,7 +312,7 @@ namespace ECS
 		
 		int font_[4];
 		
-		void setRectAndDraw()
+		void setRectAndDraw(const bool isDraw = true)
 		{
 			int keta = 0;
 			for (int i = 0; i < std::size(font_); ++i) 
@@ -348,6 +349,7 @@ namespace ECS
 			rectangle_->x = (int)rect_.x * num_;
 			rectangle_->w = (int)rect_.x;
 			font_[3] = 10;
+			setRectAndDraw(false);
 		}
 
 		void update() override

@@ -38,13 +38,13 @@ namespace ECS
 			return entity;
 		}
 		//!画像を表示できるエンティティの生成
-		static Entity* CreateRectEntity(const char* graphicName, const Vec2& pos, EntityManager& entityManager_, const Group group)
+		static Entity* CreateRectEntity(const char* graphicName, const Vec2& pos, const Rectangle& rectAngle, EntityManager& entityManager_, const Group group)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0,0,0,0);
+			entity->addComponent<Rectangle>(rectAngle);
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 0.f,0.f });
 			entity->addGroup(group);
 			return entity;

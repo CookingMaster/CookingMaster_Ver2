@@ -145,6 +145,7 @@ namespace Scene
 			(
 				"slider_full",
 				Vec2{ BGM_SLIDER_POSITION },
+				ECS::Rectangle(0,0,0,80),
 				*entityManager_,
 				ENTITY_GROUP::BACK
 			);
@@ -152,6 +153,7 @@ namespace Scene
 			(
 				"slider_full",
 				Vec2{ SE_SLIDER_POSITION },
+				ECS::Rectangle(0, 0, 0, 80),
 				*entityManager_,
 				ENTITY_GROUP::BACK
 			);
@@ -228,6 +230,7 @@ namespace Scene
 			(
 				"number",
 				Vec2{ 740.f,620.f },
+				ECS::Rectangle(0, 0, 0, 0),
 				*entityManager_,
 				ENTITY_GROUP::UI
 			);
@@ -334,6 +337,7 @@ namespace Scene
 			seFullSlider_->changeGroup(ENTITY_GROUP::UI);
 			bgmBar_->changeGroup(ENTITY_GROUP::UI);
 			seBar_->changeGroup(ENTITY_GROUP::UI);
+			score_->changeGroup(ENTITY_GROUP::LAYER1);
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
 			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
@@ -346,6 +350,7 @@ namespace Scene
 			seFullSlider_->changeGroup(ENTITY_GROUP::BACK);
 			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
 			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
+			score_->changeGroup(ENTITY_GROUP::UI);
 		}
 	}
 
