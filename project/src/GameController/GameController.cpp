@@ -70,7 +70,7 @@ void GameController::onSceneChange(const Scene::SceneName& scene, Parameter* par
 	default:
 		break;
 	}
-
+	MasterSound::Get().update();
 	if(isInitialize)	
 	{
 		sceneStack.top()->initialize();
