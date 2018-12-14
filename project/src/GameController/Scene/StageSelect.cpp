@@ -34,6 +34,8 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/star.png", "star", 2,2,1,55,53);
 		//フォント
 		ResourceManager::GetGraph().loadDiv("Resource/image/number.png", "number", 10, 10, 1, 50, 100);
+		//料理
+		ResourceManager::GetGraph().load("Resource/image/antipasto.png", "antipasto");
 	}
 
 	void StageSelect::entitySetUp()
@@ -194,15 +196,54 @@ namespace Scene
 				++i;
 			}	
 		}
+		//料理
+		{
+			dish_[0] = ECS::ArcheType::CreateEntity
+			(
+				"antipasto",
+				Vec2{ DISH_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK_OBJECT
+			);
+			dish_[1] = ECS::ArcheType::CreateEntity
+			(
+				"antipasto",
+				Vec2{ DISH_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK_OBJECT
+			);
+			dish_[2] = ECS::ArcheType::CreateEntity
+			(
+				"antipasto",
+				Vec2{ DISH_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK_OBJECT
+			);
+		}
 		//数字
-		ECS::ArcheType::CreateMultiEntity
-		(
-			"number",
-			Vec2{ 720.f,580.f },
-			*entityManager_,
-			ENTITY_GROUP::UI
-		);
-
+		{
+			numbers_[0] = ECS::ArcheType::CreateMultiEntity
+			(
+				"number",
+				Vec2{ 720.f,580.f },
+				*entityManager_,
+				ENTITY_GROUP::UI
+			);
+			numbers_[1] = ECS::ArcheType::CreateMultiEntity
+			(
+				"number",
+				Vec2{ 780.f,580.f },
+				*entityManager_,
+				ENTITY_GROUP::UI
+			);
+			numbers_[2] = ECS::ArcheType::CreateMultiEntity
+			(
+				"number",
+				Vec2{ 840.f,580.f },
+				*entityManager_,
+				ENTITY_GROUP::UI
+			);
+		}
 	}
 
 	void StageSelect::optionSheetMove()
@@ -239,31 +280,7 @@ namespace Scene
 			cnt_.reset();
 		}
 
-		//レイヤー入れ替え
-		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
-			&& cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
-			&& Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
-		{
-			option_->changeGroup(ENTITY_GROUP::BACK_OBJECT);
-			bgmSlider_->changeGroup(ENTITY_GROUP::UI);
-			seSlider_->changeGroup(ENTITY_GROUP::UI);
-			bgmFullSlider_->changeGroup(ENTITY_GROUP::UI);
-			seFullSlider_->changeGroup(ENTITY_GROUP::UI);
-			bgmBar_->changeGroup(ENTITY_GROUP::UI);
-			seBar_->changeGroup(ENTITY_GROUP::UI);
-		}
-		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
-			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
-			&& Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
-		{
-			option_->changeGroup(ENTITY_GROUP::BACK);
-			bgmSlider_->changeGroup(ENTITY_GROUP::BACK);
-			seSlider_->changeGroup(ENTITY_GROUP::BACK);
-			bgmFullSlider_->changeGroup(ENTITY_GROUP::BACK);
-			seFullSlider_->changeGroup(ENTITY_GROUP::BACK);
-			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
-			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
-		}
+	
 	}
 
 	void StageSelect::setSoundVolume()
@@ -312,18 +329,37 @@ namespace Scene
 		MasterSound::Get().setAllSEGain(seVal);
 	}
 
-	void StageSelect::initialize()
+	void StageSelect::changeLayer()
 	{
-		//サウンド情報の読み込み
-		std::ifstream ifs("Resource/system/gain.bin");
-		ifs >> bgmVal >> seVal;
-		entitySetUp();
-		Sound bgm("selectBGM");
-		bgm.play(true,false);
+		//レイヤー入れ替え
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
+			&& cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
+			&& Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+		{
+			option_->changeGroup(ENTITY_GROUP::BACK_OBJECT);
+			bgmSlider_->changeGroup(ENTITY_GROUP::UI);
+			seSlider_->changeGroup(ENTITY_GROUP::UI);
+			bgmFullSlider_->changeGroup(ENTITY_GROUP::UI);
+			seFullSlider_->changeGroup(ENTITY_GROUP::UI);
+			bgmBar_->changeGroup(ENTITY_GROUP::UI);
+			seBar_->changeGroup(ENTITY_GROUP::UI);
+		}
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
+			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
+			&& Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+		{
+			option_->changeGroup(ENTITY_GROUP::BACK);
+			bgmSlider_->changeGroup(ENTITY_GROUP::BACK);
+			seSlider_->changeGroup(ENTITY_GROUP::BACK);
+			bgmFullSlider_->changeGroup(ENTITY_GROUP::BACK);
+			seFullSlider_->changeGroup(ENTITY_GROUP::BACK);
+			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
+			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
+		}
 	}
-	void StageSelect::update()
+
+	void StageSelect::showDishParameter()
 	{
-		entityManager_->update();
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() != 3u)
 		{
 			for (auto& it : star_)
@@ -334,19 +370,48 @@ namespace Scene
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 0u)
 		{
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			dish_[0]->getComponent<ECS::SpriteDraw>().drawEnable();
+			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 1u)
 		{
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[1]->getComponent<ECS::SpriteDraw>().drawEnable();
+			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 2u)
 		{
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[2]->getComponent<ECS::SpriteDraw>().drawEnable();
 		}
+	}
+
+	void StageSelect::initialize()
+	{
+		//サウンド情報の読み込み
+		std::ifstream ifs("Resource/system/gain.bin");
+		ifs >> bgmVal >> seVal;
+		entitySetUp();
+		for (auto& it : dish_)
+		{
+			it->getComponent<ECS::SpriteDraw>().drawDisable();
+		}
+		Sound bgm("selectBGM");
+		bgm.play(true,false);
+	}
+	void StageSelect::update()
+	{
+		entityManager_->update();
+		showDishParameter();
 		optionSheetMove();
+		changeLayer();
 		setSoundVolume();
 		const auto bgmName = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
 		if (bgmName != "")

@@ -37,6 +37,17 @@
 #endif
 namespace Utility
 {
+	//!10進数の桁数を返す
+	unsigned GetDigit(unsigned num) 
+	{
+		unsigned digit = 0;
+		while (num != 0) 
+		{
+			num /= 10;
+			++digit;
+		}
+		return digit;
+	}
 	/*!
 	* @class Console
 	* @brief Win32アプリでcin、coutを許可するクラスです

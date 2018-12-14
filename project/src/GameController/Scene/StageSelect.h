@@ -22,6 +22,7 @@ namespace Scene
 		const Vec2 BGM_SLIDER_POSITION{ 50.f, 195.f };
 		const Vec2 SE_SLIDER_POSITION{ 50.f, 375.f };
 		const Vec2 BACK_POSITION{ 115.f, 522.f };
+		const Vec2 DISH_POSITION{ 600.f, 0.f };
 		ECS::Entity* option_ = nullptr;
 		ECS::Entity* cursor_ = nullptr;
 		ECS::Entity* bgmSlider_ = nullptr;
@@ -31,6 +32,8 @@ namespace Scene
 		ECS::Entity* bgmBar_ = nullptr;
 		ECS::Entity* seBar_ = nullptr;
 		ECS::Entity* star_[3]{};
+		ECS::Entity* dish_[3]{};
+		ECS::Entity* numbers_[3]{};
 		ECS::EntityManager* entityManager_ = nullptr;
 		std::vector<ECS::Entity*> cursorTargets{};
 		Counter cnt_;
@@ -41,6 +44,8 @@ namespace Scene
 		void entitySetUp();
 		void optionSheetMove();
 		void setSoundVolume();
+		void changeLayer();
+		void showDishParameter();
 	public:
 		StageSelect(IOnSceneChangeCallback* sceneChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~StageSelect();
