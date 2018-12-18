@@ -41,7 +41,7 @@ namespace ECS
 			
 			entity->addComponent<SpriteAnimationDraw>(notesData.imageName.c_str()).setPivot(
 				Vec2(notesData.xsize / 2.f, notesData.ysize / 2.f));
-			entity->addComponent<AnimatorByFrame>(notesData.animFlame, notesData.xnum, notesData.ynum).setSpriteNum(
+			entity->addComponent<Animator>(notesData.animFlame, notesData.xnum, notesData.ynum).setSpriteNum(
 				notesData.animSData[0].xmin,
 				notesData.animSData[0].ymin,
 				notesData.animSData[0].xmax,

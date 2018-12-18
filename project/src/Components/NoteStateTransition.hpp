@@ -45,7 +45,7 @@ namespace ECS
 		float arrivalBeatTime_;
 
 		NoteState* noteState_ = nullptr;
-		AnimatorByFrame* animator_ = nullptr;
+		Animator* animator_ = nullptr;
 		std::array<float, 8> hitTimeLine_;
 		Counter transCounter_;
 		Counter_f flameCounter_;
@@ -63,7 +63,7 @@ namespace ECS
 		void initialize() override
 		{
 			noteState_ = &entity->getComponent<NoteState>();
-			animator_ = &entity->getComponent<AnimatorByFrame>();
+			animator_ = &entity->getComponent<Animator>();
 
 
 			//ƒ~ƒŠ•b‚ğƒtƒŒ[ƒ€‚É•ÏŠ·

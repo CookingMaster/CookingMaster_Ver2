@@ -174,7 +174,7 @@ namespace ECS {
 		AnimatorPlayer* animator_ = nullptr;
 		PlayerState* state_ = nullptr;
 		Counter counter_;
-		int cutAnimMaxTime_ = 180;	//!切るモーションの全体の長さ(フレーム数)、これを超えるとIdleに戻る
+		int cutAnimMaxTime_ = 20;	//!切るモーションの全体の長さ(フレーム数)、これを超えるとIdleに戻る
 	public:
 		PlayerController()
 		{

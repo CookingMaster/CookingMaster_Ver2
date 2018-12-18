@@ -14,10 +14,10 @@ class NotesCreator
 {
 #undef max
 private:
-	int bpm_ = 0;					//BPM
-	int offsetTime_ = 0;			//オフセット時間
-	TCounter<int> cntTime_;		//時間計測
-	TCounter<int> cntBar_;		//小節の計測
+	int bpm_ = 0;			//BPM
+	int offsetTime_ = 0;	//オフセット時間
+	TCounter<int> cntTime_;	//時間計測
+	TCounter<int> cntBar_;	//小節の計測
 
 public:
 	/**

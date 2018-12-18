@@ -33,7 +33,7 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2{ 0.f,0.f });
+			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2(0.f,0.f));
 			entity->addGroup(group);
 			return entity;
 		}
@@ -64,13 +64,13 @@ namespace ECS
 		static Entity* CreateAnimationEntity(const char* graphicName, const char* soundName, const Vec2 pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			/*entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(1);
 			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
 			entity->addComponent<AnimatorByBPM>(soundName, 130).setSpriteNum(1, 0, 5, 3);
-			entity->addGroup(ENTITY_GROUP::LAYER1);
+			entity->addGroup(ENTITY_GROUP::LAYER1);*/
 			return entity;
 		}
 
@@ -92,7 +92,7 @@ namespace ECS
 		static Entity* CreatePlayerEntity(const char* graphicName, const char* soundName, const Vec2 pos, const int frame, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			/*entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SpriteAnimationDraw>(graphicName);
@@ -100,7 +100,7 @@ namespace ECS
 			entity->addComponent<PlayerState>(PlayerState::State::Idle);
 			entity->addComponent<AnimatorPlayer>(soundName, 130, frame).setSpriteNum(6, 4);
 			entity->addComponent<PlayerController>();
-			entity->addGroup(ENTITY_GROUP::LAYER1);
+			entity->addGroup(ENTITY_GROUP::LAYER1);*/
 			return entity;
 		}
 
