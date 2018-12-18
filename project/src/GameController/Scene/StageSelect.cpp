@@ -415,11 +415,14 @@ namespace Scene
 		optionSheetMove();
 		changeLayer();
 		setSoundVolume();
-		const auto bgmName = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
-		if (bgmName != "")
+		const auto bgm_path = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
+		const auto stage_num = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
+		if (bgm_path != "")
 		{
 			auto name = std::make_unique<Parameter>();
-			ResourceManager::GetSound().load("Resource/sound/MUSIC/" + bgmName,"stage1", SoundType::BGM);
+			ResourceManager::GetSound().load(
+				"Resource/sound/MUSIC/stage" + std::to_string(stage_num) + "/"+ bgm_path,"stage1", 
+				SoundType::BGM);
 			name->add<std::string>("BGM_name", "stage1");
 			std::ofstream ofs("Resource/system/gain.bin");
 			ofs << bgmVal << seVal;
