@@ -10,8 +10,6 @@
 0 ,
 L1 R1 L1 R1 ,
 L2 R2 L2 R2 ,
-0 R1 0 L2 ,
-0 R1 0 L1 0 R2 0 L2 ,
 L1 R1 L1 R1 ,
 L2 R2 L2 R2 ,
 L2 R2 L2 R2 ,

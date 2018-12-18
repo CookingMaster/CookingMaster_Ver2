@@ -36,8 +36,10 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
 		//料理
 		ResourceManager::GetGraph().load("Resource/image/antipasto.png", "antipasto");
-
-	
+		ResourceManager::GetGraph().load("Resource/image/galantine.png", "galantine");
+		//サウンド情報の読み込み
+		std::ifstream ifs("Resource/system/gain.bin");
+		ifs >> bgmVal_ >> seVal_;
 	}
 
 	void StageSelect::entitySetUp()
@@ -212,7 +214,7 @@ namespace Scene
 			dish_[0]->getComponent<ECS::Scale>().val /= 2;
 			dish_[1] = ECS::ArcheType::CreateEntity
 			(
-				"antipasto",
+				"galantine",
 				Vec2{ DISH_POSITION },
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
@@ -273,8 +275,6 @@ namespace Scene
 			backVal_ = 0;
 			cnt_.reset();
 		}
-
-	
 	}
 
 	void StageSelect::setSoundVolume()
@@ -285,33 +285,33 @@ namespace Scene
 			//BGM
 			if (cursorMov.getIndex() == 4u)
 			{
-				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && bgmVal <= MasterSound::MAX_GAIN)
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && bgmVal_ <= MasterSound::MAX_GAIN)
 				{
-					bgmVal += 0.01f;
+					bgmVal_ += 0.01f;
 				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && bgmVal >= MasterSound::MIN_GAIN)
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && bgmVal_ >= MasterSound::MIN_GAIN)
 				{
-					bgmVal -= 0.01f;
+					bgmVal_ -= 0.01f;
 				}
 			}
 			//SE
 			if (cursorMov.getIndex() == 5u)
 			{
-				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && seVal <= MasterSound::MAX_GAIN)
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && seVal_ <= MasterSound::MAX_GAIN)
 				{
-					seVal += 0.01f;
+					seVal_ += 0.01f;
 				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && seVal >= MasterSound::MIN_GAIN)
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && seVal_ >= MasterSound::MIN_GAIN)
 				{
-					seVal -= 0.01f;
+					seVal_ -= 0.01f;
 				}
 			}
 		}
 		
 		//バーの位置をセット
 		constexpr float MAX_GAUGE_SIZE = 250;
-		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal);
-		seBar_->getComponent<ECS::Position>().val.x = seSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * seVal);
+		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal_);
+		seBar_->getComponent<ECS::Position>().val.x = seSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * seVal_);
 		//赤いゲージ増減
 		constexpr int ADJUST = 20;	//座標をいい感じにする補正値
 		bgmFullSlider_->getComponent<ECS::Rectangle>().w = static_cast<int>(bgmBar_->getComponent<ECS::Position>().val.x -
@@ -319,8 +319,8 @@ namespace Scene
 		seFullSlider_->getComponent<ECS::Rectangle>().w = static_cast<int>(seBar_->getComponent<ECS::Position>().val.x -
 			option_->getComponent<ECS::Position>().val.x - ADJUST);
 		//音量更新
-		MasterSound::Get().setAllBGMGain(bgmVal);
-		MasterSound::Get().setAllSEGain(seVal);
+		MasterSound::Get().setAllBGMGain(bgmVal_);
+		MasterSound::Get().setAllSEGain(seVal_);
 	}
 
 	void StageSelect::changeLayer()
@@ -356,16 +356,11 @@ namespace Scene
 
 	void StageSelect::showDishParameter()
 	{
-		if (cursor_->getComponent<ECS::CursorMove>().getIndex() != 3u)
-		{
-			for (auto& it : star_)
-			{
-				it->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
-			}
-		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 0u)
 		{
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
 			dish_[0]->getComponent<ECS::SpriteDraw>().drawEnable();
 			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
@@ -376,6 +371,7 @@ namespace Scene
 		{
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
 			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[1]->getComponent<ECS::SpriteDraw>().drawEnable();
 			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
@@ -397,9 +393,6 @@ namespace Scene
 
 	void StageSelect::initialize()
 	{
-		//サウンド情報の読み込み
-		std::ifstream ifs("Resource/system/gain.bin");
-		ifs >> bgmVal >> seVal;
 		entitySetUp();
 		for (auto& it : dish_)
 		{
@@ -419,14 +412,16 @@ namespace Scene
 		const auto stage_num = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
 		if (bgm_path != "")
 		{
-			auto name = std::make_unique<Parameter>();
+			auto parameter = std::make_unique<Parameter>();
+			const std::string STAGE_STR = "stage";
 			ResourceManager::GetSound().load(
-				"Resource/sound/MUSIC/stage" + std::to_string(stage_num) + "/"+ bgm_path,"stage1", 
+				"Resource/sound/MUSIC/stage" + std::to_string(stage_num) + "/"+ bgm_path,
+				STAGE_STR + std::to_string(stage_num),
 				SoundType::BGM);
-			name->add<std::string>("BGM_name", "stage1");
+			parameter->add<std::string>("BGM_name", STAGE_STR + std::to_string(stage_num));
 			std::ofstream ofs("Resource/system/gain.bin");
-			ofs << bgmVal << seVal;
-			ON_SCENE_CHANGE(SceneName::GAME, name.get(), StackPopFlag::POP, true);
+			ofs << bgmVal_ << seVal_;
+			ON_SCENE_CHANGE(SceneName::GAME, parameter.get(), StackPopFlag::POP, true);
 		}
 		
 	}
