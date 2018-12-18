@@ -209,6 +209,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
+			dish_[0]->getComponent<ECS::Scale>().val /= 2;
 			dish_[1] = ECS::ArcheType::CreateEntity
 			(
 				"antipasto",
@@ -216,6 +217,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
+			dish_[1]->getComponent<ECS::Scale>().val /= 2;
 			dish_[2] = ECS::ArcheType::CreateEntity
 			(
 				"antipasto",
@@ -223,20 +225,18 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
+			dish_[2]->getComponent<ECS::Scale>().val /= 2;
 		}
 		//数字
 		{
-			score_ = ECS::ArcheType::CreateRectEntity
+			score_ = ECS::ScoreArcheType::CreateSelectScoreEntity
 			(
 				"number",
-				Vec2{ 740.f,620.f },
-				ECS::Rectangle(0, 0, 0, 0),
-				*entityManager_,
-				ENTITY_GROUP::UI
+				Vec2{ 740.f, 620.f },
+				ECS::StageHighScore::STAGE1,
+				*entityManager_
 			);
-			score_->getComponent<ECS::Rectangle>().w = 500;
-			score_->getComponent<ECS::Rectangle>().h = 100;
-			score_->addComponent<ECS::DrawFont2>(50.f,100.f).setNumber(100);
+				
 		}
 	}
 
@@ -369,6 +369,8 @@ namespace Scene
 			dish_[0]->getComponent<ECS::SpriteDraw>().drawEnable();
 			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
+			int score = score_->getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE1);
+			score_->getComponent<ECS::DrawFont2>().setNumber(score);
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 1u)
 		{
@@ -377,6 +379,8 @@ namespace Scene
 			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[1]->getComponent<ECS::SpriteDraw>().drawEnable();
 			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
+			int score = score_->getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE2);
+			score_->getComponent<ECS::DrawFont2>().setNumber(score);
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 2u)
 		{
@@ -386,6 +390,8 @@ namespace Scene
 			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[2]->getComponent<ECS::SpriteDraw>().drawEnable();
+			int score = score_->getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE3);
+			score_->getComponent<ECS::DrawFont2>().setNumber(score);
 		}
 	}
 
