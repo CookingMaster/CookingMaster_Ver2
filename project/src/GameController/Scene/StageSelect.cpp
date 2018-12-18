@@ -36,7 +36,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
 		//料理
 		ResourceManager::GetGraph().load("Resource/image/antipasto.png", "antipasto");
-
+		ResourceManager::GetGraph().load("Resource/image/galantine.png", "galantine");
 	
 	}
 
@@ -212,7 +212,7 @@ namespace Scene
 			dish_[0]->getComponent<ECS::Scale>().val /= 2;
 			dish_[1] = ECS::ArcheType::CreateEntity
 			(
-				"antipasto",
+				"galantine",
 				Vec2{ DISH_POSITION },
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
@@ -356,16 +356,11 @@ namespace Scene
 
 	void StageSelect::showDishParameter()
 	{
-		if (cursor_->getComponent<ECS::CursorMove>().getIndex() != 3u)
-		{
-			for (auto& it : star_)
-			{
-				it->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
-			}
-		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 0u)
 		{
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
 			dish_[0]->getComponent<ECS::SpriteDraw>().drawEnable();
 			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
@@ -376,6 +371,7 @@ namespace Scene
 		{
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
 			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[1]->getComponent<ECS::SpriteDraw>().drawEnable();
 			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
@@ -419,14 +415,16 @@ namespace Scene
 		const auto stage_num = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
 		if (bgm_path != "")
 		{
-			auto name = std::make_unique<Parameter>();
+			auto parameter = std::make_unique<Parameter>();
+			const std::string STAGE_STR = "stage";
 			ResourceManager::GetSound().load(
-				"Resource/sound/MUSIC/stage" + std::to_string(stage_num) + "/"+ bgm_path,"stage1", 
+				"Resource/sound/MUSIC/stage" + std::to_string(stage_num) + "/"+ bgm_path,
+				STAGE_STR + std::to_string(stage_num),
 				SoundType::BGM);
-			name->add<std::string>("BGM_name", "stage1");
+			parameter->add<std::string>("BGM_name", STAGE_STR + std::to_string(stage_num));
 			std::ofstream ofs("Resource/system/gain.bin");
 			ofs << bgmVal << seVal;
-			ON_SCENE_CHANGE(SceneName::GAME, name.get(), StackPopFlag::POP, true);
+			ON_SCENE_CHANGE(SceneName::GAME, parameter.get(), StackPopFlag::POP, true);
 		}
 		
 	}
