@@ -71,6 +71,7 @@ private:
 			if (nd.imageName == "rest")
 				continue;
 
+			//
 			float arrivalBeatTime = beat.calcNote_Frame(float(nd.arrivalBeatTime));
 			//そのノーツが画面内に出現するまでの待ち時間を計算
 			float waitTime = beat.calcOneBar_Frame() * 2.f - (float(scoreData[nextBar].size() - i) * noteFlame) - arrivalBeatTime;

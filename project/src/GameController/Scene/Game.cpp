@@ -14,6 +14,8 @@ namespace Scene
 	{
 		if (parame != nullptr)
 			name_ = (parame->get<std::string>("BGM_name"));
+
+		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + name_ + "/" + name_ + ".txt");
 	}
 	void Game::initialize()
 	{
@@ -32,7 +34,6 @@ namespace Scene
 		
 
 		Sound s(name_);
-		msl_.loadMusicScoreData("Resource/score/musicScoreTest.txt");
 		nc_.resetData(msl_.GetBPM(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
