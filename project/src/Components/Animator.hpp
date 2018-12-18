@@ -112,16 +112,20 @@ namespace ECS {
 		int frame_ = 0;		//!アニメーションするフレーム数
 		int indexX_ = 0;
 		int indexY_ = 0;
-		int xmin_ = 0;		//!描画する画像のX方向のインデックスの最小
-		int ymin_ = 0;		//!描画する画像のY方向のインデックスの最小
-		int maxXnum_ = 0;	//!描画する画像のX方向の枚数
-		int maxYnum_ = 0;	//!描画する画像のY方向の枚数
+		int xmin_ = 0;			//!描画する画像のX方向のインデックスの最小
+		int ymin_ = 0;			//!描画する画像のY方向のインデックスの最小
+		int maxXnum_ = 0;		//!描画する画像のX方向の枚数
+		int maxYnum_ = 0;		//!描画する画像のY方向の枚数
+		int maxImgXNum_ = 0;	//!使用する画像のX方向の最大インデックス数
+		int maxImgYNum_ = 0;	//!使用する画像のY方向の最大インデックス数
 		bool isEndStopAnim_;	//!アニメーションが一巡したら停止するか否か
 	public:
 		//!アニメーションの遷移フレーム数を設定する
-		AnimatorByFrame(const int frame)
+		AnimatorByFrame(const int frame, const int maxX, const int maxY)
 			:
 			frame_(frame),
+			maxImgXNum_(maxX),
+			maxImgYNum_(maxY),
 			isEndStopAnim_(false)
 		{}
 		void initialize() override
@@ -156,7 +160,7 @@ namespace ECS {
 					}
 				}
 			}
-			animation_->setIndex(indexX_ + (indexY_ * maxXnum_));
+			animation_->setIndex(indexX_ + (indexY_ * maxImgXNum_));
 		}
 		/**
 		* @brief アニメーションのインデックス情報を設定する
@@ -180,7 +184,7 @@ namespace ECS {
 
 		/**
 		* @brief 現在のインデックスを指定値に設定する
-		* @param indexY 設定するインデックス値
+		* @param indexX,indexY 設定するインデックス値
 		*/
 		void setIndex(int indexX, int indexY)
 		{
@@ -199,8 +203,8 @@ namespace ECS {
 		}
 
 		/**
-		* @brief アニメーションが一巡したら停止するか否かを設定する
-		* @param isEndStopAnim アニメーションを停止するか否か
+		* @brief アニメーション速度を変更する
+		* @param frame アニメーション速度
 		*/
 		void changeFrame(int frame)
 		{

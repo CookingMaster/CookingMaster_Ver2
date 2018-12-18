@@ -75,18 +75,18 @@ namespace ECS
 		}
 
 		//!フレームアニメーションテスト
-		static Entity* CreateFrameAnimationEntity(const char* graphicName, const Vec2 pos, const int frame, EntityManager& entityManager_)
-		{
-			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
-			entity->addComponent<Color>();
-			entity->addComponent<AlphaBlend>();
-			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(1);
-			entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
-			entity->addComponent<AnimatorByFrame>(frame).setSpriteNum(1, 0, 5, 1);
-			entity->addGroup(ENTITY_GROUP::LAYER1);
-			return entity;
-		}
+		//static Entity* CreateFrameAnimationEntity(const char* graphicName, const Vec2 pos, const int frame, EntityManager& entityManager_)
+		//{
+		//	auto* entity = &entityManager_.addEntity();
+		//	entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+		//	entity->addComponent<Color>();
+		//	entity->addComponent<AlphaBlend>();
+		//	entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(1);
+		//	entity->getComponent<SpriteAnimationDraw>().setPivot(Vec2{ 32,32 });
+		//	entity->addComponent<AnimatorByFrame>(frame).setSpriteNum(1, 0, 5, 1);
+		//	entity->addGroup(ENTITY_GROUP::LAYER1);
+		//	return entity;
+		//}
 
 		//!プレイヤエンティティテスト
 		static Entity* CreatePlayerEntity(const char* graphicName, const char* soundName, const Vec2 pos, const int frame, EntityManager& entityManager_)
