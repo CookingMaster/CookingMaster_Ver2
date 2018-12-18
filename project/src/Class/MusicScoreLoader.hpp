@@ -167,6 +167,13 @@ private:
 			>> notesData_.back().xsize >> notesData_.back().ysize
 			>> notesData_.back().animFlame
 			>> notesData_.back().xnum >> notesData_.back().ynum;
+		for (size_t i = 0; i < notesData_.back().animSData.size(); ++i)
+		{
+			fin >> notesData_.back().animSData[i].xmin
+				>> notesData_.back().animSData[i].ymin
+				>> notesData_.back().animSData[i].xmax
+				>> notesData_.back().animSData[i].ymax;
+		}
 		notesData_.shrink_to_fit();
 
 		//リソースの読み込み
