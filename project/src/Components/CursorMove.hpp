@@ -194,7 +194,7 @@ namespace ECS
 				case STAGE3: return 3; break;
 				}
 			}
-			return 999999;
+			return MAX;
 		}
 	};
 }

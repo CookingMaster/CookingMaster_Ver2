@@ -38,8 +38,8 @@ namespace Scene
 		std::vector<ECS::Entity*> cursorTargets{};
 	
 		Counter cnt_;
-		float bgmVal = 0;
-		float seVal = 0;
+		float bgmVal_ = 0;
+		float seVal_ = 0;
 		int backVal_ = 0;
 		void entitySetUp();
 		void optionSheetMove();
