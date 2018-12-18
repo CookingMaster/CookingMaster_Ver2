@@ -46,7 +46,11 @@ namespace ECS
 		{
 			std::ofstream ofs;
 			//ファイル名にステージの番号をつける
-			ofs.open(std::string("Resource/result/score") + std::to_string(size_t(stageName_)) + ".bin", std::ios::out);
+			ofs.open(
+				std::string("Resource/sound/MUSIC/stage") + 
+				std::to_string(size_t(stageName_)) + "/" +
+				std::to_string(size_t(stageName_)) + 
+				".bin", std::ios::out);
 
 			if (!ofs)
 			{
@@ -58,7 +62,11 @@ namespace ECS
 		void loadScoreData(const StageHighScore& stageName)
 		{
 			std::ifstream ifs;
-			ifs.open(std::string("Resource/result/score") + std::to_string(size_t(stageName)) + ".bin", std::ios::in);
+			ifs.open(
+				std::string("Resource/sound/MUSIC/stage") +
+				std::to_string(size_t(stageName_)) + "/" +
+				std::to_string(size_t(stageName_)) +
+				".bin", std::ios::in);
 
 			if (!ifs)
 			{
