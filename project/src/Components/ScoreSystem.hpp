@@ -64,8 +64,8 @@ namespace ECS
 			std::ifstream ifs;
 			ifs.open(
 				std::string("Resource/sound/MUSIC/stage") +
-				std::to_string(size_t(stageName_)) + "/" +
-				"score" + std::to_string(size_t(stageName_)) +
+				std::to_string(size_t(stageName)) + "/" +
+				"score" + std::to_string(size_t(stageName)) +
 				".bin", std::ios::in);
 
 			if (!ifs)
