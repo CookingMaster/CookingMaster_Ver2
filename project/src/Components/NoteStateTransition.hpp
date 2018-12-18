@@ -50,6 +50,9 @@ namespace ECS
 		Counter transCounter_;
 		Counter_f flameCounter_;
 
+		//こいつをtrueにするとオートモードになるぞ！
+		bool autoPerfectMode = true;
+
 	public:
 		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
 			asd_(nd.animSData),
@@ -154,7 +157,11 @@ namespace ECS
 					break;
 			case 2:	noteState_->state = NoteState::State::GREAT;
 					break;
-			case 3:	noteState_->state = NoteState::State::PARFECT;	
+			case 3:	noteState_->state = NoteState::State::PARFECT;
+				if (autoPerfectMode)
+				{
+					changeNoteAnim(1, false);
+				}
 					break;
 			case 4:	noteState_->state = NoteState::State::GREAT;	break;
 			case 5:	noteState_->state = NoteState::State::GOOD;		break;
