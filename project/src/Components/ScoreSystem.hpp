@@ -49,7 +49,7 @@ namespace ECS
 			ofs.open(
 				std::string("Resource/sound/MUSIC/stage") + 
 				std::to_string(size_t(stageName_)) + "/" +
-				std::to_string(size_t(stageName_)) + 
+				"score" + std::to_string(size_t(stageName_)) + 
 				".bin", std::ios::out);
 
 			if (!ofs)
@@ -65,13 +65,13 @@ namespace ECS
 			ifs.open(
 				std::string("Resource/sound/MUSIC/stage") +
 				std::to_string(size_t(stageName_)) + "/" +
-				std::to_string(size_t(stageName_)) +
+				"score" + std::to_string(size_t(stageName_)) +
 				".bin", std::ios::in);
 
 			if (!ifs)
 			{
 				//読み込みに失敗したら新しくファイルを作成する
-				wrightScoreData(0);
+				
 				return;
 			}
 			ifs >> saveScore_;
