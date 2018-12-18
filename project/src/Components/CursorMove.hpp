@@ -182,5 +182,19 @@ namespace ECS
 			}
 			return "";
 		}
+		//!決定ボタン(Z)を押すと選択したステージ番号を返します
+		[[nodiscard]] const size_t getStageNumber() const
+		{
+			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ < 3)
+			{
+				switch (index_)
+				{
+				case STAGE1: return 1; break;
+				case STAGE2: return 2; break;
+				case STAGE3: return 3; break;
+				}
+			}
+			return 999999;
+		}
 	};
 }
