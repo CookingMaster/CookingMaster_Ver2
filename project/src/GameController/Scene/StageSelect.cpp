@@ -381,7 +381,7 @@ namespace Scene
 			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[1]->getComponent<ECS::SpriteDraw>().drawEnable();
 			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
-			score_->getComponent<ECS::DrawFont2>().setNumber(0);
+			score_->getComponent<ECS::DrawFont2>().setNumber(60);
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 2u)
 		{
@@ -391,7 +391,7 @@ namespace Scene
 			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
 			dish_[2]->getComponent<ECS::SpriteDraw>().drawEnable();
-			score_->getComponent<ECS::DrawFont2>().setNumber(0);
+			score_->getComponent<ECS::DrawFont2>().setNumber(70);
 		}
 	}
 
