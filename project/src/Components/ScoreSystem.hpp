@@ -84,8 +84,8 @@ namespace ECS
 			score_ = &entity->getComponent<ScoreData>();
 			loadScoreData(stageName_);
 		}
-		//指定したステージのスコアを取得します
-		int getHighScore(const StageHighScore& stageName)
+		//!指定したステージのスコアを取得します
+		[[nodiscard]] int getHighScore(const StageHighScore& stageName)
 		{
 			loadScoreData(stageName);
 			return saveScore_;
