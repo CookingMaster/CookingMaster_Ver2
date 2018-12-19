@@ -3,6 +3,9 @@
 * @brief 座標や速度などの基本的なコンポーネント群です。
 * @author tonarinohito
 * @date 2018/10/05
+* @par History
+- 2018/12/19 tonarinohito
+-# Canvas追加
 */
 #pragma once
 #include "../ECS/ECS.hpp"
@@ -239,6 +242,84 @@ namespace ECS
 		{
 			scale_->val.x = scaleX;
 			scale_->val.y = scaleY;
+		}
+	};
+
+	/*!
+	@brief UI等の配置に適したコンポーネントです
+	@details Transformが必要です。
+	- Canvasに追従する形で子のエンティティは動きます
+	- 子になっているエンティティ単体では動かせません
+	*/
+	class Canvas final : public ComponentSystem
+	{
+	private:
+		//ScaleとRotationは加算値でPositonは相対座標になる
+		std::vector<std::tuple<Entity*, Position, Scale, Rotation>> e_{};
+	public:
+		Canvas() = default;
+		//!Canvasに乗せるエンティティを指定します。
+		void addChild(Entity* e)
+		{
+			e_.emplace_back
+			(
+				std::make_tuple
+				(
+					e,
+					e->getComponent<Position>(),
+					e->getComponent<Scale>(),
+					e->getComponent<Rotation>()
+				)
+			);
+			auto& scale = std::get<2>(e_.back());
+			scale.val = 0;
+			auto& rota = std::get<3>(e_.back());
+			rota.val = 0;
+		}
+		/*
+		@brief 子のエンティティの座標を指定した分だけずらします
+		@param index 登録した番号
+		@param offsetVal オフセット値
+		*/
+		void offsetChildPosition(const size_t index, const Vec2& offsetVal)
+		{
+			auto& pos = std::get<1>(e_.at(index));
+			pos.val += offsetVal;
+		}
+
+		/*
+		@brief 子のエンティティのスケールを指定した分だけ加算します
+		@param index 登録した番号
+		@param offsetVal オフセット値
+		*/
+		void offsetChildScale(const size_t index, const Vec2& offsetVal)
+		{
+			auto& scale = std::get<2>(e_.at(index));
+			scale.val += offsetVal;
+		}
+		/*
+		@brief 子のエンティティの回転率(ラジアン)を指定した分だけ加算します
+		@param index 登録した番号
+		@param offsetVal オフセット値
+		*/
+		void offsetChildRotation(const size_t index, const float& offsetVal)
+		{
+			auto& rota = std::get<3>(e_.at(index));
+			rota.val += offsetVal;
+		}
+		void update() override
+		{
+			for (auto& it : e_)
+			{
+				auto child_entity = std::get<0>(it);
+				auto pos = std::get<1>(it);
+				auto scale = std::get<2>(it);
+				auto rota = std::get<3>(it);
+				
+				child_entity->getComponent<Position>().val = pos.val + entity->getComponent<Position>().val;
+				child_entity->getComponent<Scale>().val = entity->getComponent<Scale>().val + scale.val;
+				child_entity->getComponent<Rotation>().val = entity->getComponent<Rotation>().val + rota.val;
+			}
 		}
 	};
 
