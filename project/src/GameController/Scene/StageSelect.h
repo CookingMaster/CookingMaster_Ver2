@@ -16,13 +16,6 @@ namespace Scene
 	class StageSelect : public AbstractScene
 	{
 	private:
-		const Vec2 OPTION_POSITION{ 400.f,55.f };
-		const Vec2 BGM_FONT_POSITION{ 110.f, 150.f };
-		const Vec2 SE_FONT_POSITION{ 110.f, 330.f};
-		const Vec2 BGM_SLIDER_POSITION{ 50.f, 195.f };
-		const Vec2 SE_SLIDER_POSITION{ 50.f, 375.f };
-		const Vec2 BACK_POSITION{ 115.f, 522.f };
-		const Vec2 DISH_POSITION{ 680.f, 140.f };
 		ECS::Entity* option_ = nullptr;
 		ECS::Entity* cursor_ = nullptr;
 		ECS::Entity* bgmSlider_ = nullptr;

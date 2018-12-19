@@ -44,6 +44,13 @@ namespace Scene
 
 	void StageSelect::entitySetUp()
 	{
+		const Vec2 OPTION_POSITION{ 400.f,55.f };
+		const Vec2 BGM_FONT_POSITION{ 110.f, 150.f };
+		const Vec2 SE_FONT_POSITION{ 110.f, 330.f };
+		const Vec2 BGM_SLIDER_POSITION{ 50.f, 195.f };
+		const Vec2 SE_SLIDER_POSITION{ 50.f, 375.f };
+		const Vec2 BACK_POSITION{ 115.f, 522.f };
+		const Vec2 DISH_POSITION{ 680.f, 140.f };
 		ECS::ArcheType::CreateEntity
 		(
 			"back",
@@ -59,6 +66,7 @@ namespace Scene
 			*entityManager_,
 			ENTITY_GROUP::BACK
 		);
+		option_->addComponent<ECS::Canvas>();
 
 		ECS::ArcheType::CreateEntity
 		(
@@ -240,24 +248,20 @@ namespace Scene
 			);
 				
 		}
+
+		//オプションに乗ってるやつをオプションエンティの相対座標に設定する
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[3]);
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[4]);
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[5]);
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[6]);
+		option_->getComponent<ECS::Canvas>().addChild(bgmSlider_);
+		option_->getComponent<ECS::Canvas>().addChild(bgmFullSlider_);
+		option_->getComponent<ECS::Canvas>().addChild(seSlider_);
+		option_->getComponent<ECS::Canvas>().addChild(seFullSlider_);
 	}
 
 	void StageSelect::optionSheetMove()
 	{
-		//オプションに乗ってるやつをオプションエンティティの相対座標に設定する
-		{
-			cursorTargets[3]->getComponent<ECS::Position>().val = OPTION_POSITION + option_->getComponent<ECS::Position>().val;
-			cursorTargets[4]->getComponent<ECS::Position>().val = BGM_FONT_POSITION + option_->getComponent<ECS::Position>().val;
-			cursorTargets[5]->getComponent<ECS::Position>().val = SE_FONT_POSITION + option_->getComponent<ECS::Position>().val;
-			cursorTargets[6]->getComponent<ECS::Position>().val = BACK_POSITION + option_->getComponent<ECS::Position>().val;
-			bgmSlider_->getComponent<ECS::Position>().val = BGM_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
-			bgmFullSlider_->getComponent<ECS::Position>().val = bgmSlider_->getComponent<ECS::Position>().val;
-			seFullSlider_->getComponent<ECS::Position>().val = seSlider_->getComponent<ECS::Position>().val;
-			bgmBar_->getComponent<ECS::Position>().val.y = bgmSlider_->getComponent<ECS::Position>().val.y;
-			seSlider_->getComponent<ECS::Position>().val = SE_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
-			seBar_->getComponent<ECS::Position>().val.y = seSlider_->getComponent<ECS::Position>().val.y;
-		}
-	
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3)
 		{
 			cnt_.add();
@@ -312,6 +316,8 @@ namespace Scene
 		constexpr float MAX_GAUGE_SIZE = 250;
 		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal_);
 		seBar_->getComponent<ECS::Position>().val.x = seSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * seVal_);
+		bgmBar_->getComponent<ECS::Position>().val.y = bgmSlider_->getComponent<ECS::Position>().val.y;
+		seBar_->getComponent<ECS::Position>().val.y = seSlider_->getComponent<ECS::Position>().val.y;
 		//赤いゲージ増減
 		constexpr int ADJUST = 20;	//座標をいい感じにする補正値
 		bgmFullSlider_->getComponent<ECS::Rectangle>().w = static_cast<int>(bgmBar_->getComponent<ECS::Position>().val.x -
@@ -409,9 +415,9 @@ namespace Scene
 		changeLayer();
 		setSoundVolume();
 		const auto bgm_path = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
-		const auto stage_num = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
 		if (bgm_path != "")
 		{
+			const auto stage_num = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
 			auto parameter = std::make_unique<Parameter>();
 			const std::string STAGE_STR = "stage";
 			ResourceManager::GetSound().load(
