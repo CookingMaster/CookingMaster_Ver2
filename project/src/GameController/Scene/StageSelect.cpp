@@ -37,6 +37,7 @@ namespace Scene
 		//料理
 		ResourceManager::GetGraph().load("Resource/image/antipasto.png", "antipasto");
 		ResourceManager::GetGraph().load("Resource/image/galantine.png", "galantine");
+		ResourceManager::GetGraph().load("Resource/image/entremets.png", "entremets");
 		//サウンド情報の読み込み
 		std::ifstream ifs("Resource/system/gain.bin");
 		ifs >> bgmVal_ >> seVal_;
@@ -230,7 +231,7 @@ namespace Scene
 			dish_[1]->getComponent<ECS::Scale>().val /= 2;
 			dish_[2] = ECS::ArcheType::CreateEntity
 			(
-				"antipasto",
+				"entremets",
 				Vec2{ DISH_POSITION },
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
@@ -258,6 +259,7 @@ namespace Scene
 		option_->getComponent<ECS::Canvas>().addChild(bgmFullSlider_);
 		option_->getComponent<ECS::Canvas>().addChild(seSlider_);
 		option_->getComponent<ECS::Canvas>().addChild(seFullSlider_);
+
 	}
 
 	void StageSelect::optionSheetMove()
