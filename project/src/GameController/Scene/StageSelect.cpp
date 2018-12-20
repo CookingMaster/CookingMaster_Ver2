@@ -188,7 +188,7 @@ namespace Scene
 			cursor_ = ECS::ArcheType::CreateEntity
 			(
 				"cursor",
-				Vec2{ 0.f, 0.f },
+				Vec2{ -100.f, -100.f },
 				*entityManager_,
 				ENTITY_GROUP::UI
 			);
