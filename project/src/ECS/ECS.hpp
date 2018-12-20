@@ -417,5 +417,4 @@ namespace ECS
 	//!vectorに格納されているエンティティの3D描画を行います
 	void EntitiesDraw3D(const std::vector<Entity*>& entities);
 	
-}
-
+}  //namespace ECS
