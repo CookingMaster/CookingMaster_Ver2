@@ -39,7 +39,7 @@ namespace Scene
 		//背景
 		ECS::ArcheType::CreateGameBG("game_bg", Vec2(0.f, 0.f), *entityManager_);
 		//プレイヤテスト
-		ECS::ArcheType::CreatePlayerEntity("chara", name_.c_str(), Vec2(300.f, 100.f), 20, *entityManager_);
+		//ECS::ArcheType::CreatePlayerEntity("chara", name_.c_str(), Vec2(300.f, 100.f), 20, *entityManager_);
 		//スコアのバー
 		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(300.f, 300.f), *entityManager_);
 		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), msl_.GetMaxPoint(), *entityManager_);

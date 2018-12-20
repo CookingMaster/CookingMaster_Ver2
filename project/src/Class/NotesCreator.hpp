@@ -60,7 +60,6 @@ private:
 		//次の小節の譜面を見る
 		int nextBar = cntBar_.getCurrentCount() + 1;
 		if ((unsigned int)nextBar >= scoreData.size()) return;
-		
 		//その小節内で生成されるノーツ数から音の長さを計算
 		CalcurationBeat beat((float)bpm_);
 		float noteFlame = beat.calcNote_Frame(float(scoreData[nextBar].size()));
@@ -71,7 +70,7 @@ private:
 			if (nd.imageName == "rest")
 				continue;
 
-			//
+			//目標地点に到達するまでの時間を計算
 			float arrivalBeatTime = beat.calcNote_Frame(float(nd.arrivalBeatTime));
 			//そのノーツが画面内に出現するまでの待ち時間を計算
 			float waitTime = beat.calcOneBar_Frame() * 2.f - (float(scoreData[nextBar].size() - i) * noteFlame) - arrivalBeatTime;
