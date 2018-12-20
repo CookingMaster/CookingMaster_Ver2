@@ -1,6 +1,6 @@
 ﻿#include "Game.h"
 #include "SceneManager.hpp"
-#include "../../ArcheType/TestArcheType.hpp"
+#include "../../ArcheType/ArcheType.hpp"
 #include "../../Input/Input.hpp"
 #include "../../Class/Sound.hpp"
 #include "../../ArcheType/UIArcheType.hpp"
@@ -37,9 +37,7 @@ namespace Scene
 		nc_.resetData(msl_.GetBPM(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
-		ECS::ArcheType::CreateGameBG("game_bg", Vec2(0.f, 0.f), *entityManager_);
-		//プレイヤテスト
-		ECS::ArcheType::CreatePlayerEntity("chara", name_.c_str(), Vec2(300.f, 100.f), 20, *entityManager_);
+		ECS::ArcheType::CreateEntity("game_bg", Vec2(0.f, 0.f), *entityManager_,ENTITY_GROUP::BACK);
 		//スコアのバー
 		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(300.f, 300.f), *entityManager_);
 		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), msl_.GetMaxPoint(), *entityManager_);

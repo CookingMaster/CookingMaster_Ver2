@@ -33,7 +33,7 @@
     <ClInclude Include="src\ArcheType\ResultArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ScoreArcheType.hpp" />
     <ClInclude Include="src\ArcheType\SelectArchetype.hpp" />
-    <ClInclude Include="src\ArcheType\TestArcheType.hpp" />
+    <ClInclude Include="src\ArcheType\ArcheType.hpp" />
     <ClInclude Include="src\ArcheType\TitleUIArcheType.hpp" />
     <ClInclude Include="src\ArcheType\UIArcheType.hpp" />
     <ClInclude Include="src\Class\MusicScoreLoader.hpp" />

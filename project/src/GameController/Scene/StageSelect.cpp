@@ -4,7 +4,7 @@
 #include "../src/ArcheType/ScoreArcheType.hpp"
 #include "../src/Components/CursorMove.hpp"
 #include "../src/Class/Sound.hpp"
-#include "../src/ArcheType/TestArcheType.hpp"
+#include "../src/ArcheType/ArcheType.hpp"
 #include "../src/Components/musicName.hpp"
 namespace Scene
 {
@@ -80,7 +80,7 @@ namespace Scene
 		//ターゲット(アイコンが指すエンティティ)
 		{
 			//0 曲
-			cursorTargets.emplace_back(ECS::ArcheType::CreateMultiEntity
+			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
 			(
 				"menuname",
 				Vec2{ 370.f,310.f },
@@ -90,7 +90,7 @@ namespace Scene
 			cursorTargets.back()->addComponent<ECS::MusicName>("Let'sCooking.wav");
 
 			//1 曲
-			cursorTargets.emplace_back(ECS::ArcheType::CreateMultiEntity
+			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
 			(
 				"menuname",
 				Vec2{ 370.f,420.f },
@@ -100,7 +100,7 @@ namespace Scene
 			cursorTargets.back()->addComponent<ECS::MusicName>("test.mp3");
 
 			//2 曲
-			cursorTargets.emplace_back(ECS::ArcheType::CreateMultiEntity
+			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
 			(
 				"menuname",
 				Vec2{ 370.f,530.f },
@@ -200,7 +200,7 @@ namespace Scene
 			float i = 0;
 			for (auto& it : star_)
 			{
-				it = ECS::ArcheType::CreateMultiEntity
+				it = ECS::ArcheType::CreateAnimationEntity
 				(
 					"star",
 					Vec2{ 740.f + 55.f * i, 420.f },
