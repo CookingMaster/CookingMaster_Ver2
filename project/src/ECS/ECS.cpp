@@ -1,6 +1,6 @@
 ﻿#include "ECS.hpp"
 
-void ECS::Entity::addGroup(Group group) noexcept
+void ECS::Entity::addGroup(const Group& group) noexcept
 {
 	nowGroup_ = group;
 	groupBitSet_[group] = true;

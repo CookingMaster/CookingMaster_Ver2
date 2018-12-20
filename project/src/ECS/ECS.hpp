@@ -174,27 +174,24 @@ namespace ECS
 		[[nodiscard]] bool isActive() const { return isActive_; }
 
 		//!Entityを殺します
-		void destroy() 
-		{
-			isActive_ = false; 
-		}
+		void destroy() { isActive_ = false; }
 
 		//!Entityが指定したグループに登録されているか返します
-		[[nodiscard]] bool hasGroup(Group group) const noexcept
+		[[nodiscard]] bool hasGroup(const Group& group) const noexcept
 		{
 			return groupBitSet_[group];
 		}
 
 		//!Entityをグループに登録します
-		void addGroup(Group group) noexcept;
+		void addGroup(const Group& group) noexcept;
 
 		//!Entityをグループから消します
-		void removeGroup(Group group) noexcept
+		void removeGroup(const Group& group) noexcept
 		{
 			groupBitSet_[group] = false;
 		}
-		//!グループを登録しなおします
-		void changeGroup(const Group setGroup) noexcept
+		//!グループを登録し直します
+		void changeGroup(const Group& setGroup) noexcept
 		{
 			removeGroup(nowGroup_);
 
@@ -317,7 +314,7 @@ namespace ECS
 		* @brief グループごとの描画を登録順に行います
 		* @param MaxGroup 最大グループ数
 		*/
-		void orderByDraw(const size_t MaxGroup)
+		void orderByDraw(const Group& MaxGroup)
 		{
 			for (auto i(0u); i < MaxGroup; ++i)
 			{
@@ -369,13 +366,13 @@ namespace ECS
 		}
 
 		//!指定したグループに登録されているEntity達を返します
-		[[nodiscard]] std::vector<Entity*>& getEntitiesByGroup(Group group)
+		[[nodiscard]] std::vector<Entity*>& getEntitiesByGroup(const Group& group)
 		{
 			return groupedEntities_[group];
 		}
 
 		//!Entityを指定したグループに登録します
-		void addToGroup(Entity* pEntity, Group group)
+		void addToGroup(Entity* pEntity, const Group& group)
 		{
 			groupedEntities_[group].emplace_back(pEntity);
 		}
