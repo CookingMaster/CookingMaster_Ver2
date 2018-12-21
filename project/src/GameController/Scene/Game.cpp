@@ -39,7 +39,7 @@ namespace Scene
 		nc_.resetData(msl_.getBPM(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
-		ECS::ArcheType::CreateGameBG("game_bg", Vec2(0.f, 0.f), *entityManager_);
+		ECS::ArcheType::CreateEntity("game_bg", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
 		//プレイヤー
 		ECS::Player::CreatePlayer(
 			name_,
