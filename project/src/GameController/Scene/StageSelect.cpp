@@ -4,7 +4,7 @@
 #include "../src/ArcheType/ScoreArcheType.hpp"
 #include "../src/Components/CursorMove.hpp"
 #include "../src/Class/Sound.hpp"
-#include "../src/ArcheType/TestArcheType.hpp"
+#include "../src/ArcheType/ArcheType.hpp"
 #include "../src/Components/musicName.hpp"
 namespace Scene
 {
@@ -37,6 +37,7 @@ namespace Scene
 		//料理
 		ResourceManager::GetGraph().load("Resource/image/antipasto.png", "antipasto");
 		ResourceManager::GetGraph().load("Resource/image/galantine.png", "galantine");
+		ResourceManager::GetGraph().load("Resource/image/entremets.png", "entremets");
 		//サウンド情報の読み込み
 		std::ifstream ifs("Resource/system/gain.bin");
 		ifs >> bgmVal_ >> seVal_;
@@ -44,6 +45,13 @@ namespace Scene
 
 	void StageSelect::entitySetUp()
 	{
+		const Vec2 OPTION_POSITION{ 400.f,55.f };
+		const Vec2 BGM_FONT_POSITION{ 110.f, 150.f };
+		const Vec2 SE_FONT_POSITION{ 110.f, 330.f };
+		const Vec2 BGM_SLIDER_POSITION{ 50.f, 195.f };
+		const Vec2 SE_SLIDER_POSITION{ 50.f, 375.f };
+		const Vec2 BACK_POSITION{ 115.f, 522.f };
+		const Vec2 DISH_POSITION{ 680.f, 140.f };
 		ECS::ArcheType::CreateEntity
 		(
 			"back",
@@ -59,6 +67,7 @@ namespace Scene
 			*entityManager_,
 			ENTITY_GROUP::BACK
 		);
+		option_->addComponent<ECS::Canvas>();
 
 		ECS::ArcheType::CreateEntity
 		(
@@ -71,7 +80,7 @@ namespace Scene
 		//ターゲット(アイコンが指すエンティティ)
 		{
 			//0 曲
-			cursorTargets.emplace_back(ECS::ArcheType::CreateMultiEntity
+			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
 			(
 				"menuname",
 				Vec2{ 370.f,310.f },
@@ -81,7 +90,7 @@ namespace Scene
 			cursorTargets.back()->addComponent<ECS::MusicName>("Let'sCooking.wav");
 
 			//1 曲
-			cursorTargets.emplace_back(ECS::ArcheType::CreateMultiEntity
+			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
 			(
 				"menuname",
 				Vec2{ 370.f,420.f },
@@ -91,7 +100,7 @@ namespace Scene
 			cursorTargets.back()->addComponent<ECS::MusicName>("test.mp3");
 
 			//2 曲
-			cursorTargets.emplace_back(ECS::ArcheType::CreateMultiEntity
+			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
 			(
 				"menuname",
 				Vec2{ 370.f,530.f },
@@ -179,7 +188,7 @@ namespace Scene
 			cursor_ = ECS::ArcheType::CreateEntity
 			(
 				"cursor",
-				Vec2{ 0.f, 0.f },
+				Vec2{ -100.f, -100.f },
 				*entityManager_,
 				ENTITY_GROUP::UI
 			);
@@ -191,7 +200,7 @@ namespace Scene
 			float i = 0;
 			for (auto& it : star_)
 			{
-				it = ECS::ArcheType::CreateMultiEntity
+				it = ECS::ArcheType::CreateAnimationEntity
 				(
 					"star",
 					Vec2{ 740.f + 55.f * i, 420.f },
@@ -222,7 +231,7 @@ namespace Scene
 			dish_[1]->getComponent<ECS::Scale>().val /= 2;
 			dish_[2] = ECS::ArcheType::CreateEntity
 			(
-				"antipasto",
+				"entremets",
 				Vec2{ DISH_POSITION },
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
@@ -240,24 +249,21 @@ namespace Scene
 			);
 				
 		}
+
+		//オプションに乗ってるやつをオプションエンティの相対座標に設定する
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[3]);
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[4]);
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[5]);
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[6]);
+		option_->getComponent<ECS::Canvas>().addChild(bgmSlider_);
+		option_->getComponent<ECS::Canvas>().addChild(bgmFullSlider_);
+		option_->getComponent<ECS::Canvas>().addChild(seSlider_);
+		option_->getComponent<ECS::Canvas>().addChild(seFullSlider_);
+
 	}
 
 	void StageSelect::optionSheetMove()
 	{
-		//オプションに乗ってるやつをオプションエンティティの相対座標に設定する
-		{
-			cursorTargets[3]->getComponent<ECS::Position>().val = OPTION_POSITION + option_->getComponent<ECS::Position>().val;
-			cursorTargets[4]->getComponent<ECS::Position>().val = BGM_FONT_POSITION + option_->getComponent<ECS::Position>().val;
-			cursorTargets[5]->getComponent<ECS::Position>().val = SE_FONT_POSITION + option_->getComponent<ECS::Position>().val;
-			cursorTargets[6]->getComponent<ECS::Position>().val = BACK_POSITION + option_->getComponent<ECS::Position>().val;
-			bgmSlider_->getComponent<ECS::Position>().val = BGM_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
-			bgmFullSlider_->getComponent<ECS::Position>().val = bgmSlider_->getComponent<ECS::Position>().val;
-			seFullSlider_->getComponent<ECS::Position>().val = seSlider_->getComponent<ECS::Position>().val;
-			bgmBar_->getComponent<ECS::Position>().val.y = bgmSlider_->getComponent<ECS::Position>().val.y;
-			seSlider_->getComponent<ECS::Position>().val = SE_SLIDER_POSITION + option_->getComponent<ECS::Position>().val;
-			seBar_->getComponent<ECS::Position>().val.y = seSlider_->getComponent<ECS::Position>().val.y;
-		}
-	
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3)
 		{
 			cnt_.add();
@@ -312,6 +318,8 @@ namespace Scene
 		constexpr float MAX_GAUGE_SIZE = 250;
 		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal_);
 		seBar_->getComponent<ECS::Position>().val.x = seSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * seVal_);
+		bgmBar_->getComponent<ECS::Position>().val.y = bgmSlider_->getComponent<ECS::Position>().val.y;
+		seBar_->getComponent<ECS::Position>().val.y = seSlider_->getComponent<ECS::Position>().val.y;
 		//赤いゲージ増減
 		constexpr int ADJUST = 20;	//座標をいい感じにする補正値
 		bgmFullSlider_->getComponent<ECS::Rectangle>().w = static_cast<int>(bgmBar_->getComponent<ECS::Position>().val.x -
@@ -409,9 +417,9 @@ namespace Scene
 		changeLayer();
 		setSoundVolume();
 		const auto bgm_path = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
-		const auto stage_num = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
 		if (bgm_path != "")
 		{
+			const auto stage_num = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
 			auto parameter = std::make_unique<Parameter>();
 			const std::string STAGE_STR = "stage";
 			ResourceManager::GetSound().load(

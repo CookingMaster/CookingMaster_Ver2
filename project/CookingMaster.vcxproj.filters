@@ -61,9 +61,6 @@
     <ClInclude Include="src\System\System.hpp">
       <Filter>src\System</Filter>
     </ClInclude>
-    <ClInclude Include="src\ArcheType\TestArcheType.hpp">
-      <Filter>src\ArcheType</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameController\Scene\Game.h">
       <Filter>src\GameController\Scene</Filter>
     </ClInclude>
@@ -161,10 +158,7 @@
     <ClInclude Include="src\Components\musicName.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\BeatByTrigger.hpp">
-      <Filter>src\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ArcheType\PlayerArcheType.hpp">
+    <ClInclude Include="src\ArcheType\ArcheType.hpp">
       <Filter>src\ArcheType</Filter>
     </ClInclude>
   </ItemGroup>

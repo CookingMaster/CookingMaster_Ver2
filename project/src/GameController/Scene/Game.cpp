@@ -1,6 +1,6 @@
 ﻿#include "Game.h"
 #include "SceneManager.hpp"
-#include "../../ArcheType/TestArcheType.hpp"
+#include "../../ArcheType/ArcheType.hpp"
 #include "../../Input/Input.hpp"
 #include "../../Class/Sound.hpp"
 #include "../../ArcheType/UIArcheType.hpp"
