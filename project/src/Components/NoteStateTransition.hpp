@@ -45,7 +45,7 @@ namespace ECS
 		float arrivalBeatTime_;
 
 		NoteState* noteState_ = nullptr;
-		AnimatorByFrame* animator_ = nullptr;
+		Animator* animator_ = nullptr;
 		std::array<float, 8> hitTimeLine_;
 		Counter transCounter_;
 		Counter_f flameCounter_;
@@ -63,13 +63,13 @@ namespace ECS
 		void initialize() override
 		{
 			noteState_ = &entity->getComponent<NoteState>();
-			animator_ = &entity->getComponent<AnimatorByFrame>();
+			animator_ = &entity->getComponent<Animator>();
 
 
 			//ミリ秒をフレームに変換
 			for (auto& it : hitJudge_)
 			{
-				it = millisecondToFlame(it);
+				it = CalcurationBeat().millisecondToFrame(it);
 			} 
 
 			/*NON → BAD → GOOD → GREAT → PARFECT → GREAT → GOOD → BAD → MISSED という風に遷移する
@@ -92,7 +92,7 @@ namespace ECS
 		{
 			if (transCounter_.isMax()) return;
 
-			if (flameCounter_.getCurrentCount() > hitTimeLine_[transCounter_.getCurrentCount()])
+			if (flameCounter_.getCurrentCount() >= hitTimeLine_[transCounter_.getCurrentCount()])
 			{
 				transition();
 			}
@@ -136,11 +136,6 @@ namespace ECS
 		}
 
 	private:
-		//ミリ秒をフレーム数に変換
-		float millisecondToFlame(float ms)
-		{
-			return (ms / 1000.f) * 60.f;
-		}
 
 		//状態を遷移させる
 		void transition()
@@ -161,6 +156,7 @@ namespace ECS
 				if (autoPerfectMode)
 				{
 					changeNoteAnim(1, false);
+					noteState_->state = NoteState::State::HITTED;
 				}
 					break;
 			case 4:	noteState_->state = NoteState::State::GREAT;	break;
@@ -174,6 +170,7 @@ namespace ECS
 			++transCounter_;
 		}
 
+		//ノーツのアニメーションを変更し、一定フレーム後に消えるように設定する
 		void changeNoteAnim(int animMode, bool isStopMove)
 		{
 			animator_->setSpriteNum(

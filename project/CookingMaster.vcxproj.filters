@@ -161,6 +161,12 @@
     <ClInclude Include="src\ArcheType\ArcheType.hpp">
       <Filter>src\ArcheType</Filter>
     </ClInclude>
+    <ClInclude Include="src\ArcheType\PlayerArcheType.hpp">
+      <Filter>src\ArcheType</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\BeatByTrigger.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

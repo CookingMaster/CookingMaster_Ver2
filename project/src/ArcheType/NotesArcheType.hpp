@@ -16,32 +16,32 @@ namespace ECS
 {
 	struct NotesArcheType
 	{
-		static Entity* CreateNotes(const NotesData& notesData, const ECS::Direction::Dir& dir, float wait, float arrivalBeatTime, float targetPosX, EntityManager& entityManager_)
+		static Entity* CreateNotes(const NotesData& notesData, const ECS::Direction::Dir& dir, float wait, float arrivalBeatTime, const Vec2& targetPos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 
 			float posX;
 			if (dir == ECS::Direction::Dir::L)
 			{
-				posX = notesData.xsize / -2.f;
-				entity->addComponent<Transform>().setPosition(posX, float(System::SCREEN_HEIGHT) / 2.f);
+				posX = -(notesData.xsize / 2.f);
+				entity->addComponent<Transform>().setPosition(posX, targetPos.y);
 			}
 			else
 			{
 				posX = System::SCREEN_WIDIH + (notesData.xsize / 2.f);
-				entity->addComponent<Transform>().setPosition(posX, float(System::SCREEN_HEIGHT) / 2.f);
+				entity->addComponent<Transform>().setPosition(posX, targetPos.y);
 			}
-			float grav = 0.5f;
 
+			float gravity = 0.5f;
 			//横方向の移動速度と、上にどの程度飛ぶかの計算を行う
-			entity->addComponent<Velocity>((targetPosX - posX) / arrivalBeatTime, -grav * (arrivalBeatTime / 2.f));
+			entity->addComponent<Velocity>((targetPos.x - posX) / arrivalBeatTime, -gravity * (arrivalBeatTime / 2.f));
 			
-			entity->addComponent<Gravity>(grav);
+			entity->addComponent<Gravity>(gravity);
 			entity->addComponent<Physics>();
 			
 			entity->addComponent<SpriteAnimationDraw>(notesData.imageName.c_str()).setPivot(
 				Vec2(notesData.xsize / 2.f, notesData.ysize / 2.f));
-			entity->addComponent<AnimatorByFrame>(notesData.animFlame, notesData.xnum, notesData.ynum).setSpriteNum(
+			entity->addComponent<Animator>(notesData.animFlame, notesData.xnum, notesData.ynum).setSpriteNum(
 				notesData.animSData[0].xmin,
 				notesData.animSData[0].ymin,
 				notesData.animSData[0].xmax,
