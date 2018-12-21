@@ -13,7 +13,7 @@
 #include "Scene/Parameter.hpp"
 #include <stack>
 #define ENTITY_GROUP (ECS::Group)GameController::GameGroup
-#define IS_AUTO_PLAY false
+#define IS_AUTO_PLAY true
 class GameController final : public Scene::IOnSceneChangeCallback
 {
 private:

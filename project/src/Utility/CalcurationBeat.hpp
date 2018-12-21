@@ -11,9 +11,11 @@
 class CalcurationBeat
 {
 private:
-	const float bpm_;
+	const float bpm_ = 0;
 
 public:
+	CalcurationBeat() {}
+	CalcurationBeat(int bpm) : bpm_((float)bpm) {}
 	CalcurationBeat(float bpm) : bpm_(bpm){}
 
 	/**
@@ -52,5 +54,23 @@ public:
 	{
 		assert(beat >= 1.f && "The beat is incorrect!");
 		return calcOneBar_Millisecond() / beat;
+	}
+	/**
+	* @brief ミリ秒をフレーム数に変換する
+	* @param ms ミリ秒
+	* @return float フレーム数
+	*/
+	float millisecondToFrame(float ms)
+	{
+		return (ms / 1000.f) * 60.f;
+	}
+	/**
+	* @brief フレーム数をミリ秒に変換する
+	* @param frame フレーム数
+	* @return float ミリ秒
+	*/
+	float frameToMillisecond(float ms)
+	{
+		return (ms / 1000.f) * 60.f;
 	}
 };

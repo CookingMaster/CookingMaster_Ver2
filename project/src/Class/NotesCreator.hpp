@@ -81,7 +81,7 @@ private:
 				scoreData[nextBar][i].dir,
 				waitTime,
 				arrivalBeatTime,
-				System::SCREEN_WIDIH / 2.f,
+				Vec2(System::SCREEN_WIDIH, System::SCREEN_HEIGHT / 2.f),
 				entityManager);
 		}
 

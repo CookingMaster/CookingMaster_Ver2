@@ -26,8 +26,8 @@ namespace ECS {
 	};
 
 	/*!
-	@brief 画像の横一列をアニメーションさせる描画機能です。
-	* - SpriteAnimationDrawとAnimationDataが必要です(AnimationDataは無かったら自動で作成する)。
+	@brief 画像をアニメーションさせる描画機能です。
+	* - SpriteAnimationDrawが必要です。
 	*/
 	class Animator final : public ComponentSystem
 	{
@@ -41,6 +41,7 @@ namespace ECS {
 		int maxImgYNum_ = 0;	//!使用する画像のY方向の最大インデックス数
 		bool isEndStopAnim_ = false;	//!アニメーションが一巡したら停止するか否か
 		bool isMinusAnim_ = false;		//!アニメーションを逆順で行うか否か
+		bool isAnimEnd_ = false;		//!アニメーションが終了したか否か
 
 	public:
 		//!アニメーションの遷移フレーム数を設定する
@@ -80,12 +81,20 @@ namespace ECS {
 							//停止(アニメ遷移が逆順なら初期化)
 							indexX_ = animData_.maxXnum_ - 1;
 							indexY_ = animData_.maxYnum_ - 1;
+							if (!isMinusAnim_)
+							{
+								isAnimEnd_ = true;
+							}
 						}
 						else
 						{
 							//初期化(アニメ遷移が逆順なら停止)
 							indexX_ = animData_.minXnum_;
 							indexY_ = animData_.minYnum_;
+							if (isMinusAnim_)
+							{
+								isAnimEnd_ = true;
+							}
 						}
 					}
 					else
@@ -124,6 +133,7 @@ namespace ECS {
 				indexX_ = xmax;
 				indexY_ = ymax;
 			}
+			isAnimEnd_ = false;
 
 			animData_.minXnum_ = xmin;
 			animData_.minYnum_ = ymin;
@@ -140,6 +150,7 @@ namespace ECS {
 		{
 			indexX_ = indexX;
 			indexY_ = indexY;
+			isAnimEnd_ = false;
 			counterReset();
 		}
 
@@ -177,6 +188,18 @@ namespace ECS {
 		void counterReset()
 		{
 			counter_.reset();
+		}
+
+		/**
+		* @brief アニメーションの終了フラグを取得する
+		*/
+		bool isAnimEnd()
+		{
+			if (isEndStopAnim_)
+			{
+				return false;
+			}
+			return isAnimEnd_;
 		}
 	};
 
