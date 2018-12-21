@@ -33,7 +33,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
 
 		//プレイヤーの画像読み込み
-		ResourceManager::GetGraph().loadDiv("Resource/image/player.png", "player", 15, 3, 5, 437, 505);
+		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 
 		Sound s(name_);
 		nc_.resetData(msl_.getBPM(), msl_.getOffsetTime());
@@ -44,7 +44,7 @@ namespace Scene
 		ECS::Player::CreatePlayer(
 			name_,
 			"player",
-			Vec2(437.f, 505.f),
+			Vec2(500.f, 505.f),
 			Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f),
 			msl_.getBPM(),
 			*entityManager_);

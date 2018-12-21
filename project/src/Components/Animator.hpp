@@ -64,14 +64,14 @@ namespace ECS {
 			{
 				//画像のX方向を次に進め、その値がXの最大値を超えていた場合Yを進める
 				bool isNextImg = false;
-				if (!isMinusAnim_)	{ ++indexX_; isNextImg = indexX_ >= animData_.maxXnum_; }
-				else				{ --indexX_; isNextImg = indexX_ <= animData_.minXnum_; }
+				if (!isMinusAnim_)	{ ++indexX_; isNextImg = (indexX_ >= animData_.maxXnum_); }
+				else				{ --indexX_; isNextImg = (indexX_ <= animData_.minXnum_); }
 
 				if (isNextImg)
 				{
 					//画像のY方向を次に進め、その値がYの最大値を超えていた場合最初に戻す(または停止する)
-					if (!isMinusAnim_)	{ ++indexY_; isNextImg = indexY_ >= animData_.maxYnum_; }
-					else				{ --indexY_; isNextImg = indexY_ <= animData_.minYnum_; }
+					if (!isMinusAnim_)	{ ++indexY_; isNextImg = (indexY_ >= animData_.maxYnum_); }
+					else				{ --indexY_; isNextImg = (indexY_ <= animData_.minYnum_); }
 
 					if (isNextImg)
 					{
@@ -130,11 +130,10 @@ namespace ECS {
 			}
 			else
 			{
-				indexX_ = xmax;
-				indexY_ = ymax;
+				indexX_ = xmax - 1;
+				indexY_ = ymax - 1;
 			}
 			isAnimEnd_ = false;
-
 			animData_.minXnum_ = xmin;
 			animData_.minYnum_ = ymin;
 			animData_.maxXnum_ = xmax;
@@ -248,13 +247,13 @@ namespace ECS {
 		*/
 		void setAnimData(const int setNum)
 		{
+			animator_->changeFrame(recordData_[setNum]->speed_);
 			animator_->setSpriteNum(
 				recordData_[setNum]->minXnum_,
 				recordData_[setNum]->minYnum_,
 				recordData_[setNum]->maxXnum_,
 				recordData_[setNum]->maxYnum_
 			);
-			animator_->changeFrame(recordData_[setNum]->speed_);
 		}
 	};
 }
