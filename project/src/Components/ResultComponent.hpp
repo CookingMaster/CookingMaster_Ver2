@@ -44,7 +44,7 @@ namespace ECS
 		{
 			position_ = &entity->getComponent<Position>();
 			rotate_ = &entity->getComponent<Rotation>();
-			cnt_.SetCounter(0.f, speed_, 0.f, 360.f);
+			cnt_.setCounter(0.f, speed_, 0.f, 360.f);
 		}
 
 		void update() override
@@ -137,7 +137,7 @@ namespace ECS
 			:
 			shift_(shift)
 		{
-			angleCnt_.SetCounter(angleInit, rotateSpeed, 0.f, 360.f);
+			angleCnt_.setCounter(angleInit, rotateSpeed, 0.f, 360.f);
 		}
 		void initialize() override
 		{

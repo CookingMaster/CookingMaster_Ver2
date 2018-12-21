@@ -515,7 +515,11 @@ namespace ECS
 			{
 				RenderUtility::SetColor(__super::color_);
 				RenderUtility::SetBlend(__super::blend_);
-				
+				if (__super::pos_->val.x == 110)
+				{
+					int a;
+					a = 1;
+				}
 				DrawRotaGraph3F(
 					__super::pos_->val.x,
 					__super::pos_->val.y,
