@@ -5,6 +5,7 @@
 #include "../../Class/Sound.hpp"
 #include "../../ArcheType/UIArcheType.hpp"
 #include "../../ArcheType/ScoreArcheType.hpp"
+#include "../../ArcheType/PlayerArcheType.hpp"
 #include "../../Components/NoteStateTransition.hpp"
 namespace Scene
 {
@@ -23,7 +24,6 @@ namespace Scene
 		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/1280.png", "game_bg");
-		ResourceManager::GetGraph().loadDiv("Resource/image/Chara_Test.png", "chara", 18, 6, 3, 64, 64);
 		ResourceManager::GetGraph().load("Resource/image/bar_empty.png", "bar_empty");
 		ResourceManager::GetGraph().load("Resource/image/bar_full.png", "bar_full");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
@@ -31,19 +31,29 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/needle.png", "needle");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
-		
+
+		//プレイヤーの画像読み込み
+		ResourceManager::GetGraph().loadDiv("Resource/image/player.png", "player", 15, 3, 5, 437, 505);
 
 		Sound s(name_);
-		nc_.resetData(msl_.GetBPM(), msl_.getOffsetTime());
+		nc_.resetData(msl_.getBPM(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
-		ECS::ArcheType::CreateEntity("game_bg", Vec2(0.f, 0.f), *entityManager_,ENTITY_GROUP::BACK);
+		ECS::ArcheType::CreateEntity("game_bg", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
+		//プレイヤー
+		ECS::Player::CreatePlayer(
+			name_,
+			"player",
+			Vec2(437.f, 505.f),
+			Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f),
+			msl_.getBPM(),
+			*entityManager_);
 		//スコアのバー
-		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(300.f, 300.f), *entityManager_);
-		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(300.f, 300.f), msl_.GetMaxPoint(), *entityManager_);
-		//時計
-		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(450.f, 350.f), *entityManager_);
+		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(0.f, 0.f), *entityManager_);
+		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(0.f, 0.f), msl_.getMaxPoint(), *entityManager_);
 		//得点(パーセンテージ)表示
+		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
+		//時計
 		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2(800.f, 100.f), *entityManager_);
 		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
 		
@@ -74,7 +84,7 @@ namespace Scene
 				}
 			}
 		}
-		nc_.run(msl_.GetNotesData(), msl_.GetScoreData(), *entityManager_);
+		nc_.run(msl_.getNotesData(), msl_.getScoreData(), *entityManager_);
 
 		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 		{

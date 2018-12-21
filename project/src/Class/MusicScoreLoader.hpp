@@ -91,7 +91,7 @@ public:
 	* @brief BPMを取得する
 	* @return int BPM
 	*/
-	[[nodiscard]]int GetBPM()
+	[[nodiscard]]int getBPM()
 	{
 		return bpm_;
 	}
@@ -107,7 +107,7 @@ public:
 	* @brief 使用するノーツのデータを取得する
 	* @return const std::vector<NotesData>& 使用するノーツのデータ
 	*/
-	[[nodiscard]]const std::vector<NotesData>& GetNotesData()
+	[[nodiscard]]const std::vector<NotesData>& getNotesData()
 	{
 		return notesData_;
 	}
@@ -115,7 +115,7 @@ public:
 	* @brief 譜面データを取得する
 	* @return const ScoreData& 譜面データ
 	*/
-	[[nodiscard]]const MusicData& GetScoreData()
+	[[nodiscard]]const MusicData& getScoreData()
 	{
 		return scoreData_;
 	}
@@ -123,7 +123,7 @@ public:
 	* @brief 最高得点を取得する
 	* @return int 最高得点
 	*/
-	[[nodiscard]]int GetMaxPoint()
+	[[nodiscard]]int getMaxPoint()
 	{
 		return noteNum_ * 10;
 	}

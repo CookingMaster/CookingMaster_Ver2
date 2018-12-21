@@ -161,11 +161,11 @@
     <ClInclude Include="src\ArcheType\ArcheType.hpp">
       <Filter>src\ArcheType</Filter>
     </ClInclude>
-    <ClInclude Include="src\ArcheType\GameEffectsArcheType.hpp">
+    <ClInclude Include="src\ArcheType\PlayerArcheType.hpp">
       <Filter>src\ArcheType</Filter>
     </ClInclude>
-    <ClInclude Include="src\Class\BossController.hpp">
-      <Filter>src\Class</Filter>
+    <ClInclude Include="src\Components\BeatByTrigger.hpp">
+      <Filter>src\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
