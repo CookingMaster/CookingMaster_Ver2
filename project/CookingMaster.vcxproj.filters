@@ -167,6 +167,12 @@
     <ClInclude Include="src\Components\BeatByTrigger.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\ArcheType\GameEffectsArcheType.hpp">
+      <Filter>src\ArcheType</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class\BossController.hpp">
+      <Filter>src\Class</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

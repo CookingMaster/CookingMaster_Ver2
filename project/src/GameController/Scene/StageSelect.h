@@ -11,6 +11,7 @@
 #include "../Scene/SceneManager.hpp"
 #include "../src/Components/BasicComponents.hpp"
 #include "../src/Components/BasicComponents.hpp"
+
 namespace Scene
 {
 	class StageSelect : public AbstractScene
@@ -29,7 +30,7 @@ namespace Scene
 		ECS::Entity* score_{};
 		ECS::EntityManager* entityManager_ = nullptr;
 		std::vector<ECS::Entity*> cursorTargets{};
-	
+		
 		Counter cnt_;
 		float bgmVal_ = 0;
 		float seVal_ = 0;

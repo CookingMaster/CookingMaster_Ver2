@@ -29,6 +29,7 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ArcheType\GameEffectsArcheType.hpp" />
     <ClInclude Include="src\ArcheType\NotesArcheType.hpp" />
     <ClInclude Include="src\ArcheType\PlayerArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ResultArcheType.hpp" />
@@ -37,6 +38,7 @@
     <ClInclude Include="src\ArcheType\ArcheType.hpp" />
     <ClInclude Include="src\ArcheType\TitleUIArcheType.hpp" />
     <ClInclude Include="src\ArcheType\UIArcheType.hpp" />
+    <ClInclude Include="src\Class\BossController.hpp" />
     <ClInclude Include="src\Class\MusicScoreLoader.hpp" />
     <ClInclude Include="src\Class\NotesAndScoreData.hpp" />
     <ClInclude Include="src\Class\NotesCreator.hpp" />

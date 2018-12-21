@@ -11,6 +11,7 @@
 #include "../../Class/MusicScoreLoader.hpp"
 #include "../../Class/NotesCreator.hpp"
 #include "../src/ArcheType/UIArcheType.hpp"
+#include "../src/Class/BossController.hpp"
 namespace Scene
 {
 	class Game : public AbstractScene
@@ -21,6 +22,7 @@ namespace Scene
 		NotesCreator nc_;
 		int num_;
 		std::string name_;
+		std::unique_ptr<BossController> boss_;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();
