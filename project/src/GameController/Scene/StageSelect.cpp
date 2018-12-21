@@ -36,9 +36,9 @@ namespace Scene
 		//フォント
 		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
 		//料理
-		ResourceManager::GetGraph().load("Resource/image/antipasto.png", "antipasto");
-		ResourceManager::GetGraph().load("Resource/image/galantine.png", "galantine");
-		ResourceManager::GetGraph().load("Resource/image/entremets.png", "entremets");
+		ResourceManager::GetGraph().load("Resource/image/antipasto_great.png", "antipasto");
+		ResourceManager::GetGraph().load("Resource/image/galantine_great.png", "galantine");
+		ResourceManager::GetGraph().load("Resource/image/entremets_great.png", "entremets");
 		//サウンド情報の読み込み
 		std::ifstream ifs("Resource/system/gain.bin");
 		ifs >> bgmVal_ >> seVal_;
