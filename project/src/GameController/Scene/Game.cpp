@@ -59,12 +59,15 @@ namespace Scene
 		
 		//時計の針
 		ECS::UIArcheType::CreateNeedleUI("needle", Vec2(800.f, 100.f), *entityManager_, 1.f);
+		//おやっさんを攻撃表示で召喚する
+		boss_ = std::make_unique<BossController>(*entityManager_);
 	}
 
 	void Game::update()
 	{
 		entityManager_->update();
-
+		//おやっさんテスト(Dキー押すと笑うよ)
+		boss_->speekComb();
 		int score = getNoteScore();
 
 		if (score > 0)

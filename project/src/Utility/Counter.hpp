@@ -67,12 +67,14 @@ public:
 		max_ = max;
 	}
 	/*!* @brief カウンターを初期化します*/
-	void SetCounter(T now, T add, T min, T max) 
+	void setCounter(T now, T add, T min, T max) 
 	{
 		now_ = now;
 		add_ = add;
 		min_ = min;
 		max_ = max;
+		isMax_ = false;
+		isMin_ = false;
 	}
 	/*!
 	* @brief カウンターを加算値分足します

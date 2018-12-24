@@ -56,7 +56,7 @@ namespace ECS {
 		{
 			animation_ = &entity->getComponent<SpriteAnimationDraw>();
 
-			counter_.SetCounter(0, 1, 0, animData_.speed_);
+			counter_.setCounter(0, 1, 0, animData_.speed_);
 		}
 		void update() override
 		{
@@ -178,7 +178,7 @@ namespace ECS {
 		void changeFrame(const int animspd)
 		{
 			animData_.speed_ = animspd;
-			counter_.SetCounter(0, 1, 0, animspd);
+			counter_.setCounter(0, 1, 0, animspd);
 		}
 
 		/**

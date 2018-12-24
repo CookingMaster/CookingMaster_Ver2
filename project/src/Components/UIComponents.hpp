@@ -41,7 +41,7 @@ namespace ECS
 		void initialize() override
 		{
 			rotate_ = &entity->getComponent<Rotation>();
-			cnt_.SetCounter(0, speed_, 0, 360);
+			cnt_.setCounter(0, speed_, 0, 360);
 		}
 
 		void update() override
@@ -124,7 +124,7 @@ namespace ECS
 		void initialize() override
 		{
 			scale_ = &entity->getComponent<Scale>();
-			cnt_.SetCounter(1.f, speed_, 1.f, magni_);
+			cnt_.setCounter(1.f, speed_, 1.f, magni_);
 		}
 
 		void update() override
@@ -181,7 +181,7 @@ namespace ECS
 		void initialize() override
 		{
 			scale_ = &entity->getComponent<Scale>();
-			cnt_.SetCounter(magni_min_, speed_, magni_min_, magni_max_);
+			cnt_.setCounter(magni_min_, speed_, magni_min_, magni_max_);
 		}
 
 		void update() override
