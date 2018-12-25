@@ -45,7 +45,8 @@ namespace ECS
 				notesData.animSData[0].xmin,
 				notesData.animSData[0].ymin,
 				notesData.animSData[0].xmax,
-				notesData.animSData[0].ymax);
+				notesData.animSData[0].ymax,
+				true);
 
 			entity->addComponent<NoteState>();
 			entity->addComponent<NoteStateTransition>(notesData, arrivalBeatTime);

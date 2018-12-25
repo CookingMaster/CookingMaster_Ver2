@@ -14,7 +14,7 @@ namespace ECS
 {
 	struct Player
 	{
-		static Entity* CreatePlayer(std::string& soundName, const char* graphicName, const Vec2& imgSize, const Vec2& pos, const int bpm, EntityManager& entityManager_)
+		static Entity* CreatePlayer(std::string& soundName, const char* graphicName, const Vec2& imgSize, const Vec2& pos, const int bpm, const int beat, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -23,7 +23,7 @@ namespace ECS
 
 			entity->addComponent<Animator>(5, 3, 5);
 			entity->addComponent<RecordAnimation>();
-			entity->addComponent<BeatByTrigger>(bpm, 4.f, soundName);
+			entity->addComponent<BeatByTrigger>(bpm, beat, 4.f, soundName);
 			entity->addComponent<PlayerState>();
 			entity->addComponent<PlayerController>();
 

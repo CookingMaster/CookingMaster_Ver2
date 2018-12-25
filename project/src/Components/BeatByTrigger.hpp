@@ -21,30 +21,32 @@ namespace ECS {
 	{
 	private:
 		int bpm_ = 0;			//BPM
-		float beat_ = 0.f;		//拍
+		int beat_ = 0;			//拍子
+		float rhythm_ = 0.f;	//リズムを取るタイミング
 		float goalTime_ = 0.f;	//次にtrueとなる時間
 		Sound sound;
 		bool trigger = false;
 
 	public:
-		BeatByTrigger(int bpm, float beat, const std::string& soundName) :
+		BeatByTrigger(int bpm, int beat, float rhythm, const std::string& soundName) :
 			bpm_(bpm),
 			beat_(beat),
+			rhythm_(rhythm),
 			sound(soundName) {}
 
 		void initialize() override
 		{
-			CalcurationBeat beat(bpm_);
-			goalTime_ = beat.calcNote_Millisecond(beat_);
+			CalcurationBeat beat(bpm_, beat_);
+			goalTime_ = beat.calcNote_Millisecond(rhythm_);
 		}
 
 		void update() override
 		{
 			//指定拍毎にトリガーをtrueにする
-			if (sound.getCurrentTime() >= goalTime_)
+			if (sound.getCurrentTime() > goalTime_)
 			{
-				CalcurationBeat beat(bpm_);
-				goalTime_ += beat.calcNote_Millisecond(beat_);
+				CalcurationBeat beat(bpm_, beat_);
+				goalTime_ += beat.calcNote_Millisecond(rhythm_);
 				trigger = true;
 			}
 			else
@@ -60,9 +62,9 @@ namespace ECS {
 		}
 
 		//トリガーがtrueになる拍を変更
-		void setBeat(float beat)
+		void setBeat(float rhythm)
 		{
-			beat_ = beat;
+			rhythm_ = rhythm;
 		}
 	};
 }

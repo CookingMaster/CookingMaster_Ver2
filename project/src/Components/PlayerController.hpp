@@ -56,7 +56,7 @@ namespace ECS {
 
 	public:
 		PlayerController() :
-			animCnt_(0, 10) {};
+			animCnt_(0, 15) {};
 
 		void initialize() override
 		{
@@ -70,12 +70,12 @@ namespace ECS {
 			state_ = &entity->getComponent<PlayerState>();
 
 			recData_->addAnimData(0, 0, 3, 1, 2);	//待機
-			recData_->addAnimData(0, 1, 3, 2, 3);	//左切り1
-			recData_->addAnimData(0, 2, 3, 3, 3);	//左切り2
-			recData_->addAnimData(0, 3, 3, 4, 3);	//右切り1
-			recData_->addAnimData(0, 4, 3, 5, 3);	//右切り2
+			recData_->addAnimData(0, 1, 3, 2, 4);	//左切り1
+			recData_->addAnimData(0, 2, 3, 3, 4);	//左切り2
+			recData_->addAnimData(0, 3, 3, 4, 4);	//右切り1
+			recData_->addAnimData(0, 4, 3, 5, 4);	//右切り2
 
-			recData_->setAnimData((int)PlayerState::State::Idle);	//待機アニメーションに設定
+			recData_->setAnimData((int)PlayerState::State::Idle, true);	//待機アニメーションに設定
 			animator_->setIsEndStopAnim(true);
 		}
 
@@ -88,14 +88,14 @@ namespace ECS {
 		//入力や時間経過に対応してアニメーションと状態を遷移させる
 		void transitionState()
 		{
-			//入力無しで待機状態
-			if (animCnt_.isMax() && beatTrigger_->getTrigger())
+			//切りモーション終了、または
+			if ((state_->val != PlayerState::State::Idle &&  animCnt_.isMax()) ||
+				(state_->val == PlayerState::State::Idle && beatTrigger_->getTrigger()))
 			{
 				handup = !handup;
 				animator_->setIsMinusAnim(handup);
 				state_->val = PlayerState::State::Idle;
-				recData_->setAnimData((int)PlayerState::State::Idle);
-				return;
+				recData_->setAnimData((int)PlayerState::State::Idle, false);
 			}
 
 			//同時押しは許さない
@@ -116,7 +116,6 @@ namespace ECS {
 				{
 					changeState(PlayerState::State::Left1);
 				}
-				return;
 			}
 			//右カーソルを押すと右切り状態
 			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
@@ -129,7 +128,6 @@ namespace ECS {
 				{
 					changeState(PlayerState::State::Right1);
 				}
-				return;
 			}
 
 			animCnt_.add();
@@ -140,7 +138,7 @@ namespace ECS {
 		{
 			state_->val = changeState;
 			animator_->setIsMinusAnim(false);
-			recData_->setAnimData((int)changeState);
+			recData_->setAnimData((int)changeState, true);
 			animCnt_.reset();
 		}
 	};

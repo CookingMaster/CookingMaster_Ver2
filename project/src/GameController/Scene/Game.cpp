@@ -36,7 +36,7 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 
 		Sound s(name_);
-		nc_.resetData(msl_.getBPM(), msl_.getOffsetTime());
+		nc_.resetData(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
 		ECS::ArcheType::CreateEntity("game_bg", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
@@ -47,6 +47,7 @@ namespace Scene
 			Vec2(500.f, 505.f),
 			Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f),
 			msl_.getBPM(),
+			msl_.getBeat(),
 			*entityManager_);
 		//スコアのバー
 		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(0.f, 0.f), *entityManager_);

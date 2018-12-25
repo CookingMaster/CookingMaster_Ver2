@@ -15,6 +15,7 @@ class NotesCreator
 #undef max
 private:
 	int bpm_ = 0;			//BPM
+	int beat_ = 0;			//拍子
 	int offsetTime_ = 0;	//オフセット時間
 	TCounter<int> cntTime_;	//時間計測
 	TCounter<int> cntBar_;	//小節の計測
@@ -25,9 +26,10 @@ public:
 	* @param bpm BPM
 	* @param offsetTime オフセット時間
 	*/
-	void resetData(int bpm, int offsetTime)
+	void resetData(int bpm, int beat, int offsetTime)
 	{
 		bpm_ = bpm;
+		beat_ = beat;
 		offsetTime_ = offsetTime;
 		cntTime_.reset();
 		cntBar_.reset();
@@ -36,13 +38,12 @@ public:
 	/**
 	* @brief 更新処理
 	* @param notesData 使用するノーツのデータ
-	* @param 
-	譜面データ
+	* @param 譜面データ
 	* @param entityManager エンティティマネージャ
 	*/
 	void run(const std::vector<NotesData>& notesData, const MusicData& scoreData, ECS::EntityManager& entityManager)
 	{
-		CalcurationBeat beat((float)bpm_);
+		CalcurationBeat beat(bpm_, beat_);
 
 		//一小節毎にノーツを生成する
 		if (cntTime_.getCurrentCount() % int(beat.calcOneBar_Frame()) == 0)
@@ -61,7 +62,7 @@ private:
 		int nextBar = cntBar_.getCurrentCount() + 1;
 		if ((unsigned int)nextBar >= scoreData.size()) return;
 		//その小節内で生成されるノーツ数から音の長さを計算
-		CalcurationBeat beat((float)bpm_);
+		CalcurationBeat beat(bpm_, beat_);
 		float noteFlame = beat.calcNote_Frame(float(scoreData[nextBar].size()));
 
 		for (unsigned int i = 0; i < scoreData[nextBar].size(); ++i)
@@ -81,7 +82,7 @@ private:
 				scoreData[nextBar][i].dir,
 				waitTime,
 				arrivalBeatTime,
-				Vec2(System::SCREEN_WIDIH, System::SCREEN_HEIGHT / 2.f),
+				Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f),
 				entityManager);
 		}
 

@@ -177,7 +177,8 @@ namespace ECS
 				asd_[animMode].xmin,
 				asd_[animMode].ymin,
 				asd_[animMode].xmax,
-				asd_[animMode].ymax);
+				asd_[animMode].ymax, 
+				true);
 			//animator_->changeFrame(10);
 			animator_->setIsEndStopAnim(isStopMove);
 			entity->stopComponent<Physics>();

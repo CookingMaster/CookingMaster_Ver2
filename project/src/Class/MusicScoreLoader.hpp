@@ -19,6 +19,7 @@ class MusicScoreLoader
 {
 private:
 	int bpm_;
+	int beat_;
 	int offsetTime_;
 	int noteNum_;	//休符以外のノーツの数
 	std::vector<NotesData> notesData_;
@@ -42,6 +43,9 @@ public:
 
 		//BPM読み込み
 		fin >> tmpstr >> bpm_;
+
+		//拍子読み込み
+		fin >> tmpstr >> beat_;
 
 		//OffsetTime読み込み
 		fin >> tmpstr >> offsetTime_;
@@ -94,6 +98,14 @@ public:
 	[[nodiscard]]int getBPM()
 	{
 		return bpm_;
+	}
+	/**
+	* @brief 拍子を取得する
+	* @return int 拍子
+	*/
+	[[nodiscard]]int getBeat()
+	{
+		return beat_;
 	}
 	/**
 	* @brief オフセットの値(フレーム)を取得する
