@@ -1,4 +1,6 @@
-#BPM 200
+#BPM 100
+
+#BEAT 3
 
 #OFFSET 0
 
@@ -7,7 +9,6 @@
 2 Resource/notesData/notesDataTest2.txt
 
 #START
-0 ,
 0 ,
 L1 L1 R1 ,
 L1 L1 R1 ,
