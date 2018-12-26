@@ -1,5 +1,7 @@
 #BPM 10
 
+#BEAT 4
+
 #OFFSET 0
 
 #NOTESDATA

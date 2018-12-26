@@ -64,14 +64,14 @@ namespace ECS {
 			{
 				//画像のX方向を次に進め、その値がXの最大値を超えていた場合Yを進める
 				bool isNextImg = false;
-				if (!isMinusAnim_)	{ ++indexX_; isNextImg = indexX_ >= animData_.maxXnum_; }
-				else				{ --indexX_; isNextImg = indexX_ <= animData_.minXnum_; }
+				if (!isMinusAnim_)	{ ++indexX_; isNextImg = (indexX_ >= animData_.maxXnum_); }
+				else				{ --indexX_; isNextImg = (indexX_ <= animData_.minXnum_); }
 
 				if (isNextImg)
 				{
 					//画像のY方向を次に進め、その値がYの最大値を超えていた場合最初に戻す(または停止する)
-					if (!isMinusAnim_)	{ ++indexY_; isNextImg = indexY_ >= animData_.maxYnum_; }
-					else				{ --indexY_; isNextImg = indexY_ <= animData_.minYnum_; }
+					if (!isMinusAnim_)	{ ++indexY_; isNextImg = (indexY_ >= animData_.maxYnum_); }
+					else				{ --indexY_; isNextImg = (indexY_ <= animData_.minYnum_); }
 
 					if (isNextImg)
 					{
@@ -118,10 +118,11 @@ namespace ECS {
 		* @param minY Yのインデックスの最小
 		* @param maxX Xのインデックスの最大
 		* @param maxY Yのインデックスの最大
+		* @param isTimeReset 時間をリセットするか否か
 		* @note 使用例：Yの0番目、Xの1~5番目でアニメーションする
 		* -
 		*/
-		void setSpriteNum(const int xmin, const int ymin, const int xmax, const int ymax)
+		void setSpriteNum(const int xmin, const int ymin, const int xmax, const int ymax, const bool isTimeReset)
 		{
 			if (!isMinusAnim_)
 			{
@@ -130,28 +131,28 @@ namespace ECS {
 			}
 			else
 			{
-				indexX_ = xmax;
-				indexY_ = ymax;
+				indexX_ = xmax - 1;
+				indexY_ = ymax - 1;
 			}
 			isAnimEnd_ = false;
-
 			animData_.minXnum_ = xmin;
 			animData_.minYnum_ = ymin;
 			animData_.maxXnum_ = xmax;
 			animData_.maxYnum_ = ymax;
-			counterReset();
+			if (isTimeReset) counterReset();
 		}
 
 		/**
 		* @brief 現在のインデックスを指定値に設定する
-		* @param indexX,indexY 設定するインデックス値
+		* @param indexX, indexY 設定するインデックス値
+		* @param isTimeReset 時間をリセットするか否か
 		*/
-		void setIndex(const int indexX, const int indexY)
+		void setIndex(const int indexX, const int indexY, const bool isTimeReset)
 		{
 			indexX_ = indexX;
 			indexY_ = indexY;
 			isAnimEnd_ = false;
-			counterReset();
+			if (isTimeReset) counterReset();
 		}
 
 		/**
@@ -245,16 +246,17 @@ namespace ECS {
 		/**
 		* @brief アニメーションを設定する
 		* @param setNum 登録番号
+		* @param isTimeReset 時間をリセットするか否か
 		*/
-		void setAnimData(const int setNum)
+		void setAnimData(const int setNum, const bool isTimeReset)
 		{
+			animator_->changeFrame(recordData_[setNum]->speed_);
 			animator_->setSpriteNum(
 				recordData_[setNum]->minXnum_,
 				recordData_[setNum]->minYnum_,
 				recordData_[setNum]->maxXnum_,
-				recordData_[setNum]->maxYnum_
-			);
-			animator_->changeFrame(recordData_[setNum]->speed_);
+				recordData_[setNum]->maxYnum_,
+				isTimeReset);
 		}
 	};
 }
