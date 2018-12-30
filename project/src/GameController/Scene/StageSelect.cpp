@@ -88,7 +88,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
-			cursorTargets.back()->addComponent<ECS::MusicName>(/*"Let'sCooking.wav"*/"Grass.wav");
+			cursorTargets.back()->addComponent<ECS::MusicName>("Cooking_antipasto.ogg");
 
 			//1 曲
 			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
@@ -98,7 +98,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
-			cursorTargets.back()->addComponent<ECS::MusicName>("test.mp3");
+			cursorTargets.back()->addComponent<ECS::MusicName>("Coock_galantine.wav");
 
 			//2 曲
 			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
