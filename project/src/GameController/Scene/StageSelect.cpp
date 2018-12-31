@@ -98,7 +98,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
-			cursorTargets.back()->addComponent<ECS::MusicName>("Coock_galantine.wav");
+			cursorTargets.back()->addComponent<ECS::MusicName>("Coocking_galantine.wav");
 
 			//2 曲
 			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
