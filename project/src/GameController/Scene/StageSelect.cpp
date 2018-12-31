@@ -84,7 +84,7 @@ namespace Scene
 			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
 			(
 				"menuname",
-				Vec2{ 370.f,310.f },
+				Vec2{ 330.f,310.f },
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
@@ -94,7 +94,7 @@ namespace Scene
 			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
 			(
 				"menuname",
-				Vec2{ 370.f,420.f },
+				Vec2{ 330.f,420.f },
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
@@ -104,7 +104,7 @@ namespace Scene
 			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
 			(
 				"menuname",
-				Vec2{ 370.f,530.f },
+				Vec2{ 330.f,530.f },
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
