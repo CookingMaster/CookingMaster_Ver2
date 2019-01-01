@@ -30,7 +30,12 @@ namespace ECS
 			HITTED,		//“–‚½‚Á‚½
 		} state;
 
-		NoteState(): state(State::NON){}
+		//Œü‚«
+		ECS::Direction::Dir dir;
+
+		NoteState():
+			state(State::NON),
+			dir(ECS::Direction::Dir::L){}
 	};
 
 	/**
@@ -133,6 +138,12 @@ namespace ECS
 		[[nodiscard]]NoteState::State getNoteState() const
 		{
 			return noteState_->state;
+		}
+
+		//ƒm[ƒc‚ª¶‰E‚Ç‚¿‚ç‚©‚ç—ˆ‚Ä‚¢‚é‚©‚ðŽæ“¾‚·‚é
+		[[nodiscard]]ECS::Direction::Dir getNoteDir() const
+		{
+			return noteState_->dir;
 		}
 
 	private:
