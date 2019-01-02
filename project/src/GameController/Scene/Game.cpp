@@ -138,16 +138,18 @@ namespace Scene
 		for (auto& it : note)
 		{
 			auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
-			auto nowstate = itnotestate.getNoteState();
 
-			if (itnotestate.ActionToChangeNoteState())
+			if (itnotestate.isActiveNote())
 			{
 				//入力方向とノーツの向きが一致していない場合は無効
 				if (itnotestate.getNoteDir() != dir)
 				{
 					break;
 				}
+				auto nowstate = itnotestate.getNoteState();
 
+				//ノーツの状態を遷移
+				itnotestate.ActionToChangeNoteState();
 				switch (nowstate)
 				{
 				case ECS::NoteState::State::BAD:

@@ -56,7 +56,7 @@ namespace ECS
 		Counter_f flameCounter_;
 
 		//こいつをtrueにするとオートモードになるぞ！
-		bool autoPerfectMode = IS_AUTO_PLAY;
+		bool autoPerfectMode = /*IS_AUTO_PLAY*/false;
 
 	public:
 		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
@@ -106,20 +106,11 @@ namespace ECS
 
 		/**
 		* @brief 入力を受けた後のノーツの状態遷移を行う
-		* @return bool 判定が有効だったか否か(有効だったらtrueが返る)
 		*/
-		bool ActionToChangeNoteState()
+		void ActionToChangeNoteState()
 		{
 			switch (noteState_->state)
 			{
-			case NoteState::State::NON:
-			case NoteState::State::MISSED:
-			case NoteState::State::GRAZED:
-				return false;
-
-			case NoteState::State::HITTED:
-				return false;
-
 			case NoteState::State::BAD:
 				noteState_->state = NoteState::State::GRAZED;
 				break;
@@ -131,7 +122,22 @@ namespace ECS
 				noteState_->state = NoteState::State::HITTED;
 				break;
 			}
-			return true;
+		}
+
+		/**
+		* @brief ノーツのヒット処理が有効か否かを取得する
+		* @return bool ヒット処理が有効か
+		*/
+		[[nodiscard]] bool isActiveNote() const
+		{
+			if (noteState_->state == NoteState::State::BAD		||
+				noteState_->state == NoteState::State::GOOD		||
+				noteState_->state == NoteState::State::GREAT	||
+				noteState_->state == NoteState::State::PARFECT)
+			{
+				return true;
+			}
+			return false;
 		}
 
 		//現在のノーツの状態を取得する
@@ -158,7 +164,8 @@ namespace ECS
 
 			switch (transCounter_.getCurrentCount())
 			{
-			case 0:	noteState_->state = NoteState::State::BAD;		break;
+			case 0:	noteState_->state = NoteState::State::BAD;		
+					break;
 			case 1:	noteState_->state = NoteState::State::GOOD;
 					break;
 			case 2:	noteState_->state = NoteState::State::GREAT;
