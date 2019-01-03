@@ -56,7 +56,7 @@ namespace ECS
 		Counter_f flameCounter_;
 
 		//こいつをtrueにするとオートモードになるぞ！
-		bool autoPerfectMode = /*IS_AUTO_PLAY*/false;
+		bool autoPerfectMode = IS_AUTO_PLAY;
 
 	public:
 		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :

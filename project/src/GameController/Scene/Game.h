@@ -18,11 +18,11 @@ namespace Scene
 	{
 	private:
 		ECS::EntityManager* entityManager_ = nullptr;
-		MusicScoreLoader msl_;
-		NotesCreator nc_;
 		int num_;
 		std::string name_;
 		std::unique_ptr<BossController> boss_;
+		MusicScoreLoader msl_;
+		NotesCreator nc_;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();

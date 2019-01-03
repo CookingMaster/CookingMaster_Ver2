@@ -12,10 +12,9 @@ namespace Scene
 	Game::Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
+		, name_(parame->get<std::string>("BGM_name"))
+		, nc_(name_)
 	{
-		if (parame != nullptr)
-			name_ = (parame->get<std::string>("BGM_name"));
-
 		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + name_ + "/" + name_ + ".txt");
 	}
 	void Game::initialize()
@@ -36,7 +35,7 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 
 		Sound s(name_);
-		nc_.resetData(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
+		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
 		ECS::ArcheType::CreateEntity("game_bg", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
