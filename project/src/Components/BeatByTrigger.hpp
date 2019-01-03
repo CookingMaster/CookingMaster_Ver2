@@ -24,7 +24,7 @@ namespace ECS {
 		int beat_ = 0;			//拍子
 		float rhythm_ = 0.f;	//リズムを取るタイミング
 		float goalTime_ = 0.f;	//次にtrueとなる時間
-		Sound sound;
+		Sound sound_;
 		bool trigger = false;
 
 	public:
@@ -32,7 +32,7 @@ namespace ECS {
 			bpm_(bpm),
 			beat_(beat),
 			rhythm_(rhythm),
-			sound(soundName) {}
+			sound_(soundName) {}
 
 		void initialize() override
 		{
@@ -43,7 +43,7 @@ namespace ECS {
 		void update() override
 		{
 			//指定拍毎にトリガーをtrueにする
-			if (sound.getCurrentTime() > goalTime_)
+			if (sound_.getCurrentTime() > goalTime_)
 			{
 				CalcurationBeat beat(bpm_, beat_);
 				goalTime_ += beat.calcNote_Millisecond(rhythm_);

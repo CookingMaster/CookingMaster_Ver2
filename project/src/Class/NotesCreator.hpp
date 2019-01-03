@@ -9,6 +9,7 @@
 #include "../Utility/Counter.hpp"
 #include "../Utility/CalcurationBeat.hpp"
 #include "../ArcheType/NotesArcheType.hpp"
+#include "../Class/Sound.hpp"
 
 class NotesCreator
 {
@@ -17,22 +18,24 @@ private:
 	int bpm_ = 0;			//BPM
 	int beat_ = 0;			//拍子
 	int offsetTime_ = 0;	//オフセット時間
-	TCounter<int> cntTime_;	//時間計測
-	TCounter<int> cntBar_;	//小節の計測
+	float goalTime_ = 0.f;	//次にtrueとなる時間
+	Sound sound_;			//音楽
+	Counter cntBar_;		//ノーツ数
 
 public:
+	NotesCreator(const std::string& soundName):
+		sound_(soundName) {}
+
 	/**
-	* @brief BPM, OffsetTimeを設定し、経過時間を0にする
-	* @param bpm BPM
-	* @param offsetTime オフセット時間
+	* @brief 各種データ設定
 	*/
-	void resetData(int bpm, int beat, int offsetTime)
+	void set(int bpm, int beat, int offsetTime)
 	{
 		bpm_ = bpm;
 		beat_ = beat;
 		offsetTime_ = offsetTime;
-		cntTime_.reset();
-		cntBar_.reset();
+		CalcurationBeat cbeat(bpm_, beat_);
+		goalTime_ = cbeat.calcNote_Millisecond(1.f);
 	}
 
 	/**
@@ -46,12 +49,13 @@ public:
 		CalcurationBeat beat(bpm_, beat_);
 
 		//一小節毎にノーツを生成する
-		if (cntTime_.getCurrentCount() % int(beat.calcOneBar_Frame()) == 0)
+		if (sound_.getCurrentTime() > goalTime_)
 		{
+			CalcurationBeat cbeat(bpm_, beat_);
+			goalTime_ += cbeat.calcNote_Millisecond(1.f);
 			//ノーツ生成
 			createNotes(notesData, scoreData, entityManager);
 		}
-		++cntTime_;
 	}
 
 private:
