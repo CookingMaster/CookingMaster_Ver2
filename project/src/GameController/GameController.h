@@ -14,7 +14,7 @@
 #include <stack>
 #define ENTITY_GROUP (ECS::Group)GameController::GameGroup
 #ifdef _DEBUG
-#define IS_AUTO_PLAY true
+#define IS_AUTO_PLAY false
 #else
 #define IS_AUTO_PLAY false
 #endif

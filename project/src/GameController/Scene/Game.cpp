@@ -142,6 +142,7 @@ namespace Scene
 
 			if (itnotestate.isActiveNote())
 			{
+				Sound se("onion");
 				//入力方向とノーツの向きが一致していない場合は無効
 				if (itnotestate.getNoteDir() != dir)
 				{
@@ -158,12 +159,15 @@ namespace Scene
 					return 0;
 				case ECS::NoteState::State::GOOD:
 					DOUT << "GOOD" << std::endl;
+					se.play(false, true);
 					return 5;
 				case ECS::NoteState::State::GREAT:
 					DOUT << "GREAT" << std::endl;
+					se.play(false, true);
 					return 8;
 				case ECS::NoteState::State::PARFECT:
 					DOUT << "PARFECT" << std::endl;
+					se.play(false, true);
 					return 10;
 				}
 				break;
