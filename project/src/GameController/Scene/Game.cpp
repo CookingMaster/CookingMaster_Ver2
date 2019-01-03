@@ -61,6 +61,8 @@ namespace Scene
 		ECS::UIArcheType::CreateNeedleUI("needle", Vec2(800.f, 100.f), *entityManager_, 1.f);
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_);
+		//曲の再生
+		s.play(false, false);
 	}
 
 	void Game::update()
