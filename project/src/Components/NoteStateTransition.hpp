@@ -12,7 +12,7 @@
 #include "../Utility/Counter.hpp"
 #include "BasicComponents.hpp"
 #include "../ECS/ECS.hpp"
-
+#include "../Class/Sound.hpp"
 namespace ECS
 {
 	struct NoteState : public ComponentData
@@ -157,6 +157,8 @@ namespace ECS
 				{
 					changeNoteAnim(1, false);
 					noteState_->state = NoteState::State::HITTED;
+					Sound se("onion");
+					se.play(false,true);
 				}
 					break;
 			case 4:	noteState_->state = NoteState::State::GREAT;	break;

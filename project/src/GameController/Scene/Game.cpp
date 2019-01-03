@@ -37,7 +37,7 @@ namespace Scene
 
 		Sound s(name_);
 		nc_.resetData(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
-		s.play(false,false);
+		
 		//背景
 		ECS::ArcheType::CreateEntity("game_bg", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
 		//プレイヤー
@@ -62,6 +62,8 @@ namespace Scene
 		ECS::UIArcheType::CreateNeedleUI("needle", Vec2(800.f, 100.f), *entityManager_, 1.f);
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_);
+		//曲の再生
+		s.play(false, false);
 	}
 
 	void Game::update()
@@ -121,7 +123,7 @@ namespace Scene
 	//ノーツ判定処理
 	[[nodiscard]]int Game::getNoteScore()
 	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
+		if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 		{
 			auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
 			for (auto& it : note)
@@ -131,6 +133,7 @@ namespace Scene
 
 				if (itnotestate.ActionToChangeNoteState())
 				{
+					Sound se("onion");
 					switch (nowstate)
 					{
 					case ECS::NoteState::State::BAD:
@@ -138,12 +141,15 @@ namespace Scene
 						return 0;
 					case ECS::NoteState::State::GOOD:
 						DOUT << "GOOD" << std::endl;
+						se.play(false,true);
 						return 5;
 					case ECS::NoteState::State::GREAT:
 						DOUT << "GREAT" << std::endl;
+						se.play(false, true);
 						return 8;
 					case ECS::NoteState::State::PARFECT:
 						DOUT << "PARFECT" << std::endl;
+						se.play(false, true);
 						return 10;
 					}
 					break;
