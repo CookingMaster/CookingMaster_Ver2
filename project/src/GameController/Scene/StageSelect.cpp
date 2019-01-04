@@ -429,7 +429,7 @@ namespace Scene
 				SoundType::BGM);
 			parameter->add<std::string>("BGM_name", STAGE_STR + std::to_string(stage_num));
 			std::ofstream ofs("Resource/system/gain.bin");
-			ofs << bgmVal_ << seVal_;
+			ofs << bgmVal_ << "\n" << seVal_;
 			ON_SCENE_CHANGE(SceneName::GAME, parameter.get(), StackPopFlag::POP, true);
 		}
 		

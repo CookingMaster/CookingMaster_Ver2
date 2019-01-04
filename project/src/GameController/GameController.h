@@ -14,9 +14,9 @@
 #include <stack>
 #define ENTITY_GROUP (ECS::Group)GameController::GameGroup
 #ifdef _DEBUG
-#define IS_AUTO_PLAY true
-#else
 #define IS_AUTO_PLAY false
+#else
+#define IS_AUTO_PLAY true
 #endif
 
 class GameController final : public Scene::IOnSceneChangeCallback

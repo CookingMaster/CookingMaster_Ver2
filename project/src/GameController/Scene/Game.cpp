@@ -12,10 +12,9 @@ namespace Scene
 	Game::Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
+		, name_(parame->get<std::string>("BGM_name"))
+		, nc_(name_)
 	{
-		if (parame != nullptr)
-			name_ = (parame->get<std::string>("BGM_name"));
-
 		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + name_ + "/" + name_ + ".txt");
 	}
 	void Game::initialize()
@@ -36,7 +35,7 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 
 		Sound s(name_);
-		nc_.resetData(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
+		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
 		ECS::ArcheType::CreateEntity("game_bg", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
@@ -62,6 +61,8 @@ namespace Scene
 		ECS::UIArcheType::CreateNeedleUI("needle", Vec2(800.f, 100.f), *entityManager_, 1.f);
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_);
+		//曲の再生
+		s.play(false, false);
 	}
 
 	void Game::update()
@@ -118,36 +119,58 @@ namespace Scene
 		entityManager_->allDestory();
 	}
 	
-	//ノーツ判定処理
+	//ノーツ判定処理とスコアの取得
 	[[nodiscard]]int Game::getNoteScore()
 	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_SPACE) == 1)
+		auto& input = Input::Get();
+		//入力無し、同時押しは無視
+		if ((input.getKeyFrame(KEY_INPUT_LEFT) == 1 && input.getKeyFrame(KEY_INPUT_RIGHT) == 1) ||
+			(input.getKeyFrame(KEY_INPUT_LEFT) == 0 && input.getKeyFrame(KEY_INPUT_RIGHT) == 0))
 		{
-			auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
-			for (auto& it : note)
-			{
-				auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
-				auto nowstate = itnotestate.getNoteState();
+			return 0;
+		}
 
-				if (itnotestate.ActionToChangeNoteState())
+		//入力方向を取得
+		ECS::Direction::Dir dir = ECS::Direction::Dir::U;
+		if (input.getKeyFrame(KEY_INPUT_LEFT) == 1)	 { dir = ECS::Direction::Dir::L; }
+		if (input.getKeyFrame(KEY_INPUT_RIGHT) == 1) { dir = ECS::Direction::Dir::R; }
+
+		auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
+		for (auto& it : note)
+		{
+			auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
+
+			if (itnotestate.isActiveNote())
+			{
+				Sound se("onion");
+				//入力方向とノーツの向きが一致していない場合は無効
+				if (itnotestate.getNoteDir() != dir)
 				{
-					switch (nowstate)
-					{
-					case ECS::NoteState::State::BAD:
-						DOUT << "BAD" << std::endl;
-						return 0;
-					case ECS::NoteState::State::GOOD:
-						DOUT << "GOOD" << std::endl;
-						return 5;
-					case ECS::NoteState::State::GREAT:
-						DOUT << "GREAT" << std::endl;
-						return 8;
-					case ECS::NoteState::State::PARFECT:
-						DOUT << "PARFECT" << std::endl;
-						return 10;
-					}
 					break;
 				}
+				auto nowstate = itnotestate.getNoteState();
+
+				//ノーツの状態を遷移
+				itnotestate.ActionToChangeNoteState();
+				switch (nowstate)
+				{
+				case ECS::NoteState::State::BAD:
+					DOUT << "BAD" << std::endl;
+					return 0;
+				case ECS::NoteState::State::GOOD:
+					DOUT << "GOOD" << std::endl;
+					se.play(false, true);
+					return 5;
+				case ECS::NoteState::State::GREAT:
+					DOUT << "GREAT" << std::endl;
+					se.play(false, true);
+					return 8;
+				case ECS::NoteState::State::PARFECT:
+					DOUT << "PARFECT" << std::endl;
+					se.play(false, true);
+					return 10;
+				}
+				break;
 			}
 		}
 		return 0;

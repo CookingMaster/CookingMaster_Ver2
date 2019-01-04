@@ -48,7 +48,7 @@ namespace ECS
 				notesData.animSData[0].ymax,
 				true);
 
-			entity->addComponent<NoteState>();
+			entity->addComponent<NoteState>().dir = dir;
 			entity->addComponent<NoteStateTransition>(notesData, arrivalBeatTime);
 
 			entity->addComponent<ReplayNotesComponents>(int(wait));
