@@ -9,7 +9,6 @@
 2 Resource/notesData/notesDataTest2.txt
 
 #START
-0 L1 R1 ,		  //2¬ß
 0 L1 R1 ,		  //3¬ß
 R1 0 R1 L1 R1 0 , //4¬ß(Šî–{8•ª‚İ‚Å‘‚¢‚½‚Ù‚¤‚ª‚í‚©‚è‚â‚·‚¢)
 0 R1 L1 ,	//5
