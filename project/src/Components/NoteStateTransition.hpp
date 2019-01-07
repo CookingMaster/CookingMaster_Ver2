@@ -56,7 +56,7 @@ namespace ECS
 		Counter_f flameCounter_;
 
 		//こいつをtrueにするとオートモードになるぞ！
-		bool autoPerfectMode = IS_AUTO_PLAY;
+		bool autoPerfectMode = /*IS_AUTO_PLAY*/false;
 
 	public:
 		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
@@ -111,14 +111,14 @@ namespace ECS
 		{
 			switch (noteState_->state)
 			{
-			case NoteState::State::BAD:
+			case NoteState::State::BAD:	//かすって飛んでいく
 				noteState_->state = NoteState::State::GRAZED;
 				break;
 
-			case NoteState::State::GOOD:
+			case NoteState::State::GOOD:	//ちゃんと切れる
 			case NoteState::State::GREAT:
 			case NoteState::State::PARFECT:
-				changeNoteAnim(1, false);
+				changeNoteAnim(1, true, 5);
 				noteState_->state = NoteState::State::HITTED;
 				break;
 			}
@@ -173,7 +173,7 @@ namespace ECS
 			case 3:	noteState_->state = NoteState::State::PARFECT;
 				if (autoPerfectMode)
 				{
-					changeNoteAnim(1, false);
+					changeNoteAnim(1, true, 5);
 					noteState_->state = NoteState::State::HITTED;
 					Sound se("onion");
 					se.play(false,true);
@@ -183,7 +183,7 @@ namespace ECS
 			case 5:	noteState_->state = NoteState::State::GOOD;		break;
 			case 6:	noteState_->state = NoteState::State::BAD;		break;
 			case 7:	noteState_->state = NoteState::State::MISSED;
-					changeNoteAnim(2, true);
+					changeNoteAnim(2, true, 5);
 					break;
 			default: return;
 			}
@@ -191,7 +191,7 @@ namespace ECS
 		}
 
 		//ノーツのアニメーションを変更し、一定フレーム後に消えるように設定する
-		void changeNoteAnim(int animMode, bool isStopMove)
+		void changeNoteAnim(int animMode, bool isStopMove, int animspd)
 		{
 			animator_->setSpriteNum(
 				asd_[animMode].xmin,
@@ -199,7 +199,7 @@ namespace ECS
 				asd_[animMode].xmax,
 				asd_[animMode].ymax, 
 				true);
-			//animator_->changeFrame(10);
+			animator_->changeFrame(animspd);
 			animator_->setIsEndStopAnim(isStopMove);
 			entity->stopComponent<Physics>();
 			entity->updateComponent<KillEntity>();

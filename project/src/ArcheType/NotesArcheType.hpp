@@ -20,16 +20,18 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 
-			float posX;
-			if (dir == ECS::Direction::Dir::L)
+			float posX = 0.f;
+			switch (dir)
 			{
-				posX = -(notesData.xsize / 2.f);
+			case ECS::Direction::Dir::L:
+				posX = -(notesData.xsize / 2.f);	//出現するX座標
 				entity->addComponent<Transform>().setPosition(posX, targetPos.y);
-			}
-			else
-			{
-				posX = System::SCREEN_WIDIH + (notesData.xsize / 2.f);
+				break;
+
+			case ECS::Direction::Dir::R:
+				posX = System::SCREEN_WIDIH + (notesData.xsize / 2.f);	//出現するX座標
 				entity->addComponent<Transform>().setPosition(posX, targetPos.y);
+				break;
 			}
 
 			float gravity = 0.5f;
