@@ -1,0 +1,45 @@
+#BPM 145
+
+#BEAT 4
+
+#OFFSET 0
+
+#NOTESDATA
+1 Resource/notesData/notesDataTest.txt
+2 Resource/notesData/notesDataTest2.txt
+
+#START
+R1 L1 R1 L1 ,
+R1 0 L1 0 R1 0 L1 R1 ,
+R1 L1 R1 L1 ,
+R1 0 L1 0 R1 0 L1 R1 ,
+R1 L1 R1 L1 ,
+R1 0 L1 0 R1 0 L1 R1 ,
+R1 L1 R1 L1 ,
+R1 0 L1 0 R1 0 L1 R1 ,
+R1 L1 R1 L1 ,
+R1 0 L1 0 R1 0 L1 R1 ,
+R1 L1 R1 L1 ,
+R1 0 L1 0 R1 0 L1 0 R1 0 R1 0 R1 0 R1 0 ,
+R1 L1 0 L1 ,
+R1 L1 0 L1 ,
+R1 L1 0 L1 ,
+R1 L1 0 L1 ,
+R1 L1 0 L1 ,
+R1 L1 0 L1 ,
+R1 L1 R1 L1 ,
+R1 0 L1 0 R1 R1 L1 L1 ,
+R1 R1 0 0 R1 0 0 0 L1 0 0 0 R1 0 L1 0 ,
+R1 R1 0 0 R1 0 0 0 L1 0 0 0 R1 0 L1 0 ,
+R1 R1 0 0 R1 0 0 0 L1 0 0 0 R1 0 L1 0 ,
+R1 R1 0 0 R1 0 0 0 L1 0 0 0 R1 0 L1 0 ,
+0 L1 0 R1 0 L1 0 R1 ,
+0 L1 0 R1 0 L1 0 R1 ,
+0 L1 0 R1 0 L1 0 R1 ,
+0 L1 0 R1 0 L1 0 R1 ,
+0 L1 0 R1 0 L1 0 R1 ,
+0 L1 0 R1 0 L1 0 R1 ,
+0 L1 0 R1 0 L1 0 R1 ,
+0 L1 0 R1 0 L1 0 R1 ,
+0 ,
+#END

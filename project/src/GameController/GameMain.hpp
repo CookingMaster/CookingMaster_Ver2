@@ -34,6 +34,7 @@ public:
 	//!アプリケーションの更新を行います
 	void run()
 	{
+
 		while (system->isOk())
 		{
 			Fps::Get().update();

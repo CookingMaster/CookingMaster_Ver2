@@ -25,13 +25,13 @@ namespace Scene
 	class Result : public AbstractScene
 	{
 	private:
-		ECS::EntityManager* entityManager_;
+		ECS::EntityManager* entityManager_ = nullptr;
 		//! 背景
-		ECS::Entity* back_;
+		ECS::Entity* back_ = nullptr;
 		//! クロッシュ
-		ECS::Entity* cloche_;
+		ECS::Entity* cloche_ = nullptr;
 		//! 料理
-		ECS::Entity* dish_;
+		ECS::Entity* dish_ = nullptr;
 		//! 紙吹雪
 		std::vector<ECS::Entity*> confetties_;
 		//! スコア

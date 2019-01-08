@@ -29,12 +29,16 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ArcheType\GameEffectsArcheType.hpp" />
     <ClInclude Include="src\ArcheType\NotesArcheType.hpp" />
+    <ClInclude Include="src\ArcheType\PlayerArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ResultArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ScoreArcheType.hpp" />
-    <ClInclude Include="src\ArcheType\TestArcheType.hpp" />
+    <ClInclude Include="src\ArcheType\SelectArchetype.hpp" />
+    <ClInclude Include="src\ArcheType\ArcheType.hpp" />
     <ClInclude Include="src\ArcheType\TitleUIArcheType.hpp" />
     <ClInclude Include="src\ArcheType\UIArcheType.hpp" />
+    <ClInclude Include="src\Class\BossController.hpp" />
     <ClInclude Include="src\Class\MusicScoreLoader.hpp" />
     <ClInclude Include="src\Class\NotesAndScoreData.hpp" />
     <ClInclude Include="src\Class\NotesCreator.hpp" />
@@ -43,7 +47,10 @@
     <ClInclude Include="src\Collision\Collision.hpp" />
     <ClInclude Include="src\Components\Animator.hpp" />
     <ClInclude Include="src\Components\BasicComponents.hpp" />
+    <ClInclude Include="src\Components\BeatByTrigger.hpp" />
     <ClInclude Include="src\Components\Collider.hpp" />
+    <ClInclude Include="src\Components\CursorMove.hpp" />
+    <ClInclude Include="src\Components\musicName.hpp" />
     <ClInclude Include="src\Components\NoteStateTransition.hpp" />
     <ClInclude Include="src\Components\PlayerController.hpp" />
     <ClInclude Include="src\Components\ResultComponent.hpp" />
@@ -76,7 +83,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{3FD7EF5E-4359-47D9-9E85-A69DF9FDA696}</ProjectGuid>
     <RootNamespace>DXlibGame</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

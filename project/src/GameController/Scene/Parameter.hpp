@@ -11,6 +11,8 @@
 //!パラメータを自由に扱えるクラスです
 class Parameter final
 {
+private:
+	std::unordered_map<std::string, std::any> map;
 public:
 	Parameter() = default;
 	/*!
@@ -43,7 +45,5 @@ public:
 	 {
 		 return  map.count(key);
 	 }
-private:
-	std::unordered_map<std::string, std::any> map;
 };
 

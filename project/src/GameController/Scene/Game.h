@@ -11,16 +11,18 @@
 #include "../../Class/MusicScoreLoader.hpp"
 #include "../../Class/NotesCreator.hpp"
 #include "../src/ArcheType/UIArcheType.hpp"
+#include "../src/Class/BossController.hpp"
 namespace Scene
 {
 	class Game : public AbstractScene
 	{
 	private:
-		ECS::EntityManager* entityManager_;
-		MusicScoreLoader msl;
-		NotesCreator nc;
+		ECS::EntityManager* entityManager_ = nullptr;
 		int num_;
-		std::string name;
+		std::string name_;
+		std::unique_ptr<BossController> boss_;
+		MusicScoreLoader msl_;
+		NotesCreator nc_;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();
@@ -28,5 +30,9 @@ namespace Scene
 		void update() override;
 		void draw() override;
 	
+	private:
+		int getNoteScore();
+		void changePauseScene();
+		void cangeResultScene();
 	};
 }

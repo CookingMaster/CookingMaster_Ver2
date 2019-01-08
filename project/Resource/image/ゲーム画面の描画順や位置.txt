@@ -1,0 +1,37 @@
+bg_table
+0, 352
+
+nabe1
+431,178
+
+nabe2
+995,218
+
+nabe3
+1147,246
+
+chef_happy
+chef0,0‚©‚ç
+33,99
+
+chef_angry
+chef0,0‚©‚ç
+33,99
+
+water
+262,264
+
+
+
+ƒQ[ƒ€‰æ–Ê‚Ì•`‰æ‡‚Í
+bg_back.png
+«
+bg_nabe1,2,3 & bg_water & chef 
+«
+bg_table
+«
+player
+
+
+¡‚Ì‚Æ‚±‚ë
+bg_closet, bg_dish, bg_kabe‚Íg‚í‚È‚¢

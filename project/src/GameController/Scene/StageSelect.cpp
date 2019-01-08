@@ -2,273 +2,448 @@
 #include "../src/Input/Input.hpp"
 #include "../src/Components/ScoreSystem.hpp"
 #include "../src/ArcheType/ScoreArcheType.hpp"
+#include "../src/Components/CursorMove.hpp"
 #include "../src/Class/Sound.hpp"
-#include "../src/ArcheType/TestArcheType.hpp"
+#include "../src/ArcheType/ArcheType.hpp"
+#include "../src/Components/musicName.hpp"
 
 namespace Scene
 {
-	void StageSelect::selectStageMove()
+	
+	StageSelect::StageSelect(IOnSceneChangeCallback* sceneChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
+		: AbstractScene(sceneChange)
+		, entityManager_(entityManager)
+		, cnt_(0,1,0,10)
 	{
-		pointEntityMove.pos = &point_->getComponent<ECS::Position>();
-		//ステージ選択時の挙動
-		if (!pointEntityMove.isOptionSelected)
+		//セレクト曲
+		ResourceManager::GetSound().load("Resource/sound/BGM/Welcome.ogg", "selectBGM",SoundType::BGM);
+		//背景
+		ResourceManager::GetGraph().load("Resource/image/menuback.png", "back"); 
+		//本
+		ResourceManager::GetGraph().load("Resource/image/menu2.png", "menu");
+		//文字
+		ResourceManager::GetGraph().loadDiv("Resource/image/menuname.png", "menuname",3,1,3,240,80);
+		//オプション
+		ResourceManager::GetGraph().load("Resource/image/option2.png", "option");
+		//カーソル
+		ResourceManager::GetGraph().load("Resource/image/menu_cursor.png", "cursor");
+		//スライダー
+		ResourceManager::GetGraph().load("Resource/image/sliderempty.png", "slider");
+		ResourceManager::GetGraph().load("Resource/image/sliderfull.png", "slider_full");
+		ResourceManager::GetGraph().load("Resource/image/sliderbutton.png", "bar");
+		//難易度の星
+		ResourceManager::GetGraph().loadDiv("Resource/image/star.png", "star", 2,2,1,55,53);
+		//フォント
+		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
+		//料理
+		ResourceManager::GetGraph().load("Resource/image/antipasto_great.png", "antipasto");
+		ResourceManager::GetGraph().load("Resource/image/galantine_great.png", "galantine");
+		ResourceManager::GetGraph().load("Resource/image/entremets_great.png", "entremets");
+		//サウンド情報の読み込み
+		std::ifstream ifs("Resource/system/gain.bin");
+		ifs >> bgmVal_ >> seVal_;
+	}
+
+	void StageSelect::entitySetUp()
+	{
+		const Vec2 OPTION_POSITION{ 400.f,55.f };
+		const Vec2 BGM_FONT_POSITION{ 110.f, 150.f };
+		const Vec2 SE_FONT_POSITION{ 110.f, 330.f };
+		const Vec2 BGM_SLIDER_POSITION{ 50.f, 195.f };
+		const Vec2 SE_SLIDER_POSITION{ 50.f, 375.f };
+		const Vec2 BACK_POSITION{ 115.f, 522.f };
+		const Vec2 DISH_POSITION{ 680.f, 140.f };
+		ECS::ArcheType::CreateEntity
+		(
+			"back",
+			Vec2{ 0.f,0.f },
+			*entityManager_,
+			ENTITY_GROUP::BACK
+		);
+
+		option_ = ECS::ArcheType::CreateEntity
+		(
+			"option",
+			Vec2{ 670.f,50.f },
+			*entityManager_,
+			ENTITY_GROUP::BACK
+		);
+		option_->addComponent<ECS::Canvas>();
+
+		ECS::ArcheType::CreateEntity
+		(
+			"menu",
+			Vec2{ 245.f,55.f },
+			*entityManager_,
+			ENTITY_GROUP::BACK_OBJECT
+		);
+
+		//ターゲット(アイコンが指すエンティティ)
 		{
-			//下方向
-			if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
+			//0 曲
+			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
+			(
+				"menuname",
+				Vec2{ 330.f,310.f },
+				*entityManager_,
+				ENTITY_GROUP::UI
+			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			cursorTargets.back()->addComponent<ECS::MusicName>("Cooking_antipasto.ogg");
+
+			//1 曲
+			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
+			(
+				"menuname",
+				Vec2{ 330.f,420.f },
+				*entityManager_,
+				ENTITY_GROUP::UI
+			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+			cursorTargets.back()->addComponent<ECS::MusicName>("Coocking_galantine.wav");
+
+			//2 曲
+			cursorTargets.emplace_back(ECS::ArcheType::CreateAnimationEntity
+			(
+				"menuname",
+				Vec2{ 330.f,530.f },
+				*entityManager_,
+				ENTITY_GROUP::UI
+			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
+			cursorTargets.back()->addComponent<ECS::MusicName>("act_bgm.wav");
+
+			//3 オプションの文字の位置
+			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
+			(
+				Vec2{ OPTION_POSITION },
+				*entityManager_
+			));
+
+			//4 BGM
+			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
+			(
+				Vec2{ BGM_FONT_POSITION },
+				*entityManager_
+			));
+			//5 SE
+			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
+			(
+				Vec2{ SE_FONT_POSITION },
+				*entityManager_
+			));
+			//6 戻るボタンの位置
+			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
+			(
+				Vec2{ BACK_POSITION },
+				*entityManager_
+			));
+		}
+
+		//スライダー生成
+		{
+			bgmSlider_ = ECS::ArcheType::CreateEntity
+			(
+				"slider",
+				Vec2{ BGM_SLIDER_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK
+			);
+			seSlider_ = ECS::ArcheType::CreateEntity
+			(
+				"slider",
+				Vec2{ SE_SLIDER_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK
+			);
+			bgmFullSlider_ = ECS::ArcheType::CreateRectEntity
+			(
+				"slider_full",
+				Vec2{ BGM_SLIDER_POSITION },
+				ECS::Rectangle(0,0,0,80),
+				*entityManager_,
+				ENTITY_GROUP::BACK
+			);
+			seFullSlider_ = ECS::ArcheType::CreateRectEntity
+			(
+				"slider_full",
+				Vec2{ SE_SLIDER_POSITION },
+				ECS::Rectangle(0, 0, 0, 80),
+				*entityManager_,
+				ENTITY_GROUP::BACK
+			);
+			bgmBar_ = ECS::ArcheType::CreateEntity
+			(
+				"bar",
+				Vec2{ 0.f,0.f },
+				*entityManager_,
+				ENTITY_GROUP::LAYER1
+			);
+			seBar_ = ECS::ArcheType::CreateEntity
+			(
+				"bar",
+				Vec2{ 0.f,0.f },
+				*entityManager_,
+				ENTITY_GROUP::LAYER1
+			);
+		}
+		//カーソル生成
+		{
+			cursor_ = ECS::ArcheType::CreateEntity
+			(
+				"cursor",
+				Vec2{ -100.f, -100.f },
+				*entityManager_,
+				ENTITY_GROUP::UI
+			);
+			cursor_->addComponent<ECS::CursorMove>(cursorTargets);
+		}
+
+		//星生成
+		{
+			float i = 0;
+			for (auto& it : star_)
 			{
-				if (pointEntityMove.selectNum < UIMap_.size() - 1)
-				{
-					++pointEntityMove.selectNum;
-					pointEntityMove.pos->val.y = UIMap_[pointEntityMove.selectNum]->getComponent<ECS::Position>().val.y;
-				}
-				else
-				{
-					pointEntityMove.pos->val.y = UIMap_.front()->getComponent<ECS::Position>().val.y;
-					pointEntityMove.selectNum = 0;
-				}
-			}
-			//上方向
-			if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
+				it = ECS::ArcheType::CreateAnimationEntity
+				(
+					"star",
+					Vec2{ 740.f + 55.f * i, 420.f },
+					*entityManager_,
+					ENTITY_GROUP::BACK_OBJECT
+				);
+				it->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+				++i;
+			}	
+		}
+		//料理
+		{
+			dish_[0] = ECS::ArcheType::CreateEntity
+			(
+				"antipasto",
+				Vec2{ DISH_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK_OBJECT
+			);
+			dish_[0]->getComponent<ECS::Scale>().val /= 2;
+			dish_[1] = ECS::ArcheType::CreateEntity
+			(
+				"galantine",
+				Vec2{ DISH_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK_OBJECT
+			);
+			dish_[1]->getComponent<ECS::Scale>().val /= 2;
+			dish_[2] = ECS::ArcheType::CreateEntity
+			(
+				"entremets",
+				Vec2{ DISH_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::BACK_OBJECT
+			);
+			dish_[2]->getComponent<ECS::Scale>().val /= 2;
+		}
+		//数字
+		{
+			score_ = ECS::ScoreArcheType::CreateSelectScoreEntity
+			(
+				"number",
+				Vec2{ 740.f, 620.f },
+				ECS::StageHighScore::STAGE1,
+				*entityManager_
+			);
+				
+		}
+
+		//オプションに乗ってるやつをオプションエンティの相対座標に設定する
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[3]);
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[4]);
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[5]);
+		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[6]);
+		option_->getComponent<ECS::Canvas>().addChild(bgmSlider_);
+		option_->getComponent<ECS::Canvas>().addChild(bgmFullSlider_);
+		option_->getComponent<ECS::Canvas>().addChild(seSlider_);
+		option_->getComponent<ECS::Canvas>().addChild(seFullSlider_);
+
+	}
+
+	void StageSelect::optionSheetMove()
+	{
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3)
+		{
+			cnt_.add();
+			if (!cnt_.isMax())
 			{
-				if (pointEntityMove.selectNum > 0)
-				{
-					--pointEntityMove.selectNum;
-					pointEntityMove.pos->val.y = UIMap_[pointEntityMove.selectNum]->getComponent<ECS::Position>().val.y;
-				}
-				else
-				{
-					pointEntityMove.pos->val.y = UIMap_.back()->getComponent<ECS::Position>().val.y;
-					pointEntityMove.selectNum = UIMap_.size() - 1;
-				}
+				constexpr int ADD_SPEED = 4;
+				backVal_ += ADD_SPEED;
+				option_->getComponent<ECS::Position>().val.x += ADD_SPEED;
 			}
 		}
-		//オプション時の操作
 		else
 		{
-			auto& bgmBarPos = bgmSlider_.barEntity->getComponent<ECS::Position>();
-			auto& seBarPos = seSlider_.barEntity->getComponent<ECS::Position>();
-			
-			if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1)
-			{
-				pointEntityMove.isOptionSelected = false;
-				bgmSlider_.isSelect = false;
-				seSlider_.isSelect = false;
-				std::ofstream ofs("Resource/system/gain.bin");
-				ofs << bgmSlider_.volume <<  seSlider_.volume;
-			}
-
-			if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
-			{
-				bgmSlider_.isSelect = !bgmSlider_.isSelect;
-				seSlider_.isSelect = !seSlider_.isSelect;
-			}
-
-			//BGMスライダー
-			if (bgmSlider_.isSelect)
-			{
-				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 
-					&& !(bgmSlider_.volume >= MasterSound::MAX_GAIN))
-				{
-					bgmBarPos.val.x++;
-					bgmSlider_.volume += 0.005f;
-				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 
-					&& !(bgmSlider_.volume <= MasterSound::MIN_GAIN))
-				{
-					bgmBarPos.val.x--;
-					bgmSlider_.volume -= 0.005f;
-				}
-			}
-			//SEスライダー
-			if (seSlider_.isSelect)
-			{
-				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 
-					&& !(seSlider_.volume >= MasterSound::MAX_GAIN))
-				{
-					seBarPos.val.x++;
-					seSlider_.volume += 0.005f;
-				}
-				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1
-					&& !(seSlider_.volume <= MasterSound::MIN_GAIN))
-				{
-					seBarPos.val.x--;
-					seSlider_.volume -= 0.005f;
-				}
-			}
-		}
-		//バーの位置をセットMasterSound::MIN_GAIN
-		constexpr float MAX_GAUGE_SIZE = 270;
-		bgmSlider_.barEntity->getComponent<ECS::Position>().val.x = 
-			bgmSlider_.volume * MAX_GAUGE_SIZE + (bgmSlider_.gaugeEntity->getComponent<ECS::Position>().val.x) -MAX_GAUGE_SIZE / 2;
-		seSlider_.barEntity->getComponent<ECS::Position>().val.x =
-			seSlider_.volume * MAX_GAUGE_SIZE + (seSlider_.gaugeEntity->getComponent<ECS::Position>().val.x) - MAX_GAUGE_SIZE / 2;
-	}
-
-	void StageSelect::selectStage()
-	{
-		UIReset();
-		switch (pointEntityMove.selectNum)
-		{
-		case 0:
-		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
-			{
-				auto stage_name = std::make_unique<Parameter>();
-				stage_name->add<std::string>("BGM_name", "Stage1");
-				ResourceManager::GetSound().load("Resource/sound/Let'sCooking.wav", "Stage1", SoundType::BGM);
-				ON_SCENE_CHANGE(SceneName::GAME, stage_name.get(), StackPopFlag::POP, true);
-			}
-			cookMap_[pointEntityMove.selectNum]->getComponent<ECS::SpriteDraw>().drawEnable();
-			break;
-		}
-		case 1:
-		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
-			{
-				auto stage_name = std::make_unique<Parameter>();
-				stage_name->add<std::string>("BGM_name", "Stage2");
-				ResourceManager::GetSound().load("Resource/sound/act_bgm.wav", "Stage2", SoundType::BGM);
-				ON_SCENE_CHANGE(SceneName::GAME, stage_name.get(), StackPopFlag::POP, true);
-			}
-			cookMap_[pointEntityMove.selectNum]->getComponent<ECS::SpriteDraw>().drawEnable();
-			break;
-		}
-
-		case 2:
-		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
-			{
-				auto stage_name = std::make_unique<Parameter>();
-				stage_name->add<std::string>("BGM_name", "Stage3");
-				ResourceManager::GetSound().load("Resource/sound/Grass.wav", "Stage3", SoundType::BGM);
-				ON_SCENE_CHANGE(SceneName::GAME, stage_name.get(), StackPopFlag::POP, true);
-			}
-			cookMap_[pointEntityMove.selectNum]->getComponent<ECS::SpriteDraw>().drawEnable();
-			break;
-		}
-		case 3:
-		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1
-				&& !pointEntityMove.isOptionSelected)
-			{
-				Sound se("onion");
-				se.play(false, true);
-				pointEntityMove.isOptionSelected = true;
-				bgmSlider_.isSelect = true;
-				seSlider_.isSelect = false;
-			}
-			bgmSlider_.gaugeEntity->getComponent<ECS::SpriteDraw>().drawEnable();
-			seSlider_.gaugeEntity->getComponent<ECS::SpriteDraw>().drawEnable();
-			bgmSlider_.barEntity->getComponent<ECS::SpriteDraw>().drawEnable();
-			seSlider_.barEntity->getComponent<ECS::SpriteDraw>().drawEnable();
-			break;
-		}
+			//進めた分を戻す
+			option_->getComponent<ECS::Position>().val.x -= backVal_;
+			backVal_ = 0;
+			cnt_.reset();
 		}
 	}
-	void StageSelect::UIReset()
+
+	void StageSelect::setSoundVolume()
 	{
-		for (auto& it : cookMap_)
+		auto& cursorMov = cursor_->getComponent<ECS::CursorMove>();
+		if (cursorMov.isSiliderSelect())
 		{
-			it->getComponent<ECS::SpriteDraw>().drawDisable();
+			//BGM
+			if (cursorMov.getIndex() == 4u)
+			{
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && bgmVal_ <= MasterSound::MAX_GAIN)
+				{
+					bgmVal_ += 0.01f;
+				}
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && bgmVal_ >= MasterSound::MIN_GAIN)
+				{
+					bgmVal_ -= 0.01f;
+				}
+			}
+			//SE
+			if (cursorMov.getIndex() == 5u)
+			{
+				if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) >= 1 && seVal_ <= MasterSound::MAX_GAIN)
+				{
+					seVal_ += 0.01f;
+				}
+				if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) >= 1 && seVal_ >= MasterSound::MIN_GAIN)
+				{
+					seVal_ -= 0.01f;
+				}
+			}
 		}
-		bgmSlider_.gaugeEntity->getComponent<ECS::SpriteDraw>().drawDisable();
-		seSlider_.gaugeEntity->getComponent<ECS::SpriteDraw>().drawDisable();
-		bgmSlider_.barEntity->getComponent<ECS::SpriteDraw>().drawDisable();
-		seSlider_.barEntity->getComponent<ECS::SpriteDraw>().drawDisable();
+		
+		//バーの位置をセット
+		constexpr float MAX_GAUGE_SIZE = 250;
+		bgmBar_->getComponent<ECS::Position>().val.x = bgmSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * bgmVal_);
+		seBar_->getComponent<ECS::Position>().val.x = seSlider_->getComponent<ECS::Position>().val.x + (MAX_GAUGE_SIZE * seVal_);
+		bgmBar_->getComponent<ECS::Position>().val.y = bgmSlider_->getComponent<ECS::Position>().val.y;
+		seBar_->getComponent<ECS::Position>().val.y = seSlider_->getComponent<ECS::Position>().val.y;
+		//赤いゲージ増減
+		constexpr int ADJUST = 20;	//座標をいい感じにする補正値
+		bgmFullSlider_->getComponent<ECS::Rectangle>().w = static_cast<int>(bgmBar_->getComponent<ECS::Position>().val.x -
+			option_->getComponent<ECS::Position>().val.x - ADJUST);
+		seFullSlider_->getComponent<ECS::Rectangle>().w = static_cast<int>(seBar_->getComponent<ECS::Position>().val.x -
+			option_->getComponent<ECS::Position>().val.x - ADJUST);
+		//音量更新
+		MasterSound::Get().setAllBGMGain(bgmVal_);
+		MasterSound::Get().setAllSEGain(seVal_);
 	}
 
-	
-	StageSelect::StageSelect(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
-		: AbstractScene(sceneTitleChange)
-		, entityManager_(entityManager)
+	void StageSelect::changeLayer()
 	{
-		ResourceManager::GetSound().load("Resource/sound/onion.ogg", "onion", SoundType::SE);
-		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
-		//仮料理画像とUI
-		ResourceManager::GetGraph().load("Resource/image/cook.png", "tkg");
-		ResourceManager::GetGraph().load("Resource/image/cook2.png", "tkg2");
-		ResourceManager::GetGraph().load("Resource/image/cook3.png", "tkg3");
-		//スライダー
-		ResourceManager::GetGraph().load("Resource/image/slider.png", "slider");
-		ResourceManager::GetGraph().load("Resource/image/slider_bar.png", "slider_bar");
-		ResourceManager::GetGraph().load("Resource/image/1280.png", "back");
-		ResourceManager::GetGraph().load("Resource/image/book.png", "book");
-		ResourceManager::GetGraph().load("Resource/image/point.png", "point");
-		ResourceManager::GetGraph().load("Resource/image/option.png", "option");
-		ResourceManager::GetGraph().load("Resource/image/stage.png", "stage");
-		ResourceManager::GetSound().load("Resource/sound/Welcome.ogg", "selectBGM",SoundType::BGM);
+		//レイヤー入れ替え
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
+			&& cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
+			&& Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+		{
+			option_->changeGroup(ENTITY_GROUP::BACK_OBJECT);
+			bgmSlider_->changeGroup(ENTITY_GROUP::UI);
+			seSlider_->changeGroup(ENTITY_GROUP::UI);
+			bgmFullSlider_->changeGroup(ENTITY_GROUP::UI);
+			seFullSlider_->changeGroup(ENTITY_GROUP::UI);
+			bgmBar_->changeGroup(ENTITY_GROUP::UI);
+			seBar_->changeGroup(ENTITY_GROUP::UI);
+			score_->changeGroup(ENTITY_GROUP::LAYER1);
+		}
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
+			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
+			&& Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
+		{
+			option_->changeGroup(ENTITY_GROUP::BACK);
+			bgmSlider_->changeGroup(ENTITY_GROUP::BACK);
+			seSlider_->changeGroup(ENTITY_GROUP::BACK);
+			bgmFullSlider_->changeGroup(ENTITY_GROUP::BACK);
+			seFullSlider_->changeGroup(ENTITY_GROUP::BACK);
+			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
+			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
+			score_->changeGroup(ENTITY_GROUP::UI);
+		}
+	}
+
+	void StageSelect::showDishParameter()
+	{
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 0u)
+		{
+			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+			dish_[0]->getComponent<ECS::SpriteDraw>().drawEnable();
+			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
+			int score = score_->getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE1);
+			score_->getComponent<ECS::DrawFont2>().setNumber(score);
+		}
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 1u)
+		{
+			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[1]->getComponent<ECS::SpriteDraw>().drawEnable();
+			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
+			int score = score_->getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE2);
+			score_->getComponent<ECS::DrawFont2>().setNumber(score);
+		}
+		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 2u)
+		{
+			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[2]->getComponent<ECS::SpriteDraw>().drawEnable();
+			int score = score_->getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE3);
+			score_->getComponent<ECS::DrawFont2>().setNumber(score);
+		}
 	}
 
 	void StageSelect::initialize()
 	{
-		//ハイスコアの取得テスト
-		score_ = ECS::ScoreArcheType::CreateSelectScoreEntity("font", Vec2{ 100,200 }, ECS::StageHighScore::STAGE2, *entityManager_)->
-			getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE2);
-
-		ECS::ArcheType::CreateGameBG("back",  Vec2{ 0.f,0.f},*entityManager_);
-
-		auto book_ = ECS::ArcheType::CreateEntity("book",  Vec2{ System::SCREEN_WIDIH / 2, System::SCREEN_HEIGHT * 0.6f },
-			*entityManager_,  ENTITY_GROUP::BACK);
-		auto bookPos = book_->getComponent<ECS::Position>();
-
-		//ボタンUI
-		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y - UI_HEIGHT * 2 }, *entityManager_, ENTITY_GROUP::UI));
-		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y - UI_HEIGHT }, *entityManager_, ENTITY_GROUP::UI));
-		UIMap_.push_back(ECS::ArcheType::CreateEntity("stage", Vec2{ bookPos.val.x * 0.7f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI));
-		UIMap_.push_back(ECS::ArcheType::CreateEntity("option",Vec2{ bookPos.val.x * 0.7f, bookPos.val.y + UI_HEIGHT}, *entityManager_, ENTITY_GROUP::UI));
-		//料理画像
-		cookMap_.push_back(ECS::ArcheType::CreateEntity("tkg",  Vec2{ bookPos.val.x * 1.3f, bookPos.val.y - 60}, *entityManager_, ENTITY_GROUP::UI));
-		cookMap_.push_back(ECS::ArcheType::CreateEntity("tkg2", Vec2{ bookPos.val.x * 1.3f, bookPos.val.y - 60 }, *entityManager_, ENTITY_GROUP::UI));
-		cookMap_.push_back(ECS::ArcheType::CreateEntity("tkg3", Vec2{ bookPos.val.x * 1.3f, bookPos.val.y - 60 }, *entityManager_, ENTITY_GROUP::UI));
-		//スライダー
+		entitySetUp();
+		for (auto& it : dish_)
 		{
-			bgmSlider_.gaugeEntity = ECS::ArcheType::CreateEntity("slider", Vec2{ bookPos.val.x * 1.4f,  bookPos.val.y - UI_HEIGHT }, *entityManager_, ENTITY_GROUP::UI);
-			bgmSlider_.barEntity = ECS::ArcheType::CreateEntity("slider_bar", Vec2{ bookPos.val.x * 1.4f,  bookPos.val.y - UI_HEIGHT }, *entityManager_, ENTITY_GROUP::UI);
-			seSlider_.gaugeEntity = ECS::ArcheType::CreateEntity("slider", Vec2{ bookPos.val.x * 1.4f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI);
-			seSlider_.barEntity = ECS::ArcheType::CreateEntity("slider_bar", Vec2{ bookPos.val.x * 1.4f, bookPos.val.y }, *entityManager_, ENTITY_GROUP::UI);
-			bgmSlider_.type = Slider::BGM;
-			seSlider_.type = Slider::SE;
-			bgmSlider_.volume = MasterSound::Get().getBGMGain();
-			seSlider_.volume = MasterSound::Get().getSEGain();
+			it->getComponent<ECS::SpriteDraw>().drawDisable();
 		}
-		UIReset();
-		point_ = ECS::ArcheType::CreateEntity("point", Vec2{ bookPos.val.x * 0.4f, bookPos.val.y - UI_HEIGHT * 2 }, *entityManager_, ENTITY_GROUP::UI);
-
 		Sound bgm("selectBGM");
 		bgm.play(true,false);
 	}
 	void StageSelect::update()
 	{
 		entityManager_->update();
-		MasterSound::Get().setAllBGMGain(bgmSlider_.volume);
-		MasterSound::Get().setAllSEGain(seSlider_.volume);
-		bgmSlider_.select();
-		seSlider_.select();
-		selectStageMove();
-		selectStage();
+		showDishParameter();
+		optionSheetMove();
+		changeLayer();
+		setSoundVolume();
+		const auto bgm_path = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
+		if (bgm_path != "")
+		{
+			const auto stage_num = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
+			auto parameter = std::make_unique<Parameter>();
+			const std::string STAGE_STR = "stage";
+			ResourceManager::GetSound().load(
+				"Resource/sound/MUSIC/stage" + std::to_string(stage_num) + "/"+ bgm_path,
+				STAGE_STR + std::to_string(stage_num),
+				SoundType::BGM);
+			parameter->add<std::string>("BGM_name", STAGE_STR + std::to_string(stage_num));
+			std::ofstream ofs("Resource/system/gain.bin");
+			ofs << bgmVal_ << "\n" << seVal_;
+			ON_SCENE_CHANGE(SceneName::GAME, parameter.get(), StackPopFlag::POP, true);
+		}
+		
 	}
 	void StageSelect::draw()
 	{
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		DrawFormatString(0, 0, 0xffffffff, "セレクト画面");
-		DrawFormatString(0, 100, 0xffffffff, "%d", score_);
-		
 	}
 
 	StageSelect::~StageSelect()
 	{
 		entityManager_->allDestory();
+		ResourceManager::GetGraph().removeAll();
 		ResourceManager::GetSound().remove("selectBGM");
 	}
-	void StageSelect::Slider::select()
-	{
-		if (isSelect)
-		{
-			barEntity->getComponent<ECS::Scale>().val = Vec2{ 1.5f,1.5f };
-		}
-		else
-		{
-			barEntity->getComponent<ECS::Scale>().val = Vec2{ 1.f,1.f };
-		}
-	}
+
 }// namespace StageSelect

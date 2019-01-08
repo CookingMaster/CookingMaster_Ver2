@@ -69,7 +69,7 @@ namespace ECS
 		void removeThis() { active_ = false;}
 		bool isStop_ = false;
 	public:
-		Entity* entity;
+		Entity* entity = nullptr;
 		virtual void initialize() {};
 		virtual void update() {};
 		virtual void draw3D() {};
@@ -102,8 +102,9 @@ namespace ECS
 	{
 	private:
 		friend class EntityManager;
-		std::string tag_;
+		std::string tag_ = "";
 		EntityManager& manager_;
+		Group nowGroup_;
 		bool isActive_ = true;
 		std::vector<std::unique_ptr<ComponentSystem>> components_;
 		ComponentArray  componentArray_;
@@ -146,7 +147,8 @@ namespace ECS
 		//!このEntityについているComponentの3D描画処理を行います
 		void draw3D()
 		{
-			for (auto& c : components_) {
+			for (auto& c : components_)
+			{
 				if (c == nullptr)
 				{
 					continue;
@@ -172,26 +174,30 @@ namespace ECS
 		[[nodiscard]] bool isActive() const { return isActive_; }
 
 		//!Entityを殺します
-		void destroy() 
-		{
-			isActive_ = false; 
-		}
+		void destroy() { isActive_ = false; }
 
 		//!Entityが指定したグループに登録されているか返します
-		[[nodiscard]] bool hasGroup(Group group) const noexcept
+		[[nodiscard]] bool hasGroup(const Group& group) const noexcept
 		{
 			return groupBitSet_[group];
 		}
 
 		//!Entityをグループに登録します
-		void addGroup(Group group) noexcept;
+		void addGroup(const Group& group) noexcept;
 
 		//!Entityをグループから消します
-		void removeGroup(Group group) noexcept
+		void removeGroup(const Group& group) noexcept
 		{
 			groupBitSet_[group] = false;
 		}
+		//!グループを登録し直します
+		void changeGroup(const Group& setGroup) noexcept
+		{
+			removeGroup(nowGroup_);
 
+			addGroup(setGroup);
+			nowGroup_ = setGroup;
+		}
 		//!Entityに指定したComponentがあるか返します
 		template <typename T> [[nodiscard]] bool hasComponent() const
 		{
@@ -308,7 +314,7 @@ namespace ECS
 		* @brief グループごとの描画を登録順に行います
 		* @param MaxGroup 最大グループ数
 		*/
-		void orderByDraw(const size_t MaxGroup)
+		void orderByDraw(const Group& MaxGroup)
 		{
 			for (auto i(0u); i < MaxGroup; ++i)
 			{
@@ -360,13 +366,13 @@ namespace ECS
 		}
 
 		//!指定したグループに登録されているEntity達を返します
-		[[nodiscard]] std::vector<Entity*>& getEntitiesByGroup(Group group)
+		[[nodiscard]] std::vector<Entity*>& getEntitiesByGroup(const Group& group)
 		{
 			return groupedEntities_[group];
 		}
 
 		//!Entityを指定したグループに登録します
-		void addToGroup(Entity* pEntity, Group group)
+		void addToGroup(Entity* pEntity, const Group& group)
 		{
 			groupedEntities_[group].emplace_back(pEntity);
 		}
@@ -402,12 +408,13 @@ namespace ECS
 		}
 	};
 
+	//以下の処理は必要ないかもしれない//
+
 	//!vectorに格納されているエンティティの更新を行います
 	void EntitiesUpdate(const std::vector<Entity*>& entities);
 	//!vectorに格納されているエンティティの2D描画を行います
 	void EntitiesDraw2D(const std::vector<Entity*>& entities);
 	//!vectorに格納されているエンティティの3D描画を行います
 	void EntitiesDraw3D(const std::vector<Entity*>& entities);
-
-}
-
+	
+}  //namespace ECS

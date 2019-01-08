@@ -58,7 +58,7 @@ void Scene::Result::update()
 
 	if (counter_.isMax()) {
 		DOUT << "BackToTitle" << std::endl;
-		ON_SCENE_CHANGE(SceneName::TITLE, nullptr, StackPopFlag::ALL_CLEAR, true);
+		ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::ALL_CLEAR, true);
 	}
 }
 

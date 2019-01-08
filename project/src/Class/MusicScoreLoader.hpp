@@ -9,6 +9,7 @@
 #include <sstream>
 #include <fstream>
 #include <assert.h>
+#include <math.h>
 #include "NotesAndScoreData.hpp"
 #include "ResourceManager.hpp"
 
@@ -18,11 +19,18 @@ class MusicScoreLoader
 {
 private:
 	int bpm_;
+	int beat_;
 	int offsetTime_;
+	int noteNum_;	//休符以外のノーツの数
 	std::vector<NotesData> notesData_;
-	ScoreData scoreData_;
+	MusicData scoreData_;
 
 public:
+	MusicScoreLoader() :
+		bpm_(0),
+		offsetTime_(0),
+		noteNum_(0){}
+
 	/**
 	* @brief 譜面データを読み込む
 	* @param musicScoreDataPath 譜面情報ファイルへのパス
@@ -35,6 +43,9 @@ public:
 
 		//BPM読み込み
 		fin >> tmpstr >> bpm_;
+
+		//拍子読み込み
+		fin >> tmpstr >> beat_;
 
 		//OffsetTime読み込み
 		fin >> tmpstr >> offsetTime_;
@@ -66,6 +77,7 @@ public:
 	{
 		bpm_ = 0;
 		offsetTime_ = 0;
+		noteNum_ = 0;
 
 		notesData_.clear();
 		notesData_.shrink_to_fit();
@@ -83,15 +95,23 @@ public:
 	* @brief BPMを取得する
 	* @return int BPM
 	*/
-	[[nodiscard]]int GetBPM()
+	[[nodiscard]]int getBPM()
 	{
 		return bpm_;
+	}
+	/**
+	* @brief 拍子を取得する
+	* @return int 拍子
+	*/
+	[[nodiscard]]int getBeat()
+	{
+		return beat_;
 	}
 	/**
 	* @brief オフセットの値(フレーム)を取得する
 	* @return float オフセット時間
 	*/
-	[[nodiscard]]int GetOffsetTime()
+	[[nodiscard]]int getOffsetTime()
 	{
 		return offsetTime_;
 	}
@@ -99,7 +119,7 @@ public:
 	* @brief 使用するノーツのデータを取得する
 	* @return const std::vector<NotesData>& 使用するノーツのデータ
 	*/
-	[[nodiscard]]const std::vector<NotesData>& GetNotesData()
+	[[nodiscard]]const std::vector<NotesData>& getNotesData()
 	{
 		return notesData_;
 	}
@@ -107,9 +127,17 @@ public:
 	* @brief 譜面データを取得する
 	* @return const ScoreData& 譜面データ
 	*/
-	[[nodiscard]]const ScoreData& GetScoreData()
+	[[nodiscard]]const MusicData& getScoreData()
 	{
 		return scoreData_;
+	}
+	/**
+	* @brief 最高得点を取得する
+	* @return int 最高得点
+	*/
+	[[nodiscard]]int getMaxPoint()
+	{
+		return noteNum_ * 10;
 	}
 
 private:
@@ -151,6 +179,13 @@ private:
 			>> notesData_.back().xsize >> notesData_.back().ysize
 			>> notesData_.back().animFlame
 			>> notesData_.back().xnum >> notesData_.back().ynum;
+		for (size_t i = 0; i < notesData_.back().animSData.size(); ++i)
+		{
+			fin >> notesData_.back().animSData[i].xmin
+				>> notesData_.back().animSData[i].ymin
+				>> notesData_.back().animSData[i].xmax
+				>> notesData_.back().animSData[i].ymax;
+		}
 		notesData_.shrink_to_fit();
 
 		//リソースの読み込み
@@ -226,6 +261,7 @@ private:
 				continue;
 			}
 
+			++noteNum_;
 			//ノーツの番号を取得
 			scoreData_.back()[i].notesID = int(idstr[i][1] - '0');
 		}

@@ -38,7 +38,7 @@ namespace ECS
 	class ScoreSystem : public ComponentSystem
 	{
 	private:
-		ScoreData* score_;
+		ScoreData* score_ = nullptr;
 		int saveScore_ = 0;
 		StageHighScore stageName_;
 		//得点保存用ファイルを作成
@@ -46,7 +46,11 @@ namespace ECS
 		{
 			std::ofstream ofs;
 			//ファイル名にステージの番号をつける
-			ofs.open(std::string("Resource/result/score") + std::to_string(size_t(stageName_)) + ".bin", std::ios::out);
+			ofs.open(
+				std::string("Resource/sound/MUSIC/stage") + 
+				std::to_string(size_t(stageName_)) + "/" +
+				"score" + std::to_string(size_t(stageName_)) + 
+				".bin", std::ios::out);
 
 			if (!ofs)
 			{
@@ -58,12 +62,16 @@ namespace ECS
 		void loadScoreData(const StageHighScore& stageName)
 		{
 			std::ifstream ifs;
-			ifs.open(std::string("Resource/result/score") + std::to_string(size_t(stageName)) + ".bin", std::ios::in);
+			ifs.open(
+				std::string("Resource/sound/MUSIC/stage") +
+				std::to_string(size_t(stageName)) + "/" +
+				"score" + std::to_string(size_t(stageName)) +
+				".bin", std::ios::in);
 
 			if (!ifs)
 			{
 				//読み込みに失敗したら新しくファイルを作成する
-				wrightScoreData(0);
+				
 				return;
 			}
 			ifs >> saveScore_;
@@ -84,8 +92,8 @@ namespace ECS
 			score_ = &entity->getComponent<ScoreData>();
 			loadScoreData(stageName_);
 		}
-		//指定したステージのスコアを取得します
-		int getHighScore(const StageHighScore& stageName)
+		//!指定したステージのスコアを取得します
+		[[nodiscard]] int getHighScore(const StageHighScore& stageName)
 		{
 			loadScoreData(stageName);
 			return saveScore_;
@@ -99,7 +107,7 @@ namespace ECS
 	class ResultEffect : public ComponentSystem
 	{
 	private:
-		Scale* scale_;
+		Scale* scale_ = nullptr;
 		Easing ease_;
 	public:
 		void initialize() override

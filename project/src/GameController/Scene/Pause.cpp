@@ -26,7 +26,7 @@ namespace Scene
 		
 		button = ECS::UIArcheType::CreateButtonUI("button", Vec2{ 138.f, 56.f }, Vec2{ 400.f, 397.f }, *entityManager);
 		moji = ECS::UIArcheType::CreateButtonMojiUI("moji", Vec2{ 168.f, 56.f }, Vec2{ 400.f, 397.f }, *entityManager);
-		frame = ECS::UIArcheType::CreateSelectFrame("frame", Vec2{ 400.f - 3.f, 397.f - 3.f }, *entityManager);
+		frame = ECS::UIArcheType::CreateSelectFrame("frame", Vec2{ 400.f - 7.f, 397.f - 7.f }, *entityManager);
 	}
 	void Pause::update()
 	{
@@ -65,20 +65,28 @@ namespace Scene
 			switch (select)
 			{
 			case 0:
+			{
 				DOUT << "Game Continue" << std::endl;
 				bgm_name->add<std::string>("BGM_name", name);
+				Sound bgm(name);
+				bgm.play(true, false);
 				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
 				break;
+			}
 			case 1:
+			{
 				DOUT << "Restart" << std::endl;
 				bgm_name->add<std::string>("BGM_name", name);
 				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, true);
 				break;
+			}
 			case 2:
-				DOUT << "Back To Title" << std::endl;
+			{
+				DOUT << "Back To Select" << std::endl;
 				Sound(name).stop();
-				ON_SCENE_CHANGE(SceneName::TITLE, nullptr, StackPopFlag::ALL_CLEAR, true);
+				ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::ALL_CLEAR, true);
 				break;
+			}
 			}
 		}
 	}

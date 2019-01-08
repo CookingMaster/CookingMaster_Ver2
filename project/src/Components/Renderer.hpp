@@ -33,7 +33,12 @@ namespace ECS
 		int y;
 		int w;
 		int h;
-
+		Rectangle():
+			x(0),
+			y(0),
+			w(0),
+			h(0)
+		{}
 		Rectangle(const int setX, const int setY, const int setW, const int setH) :
 			x(setX),
 			y(setY),
@@ -204,9 +209,9 @@ namespace ECS
 			isDraw_ = false;
 		}
 		//!描画する基準座標を中心にするか引数で指定します
-		void doCenter(const bool isCenter)
+		void doCenter(const bool doCenter)
 		{
-			isCenter_ = isCenter;
+			isCenter_ = doCenter;
 		}
 	};
 
@@ -293,9 +298,9 @@ namespace ECS
 			isDraw_ = false;
 		}
 		//!描画する基準座標を中心にするか引数で指定します
-		void doCenter(const bool isCenter)
+		void doCenter(const bool doCenter)
 		{
-			isCenter_ = isCenter;
+			isCenter_ = doCenter;
 		}
 	};
 
@@ -394,9 +399,11 @@ namespace ECS
 	* - アルファブレンドをしたい場合はAlphaBlendが必要です
 	* - doCenterで基準座標を変更できます
 	*/
-	class SpriteDraw final : public ComponentSystem
+	class SpriteDraw  : public ComponentSystem
 	{
 	private:
+		bool isDiv_ = false;
+	protected:
 		Position* pos_ = nullptr;
 		Scale* scale_ = nullptr;
 		Rotation* rota_ = nullptr;
@@ -411,8 +418,12 @@ namespace ECS
 		//!登録した画像名を指定して初期化します
 		SpriteDraw(const char* name)
 		{
-			assert(ResourceManager::GetGraph().hasHandle(name));
-			
+			assert(ResourceManager::GetGraph().hasHandle(name) ||
+				ResourceManager::GetGraph().hasDivHandle(name) && "load failed");
+			if (ResourceManager::GetGraph().hasDivHandle(name))
+			{
+				isDiv_ = true;
+			}
 			name_ = name;
 		}
 		void initialize() override
@@ -420,7 +431,14 @@ namespace ECS
 			pos_ = &entity->getComponent<Position>();
 			rota_ = &entity->getComponent<Rotation>();
 			scale_ = &entity->getComponent<Scale>();
-			GetGraphSize(ResourceManager::GetGraph().getHandle(name_), &size_.x, &size_.y);
+			if (isDiv_)
+			{
+				GetGraphSize(ResourceManager::GetGraph().getDivHandle(name_,0), &size_.x, &size_.y);
+			}
+			else
+			{
+				GetGraphSize(ResourceManager::GetGraph().getHandle(name_), &size_.x, &size_.y);
+			}
 			pivot_.x = float(size_.x) / 2.f;
 			pivot_.y = float(size_.y) / 2.f;
 			RenderUtility::SatRenderDetail(entity, &color_, &blend_);
@@ -432,11 +450,6 @@ namespace ECS
 			{
 				RenderUtility::SetColor(color_);
 				RenderUtility::SetBlend(blend_);
-				if (isCenter_)
-				{
-					pivot_.x = float(size_.x) / 2.f;
-					pivot_.y = float(size_.y) / 2.f;
-				}
 				DrawRotaGraph3F(
 					pos_->val.x,
 					pos_->val.y,
@@ -460,15 +473,21 @@ namespace ECS
 		{
 			isDraw_ = false;
 		}
-		//!描画する基準座標を中心にするか引数で指定します
-		void doCenter(const bool isCenter)
+		//!描画する基準座標を中心にします
+		void doCenter()
 		{
-			isCenter_ = isCenter;
+			pivot_.x = float(size_.x) / 2.f;
+			pivot_.y = float(size_.y) / 2.f;
 		}
 		//!描画する基準座標を引数で指定します
 		void setPivot(const Vec2& pivot)
 		{
 			pivot_ = pivot;
+		}
+		//!画像サイズを返します
+		const Vec2_i& getSize() const
+		{
+			return size_;
 		}
 	};
 
@@ -479,49 +498,37 @@ namespace ECS
 	* - アルファブレンドをしたい場合はAlphaBlendが必要です
 	* - setPivotで基準座標を変更できます
 	*/
-	class SpriteAnimationDraw final : public ComponentSystem
+	class SpriteAnimationDraw final : public SpriteDraw
 	{
 	private:
-		Position* pos_ = nullptr;
-		Scale* scale_ = nullptr;
-		Rotation* rota_ = nullptr;
-		Color* color_ = nullptr;
-		AlphaBlend* blend_ = nullptr;
-		std::string name_;
-		Vec2 pivot_;
-		bool isDraw_ = true;
 		int index_ = 0;
 	public:
 		//!登録した画像名を指定して初期化します
-		SpriteAnimationDraw(const char* name)
-		{
-			assert(ResourceManager::GetGraph().hasDivHandle(name));
-			name_ = name;
-		}
-		void initialize() override
-		{
-			pos_ = &entity->getComponent<Position>();
-			rota_ = &entity->getComponent<Rotation>();
-			scale_ = &entity->getComponent<Scale>();
-			RenderUtility::SatRenderDetail(entity, &color_, &blend_);
-		}
+		SpriteAnimationDraw(const char* name):
+			SpriteDraw(name)
+		{}
+	
 		void draw2D() override
 		{
-			if (ResourceManager::GetGraph().hasDivHandle(name_) &&
-				isDraw_)
+			if (ResourceManager::GetGraph().hasDivHandle(__super::name_) &&
+				__super::isDraw_)
 			{
-				RenderUtility::SetColor(color_);
-				RenderUtility::SetBlend(blend_);
-				
+				RenderUtility::SetColor(__super::color_);
+				RenderUtility::SetBlend(__super::blend_);
+				if (__super::pos_->val.x == 110)
+				{
+					int a;
+					a = 1;
+				}
 				DrawRotaGraph3F(
-					pos_->val.x,
-					pos_->val.y,
-					pivot_.x,
-					pivot_.y,
-					scale_->val.x,
-					scale_->val.y,
-					DirectX::XMConvertToRadians(rota_->val),
-					ResourceManager::GetGraph().getDivHandle(name_,index_), true);
+					__super::pos_->val.x,
+					__super::pos_->val.y,
+					__super::pivot_.x,
+					__super::pivot_.y,
+					__super::scale_->val.x,
+					__super::scale_->val.y,
+					DirectX::XMConvertToRadians(__super::rota_->val),
+					ResourceManager::GetGraph().getDivHandle(__super::name_,index_), true);
 				RenderUtility::ResetRenderState();
 			}
 
@@ -531,21 +538,7 @@ namespace ECS
 		{
 			index_ = index;
 		}
-		//!描画を有効にします
-		void drawEnable()
-		{
-			isDraw_ = true;
-		}
-		//!描画を無効にします
-		void drawDisable()
-		{
-			isDraw_ = false;
-		}
-		//!描画する基準座標を引数で指定します
-		void setPivot(const Vec2& pivot)
-		{
-			pivot_ = pivot;
-		}
+	
 	};
 
 	/*!
@@ -556,31 +549,20 @@ namespace ECS
 	* - Rectangleが必要です。
 	* - setPivotで基準座標を変更できます
 	*/
-	class SpriteRectDraw final : public ComponentSystem
+	class SpriteRectDraw final : public SpriteDraw
 	{
 	private:
-		Position* pos_ = nullptr;
-		Scale* scale_ = nullptr;
-		Rotation* rota_ = nullptr;
-		Color* color_ = nullptr;
-		AlphaBlend* blend_ = nullptr;
 		Rectangle* rect_ = nullptr;
-		Vec2 pivot_;
-		std::string name_;
-		bool isDraw_ = true;
-		bool isCenter_ = false;
 	public:
 		//!登録した画像名を指定して初期化します
-		SpriteRectDraw(const char* name)
-		{	
-			assert(ResourceManager::GetGraph().hasHandle(name));
-			name_ = name;
-		}
+		SpriteRectDraw(const char* name):
+			SpriteDraw(name)
+		{}
 		void initialize() override
 		{
-			pos_ = &entity->getComponent<Position>();
-			rota_ = &entity->getComponent<Rotation>();
-			scale_ = &entity->getComponent<Scale>();
+			__super::pos_ = &entity->getComponent<Position>();
+			__super::rota_ = &entity->getComponent<Rotation>();
+			__super::scale_ = &entity->getComponent<Scale>();
 			rect_ = &entity->getComponent<Rectangle>();
 			RenderUtility::SatRenderDetail(entity, &color_, &blend_);
 		}
@@ -592,29 +574,21 @@ namespace ECS
 				RenderUtility::SetColor(color_);
 				RenderUtility::SetBlend(blend_);
 				DrawRectRotaGraph3F(
-					pos_->val.x, pos_->val.y,
-					rect_->x, rect_->y,
+					__super::pos_->val.x,
+					__super::pos_->val.y,
+					rect_->x,
+					rect_->y,
 					rect_->w,
 					rect_->h,
-					pivot_.x,
-					pivot_.y,
-					scale_->val.x,
-					scale_->val.y,
+					__super::pivot_.x,
+					__super::pivot_.y,
+					__super::scale_->val.x,
+					__super::scale_->val.y,
 					DirectX::XMConvertToRadians(rota_->val),
 					ResourceManager::GetGraph().getHandle(name_),
 					true);
 				RenderUtility::ResetRenderState();
 			}
-		}
-		//!描画を有効にします
-		void drawEnable()
-		{
-			isDraw_ = true;
-		}
-		//!描画を無効にします
-		void drawDisable()
-		{
-			isDraw_ = false;
 		}
 		//!描画する範囲を再設定します
 		void setRect(const int srcX, const int srcY, const int w, const int h)
@@ -623,11 +597,6 @@ namespace ECS
 			rect_->y = srcY;
 			rect_->w = w;
 			rect_->h = h;
-		}
-		//!描画する基準座標を引数で指定します
-		void setPivot(const Vec2& pivot)
-		{
-			pivot_ = pivot;
 		}
 	};
 }
