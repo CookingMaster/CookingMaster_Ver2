@@ -33,6 +33,6 @@ namespace Scene
 	private:
 		int getNoteScore();
 		void changePauseScene();
-		void cangeResultScene();
+		void changeResultScene();
 	};
 }

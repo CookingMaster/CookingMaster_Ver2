@@ -109,6 +109,7 @@ public:
 		case 0: return false;
 		case 1: return true;
 		}
+		return false;
 	}
 	//!サウンドの現在の再生位置をミリ秒単位で取得します
 	[[nodiscard]] const int getCurrentTime() const
