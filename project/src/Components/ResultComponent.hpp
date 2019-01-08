@@ -76,6 +76,7 @@ namespace ECS
 	private:
 		Scale* scale_ = nullptr;
 		Easing ease_;
+		Vec2 startSize_;
 		Vec2 endSize_;
 		Ease em_;
 		float durationTime_;
@@ -88,11 +89,48 @@ namespace ECS
 		{}
 		void initialize() override {
 			scale_ = &entity->getComponent<Scale>();
+			startSize_ = scale_->val;
 		}
 		void update() override {
 			ease_.run(em_, durationTime_);
-			scale_->val.x = ease_.getVolume(1, endSize_.x);
-			scale_->val.y = ease_.getVolume(1, endSize_.y);
+			scale_->val.x = ease_.getVolume(startSize_.x, endSize_.x);
+			scale_->val.y = ease_.getVolume(startSize_.y, endSize_.y);
+		}
+		[[nodiscard]] bool isEaseEnd() {
+			return ease_.isEaseEnd();
+		}
+	};
+	/**
+	* @brief 画像の縮小を行う
+	*- 指定したイージングで縮小
+	*/
+	class Reduction final : public ComponentSystem
+	{
+	private:
+		Scale * scale_ = nullptr;
+		Easing ease_;
+		Vec2 startSize_;
+		Vec2 endSize_;
+		Ease em_;
+		float durationTime_;
+	public:
+		Reduction(const Vec2 endSize, const Ease em, float durationTime)
+			:
+			endSize_(endSize),
+			em_(em),
+			durationTime_(durationTime)
+		{}
+		void initialize() override {
+			scale_ = &entity->getComponent<Scale>();
+			startSize_ = scale_->val;
+		}
+		void update() override {
+			ease_.run(em_, durationTime_);
+			scale_->val.x = ease_.getVolume(startSize_.x, endSize_.x);
+			scale_->val.y = ease_.getVolume(startSize_.y, endSize_.y);
+		}
+		[[nodiscard]] bool isEaseEnd() {
+			return ease_.isEaseEnd();
 		}
 	};
 

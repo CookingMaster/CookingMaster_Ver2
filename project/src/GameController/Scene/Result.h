@@ -40,9 +40,11 @@ namespace Scene
 		Counter counter_;
 		//! ステージ情報
 		std::string bgmName_;
+		ECS::StageHighScore stage_;
+
 
 		//! スコアから料理の画像を設定する
-		float setDish();
+		Vec2 setDishImg();
 		//! スコアを取得する
 		void setScore();
 	public:
