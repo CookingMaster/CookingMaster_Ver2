@@ -1,14 +1,14 @@
+bg_table
+0, 352
+
 nabe1
-804,175
+431,178
 
 nabe2
 995,218
 
 nabe3
 1147,246
-
-stove
-765,321
 
 chef_happy
 chef0,0‚©‚ç
@@ -22,16 +22,15 @@ water
 262,264
 
 
+
 ƒQ[ƒ€‰æ–Ê‚Ì•`‰æ‡‚Í
-bg_kabe+stove.png
+bg_back.png
 «
-bg_nabe1,2,3 & bg_water & chef & Œv‚Ìj
-«
-bg_equip
+bg_nabe1,2,3 & bg_water & chef 
 «
 bg_table
 «
-player(+ƒo[)
+player
 
 
 ¡‚Ì‚Æ‚±‚ë
