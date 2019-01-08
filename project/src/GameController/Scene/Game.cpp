@@ -96,8 +96,8 @@ namespace Scene
 			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
 			return;
 		}
+		changeResultScene();
 		changePauseScene();
-		cangeResultScene();
 	}
 
 	void Game::draw()
@@ -191,9 +191,10 @@ namespace Scene
 	}
 
 	//結果画面遷移
-	void Game::cangeResultScene()
+	void Game::changeResultScene()
 	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1) {
+		Sound sound(name_);
+		if (!sound.isPlay()) {
 			auto bgm_name = std::make_unique<Parameter>();
 			bgm_name->add<std::string>("BGM_name", name_);
 			//BGMを停止する

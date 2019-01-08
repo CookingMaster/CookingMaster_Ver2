@@ -40,7 +40,7 @@ namespace ECS
 
 	/**
 	* @brief ノーツの状態遷移管理マン
-	* - NoteState、AnimatorByFrameが必要
+	* - NoteState、AnimatorByFrame、Velocity、Transform、Gravityが必要
 	*/
 	class NoteStateTransition : public ComponentSystem
 	{
@@ -51,12 +51,21 @@ namespace ECS
 
 		NoteState* noteState_ = nullptr;
 		Animator* animator_ = nullptr;
-		std::array<float, 8> hitTimeLine_;
-		Counter transCounter_;
+		Velocity* velocity_ = nullptr;
+		Position* position_ = nullptr;
+		Rotation* rotation_ = nullptr;
+		Gravity* gravity_ = nullptr;
+
+		std::array<float, 6> hitTimeLine_;
+		Counter transCounter_;		//状態遷移のカウント
+		Counter deathCounter_;		//死ぬまでの時間計測
 		Counter_f flameCounter_;
 
 		//こいつをtrueにするとオートモードになるぞ！
-		bool autoPerfectMode = /*IS_AUTO_PLAY*/false;
+		bool autoPerfectMode = 
+			/*
+			IS_AUTO_PLAY/*/
+			false/**/;
 
 	public:
 		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
@@ -69,26 +78,21 @@ namespace ECS
 		{
 			noteState_ = &entity->getComponent<NoteState>();
 			animator_ = &entity->getComponent<Animator>();
+			velocity_ = &entity->getComponent<Velocity>();
+			position_ = &entity->getComponent<Position>();
+			rotation_ = &entity->getComponent<Rotation>();
+			gravity_ = &entity->getComponent<Gravity>();
 
-
-			//ミリ秒をフレームに変換
-			for (auto& it : hitJudge_)
-			{
-				it = CalcurationBeat().millisecondToFrame(it);
-			} 
-
-			/*NON → BAD → GOOD → GREAT → PARFECT → GREAT → GOOD → BAD → MISSED という風に遷移する
-			BADの時に入力があるとGRAZEDへ移行する
-			GOOD,GREAT,PARFECTの時に入力があるとHITTEDへ移行する
+			/*NON → BAD → GOOD → GREAT → PARFECT → GOOD → MISSED と状態が遷移する
+			BADの時に入力があるとGRAZEDへ遷移する
+			GOOD,GREAT,PARFECTの時に入力があるとHITTEDへ遷移する
 			以下の羅列は各判定開始時間の計算*/
-			hitTimeLine_[0] = arrivalBeatTime_ - ((hitJudge_[3] / 2.f) + hitJudge_[2] + hitJudge_[1] + hitJudge_[0]);
-			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge_[0];
-			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge_[1];
-			hitTimeLine_[3] = hitTimeLine_[2] + hitJudge_[2];
-			hitTimeLine_[4] = hitTimeLine_[3] + hitJudge_[3];
-			hitTimeLine_[5] = hitTimeLine_[4] + hitJudge_[2];
-			hitTimeLine_[6] = hitTimeLine_[5] + hitJudge_[1];
-			hitTimeLine_[7] = hitTimeLine_[6] + 10.f;
+			hitTimeLine_[0] = arrivalBeatTime_ - ((hitJudge_[3] / 2.f) + hitJudge_[2] + hitJudge_[1] + hitJudge_[0]);	//Non
+			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge_[0];	//BAD
+			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge_[1];	//GOOD
+			hitTimeLine_[3] = hitTimeLine_[2] + hitJudge_[2];	//GREAT
+			hitTimeLine_[4] = hitTimeLine_[3] + hitJudge_[3];	//PARFECT
+			hitTimeLine_[5] = hitTimeLine_[4] + 10.f;			//MISSED
 
 			noteState_->state = NoteState::State::NON;
 		}
@@ -99,7 +103,7 @@ namespace ECS
 
 			if (flameCounter_.getCurrentCount() >= hitTimeLine_[transCounter_.getCurrentCount()])
 			{
-				transition();
+				transitionAndMove();
 			}
 			++flameCounter_;
 		}
@@ -113,6 +117,9 @@ namespace ECS
 			{
 			case NoteState::State::BAD:	//かすって飛んでいく
 				noteState_->state = NoteState::State::GRAZED;
+				velocity_->val.x /= 1.1f;
+				velocity_->val.y = -30.f;
+				gravity_->val = 1.5f;
 				break;
 
 			case NoteState::State::GOOD:	//ちゃんと切れる
@@ -154,22 +161,40 @@ namespace ECS
 
 	private:
 
-		//状態を遷移させる
-		void transition()
+		//状態を遷移と各ノーツの挙動を行う
+		void transitionAndMove()
 		{
 			if (noteState_->state == NoteState::State::MISSED ||
-				noteState_->state == NoteState::State::GRAZED ||
 				noteState_->state == NoteState::State::HITTED)
 				return;
 
+			if (noteState_->state == NoteState::State::GRAZED)
+			{
+				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
+				{
+					transCounter_.setCounter(5, 1, 0, 1000);
+					noteState_->state = NoteState::State::MISSED;
+					changeNoteAnim(2, true, 5);
+					rotation_->val = 0.f;
+				}
+				else
+				{
+					rotation_->val += 40.f;
+				}
+				return;
+			}
+
 			switch (transCounter_.getCurrentCount())
 			{
-			case 0:	noteState_->state = NoteState::State::BAD;		
+			case 0:	noteState_->state = NoteState::State::BAD;
 					break;
+
 			case 1:	noteState_->state = NoteState::State::GOOD;
 					break;
+
 			case 2:	noteState_->state = NoteState::State::GREAT;
 					break;
+
 			case 3:	noteState_->state = NoteState::State::PARFECT;
 				if (autoPerfectMode)
 				{
@@ -179,12 +204,13 @@ namespace ECS
 					se.play(false,true);
 				}
 					break;
-			case 4:	noteState_->state = NoteState::State::GREAT;	break;
-			case 5:	noteState_->state = NoteState::State::GOOD;		break;
-			case 6:	noteState_->state = NoteState::State::BAD;		break;
-			case 7:	noteState_->state = NoteState::State::MISSED;
-					changeNoteAnim(2, true, 5);
+			case 4:	noteState_->state = NoteState::State::GOOD;
 					break;
+
+			case 5:	noteState_->state = NoteState::State::MISSED;
+					changeNoteAnim(2, true, 5);
+					return;
+
 			default: return;
 			}
 			++transCounter_;
@@ -197,7 +223,7 @@ namespace ECS
 				asd_[animMode].xmin,
 				asd_[animMode].ymin,
 				asd_[animMode].xmax,
-				asd_[animMode].ymax, 
+				asd_[animMode].ymax,
 				true);
 			animator_->changeFrame(animspd);
 			animator_->setIsEndStopAnim(isStopMove);

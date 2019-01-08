@@ -2,10 +2,10 @@ Resource/image/cabbage_squ.png
 cabbage_squ
 se.ogg
 2
-20
-20
-30
-100
+4
+1
+1
+7
 139 100
 10
 4 3
