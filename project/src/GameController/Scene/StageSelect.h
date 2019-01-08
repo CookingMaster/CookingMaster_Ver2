@@ -28,13 +28,16 @@ namespace Scene
 		ECS::Entity* star_[3]{};
 		ECS::Entity* dish_[3]{};
 		ECS::Entity* score_{};
+		ECS::Entity* fade_ = nullptr;
 		ECS::EntityManager* entityManager_ = nullptr;
 		std::vector<ECS::Entity*> cursorTargets{};
-		
+		std::unique_ptr<Parameter> param_;
 		Counter cnt_;
 		float bgmVal_ = 0;
 		float seVal_ = 0;
 		int backVal_ = 0;
+		bool isPlay_ = false;
+		size_t stageNum_ = 0u;
 		void entitySetUp();
 		void optionSheetMove();
 		void setSoundVolume();
