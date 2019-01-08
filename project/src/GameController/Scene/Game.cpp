@@ -22,7 +22,8 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/Act_Chara2.png", "test", 48, 6, 8, 64, 64);
 		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
-		ResourceManager::GetGraph().load("Resource/image/1280.png", "game_bg");
+		ResourceManager::GetGraph().load("Resource/image/bg_back.png", "bg_back");
+		ResourceManager::GetGraph().load("Resource/image/bg_table.png", "bg_table");
 		ResourceManager::GetGraph().load("Resource/image/bar_empty.png", "bar_empty");
 		ResourceManager::GetGraph().load("Resource/image/bar_full.png", "bar_full");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
@@ -38,7 +39,8 @@ namespace Scene
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
-		ECS::ArcheType::CreateEntity("game_bg", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
+		ECS::ArcheType::CreateEntity("bg_back", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
+		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 352.f), *entityManager_, ENTITY_GROUP::BACK);
 		//プレイヤー
 		ECS::Player::CreatePlayer(
 			name_,
@@ -53,12 +55,6 @@ namespace Scene
 		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(0.f, 0.f), msl_.getMaxPoint(), *entityManager_);
 		//得点(パーセンテージ)表示
 		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
-		//時計
-		ECS::Entity* clock = ECS::UIArcheType::CreateClockUI("clock", Vec2(800.f, 100.f), *entityManager_);
-		clock->getComponent<ECS::SimpleDraw>().doCenter(true);
-		
-		//時計の針
-		ECS::UIArcheType::CreateNeedleUI("needle", Vec2(800.f, 100.f), *entityManager_, 1.f);
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_);
 		//曲の再生
