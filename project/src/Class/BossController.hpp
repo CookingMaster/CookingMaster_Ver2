@@ -11,7 +11,14 @@
 class BossController final
 {
 private:
-	Counter cnt;
+	//顔
+	const int GOOD = 1u;
+	const int BAD = 0u;
+
+	int currentComb_ = 0;
+	int preComb_ = 0;		//前のコンボの値
+	bool isSpeek_ = false;	//吹き出しが複製されないようにするためのフラグ
+	Counter cnt_;
 	ECS::Entity* bossBody_ = nullptr;
 	ECS::Entity* bossFace_ = nullptr;
 	ECS::Entity* bossBalloon_ = nullptr;
@@ -19,13 +26,13 @@ private:
 	ECS::EntityManager& manager_;
 	void setComb(const int& num)
 	{
-		bossBalloon_ = ECS::GameEffectsArcheType::CreateBossBalloon("balloon", Vec2{ 300,400 }, 120, &manager_);
+		bossBalloon_ = ECS::GameEffectsArcheType::CreateBossBalloon("balloon", Vec2{ 300,100 }, 120, &manager_);
 		bossBalloon_->getComponent<ECS::Scale>().val = 2;
-		bossMessage_ = ECS::GameEffectsArcheType::CreateBossMessage("number", Vec2{ 200,400 }, ECS::Rectangle(0, 0, 50, 100), num, 120, &manager_);
+		bossMessage_ = ECS::GameEffectsArcheType::CreateBossMessage("number", Vec2{ 200,100 }, ECS::Rectangle(0, 0, 50, 100), num, 120, &manager_);
 	}
 public:
 	BossController(ECS::EntityManager& manager) :
-		cnt(120,1,0,120),
+		cnt_(120,1,0,120),
 		manager_(manager)
 	{
 		ResourceManager::GetGraph().loadDiv("Resource/image/chef.png","Boss",3,3,1,132,243);
@@ -37,26 +44,41 @@ public:
 		bossBody_->getComponent<ECS::Canvas>().addChild(bossFace_);
 		bossFace_->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
 	}
-	void speekComb()
+	void speekComb(const int& setCombNum)
 	{
-		if (cnt.isMin())
+		currentComb_ = setCombNum;
+		//120f後に元の表情に戻す
+		if (cnt_.isMin())
 		{
 			bossFace_->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
 		}
 		else
 		{
-			cnt.sub();
+			cnt_.sub();
 		}
-		if (Input::Get().getKeyFrame(KEY_INPUT_D) == 1)
+
+		//コンボ継続中にミスをした
+		if (preComb_ != 0 && currentComb_ == 0)
 		{
-			cnt.setCounter(120, 1, 0, 120);
 			bossFace_->getComponent<ECS::SpriteAnimationDraw>().drawEnable();
-			bossFace_->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
-			setComb(70);
+			bossFace_->getComponent<ECS::SpriteAnimationDraw>().setIndex(BAD);
+			cnt_.setCounter(120, 1, 0, 120);
 		}
-	
-		
-		
+		//とりあえず10の倍数で吹き出しを出す
+		if (setCombNum % 10 == 0 && !isSpeek_ && setCombNum != 0)
+		{
+			
+			isSpeek_ = true;
+			cnt_.setCounter(120, 1, 0, 120);
+			bossFace_->getComponent<ECS::SpriteAnimationDraw>().drawEnable();
+			bossFace_->getComponent<ECS::SpriteAnimationDraw>().setIndex(GOOD);
+			setComb(setCombNum);
+		}
+		else if(setCombNum % 10 != 0 && isSpeek_)
+		{
+			isSpeek_ = false;
+		}
+		preComb_ = currentComb_;
 	}
 	
 };

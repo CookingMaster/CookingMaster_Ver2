@@ -65,7 +65,7 @@ namespace Scene
 	{
 		entityManager_->update();
 		//おやっさんテスト(Dキー押すと笑うよ)
-		boss_->speekComb();
+		boss_->speekComb(comb_);
 		int score = getNoteScore();
 
 		if (score > 0)
@@ -147,18 +147,22 @@ namespace Scene
 				{
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
+					comb_ = 0;
 					return 0;
 				case ECS::NoteState::State::GOOD:
 					DOUT << "GOOD" << std::endl;
 					se.play(false, true);
+					++comb_;
 					return 5;
 				case ECS::NoteState::State::GREAT:
 					DOUT << "GREAT" << std::endl;
 					se.play(false, true);
+					++comb_;
 					return 8;
 				case ECS::NoteState::State::PARFECT:
 					DOUT << "PARFECT" << std::endl;
 					se.play(false, true);
+					++comb_;
 					return 10;
 				}
 				break;
