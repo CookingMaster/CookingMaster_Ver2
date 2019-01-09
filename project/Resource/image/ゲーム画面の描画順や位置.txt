@@ -1,3 +1,9 @@
+hukidasi
+211,23
+
+score_font
+270,74
+
 bg_table
 0, 193
 
