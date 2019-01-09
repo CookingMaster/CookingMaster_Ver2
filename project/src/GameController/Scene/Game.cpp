@@ -40,7 +40,7 @@ namespace Scene
 		s.play(false,false);
 		//背景
 		ECS::ArcheType::CreateEntity("bg_back", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
-		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 352.f), *entityManager_, ENTITY_GROUP::BACK);
+		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK);
 		//プレイヤー
 		ECS::Player::CreatePlayer(
 			name_,
@@ -100,11 +100,6 @@ namespace Scene
 	{
 		//グループ順に描画
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		DrawFormatString(0, 0, 0xffffffff, "ゲーム画面");
-		if (!name_.empty())
-		{
-			DrawFormatString(0, 100, 0xffffffff, "%s", name_.c_str());
-		}
 	}
 
 	Game::~Game()
