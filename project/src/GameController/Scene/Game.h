@@ -35,5 +35,6 @@ namespace Scene
 		int getNoteScore();
 		void changePauseScene();
 		void changeResultScene();
+		void ComboReset();
 	};
 }

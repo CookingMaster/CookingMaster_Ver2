@@ -23,7 +23,7 @@ namespace ECS
 
 			entity->addComponent<Animator>(5, 3, 5);
 			entity->addComponent<RecordAnimation>();
-			entity->addComponent<BeatByTrigger>(bpm, beat, 4.f, soundName);
+			entity->addComponent<BeatByTrigger>(bpm, beat, float(beat), soundName);
 			entity->addComponent<PlayerState>();
 			entity->addComponent<PlayerController>();
 
