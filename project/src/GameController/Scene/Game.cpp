@@ -40,7 +40,7 @@ namespace Scene
 		s.play(false,false);
 		//背景
 		ECS::ArcheType::CreateEntity("bg_back", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
-		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 352.f), *entityManager_, ENTITY_GROUP::BACK);
+		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK);
 		//プレイヤー
 		ECS::Player::CreatePlayer(
 			name_,
@@ -65,7 +65,7 @@ namespace Scene
 	{
 		entityManager_->update();
 		//おやっさんテスト(Dキー押すと笑うよ)
-		boss_->speekComb();
+		boss_->speekComb(comb_);
 		int score = getNoteScore();
 
 		if (score > 0)
@@ -100,11 +100,6 @@ namespace Scene
 	{
 		//グループ順に描画
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		DrawFormatString(0, 0, 0xffffffff, "ゲーム画面");
-		if (!name_.empty())
-		{
-			DrawFormatString(0, 100, 0xffffffff, "%s", name_.c_str());
-		}
 	}
 
 	Game::~Game()
@@ -152,18 +147,22 @@ namespace Scene
 				{
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
+					comb_ = 0;
 					return 0;
 				case ECS::NoteState::State::GOOD:
 					DOUT << "GOOD" << std::endl;
 					se.play(false, true);
+					++comb_;
 					return 5;
 				case ECS::NoteState::State::GREAT:
 					DOUT << "GREAT" << std::endl;
 					se.play(false, true);
+					++comb_;
 					return 8;
 				case ECS::NoteState::State::PARFECT:
 					DOUT << "PARFECT" << std::endl;
 					se.play(false, true);
+					++comb_;
 					return 10;
 				}
 				break;
