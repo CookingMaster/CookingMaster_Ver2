@@ -172,7 +172,10 @@ namespace ECS
 			//ó‘Ô‚ªMISS‚¾‚Á‚½‚çMISSED‚É•ÏX‚·‚é
 			if (noteState_->state == NoteState::State::MISS)
 			{
-				ChangeStateMISSED();
+				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
+				{
+					ChangeStateMISSED();
+				}
 				return;
 			}
 
