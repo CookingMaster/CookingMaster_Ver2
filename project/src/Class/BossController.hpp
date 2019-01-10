@@ -24,9 +24,9 @@ private:
 	ECS::EntityManager& manager_;
 	void setComb(const int& num)
 	{
-		bossBalloon_ = ECS::GameEffectsArcheType::CreateBossBalloon("balloon", Vec2{ 300,100 }, 120, &manager_);
+		bossBalloon_ = ECS::GameEffectsArcheType::CreateBossBalloon("balloon", Vec2{ 300,140 }, 120, &manager_);
 		bossBalloon_->getComponent<ECS::Scale>().val = 1;
-		bossMessage_ = ECS::GameEffectsArcheType::CreateBossMessage("number", Vec2{ 200,100 }, ECS::Rectangle(0, 0, 50, 100), num, 120, &manager_);
+		bossMessage_ = ECS::GameEffectsArcheType::CreateBossMessage("number", Vec2{ 150,120 }, ECS::Rectangle(0, 0, 50, 100), num, 120, &manager_);
 	}
 public:
 	BossController(ECS::EntityManager& manager) :
