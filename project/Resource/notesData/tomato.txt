@@ -1,12 +1,12 @@
-Resource/image/cabbage_squ.png
-cabbage_squ
+Resource/image/note_tomato.png
+tomato
 se.ogg
 2
 4
 1
 1
 7
-139 100
+153 100
 10
 4 3
 0 0 1 1
