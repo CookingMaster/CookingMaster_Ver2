@@ -18,8 +18,8 @@ namespace Scene
 	{
 	private:
 		ECS::EntityManager* entityManager_ = nullptr;
-		int num_;
-		std::string name_;
+		int scoreNum_;
+		std::string bgmName_;
 		std::unique_ptr<BossController> boss_;
 		MusicScoreLoader msl_;
 		NotesCreator nc_;

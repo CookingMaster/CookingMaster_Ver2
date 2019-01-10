@@ -12,10 +12,10 @@ namespace Scene
 	Game::Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
-		, name_(parame->get<std::string>("BGM_name"))
-		, nc_(name_)
+		, bgmName_(parame->get<std::string>("BGM_name"))
+		, nc_(bgmName_)
 	{
-		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + name_ + "/" + name_ + ".txt");
+		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + bgmName_ + "/" + bgmName_ + ".txt");
 	}
 	void Game::initialize()
 	{
@@ -35,7 +35,7 @@ namespace Scene
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 
-		Sound s(name_);
+		Sound s(bgmName_);
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		s.play(false,false);
 		//背景
@@ -43,7 +43,7 @@ namespace Scene
 		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK);
 		//プレイヤー
 		ECS::Player::CreatePlayer(
-			name_,
+			bgmName_,
 			"player",
 			Vec2(500.f, 505.f),
 			Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f),
@@ -75,13 +75,13 @@ namespace Scene
 				if (it->hasComponent<ECS::BarComponentSystemX>())
 				{
 					it->getComponent<ECS::BarComponentSystemX>().addScore(score);
-					num_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
+					scoreNum_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
 				}
 				if (it->hasComponent<ECS::ExpandReduceComponentSystem>())
 				{
 					//スコアのフォント
 					it->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
-					it->getComponent<ECS::DrawFont>().setNumber(num_);
+					it->getComponent<ECS::DrawFont>().setNumber(scoreNum_);
 				}
 			}
 		}
@@ -106,7 +106,7 @@ namespace Scene
 	{
 		ResourceManager::GetGraph().removeDivGraph("test");
 		ResourceManager::GetSound().remove("onion");
-		ResourceManager::GetSound().remove(name_);
+		ResourceManager::GetSound().remove(bgmName_);
 		entityManager_->allDestory();
 	}
 	
@@ -178,9 +178,9 @@ namespace Scene
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
 			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", name_);
+			bgm_name->add<std::string>("BGM_name", bgmName_);
 			//BGMを停止する
-			Sound(name_).stop();
+			Sound(bgmName_).stop();
 			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
 		}
 	}
@@ -188,12 +188,12 @@ namespace Scene
 	//結果画面遷移
 	void Game::changeResultScene()
 	{
-		Sound sound(name_);
+		Sound sound(bgmName_);
 		if (!sound.isPlay()) {
 			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", name_);
+			bgm_name->add<std::string>("BGM_name", bgmName_);
 			//BGMを停止する
-			Sound(name_).stop();
+			Sound(bgmName_).stop();
 			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
 		}
 	}
