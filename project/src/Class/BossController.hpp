@@ -25,7 +25,7 @@ private:
 	void setComb(const int& num)
 	{
 		bossBalloon_ = ECS::GameEffectsArcheType::CreateBossBalloon("balloon", Vec2{ 300,100 }, 120, &manager_);
-		bossBalloon_->getComponent<ECS::Scale>().val = 2;
+		bossBalloon_->getComponent<ECS::Scale>().val = 1;
 		bossMessage_ = ECS::GameEffectsArcheType::CreateBossMessage("number", Vec2{ 200,100 }, ECS::Rectangle(0, 0, 50, 100), num, 120, &manager_);
 	}
 public:
@@ -35,8 +35,8 @@ public:
 	{
 		ResourceManager::GetGraph().loadDiv("Resource/image/chef.png","Boss",3,3,1,132,243);
 		ResourceManager::GetGraph().loadDiv("Resource/image/chef_face.png", "BossFace", 2,2, 1, 86, 70);
-		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");//かり
-		ResourceManager::GetGraph().load("Resource/image/pause_button.png", "balloon");//かり
+		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
+		ResourceManager::GetGraph().load("Resource/image/hukidasi.png", "balloon");
 		bossBody_ = ECS::GameEffectsArcheType::CreateBossBody("Boss", Vec2{100.f,235.f}, &manager_);
 		bossFace_ = ECS::GameEffectsArcheType::CreateBossFace("BossFace", Vec2{ 10.f,12.f }, &manager_);
 		bossBody_->getComponent<ECS::Canvas>().addChild(bossFace_);
