@@ -68,12 +68,6 @@ namespace ECS
 				"score" + std::to_string(size_t(stageName)) +
 				".bin", std::ios::in);
 
-			if (!ifs)
-			{
-				//読み込みに失敗したら新しくファイルを作成する
-				
-				return;
-			}
 			ifs >> saveScore_;
 			//スコアが高いほうをsaveScore_保存
 			if (saveScore_ < score_->val)

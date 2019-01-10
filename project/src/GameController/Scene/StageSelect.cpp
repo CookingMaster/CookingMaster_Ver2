@@ -459,6 +459,7 @@ namespace Scene
 		{
 			auto parameter = std::make_unique<Parameter>();
 			parameter->add<std::string>("BGM_name", "stage" + std::to_string(stageNum_));
+			parameter->add<size_t>("stageNum", stageNum_);
 			ON_SCENE_CHANGE(SceneName::GAME, parameter.get(), StackPopFlag::POP, true);
 		}
 	}

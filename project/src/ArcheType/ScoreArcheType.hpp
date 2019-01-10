@@ -15,6 +15,7 @@ namespace ECS
 {
 	struct ScoreArcheType
 	{
+
 		//!リザルト画面で得点を表示するためのエンティティです。生成時にハイスコアを保存します
 		static Entity* CreateResultScoreEntity(const char* grapName, const Vec2& pos, const StageHighScore& stageName, const int score, EntityManager& entityManager_)
 		{
@@ -32,6 +33,15 @@ namespace ECS
 			return entity;
 		}
 
+		//スコアを外部ファイルに出力します。ハイスコアでない場合更新されません
+		static Entity* CreateScoreEntity(const StageHighScore& stageName, const int score, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<ScoreData>(score);
+			entity->addComponent<ScoreSystem>(stageName);
+			entity->addGroup(ENTITY_GROUP::LAYER1);
+			return entity;
+		}
 		//!セレクト画面で得点を表示するためのエンティティです。
 		static Entity* CreateSelectScoreEntity(const char* grapName, const Vec2& pos, const StageHighScore& stageName, EntityManager& entityManager_)
 		{

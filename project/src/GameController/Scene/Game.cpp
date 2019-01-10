@@ -13,6 +13,7 @@ namespace Scene
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
 		, bgmName_(parame->get<std::string>("BGM_name"))
+		, stageNum_(parame->get<size_t>("stageNum"))
 		, nc_(bgmName_)
 	{
 		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + bgmName_ + "/" + bgmName_ + ".txt");
@@ -64,7 +65,7 @@ namespace Scene
 	void Game::update()
 	{
 		entityManager_->update();
-		//おやっさんテスト(Dキー押すと笑うよ)
+		//おやっさんにコンボを入れる
 		boss_->speekComb(comb_);
 		int score = getNoteScore();
 
@@ -208,6 +209,18 @@ namespace Scene
 			bgm_name->add<std::string>("BGM_name", bgmName_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
+			switch (stageNum_)
+			{
+			case 1:
+				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_);
+				break;
+			case 2:
+				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_);
+				break;
+			case 3:
+				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
+				break;
+			}
 			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
 		}
 	}
@@ -217,5 +230,6 @@ namespace Scene
 	{
 		comb_ = 0;
 		//↓おやっさんを怒らせる処理
+		boss_->angry();
 	}
 }
