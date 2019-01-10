@@ -48,7 +48,7 @@ namespace Scene
 			bgmName_,
 			"player",
 			Vec2(500.f, 505.f),
-			Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f),
+			Vec2(System::SCREEN_WIDIH / 2.f, (System::SCREEN_HEIGHT / 2.f) + 30),
 			msl_.getBPM(),
 			msl_.getBeat(),
 			*entityManager_);
