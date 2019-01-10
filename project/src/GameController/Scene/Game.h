@@ -17,6 +17,8 @@ namespace Scene
 	class Game : public AbstractScene
 	{
 	private:
+		ECS::Entity* fade_ = nullptr;
+		bool isPlay_ = false;
 		ECS::EntityManager* entityManager_ = nullptr;
 		int scoreNum_;
 		std::string bgmName_;

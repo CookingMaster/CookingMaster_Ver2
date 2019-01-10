@@ -20,6 +20,8 @@ namespace Scene
 	}
 	void Game::initialize()
 	{
+		//Fade
+		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
 		ResourceManager::GetGraph().loadDiv("Resource/image/Act_Chara2.png", "test", 48, 6, 8, 64, 64);
 		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
@@ -36,9 +38,8 @@ namespace Scene
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 
-		Sound s(bgmName_);
+		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
-		s.play(false,false);
 		//背景
 		ECS::ArcheType::CreateEntity("bg_back", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
 		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK);
@@ -58,43 +59,72 @@ namespace Scene
 		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_);
-		//曲の再生
-		s.play(false, false);
+
+		fade_ = ECS::ArcheType::CreateEntity
+		(
+			"fade",
+			Vec2{ 0.f,0.f },
+			*entityManager_,
+			ENTITY_GROUP::TOP_FADE
+		);
 	}
 
 	void Game::update()
 	{
-		entityManager_->update();
-		//おやっさんにコンボを入れる
-		boss_->speekComb(comb_);
-		int score = getNoteScore();
-
-		if (score > 0)
+		auto fade = entityManager_->getEntitiesByGroup(ENTITY_GROUP::TOP_FADE);
+		for (auto& it : fade)
 		{
-			for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::UI))
+			if (!isPlay_)
 			{
-				if (it->hasComponent<ECS::BarComponentSystemX>())
-				{
-					it->getComponent<ECS::BarComponentSystemX>().addScore(score);
-					scoreNum_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
-				}
-				if (it->hasComponent<ECS::ExpandReduceComponentSystem>())
-				{
-					//スコアのフォント
-					it->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
-					it->getComponent<ECS::DrawFont>().setNumber(scoreNum_);
-				}
+				it->getComponent<ECS::AlphaBlend>().alpha -= 6;
+			}
+			 
+		}
+		if (!isPlay_ && fade[0]->getComponent<ECS::AlphaBlend>().alpha <= 0)
+		{
+			isPlay_ = true;
+			//曲の再生
+			Sound s(bgmName_);
+			if (!s.isPlay())
+			{
+				s.play(false, false);
 			}
 		}
-		nc_.run(msl_.getNotesData(), msl_.getScoreData(), *entityManager_);
-
-		if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
+		if (isPlay_)
 		{
-			getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
-			return;
+			entityManager_->update();
+			//おやっさんにコンボを入れる
+			boss_->speekComb(comb_);
+			int score = getNoteScore();
+
+			if (score > 0)
+			{
+				for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::UI))
+				{
+					if (it->hasComponent<ECS::BarComponentSystemX>())
+					{
+						it->getComponent<ECS::BarComponentSystemX>().addScore(score);
+						scoreNum_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
+					}
+					if (it->hasComponent<ECS::ExpandReduceComponentSystem>())
+					{
+						//スコアのフォント
+						it->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
+						it->getComponent<ECS::DrawFont>().setNumber(scoreNum_);
+					}
+				}
+			}
+			nc_.run(msl_.getNotesData(), msl_.getScoreData(), *entityManager_);
+
+			if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
+			{
+				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
+				return;
+			}
+			changeResultScene();
+			changePauseScene();
 		}
-		changeResultScene();
-		changePauseScene();
+		
 	}
 
 	void Game::draw()
