@@ -65,7 +65,7 @@ namespace Scene
 	void Game::update()
 	{
 		entityManager_->update();
-		//おやっさんテスト(Dキー押すと笑うよ)
+		//おやっさんにコンボを入れる
 		boss_->speekComb(comb_);
 		int score = getNoteScore();
 
@@ -230,5 +230,6 @@ namespace Scene
 	{
 		comb_ = 0;
 		//↓おやっさんを怒らせる処理
+		boss_->angry();
 	}
 }

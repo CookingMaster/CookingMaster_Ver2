@@ -15,8 +15,6 @@ private:
 	const int GOOD = 1u;
 	const int BAD = 0u;
 
-	int currentComb_ = 0;
-	int preComb_ = 0;		//前のコンボの値
 	bool isSpeek_ = false;	//吹き出しが複製されないようにするためのフラグ
 	Counter cnt_;
 	ECS::Entity* bossBody_ = nullptr;
@@ -44,9 +42,14 @@ public:
 		bossBody_->getComponent<ECS::Canvas>().addChild(bossFace_);
 		bossFace_->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
 	}
+	void angry()
+	{
+		bossFace_->getComponent<ECS::SpriteAnimationDraw>().drawEnable();
+		bossFace_->getComponent<ECS::SpriteAnimationDraw>().setIndex(BAD);
+		cnt_.setCounter(120, 1, 0, 120);
+	}
 	void speekComb(const int& setCombNum)
 	{
-		currentComb_ = setCombNum;
 		//120f後に元の表情に戻す
 		if (cnt_.isMin())
 		{
@@ -57,17 +60,9 @@ public:
 			cnt_.sub();
 		}
 
-		//コンボ継続中にミスをした
-		if (preComb_ != 0 && currentComb_ == 0)
-		{
-			bossFace_->getComponent<ECS::SpriteAnimationDraw>().drawEnable();
-			bossFace_->getComponent<ECS::SpriteAnimationDraw>().setIndex(BAD);
-			cnt_.setCounter(120, 1, 0, 120);
-		}
 		//とりあえず10の倍数で吹き出しを出す
 		if (setCombNum % 10 == 0 && !isSpeek_ && setCombNum != 0)
 		{
-			
 			isSpeek_ = true;
 			cnt_.setCounter(120, 1, 0, 120);
 			bossFace_->getComponent<ECS::SpriteAnimationDraw>().drawEnable();
@@ -78,7 +73,6 @@ public:
 		{
 			isSpeek_ = false;
 		}
-		preComb_ = currentComb_;
 	}
 	
 };
