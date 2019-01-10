@@ -114,10 +114,20 @@ namespace Scene
 	[[nodiscard]]int Game::getNoteScore()
 	{
 		auto& input = Input::Get();
-		//入力無し、同時押しは無視
+		//入力無し、同時押し時はMISSのノーツのみ調べる
 		if ((input.getKeyFrame(KEY_INPUT_LEFT) == 1 && input.getKeyFrame(KEY_INPUT_RIGHT) == 1) ||
 			(input.getKeyFrame(KEY_INPUT_LEFT) == 0 && input.getKeyFrame(KEY_INPUT_RIGHT) == 0))
 		{
+			auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
+			for (auto& it : note)
+			{
+				auto notestate = it->getComponent<ECS::NoteStateTransition>().getNoteState();
+				if (notestate == ECS::NoteState::State::MISS)
+				{
+					DOUT << "MISS" << std::endl;
+					ComboReset();
+				}
+			}
 			return 0;
 		}
 
@@ -139,15 +149,19 @@ namespace Scene
 				{
 					break;
 				}
-				auto nowstate = itnotestate.getNoteState();
 
+				auto nowstate = itnotestate.getNoteState();
 				//ノーツの状態を遷移
 				itnotestate.ActionToChangeNoteState();
 				switch (nowstate)
 				{
+				case ECS::NoteState::State::MISS:
+					DOUT << "MISS" << std::endl;
+					ComboReset();
+					return 0;
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
-					comb_ = 0;
+					ComboReset();
 					return 0;
 				case ECS::NoteState::State::GOOD:
 					DOUT << "GOOD" << std::endl;
@@ -196,5 +210,12 @@ namespace Scene
 			Sound(name_).stop();
 			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
 		}
+	}
+
+	//コンボを0にしておやっさんを怒らせる
+	void Game::ComboReset()
+	{
+		comb_ = 0;
+		//↓おやっさんを怒らせる処理
 	}
 }

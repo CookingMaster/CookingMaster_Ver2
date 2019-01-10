@@ -24,6 +24,7 @@ namespace ECS
 			GOOD,		//当たる(凡)
 			GREAT,		//当たる(良)
 			PARFECT,	//当たる(優)
+			MISS,		//ミス
 
 			MISSED,		//当たらなかった
 			GRAZED,		//かすった
@@ -168,14 +169,18 @@ namespace ECS
 				noteState_->state == NoteState::State::HITTED)
 				return;
 
+			//状態がMISSだったらMISSEDに変更する
+			if (noteState_->state == NoteState::State::MISS)
+			{
+				ChangeStateMISSED();
+				return;
+			}
+
 			if (noteState_->state == NoteState::State::GRAZED)
 			{
 				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
 				{
-					transCounter_.setCounter(5, 1, 0, 1000);
-					noteState_->state = NoteState::State::MISSED;
-					changeNoteAnim(2, true, 5);
-					rotation_->val = 0.f;
+					ChangeStateMISSED();
 				}
 				else
 				{
@@ -207,8 +212,7 @@ namespace ECS
 			case 4:	noteState_->state = NoteState::State::GOOD;
 					break;
 
-			case 5:	noteState_->state = NoteState::State::MISSED;
-					changeNoteAnim(2, true, 5);
+			case 5:	noteState_->state = NoteState::State::MISS;
 					return;
 
 			default: return;
@@ -229,6 +233,15 @@ namespace ECS
 			animator_->setIsEndStopAnim(isStopMove);
 			entity->stopComponent<Physics>();
 			entity->updateComponent<KillEntity>();
+		}
+
+		//状態をMISSED(グチャってなるアニメーション)に変更する
+		void ChangeStateMISSED()
+		{
+			transCounter_.setCounter(5, 1, 0, 1000);
+			noteState_->state = NoteState::State::MISSED;
+			changeNoteAnim(2, true, 5);
+			rotation_->val = 0.f;
 		}
 	};
 }
