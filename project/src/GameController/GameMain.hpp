@@ -8,6 +8,7 @@
 #include "../System/System.hpp"
 #include "../GameController/GameController.h"
 #include "../Utility/FPS.hpp"
+#include "../Input/Input.hpp"
 #include <memory>
 
 //!アプリケーションを生成します
@@ -24,7 +25,10 @@ private:
 	{
 		game->draw();
 	}
-
+	const bool pushEscape() const
+	{
+		return Input::Get().getKeyFrame(KEY_INPUT_ESCAPE) == 1;
+	}
 public:
 	GameMain()
 	{
@@ -35,7 +39,7 @@ public:
 	void run()
 	{
 
-		while (system->isOk())
+		while (system->isOk() && !pushEscape())
 		{
 			Fps::Get().update();
 			update();
