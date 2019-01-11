@@ -28,6 +28,8 @@ void Scene::Result::initialize()
 	ResourceManager::GetGraph().load("Resource/image/menuback.png", "result_back");
 	ResourceManager::GetGraph().load("Resource/image/dish.png", "dish");
 	ResourceManager::GetGraph().load("Resource/image/confetti.png", "confetti");
+	//評価フォント
+	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
 	//フォント
 	ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 
@@ -42,6 +44,17 @@ void Scene::Result::initialize()
 	back_ = ECS::ResultArcheType::CreateBackEntity("result_back", Vec2{ 0,0 }, *entityManager_);
 	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", dishImgPos, Vec2{ 512,512 }, Vec2{ System::SCREEN_WIDIH/2.f, System::SCREEN_HEIGHT/2.f }, *entityManager_);
 	fade_ = ECS::ArcheType::CreateEntity("fade", Vec2{ 0.f,0.f }, *entityManager_, ENTITY_GROUP::TOP_FADE);
+	int index = 0;
+	if (score_ >= SCORE_GREAT) {
+		index = 0;
+	}
+	else if (score_ >= SCORE_GOOD) {
+		index = 1;
+	}
+	else {
+		index = 2;
+	}
+	evaluation_ = ECS::ResultArcheType::CreateEvaluationEntity("evaluation", index, Vec2{ System::SCREEN_WIDIH / 2, 150.f }, Vec2{ 598,203 } , *entityManager_);
 }
 
 void Scene::Result::update()
@@ -55,8 +68,10 @@ void Scene::Result::update()
 	entityManager_->update();
 
 	if (counter_.getCurrentCount() == 100) {
-		for (int i = 0; i < 50; ++i) {
-			confetties_.push_back(ECS::ResultArcheType::CreateConfettiEntity("confetti", Vec2_i{ 100 * (i % 5),0 }, Vec2_i{ 100,100 }, *entityManager_));
+		if (score_ >= SCORE_GREAT) {
+			for (int i = 0; i < 50; ++i) {
+				confetties_.push_back(ECS::ResultArcheType::CreateConfettiEntity("confetti", Vec2_i{ 100 * (i % 5),0 }, Vec2_i{ 100,100 }, *entityManager_));
+			}
 		}
 	}
 	if (counter_.getCurrentCount() >= 100) {
@@ -67,6 +82,9 @@ void Scene::Result::update()
 			//縮小
 			dish_->addComponent<ECS::Reduction>(Vec2{ 1.2f,1.2f }, Easing::ExpoOut, 8.f);
 		}
+	}
+	if (counter_.getCurrentCount() >= 140) {
+		evaluation_->addComponent<ECS::Expand>(Vec2{ 1.f,1.f },Easing::ExpoOut, 5.f);
 	}
 	if (counter_.getCurrentCount() >= 250) {
 		isFadeOut_ = true;
@@ -96,10 +114,10 @@ Vec2 Scene::Result::setDishImg()
 	Vec2 dishImgPos;
 
 	//スコアによってx座標を変える
-	if (score_ >= 80) {
+	if (score_ >= SCORE_GREAT) {
 		dishImgPos.x = 0;
 	}
-	else if (score_ >= 50) {
+	else if (score_ >= SCORE_GOOD) {
 		dishImgPos.x = 512;
 	}
 	else {

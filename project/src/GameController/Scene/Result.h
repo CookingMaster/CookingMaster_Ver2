@@ -25,6 +25,10 @@ namespace Scene
 	class Result : public AbstractScene
 	{
 	private:
+		//! 定数
+		const int SCORE_GREAT = 80;
+		const int SCORE_GOOD = 50;
+		//! エンティティマネージャー
 		ECS::EntityManager* entityManager_ = nullptr;
 		//! フェード
 		ECS::Entity* fade_ = nullptr;
@@ -36,6 +40,8 @@ namespace Scene
 		ECS::Entity* dish_ = nullptr;
 		//! 紙吹雪
 		std::vector<ECS::Entity*> confetties_;
+		//! 評価フォント
+		ECS::Entity* evaluation_ = nullptr;
 		//! スコア
 		int score_;
 		//! 経過フレームカウンタ

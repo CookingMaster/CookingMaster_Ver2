@@ -43,7 +43,7 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<SimpleDraw>(graphicName);
+			entity->addComponent<SpriteDraw>(graphicName);
 			entity->addGroup(ENTITY_GROUP::BACK);
 			return entity;
 		}
@@ -58,6 +58,19 @@ namespace ECS
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot({ 50,50 });
 			entity->addComponent<Rotate>(1.f);
 			entity->addComponent<FallDance>(rand.getRand(-5.f, 5.f), rand.getRand(0.f, 180.f), rand.getRand(0.01f, 0.1f));
+			entity->addGroup(ENTITY_GROUP::EFFECT);
+			return entity;
+		}
+		static Entity* CreateEvaluationEntity(const char* graphicName, const int index, const Vec2 pos, const Vec2_i imageSize, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			Vec2 pivot(imageSize.x / 2.f, imageSize.y / 2.f);
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setPivot(pivot);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
 			entity->addGroup(ENTITY_GROUP::EFFECT);
 			return entity;
 		}
