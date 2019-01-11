@@ -35,7 +35,7 @@ void Scene::Result::initialize()
 	counter_.setEndTime(300, 0);
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity("cloche", Vec2{ 650,400 }, *entityManager_);
 	back_ = ECS::ResultArcheType::CreateBackEntity("game_bg", Vec2{ 0,0 }, *entityManager_);
-	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", dishImgPos, Vec2{ 512,512 }, Vec2{ 610,280 }, *entityManager_);
+	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", dishImgPos, Vec2{ 512,512 }, Vec2{ System::SCREEN_WIDIH/2.f, System::SCREEN_HEIGHT/2.f }, *entityManager_);
 
 }
 
@@ -109,6 +109,9 @@ void Scene::Result::setScore()
 	}
 	else if (bgmName_ == "stage3") {
 		stage_ = ECS::StageHighScore::STAGE3;
+	}
+	else {
+		stage_ = ECS::StageHighScore::STAGE1;
 	}
 	//ハイスコアの読み込み
 	score_ = ECS::ScoreArcheType::CreateSelectScoreEntity("font", Vec2{ 100,200 }, ECS::StageHighScore::STAGE2, *entityManager_)->
