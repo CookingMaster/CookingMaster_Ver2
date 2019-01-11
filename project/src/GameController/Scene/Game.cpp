@@ -241,8 +241,9 @@ namespace Scene
 	{
 		Sound sound(bgmName_);
 		if (!sound.isPlay()) {
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", bgmName_);
+			auto sendParame = std::make_unique<Parameter>();
+			sendParame->add<std::string>("BGM_name", bgmName_);
+			sendParame->add<int>("score", scoreNum_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			switch (stageNum_)
@@ -257,7 +258,7 @@ namespace Scene
 				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
 				break;
 			}
-			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
+			ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 		}
 	}
 
