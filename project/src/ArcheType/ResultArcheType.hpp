@@ -32,7 +32,8 @@ namespace ECS
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>((int)rectXY.x, (int)rectXY.y, (int)rectWH.x, (int)rectWH.y);
-			entity->addComponent<SpriteRectDraw>(graphicName).setPivot({ 200,125 });
+			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{256.f,256.f});
+			entity->getComponent<Transform>().setScale(0.7f,0.7f);
 			entity->addGroup(ENTITY_GROUP::KITCHENWARE);	//‚æ‚³‚°‚È‚ÌŽg‚¢‚Ü‚í‚µ
 			return entity;
 		}

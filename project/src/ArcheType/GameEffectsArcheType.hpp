@@ -35,8 +35,9 @@ namespace ECS
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
-			e.addComponent<SpriteAnimationDraw>(divGraphicName);
-			e.addGroup(ENTITY_GROUP::UI);
+			e.addComponent<SpriteAnimationDraw>(divGraphicName).setPivot(Vec2{0.f,0.f});
+			//e.addComponent<Animator>();
+			e.addGroup(ENTITY_GROUP::BACK_OBJECT);
 			return &e;
 		}
 		//!斬撃エフェクト
