@@ -28,14 +28,14 @@ void Scene::Result::initialize()
 
 	//ハイスコアの取得テスト
 	setScore();
-	//スコアによって料理の画像を変える
-	float dishW = setDish();
+	//stageとスコアによって料理の画像を変える
+	Vec2 dishImgPos = setDishImg();
 
 	//エンティティ初期化
 	counter_.setEndTime(300, 0);
-	cloche_ = ECS::ResultArcheType::CreateClocheEntity("cloche", Vec2{ 600,400 }, *entityManager_);
+	cloche_ = ECS::ResultArcheType::CreateClocheEntity("cloche", Vec2{ 650,400 }, *entityManager_);
 	back_ = ECS::ResultArcheType::CreateBackEntity("game_bg", Vec2{ 0,0 }, *entityManager_);
-	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", Vec2{ dishW, 0 }, Vec2{ 400,250 }, Vec2{ 600,425 }, *entityManager_);
+	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", dishImgPos, Vec2{ 512,512 }, Vec2{ 610,280 }, *entityManager_);
 
 }
 
@@ -51,9 +51,12 @@ void Scene::Result::update()
 	}
 	if (counter_.getCurrentCount() >= 100) {
 		cloche_->addComponent<ECS::FlyAway>(Vec2{ 1920,600 }, 3.f);
-	}
-	if (counter_.getCurrentCount() >= 110) {
-		dish_->addComponent<ECS::Expand>(Vec2{ 1.5f,1.5f }, Easing::ExpoIn, 20.f);
+		//拡大
+		dish_->addComponent<ECS::Expand>(Vec2{ 2.0f,2.0f }, Easing::ExpoIn, 20.f);
+		if (dish_->getComponent<ECS::Expand>().isEaseEnd()) {
+			//縮小
+			dish_->addComponent<ECS::Reduction>(Vec2{ 1.2f,1.2f }, Easing::ExpoOut, 8.f);
+		}
 	}
 
 	if (counter_.isMax()) {
@@ -65,7 +68,6 @@ void Scene::Result::update()
 void Scene::Result::draw()
 {
 	entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-	DrawFormatString(0, 0, 0xffffffff, "RESULT");
 }
 
 Scene::Result::~Result()
@@ -73,36 +75,40 @@ Scene::Result::~Result()
 	entityManager_->allDestory();
 }
 
-float Scene::Result::setDish()
+Vec2 Scene::Result::setDishImg()
 {
-	float dishW = 0;
-	if (score_ >= 90) {
-		dishW = 0;
-	}
-	else if (score_ >= 70) {
-		dishW = 400;
+	Vec2 dishImgPos;
+
+	//test
+	score_ = 50;
+
+	//スコアによってx座標を変える
+	if (score_ >= 80) {
+		dishImgPos.x = 0;
 	}
 	else if (score_ >= 50) {
-		dishW = 800;
+		dishImgPos.x = 512;
 	}
 	else {
-		dishW = 1200;
+		dishImgPos.x = 1024;
 	}
-	return dishW;
+	//ステージによってy座標を変える
+	dishImgPos.y = (static_cast<int>(stage_) - 1) * 512.f;
+
+	return dishImgPos;
 }
 
 void Scene::Result::setScore()
 {
 	//BGM名からステージを割り出す
-	ECS::StageHighScore stage;
-	if (bgmName_ == "Stage1") {
-		stage = ECS::StageHighScore::STAGE1;
+	if (bgmName_ == "stage1") {
+		stage_ = ECS::StageHighScore::STAGE1;
 	}
-	else if (bgmName_ == "Stage2") {
-		stage = ECS::StageHighScore::STAGE2;
+	else if (bgmName_ == "stage2") {
+		stage_ = ECS::StageHighScore::STAGE2;
 	}
-	else if (bgmName_ == "Stage3") {
-		stage = ECS::StageHighScore::STAGE3;
+	else if (bgmName_ == "stage3") {
+		stage_ = ECS::StageHighScore::STAGE3;
 	}
 	//ハイスコアの読み込み
 	score_ = ECS::ScoreArcheType::CreateSelectScoreEntity("font", Vec2{ 100,200 }, ECS::StageHighScore::STAGE2, *entityManager_)->

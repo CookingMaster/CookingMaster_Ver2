@@ -124,6 +124,7 @@ namespace Scene
 				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
 				return;
 			}
+
 			changeResultScene();
 			changePauseScene();
 		}
