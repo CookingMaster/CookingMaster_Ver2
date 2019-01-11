@@ -22,6 +22,8 @@ namespace Scene
 	{
 		//Fade
 		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
+		//鍋
+		ResourceManager::GetGraph().loadDiv("Resource/image/bg_nabe1.png", "nabe1", 8, 8, 1, 140, 148);
 		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/bg_back.png", "bg_back");
@@ -29,8 +31,6 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/bar_empty.png", "bar_empty");
 		ResourceManager::GetGraph().load("Resource/image/bar_full.png", "bar_full");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
-		ResourceManager::GetGraph().load("Resource/image/clock.png", "clock");
-		ResourceManager::GetGraph().load("Resource/image/needle.png", "needle");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
 
@@ -42,6 +42,8 @@ namespace Scene
 		//背景
 		ECS::ArcheType::CreateEntity("bg_back", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
 		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK);
+		//鍋
+		ECS::GameEffectsArcheType::CreateSaucepan("nabe1", Vec2(431.f, 175.f), entityManager_);
 		//プレイヤー
 		ECS::Player::CreatePlayer(
 			bgmName_,
