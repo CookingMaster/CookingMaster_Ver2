@@ -22,7 +22,6 @@ namespace Scene
 	{
 		//Fade
 		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
-		ResourceManager::GetGraph().loadDiv("Resource/image/Act_Chara2.png", "test", 48, 6, 8, 64, 64);
 		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/bg_back.png", "bg_back");
@@ -121,6 +120,11 @@ namespace Scene
 				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
 				return;
 			}
+			if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1)
+			{
+				getCallBack().onSceneChange(SceneName::RESULT, nullptr, StackPopFlag::POP, true);
+				return;
+			}
 
 			changeResultScene();
 			changePauseScene();
@@ -136,7 +140,6 @@ namespace Scene
 
 	Game::~Game()
 	{
-		ResourceManager::GetGraph().removeDivGraph("test");
 		ResourceManager::GetSound().remove("onion");
 		ResourceManager::GetSound().remove(bgmName_);
 		entityManager_->allDestory();

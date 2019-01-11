@@ -4,6 +4,7 @@
 #include "../../ArcheType/ResultArcheType.hpp"
 #include "../../Components/ResultComponent.hpp"
 #include "../../Components/UIComponents.hpp"
+#include "../src/ArcheType/ArcheType.hpp"
 
 
 Scene::Result::Result(IOnSceneChangeCallback * sceneTitleChange, [[maybe_unused]]Parameter * parame, ECS::EntityManager * entityManager)
@@ -18,9 +19,12 @@ Scene::Result::Result(IOnSceneChangeCallback * sceneTitleChange, [[maybe_unused]
 
 void Scene::Result::initialize()
 {
+	//Fade
+	isFadeOut_ = false;
+	ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
 	//画像
 	ResourceManager::GetGraph().load("Resource/image/cloche.png", "cloche");
-	ResourceManager::GetGraph().load("Resource/image/1280.png", "game_bg");
+	ResourceManager::GetGraph().load("Resource/image/menuback.png", "result_back");
 	ResourceManager::GetGraph().load("Resource/image/dish.png", "dish");
 	ResourceManager::GetGraph().load("Resource/image/confetti.png", "confetti");
 	//フォント
@@ -32,15 +36,27 @@ void Scene::Result::initialize()
 	Vec2 dishImgPos = setDishImg();
 
 	//エンティティ初期化
+	counter_.reset();
 	counter_.setEndTime(300, 0);
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity("cloche", Vec2{ 650,400 }, *entityManager_);
-	back_ = ECS::ResultArcheType::CreateBackEntity("game_bg", Vec2{ 0,0 }, *entityManager_);
-	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", dishImgPos, Vec2{ 512,512 }, Vec2{ 610,280 }, *entityManager_);
-
+	back_ = ECS::ResultArcheType::CreateBackEntity("result_back", Vec2{ 0,0 }, *entityManager_);
+	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", dishImgPos, Vec2{ 512,512 }, Vec2{ System::SCREEN_WIDIH/2.f, System::SCREEN_HEIGHT/2.f }, *entityManager_);
+	fade_ = ECS::ArcheType::CreateEntity
+	(
+		"fade",
+		Vec2{ 0.f,0.f },
+		*entityManager_,
+		ENTITY_GROUP::TOP_FADE
+	);
 }
 
 void Scene::Result::update()
 {
+	if (!isFadeOut_ && fade_->getComponent<ECS::AlphaBlend>().alpha >= 0) {
+		fade_->getComponent<ECS::AlphaBlend>().alpha -= 6;
+		return;
+	}
+
 	counter_.add();
 	entityManager_->update();
 
@@ -58,8 +74,14 @@ void Scene::Result::update()
 			dish_->addComponent<ECS::Reduction>(Vec2{ 1.2f,1.2f }, Easing::ExpoOut, 8.f);
 		}
 	}
-
-	if (counter_.isMax()) {
+	if (counter_.getCurrentCount() >= 250) {
+		isFadeOut_ = true;
+	}
+	if (isFadeOut_) {
+		fade_->getComponent<ECS::SpriteDraw>().drawEnable();
+		fade_->getComponent<ECS::AlphaBlend>().alpha += 6;
+	}
+	if (fade_->getComponent<ECS::AlphaBlend>().alpha >= 255) {
 		DOUT << "BackToTitle" << std::endl;
 		ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::ALL_CLEAR, true);
 	}

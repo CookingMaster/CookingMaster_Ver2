@@ -26,6 +26,8 @@ namespace Scene
 	{
 	private:
 		ECS::EntityManager* entityManager_ = nullptr;
+		//! フェード
+		ECS::Entity* fade_ = nullptr;
 		//! 背景
 		ECS::Entity* back_ = nullptr;
 		//! クロッシュ
@@ -41,6 +43,9 @@ namespace Scene
 		//! ステージ情報
 		std::string bgmName_;
 		ECS::StageHighScore stage_;
+		//! フェードアウトフラグ
+		bool isFadeOut_;
+
 
 
 		//! スコアから料理の画像を設定する
