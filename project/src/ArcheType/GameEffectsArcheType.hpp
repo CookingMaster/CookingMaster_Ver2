@@ -11,6 +11,7 @@
 #include "../Components/PlayerController.hpp"
 #include "../Components/UIComponents.hpp"
 #include "../Components/TitleUIComponents.hpp"
+#include "../Components/BossAnimator.hpp"
 
 namespace ECS
 {
@@ -35,7 +36,6 @@ namespace ECS
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteAnimationDraw>(divGraphicName);
-			//e.addComponent<Animator>();
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
@@ -115,14 +115,15 @@ namespace ECS
 		}
 
 		//!おやっさんの胴体(のっぺらぼう)
-		static Entity* CreateBossBody(const char* divGraphicName, const Vec2& pos, EntityManager* entityManager)
+		static Entity* CreateBossBody(const char* divGraphicName, const Vec2& pos, int bpm, int beat, const std::string& soundName, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteAnimationDraw>(divGraphicName);
-			//e.addComponent<Animator>();
+			e.addComponent<BeatByTrigger>(bpm, beat, float(beat), soundName);
+			e.addComponent<BossAnimator>();
 			e.addComponent<Canvas>();
 			e.addGroup(ENTITY_GROUP::BACK_OBJECT);
 			return &e;

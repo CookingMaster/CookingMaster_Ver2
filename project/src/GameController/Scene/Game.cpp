@@ -57,7 +57,7 @@ namespace Scene
 		//得点(パーセンテージ)表示
 		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
 		//おやっさんを攻撃表示で召喚する
-		boss_ = std::make_unique<BossController>(*entityManager_);
+		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
 		//曲の再生
 		s.play(false, false);
 	}
