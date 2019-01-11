@@ -55,8 +55,7 @@ void Scene::Result::update()
 		dish_->addComponent<ECS::Expand>(Vec2{ 2.0f,2.0f }, Easing::ExpoIn, 20.f);
 		if (dish_->getComponent<ECS::Expand>().isEaseEnd()) {
 			//k¬
-			dish_->addComponent<ECS::Expand>(Vec2{ 1.0f,1.0f }, Easing::ExpoOut, 10.f);
-			DOUT << dish_->getComponent<ECS::Scale>().val.x << std::endl;
+			dish_->addComponent<ECS::Reduction>(Vec2{ 1.2f,1.2f }, Easing::ExpoOut, 8.f);
 		}
 	}
 
@@ -69,7 +68,6 @@ void Scene::Result::update()
 void Scene::Result::draw()
 {
 	entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-	DrawFormatString(0, 0, 0xffffffff, "RESULT");
 }
 
 Scene::Result::~Result()

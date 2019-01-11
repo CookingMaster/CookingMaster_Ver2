@@ -1,0 +1,14 @@
+Resource/image/note_onion.png
+onion
+se.ogg
+2
+4
+1
+1
+7
+179 100
+10
+4 3
+0 0 1 1
+0 1 4 2
+0 2 3 3

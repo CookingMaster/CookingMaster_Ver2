@@ -80,13 +80,24 @@ private:
 			//そのノーツが画面内に出現するまでの待ち時間を計算
 			float waitTime = beat.calcOneBar_Frame() * 2.f - (float(scoreData[nextBar].size() - i) * noteFlame) - arrivalBeatTime;
 
-			//生成
+			Vec2 targetPos;
+			switch (scoreData[nextBar][i].dir)
+			{
+			case ECS::Direction::Dir::L:	//左から飛んでくるノーツ
+				targetPos = Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f);
+				break;
+
+			case ECS::Direction::Dir::R:	//右から飛んでくるノーツ
+				targetPos = Vec2((System::SCREEN_WIDIH / 2.f)  + 200.f, System::SCREEN_HEIGHT / 2.f);
+				break;
+			}
+			//ノーツを生成
 			ECS::NotesArcheType::CreateNotes(
 				nd,
 				scoreData[nextBar][i].dir,
 				waitTime,
 				arrivalBeatTime,
-				Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f),
+				targetPos,
 				entityManager);
 		}
 

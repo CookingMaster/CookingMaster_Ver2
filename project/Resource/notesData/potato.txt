@@ -1,0 +1,14 @@
+Resource/image/note_potato.png
+potato
+se.ogg
+2
+4
+1
+1
+7
+170 100
+10
+4 3
+0 0 1 1
+0 1 4 2
+0 2 3 3

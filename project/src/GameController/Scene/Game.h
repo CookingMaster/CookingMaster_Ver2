@@ -17,12 +17,16 @@ namespace Scene
 	class Game : public AbstractScene
 	{
 	private:
+		ECS::Entity* fade_ = nullptr;
+		bool isPlay_ = false;
 		ECS::EntityManager* entityManager_ = nullptr;
-		int num_;
-		std::string name_;
+		int scoreNum_;
+		std::string bgmName_;
+		size_t stageNum_;
 		std::unique_ptr<BossController> boss_;
 		MusicScoreLoader msl_;
 		NotesCreator nc_;
+		int comb_ = 0;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();
@@ -33,6 +37,7 @@ namespace Scene
 	private:
 		int getNoteScore();
 		void changePauseScene();
-		void cangeResultScene();
+		void changeResultScene();
+		void ComboReset();
 	};
 }

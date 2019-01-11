@@ -1,14 +1,20 @@
+hukidasi
+211,23
+
+score_font
+270,74
+
 bg_table
-0, 352
+0, 193
 
 nabe1
 431,178
 
 nabe2
-995,218
+447,224
 
 nabe3
-1147,246
+426,255
 
 chef_happy
 chef0,0‚©‚ç
@@ -19,19 +25,15 @@ chef0,0‚©‚ç
 33,99
 
 water
-262,264
+263,265
 
 
 
 ƒQ[ƒ€‰æ–Ê‚Ì•`‰æ‡‚Í
 bg_back.png
 «
-bg_nabe1,2,3 & bg_water & chef 
+bg_nabe1,2,3.png & bg_water.png & chef.png
 «
-bg_table
+bg_table.png
 «
-player
-
-
-¡‚Ì‚Æ‚±‚ë
-bg_closet, bg_dish, bg_kabe‚Íg‚í‚È‚¢
+player.png

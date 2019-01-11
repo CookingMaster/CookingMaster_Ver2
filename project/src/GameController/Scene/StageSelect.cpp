@@ -15,8 +15,12 @@ namespace Scene
 		, entityManager_(entityManager)
 		, cnt_(0,1,0,10)
 	{
+		//Fade
+		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
 		//セレクト曲
 		ResourceManager::GetSound().load("Resource/sound/BGM/Welcome.ogg", "selectBGM",SoundType::BGM);
+		//セレクト効果音
+		ResourceManager::GetSound().load("Resource/sound/SE/select.wav", "selectSE", SoundType::SE);
 		//背景
 		ResourceManager::GetGraph().load("Resource/image/menuback.png", "back"); 
 		//本
@@ -250,6 +254,15 @@ namespace Scene
 			);
 				
 		}
+		fade_ = ECS::ArcheType::CreateEntity
+		(
+			"fade",
+			Vec2{ 0.f,0.f },
+			*entityManager_,
+			ENTITY_GROUP::TOP_FADE
+		);
+		fade_->getComponent<ECS::SpriteDraw>().drawDisable();
+		fade_->getComponent<ECS::AlphaBlend>().alpha = 0;
 
 		//オプションに乗ってるやつをオプションエンティの相対座標に設定する
 		option_->getComponent<ECS::Canvas>().addChild(cursorTargets[3]);
@@ -420,19 +433,35 @@ namespace Scene
 		const auto bgm_path = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
 		if (bgm_path != "")
 		{
-			const auto stage_num = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
+			if (!isPlay_)
+			{
+				stageNum_ = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
+				ResourceManager::GetSound().load(
+					"Resource/sound/MUSIC/stage" + std::to_string(stageNum_) + "/" + bgm_path,
+					"stage" + std::to_string(stageNum_),
+					SoundType::BGM);
+				
+				std::ofstream ofs("Resource/system/gain.bin");
+				ofs << bgmVal_ << "\n" << seVal_;
+				isPlay_ = true;
+				fade_->getComponent<ECS::SpriteDraw>().drawEnable();
+				Sound se("selectSE");
+				se.play(false,true);
+			}
+		}
+		if (isPlay_)
+		{
+			fade_->getComponent<ECS::AlphaBlend>().alpha += 6;
+		}
+
+
+		if (fade_->getComponent<ECS::AlphaBlend>().alpha >= 255)
+		{
 			auto parameter = std::make_unique<Parameter>();
-			const std::string STAGE_STR = "stage";
-			ResourceManager::GetSound().load(
-				"Resource/sound/MUSIC/stage" + std::to_string(stage_num) + "/"+ bgm_path,
-				STAGE_STR + std::to_string(stage_num),
-				SoundType::BGM);
-			parameter->add<std::string>("BGM_name", STAGE_STR + std::to_string(stage_num));
-			std::ofstream ofs("Resource/system/gain.bin");
-			ofs << bgmVal_ << "\n" << seVal_;
+			parameter->add<std::string>("BGM_name", "stage" + std::to_string(stageNum_));
+			parameter->add<size_t>("stageNum", stageNum_);
 			ON_SCENE_CHANGE(SceneName::GAME, parameter.get(), StackPopFlag::POP, true);
 		}
-		
 	}
 	void StageSelect::draw()
 	{
