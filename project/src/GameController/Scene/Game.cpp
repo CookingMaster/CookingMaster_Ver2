@@ -31,8 +31,6 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/bar_empty.png", "bar_empty");
 		ResourceManager::GetGraph().load("Resource/image/bar_full.png", "bar_full");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
-		ResourceManager::GetGraph().load("Resource/image/clock.png", "clock");
-		ResourceManager::GetGraph().load("Resource/image/needle.png", "needle");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
 
@@ -124,6 +122,11 @@ namespace Scene
 				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
 				return;
 			}
+			if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1)
+			{
+				getCallBack().onSceneChange(SceneName::RESULT, nullptr, StackPopFlag::POP, true);
+				return;
+			}
 
 			changeResultScene();
 			changePauseScene();
@@ -139,7 +142,6 @@ namespace Scene
 
 	Game::~Game()
 	{
-		ResourceManager::GetGraph().removeDivGraph("test");
 		ResourceManager::GetSound().remove("onion");
 		ResourceManager::GetSound().remove(bgmName_);
 		entityManager_->allDestory();
@@ -239,8 +241,9 @@ namespace Scene
 	{
 		Sound sound(bgmName_);
 		if (!sound.isPlay()) {
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", bgmName_);
+			auto sendParame = std::make_unique<Parameter>();
+			sendParame->add<std::string>("BGM_name", bgmName_);
+			sendParame->add<int>("score", scoreNum_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			switch (stageNum_)
@@ -255,7 +258,7 @@ namespace Scene
 				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
 				break;
 			}
-			ON_SCENE_CHANGE(SceneName::RESULT, bgm_name.get(), StackPopFlag::POP, true);
+			ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 		}
 	}
 
