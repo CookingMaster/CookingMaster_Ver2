@@ -412,7 +412,6 @@ namespace ECS
 		std::string name_;
 		Vec2_i size_;
 		bool isDraw_ = true;
-		bool isCenter_ = false;
 		Vec2 pivot_;
 	public:
 		//!登録した画像名を指定して初期化します
@@ -472,12 +471,6 @@ namespace ECS
 		void drawDisable()
 		{
 			isDraw_ = false;
-		}
-		//!描画する基準座標を中心にします
-		void doCenter()
-		{
-			pivot_.x = float(size_.x) / 2.f;
-			pivot_.y = float(size_.y) / 2.f;
 		}
 		//!描画する基準座標を引数で指定します
 		void setPivot(const Vec2& pivot)
