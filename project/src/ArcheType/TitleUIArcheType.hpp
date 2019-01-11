@@ -13,8 +13,8 @@ namespace ECS
 			auto* entity = &entityManager.addEntity();
 			entity->addComponent<FlashImage>();
 
-			entity->addComponent<Position>(-1000.f, -1000.f);
-			entity->addComponent<SimpleDraw>(imgName.c_str()).doCenter(true);
+			entity->addComponent<Transform>().setPosition(-1000.f, -1000.f);
+			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<EasingPosMove>().setDest(
 				Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT + 100.f),
 				goalpos,
@@ -48,10 +48,10 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 
-			entity->addComponent<Position>(-1000.f, -1000.f);
+			entity->addComponent<Transform>().setPosition(-1000.f, -1000.f);
 			entity->addComponent<FlashImage>();
 			entity->stopComponent<FlashImage>();
-			entity->addComponent<SimpleDraw>(imgName.c_str()).doCenter(true);
+			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<EasingPosMove>().setDest(
 				Vec2(System::SCREEN_WIDIH / 2.f, -50.f),
 				goalpos,
@@ -79,9 +79,9 @@ namespace ECS
 		static Entity* CreateFade(const std::string& imgName, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Position>(0.f ,0.f);
+			entity->addComponent<Transform>().setPosition(0.f ,0.f);
 			entity->addComponent<FadeComponent>().reset(255.f, 0.f, 60.f);
-			entity->addComponent<SimpleDraw>(imgName.c_str());
+			entity->addComponent<SpriteDraw>(imgName.c_str()).setPivot(Vec2{ 0.f,0.f });
 
 			entity->addGroup(ENTITY_GROUP::TOP_FADE);
 

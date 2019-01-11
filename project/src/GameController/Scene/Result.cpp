@@ -14,6 +14,7 @@ Scene::Result::Result(IOnSceneChangeCallback * sceneTitleChange, [[maybe_unused]
 {
 	if (parame != nullptr) {
 		bgmName_ = (parame->get<std::string>("BGM_name"));
+		score_ = (parame->get<int>("score"));
 	}
 }
 
@@ -30,8 +31,8 @@ void Scene::Result::initialize()
 	//フォント
 	ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 
-	//ハイスコアの取得テスト
-	setScore();
+	//プレイしたステージを割り出す
+	setStage();
 	//stageとスコアによって料理の画像を変える
 	Vec2 dishImgPos = setDishImg();
 	//エンティティ初期化
@@ -110,7 +111,7 @@ Vec2 Scene::Result::setDishImg()
 	return dishImgPos;
 }
 
-void Scene::Result::setScore()
+void Scene::Result::setStage()
 {
 	//BGM名からステージを割り出す
 	if (bgmName_ == "stage1") {
@@ -125,7 +126,4 @@ void Scene::Result::setScore()
 	else {
 		stage_ = ECS::StageHighScore::STAGE1;
 	}
-	//ハイスコアの読み込み
-	score_ = ECS::ScoreArcheType::CreateSelectScoreEntity("font", Vec2{ 100,200 }, ECS::StageHighScore::STAGE2, *entityManager_)->
-		getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE2);
 }
