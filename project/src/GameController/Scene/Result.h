@@ -51,7 +51,7 @@ namespace Scene
 		//! スコアから料理の画像を設定する
 		Vec2 setDishImg();
 		//! スコアを取得する
-		void setScore();
+		void setStage();
 	public:
 		Result(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		void initialize() override;
