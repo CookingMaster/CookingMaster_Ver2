@@ -129,7 +129,7 @@ namespace ECS
 			SetDrawBright(255, 255, 255);
 		}
 		//!エンティティにColorとAlphaBlendを安全に参照させます。
-		static void SatRenderDetail(const Entity* entity, Color** color, AlphaBlend** blend)
+		static void SetRenderDetail(const Entity* entity, Color** color, AlphaBlend** blend)
 		{
 			//色データがあれば反映する
 			if (entity->hasComponent<Color>())
@@ -193,7 +193,7 @@ namespace ECS
 			}
 			pivot_.x = float(size_.x) / 2.f;
 			pivot_.y = float(size_.y) / 2.f;
-			RenderUtility::SatRenderDetail(entity, &color_, &blend_);
+			RenderUtility::SetRenderDetail(entity, &color_, &blend_);
 		}
 		void draw2D() override
 		{
@@ -261,11 +261,6 @@ namespace ECS
 			{
 				RenderUtility::SetColor(__super::color_);
 				RenderUtility::SetBlend(__super::blend_);
-				if (__super::pos_->val.x == 110)
-				{
-					int a;
-					a = 1;
-				}
 				DrawRotaGraph3F(
 					__super::pos_->val.x,
 					__super::pos_->val.y,
@@ -310,7 +305,7 @@ namespace ECS
 			__super::rota_ = &entity->getComponent<Rotation>();
 			__super::scale_ = &entity->getComponent<Scale>();
 			rect_ = &entity->getComponent<Rectangle>();
-			RenderUtility::SatRenderDetail(entity, &color_, &blend_);
+			RenderUtility::SetRenderDetail(entity, &color_, &blend_);
 		}
 		void draw2D() override
 		{
