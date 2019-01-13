@@ -471,7 +471,7 @@ namespace Scene
 
 	StageSelect::~StageSelect()
 	{
-		entityManager_->allDestory();
+		entityManager_->removeAll();
 		ResourceManager::GetGraph().removeAll();
 		ResourceManager::GetSound().remove("selectBGM");
 	}

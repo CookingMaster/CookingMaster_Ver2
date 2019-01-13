@@ -41,7 +41,7 @@ namespace Scene
 
 	Title::~Title()
 	{
-		entityManager_->allDestory();
+		entityManager_->removeAll();
 		ResourceManager::GetSound().remove("pak");
 	}
 
