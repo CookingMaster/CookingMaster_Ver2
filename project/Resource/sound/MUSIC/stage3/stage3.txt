@@ -1,19 +1,18 @@
-#BPM 10
+#BPM 180
 
 #BEAT 4
 
 #OFFSET 0
 
 #NOTESDATA
-1 Resource/notesData/notesDataTest.txt
-2 Resource/notesData/notesDataTest2.txt
+1 Resource/notesData/brory.txt
+2 Resource/notesData/cabbage.txt
+3 Resource/notesData/carrot.txt
+4 Resource/notesData/onion.txt
+5 Resource/notesData/potato.txt
+6 Resource/notesData/tomato.txt
 
 #START
-0 ,
-L1 R1 L1 R1 ,
-L2 R2 L2 R2 ,
-0 R1 0 L2 ,
-0 R1 0 L1 0 R2 0 L2 ,
 L1 R1 L1 R1 ,
 L2 R2 L2 R2 ,
 L2 R2 L2 R2 ,
