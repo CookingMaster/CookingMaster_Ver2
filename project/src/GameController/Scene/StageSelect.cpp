@@ -110,7 +110,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
-			cursorTargets.back()->addComponent<ECS::MusicName>("act_bgm.wav");
+			cursorTargets.back()->addComponent<ECS::MusicName>("Cooking_cuisine.wav");
 
 			//3 オプションの文字の位置
 			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
