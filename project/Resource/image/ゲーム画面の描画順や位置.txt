@@ -1,3 +1,10 @@
+bg_fan1, bg_fan2
+1087,9
+•`‰æ‚Ífan2->fan1, ‰ñ‚·‚Ì‚Ífan2
+
+mori1, mori2
+1074, 228
+
 hukidasi
 211,23
 
