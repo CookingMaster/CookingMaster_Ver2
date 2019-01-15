@@ -27,9 +27,9 @@ GameController::GameController()
 	MasterSound::Get().setAllBGMGain(BGM);
 	MasterSound::Get().setAllSEGain(SE);
 	//初期シーンの設定
-	sceneStack.push(std::make_unique<Scene::StageSelect>(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
+	sceneStack_.push(std::make_unique<Scene::StageSelect>(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
 	MasterSound::Get().update();
-	sceneStack.top()->initialize();
+	sceneStack_.top()->initialize();
 	
 }
 
@@ -41,7 +41,7 @@ void GameController::onSceneChange(const Scene::SceneName& scene, Parameter* par
 		break;
 	case Scene::StackPopFlag::POP:
 		DOUT << "poped the scene stack" << std::endl;
-		sceneStack.pop();
+		sceneStack_.pop();
 		break;
 	case Scene::StackPopFlag::ALL_CLEAR:
 		DOUT << "poped the scene stack all" << std::endl;
@@ -53,19 +53,19 @@ void GameController::onSceneChange(const Scene::SceneName& scene, Parameter* par
 	switch (scene)
 	{
 	case Scene::SceneName::TITLE:
-		sceneStack.push(std::make_unique<Scene::Title>(this, parame, &entityManager_));
+		sceneStack_.push(std::make_unique<Scene::Title>(this, parame, &entityManager_));
 		break;
 	case Scene::SceneName::SELECT:
-		sceneStack.push(std::make_unique<Scene::StageSelect>(this, parame, &entityManager_));
+		sceneStack_.push(std::make_unique<Scene::StageSelect>(this, parame, &entityManager_));
 		break;
 	case Scene::SceneName::GAME:
-		sceneStack.push(std::make_unique<Scene::Game>(this, parame, &entityManager_));
+		sceneStack_.push(std::make_unique<Scene::Game>(this, parame, &entityManager_));
 		break;
 	case Scene::SceneName::PAUSE:
-		sceneStack.push(std::make_unique<Scene::Pause>(this, parame, &entityManager_));
+		sceneStack_.push(std::make_unique<Scene::Pause>(this, parame, &entityManager_));
 		break;
 	case Scene::SceneName::RESULT:
-		sceneStack.push(std::make_unique<Scene::Result>(this, parame, &entityManager_));
+		sceneStack_.push(std::make_unique<Scene::Result>(this, parame, &entityManager_));
 		break;
 	default:
 		break;
@@ -73,15 +73,15 @@ void GameController::onSceneChange(const Scene::SceneName& scene, Parameter* par
 	MasterSound::Get().update();
 	if(isInitialize)	
 	{
-		sceneStack.top()->initialize();
+		sceneStack_.top()->initialize();
 	}
 }
 
 void GameController::stackClear()
 {
-	while (!sceneStack.empty())
+	while (!sceneStack_.empty())
 	{
-		sceneStack.pop();
+		sceneStack_.pop();
 	}
 }
 
@@ -91,11 +91,11 @@ void GameController::update()
 	entityManager_.refresh();
 	Input::Get().updateKey();
 	//シーン更新
-	sceneStack.top()->update();
+	sceneStack_.top()->update();
 }
 
 void GameController::draw()
 {
 	//シーン描画
-	sceneStack.top()->draw();
+	sceneStack_.top()->draw();
 }

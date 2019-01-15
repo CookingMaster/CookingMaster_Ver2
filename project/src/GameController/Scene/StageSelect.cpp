@@ -40,9 +40,7 @@ namespace Scene
 		//フォント
 		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
 		//料理
-		ResourceManager::GetGraph().load("Resource/image/antipasto_great.png", "antipasto");
-		ResourceManager::GetGraph().load("Resource/image/galantine_great.png", "galantine");
-		ResourceManager::GetGraph().load("Resource/image/entremets_great.png", "entremets");
+		ResourceManager::GetGraph().loadDiv("Resource/image/dish.png", "dish",9,3,3,512,512);
 		//サウンド情報の読み込み
 		std::ifstream ifs("Resource/system/gain.bin");
 		ifs >> bgmVal_ >> seVal_;
@@ -112,7 +110,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::UI
 			))->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
-			cursorTargets.back()->addComponent<ECS::MusicName>("act_bgm.wav");
+			cursorTargets.back()->addComponent<ECS::MusicName>("Cooking_cuisine.wav");
 
 			//3 オプションの文字の位置
 			cursorTargets.emplace_back(ECS::ArcheType::CreatePlainEntity
@@ -218,29 +216,32 @@ namespace Scene
 		}
 		//料理
 		{
-			dish_[0] = ECS::ArcheType::CreateEntity
+			dish_[0] = ECS::ArcheType::CreateAnimationEntity
 			(
-				"antipasto",
+				"dish",
 				Vec2{ DISH_POSITION },
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
 			dish_[0]->getComponent<ECS::Scale>().val /= 2;
-			dish_[1] = ECS::ArcheType::CreateEntity
+			dish_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			dish_[1] = ECS::ArcheType::CreateAnimationEntity
 			(
-				"galantine",
+				"dish",
 				Vec2{ DISH_POSITION },
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
 			dish_[1]->getComponent<ECS::Scale>().val /= 2;
-			dish_[2] = ECS::ArcheType::CreateEntity
+			dish_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(3);
+			dish_[2] = ECS::ArcheType::CreateAnimationEntity
 			(
-				"entremets",
+				"dish",
 				Vec2{ DISH_POSITION },
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
+			dish_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(6);
 			dish_[2]->getComponent<ECS::Scale>().val /= 2;
 		}
 		//数字
@@ -383,9 +384,9 @@ namespace Scene
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
 			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
-			dish_[0]->getComponent<ECS::SpriteDraw>().drawEnable();
-			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
-			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[0]->getComponent<ECS::SpriteAnimationDraw>().drawEnable();
+			dish_[1]->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
+			dish_[2]->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
 			int score = score_->getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE1);
 			score_->getComponent<ECS::DrawFont2>().setNumber(score);
 		}
@@ -394,9 +395,9 @@ namespace Scene
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
-			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
-			dish_[1]->getComponent<ECS::SpriteDraw>().drawEnable();
-			dish_[2]->getComponent<ECS::SpriteDraw>().drawDisable();
+			dish_[0]->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
+			dish_[1]->getComponent<ECS::SpriteAnimationDraw>().drawEnable();
+			dish_[2]->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
 			int score = score_->getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE2);
 			score_->getComponent<ECS::DrawFont2>().setNumber(score);
 		}
@@ -405,9 +406,9 @@ namespace Scene
 			star_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			star_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
-			dish_[0]->getComponent<ECS::SpriteDraw>().drawDisable();
-			dish_[1]->getComponent<ECS::SpriteDraw>().drawDisable();
-			dish_[2]->getComponent<ECS::SpriteDraw>().drawEnable();
+			dish_[0]->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
+			dish_[1]->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
+			dish_[2]->getComponent<ECS::SpriteAnimationDraw>().drawEnable();
 			int score = score_->getComponent<ECS::ScoreSystem>().getHighScore(ECS::StageHighScore::STAGE3);
 			score_->getComponent<ECS::DrawFont2>().setNumber(score);
 		}
@@ -418,7 +419,7 @@ namespace Scene
 		entitySetUp();
 		for (auto& it : dish_)
 		{
-			it->getComponent<ECS::SpriteDraw>().drawDisable();
+			it->getComponent<ECS::SpriteAnimationDraw>().drawDisable();
 		}
 		Sound bgm("selectBGM");
 		bgm.play(true,false);
@@ -470,7 +471,7 @@ namespace Scene
 
 	StageSelect::~StageSelect()
 	{
-		entityManager_->allDestory();
+		entityManager_->removeAll();
 		ResourceManager::GetGraph().removeAll();
 		ResourceManager::GetSound().remove("selectBGM");
 	}
