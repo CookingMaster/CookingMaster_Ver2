@@ -16,8 +16,11 @@ namespace ECS
 	{
 	private:
 		Animator* animator_ = nullptr;
+		SpriteAnimationDraw* sad_ = nullptr;
 		BeatByTrigger* beatTrigger_ = nullptr;
+		Position* position_ = nullptr;
 		bool shoulderUp = false;
+		Vec2 pos_ =  Vec2(0, 0);
 
 	public:
 		void initialize() override
@@ -31,7 +34,15 @@ namespace ECS
 			animator_->setIsEndStopAnim(true);
 			animator_->changeFrame(2);
 
+			sad_ = &entity->getComponent<SpriteAnimationDraw>();
 			beatTrigger_ = &entity->getComponent<BeatByTrigger>();
+			position_ = &entity->getComponent<Position>();
+			pos_ = position_->val;
+
+			//肩上げ状態からスタート
+			sad_->setIndex(0);
+			animator_->setIsMinusAnim(true);
+			shoulderUp = true;
 		}
 
 		void update() override
@@ -55,6 +66,16 @@ namespace ECS
 					animator_->setIsMinusAnim(true);
 					shoulderUp = true;
 				}
+			}
+
+			//現在のインデックス値によっておやっさんの高さを変える
+			switch (sad_->getIndex())
+			{
+			case 0: position_->val.y = pos_.y + 6; break;
+
+			case 1: position_->val.y = pos_.y + 3; break;
+
+			case 2: position_->val.y = pos_.y; break;
 			}
 		}
 	};
