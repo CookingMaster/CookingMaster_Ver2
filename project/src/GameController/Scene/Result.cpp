@@ -40,21 +40,14 @@ void Scene::Result::initialize()
 	//エンティティ初期化
 	counter_.reset();
 	counter_.setEndTime(300, 0);
-	cloche_ = ECS::ResultArcheType::CreateClocheEntity("cloche", Vec2{ 650,400 }, *entityManager_);
+	cloche_ = ECS::ResultArcheType::CreateClocheEntity("cloche", Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 100.f }, *entityManager_);
 	back_ = ECS::ResultArcheType::CreateBackEntity("result_back", Vec2{ 0,0 }, *entityManager_);
-	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", dishImgPos, Vec2{ 512,512 }, Vec2{ System::SCREEN_WIDIH/2.f, System::SCREEN_HEIGHT/2.f }, *entityManager_);
-	fade_ = ECS::ArcheType::CreateEntity("fade", Vec2{ 0.f,0.f }, *entityManager_, ENTITY_GROUP::TOP_FADE);
-	int index = 0;
-	if (score_ >= SCORE_GREAT) {
-		index = 0;
-	}
-	else if (score_ >= SCORE_GOOD) {
-		index = 1;
-	}
-	else {
-		index = 2;
-	}
-	evaluation_ = ECS::ResultArcheType::CreateEvaluationEntity("evaluation", index, Vec2{ System::SCREEN_WIDIH / 2, 150.f }, Vec2{ 598,203 } , *entityManager_);
+	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", dishImgPos, Vec2{ 512.f,512.f }, Vec2{ System::SCREEN_WIDIH/2.f, System::SCREEN_HEIGHT/2.f + 100.f }, *entityManager_);
+	fade_ = ECS::ArcheType::CreateEntity("fade", Vec2{ 0.f,0.f }, *entityManager_, ENTITY_GROUP::UI);
+	int index = getEvaluationIndex();
+	evaluation_ = ECS::ResultArcheType::CreateEvaluationEntity(
+		"evaluation", index, Vec2{ System::SCREEN_WIDIH / 2.f, 120.f }, Vec2_i{ 598,203 } , *entityManager_
+	);
 }
 
 void Scene::Result::update()
@@ -143,5 +136,17 @@ void Scene::Result::setStage()
 	}
 	else {
 		stage_ = ECS::StageHighScore::STAGE1;
+	}
+}
+
+int Scene::Result::getEvaluationIndex() {
+	if (score_ >= SCORE_GREAT) {
+		return 2;
+	}
+	else if (score_ >= SCORE_GOOD) {
+		return 1;
+	}
+	else {
+		return 0;
 	}
 }

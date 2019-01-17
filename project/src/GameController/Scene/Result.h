@@ -58,6 +58,8 @@ namespace Scene
 		Vec2 setDishImg();
 		//! スコアを取得する
 		void setStage();
+		//! スコアから評価フォントのインデックスを設定する
+		int getEvaluationIndex();
 	public:
 		Result(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		void initialize() override;

@@ -47,7 +47,7 @@ namespace ECS
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addGroup(ENTITY_GROUP::UI);
-			entity->addComponent<SimpleDraw>(graphicName);
+			entity->addComponent<SpriteDraw>(graphicName);
 			return entity;
 		}
 		//!ŽžŒv‚Ìj
@@ -85,7 +85,7 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<SimpleDraw>(graphicName);
+			entity->addComponent<SpriteDraw>(graphicName);
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
