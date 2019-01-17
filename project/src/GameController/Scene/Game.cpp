@@ -128,8 +128,10 @@ namespace Scene
 				auto sendParame = std::make_unique<Parameter>();
 				sendParame->add<std::string>("BGM_name", bgmName_);
 				sendParame->add<int>("score", scoreNum_);
-				getCallBack().onSceneChange(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
-				return;
+				sendParame->add<int>("maxcombo", maxComb_);
+				//BGMを停止する
+				Sound(bgmName_).stop();
+				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
 			//-----------------------------------------------------------------------------------------
 
