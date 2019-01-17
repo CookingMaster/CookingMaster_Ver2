@@ -50,6 +50,7 @@ namespace ECS
 		std::array<float, 4> hitJudge_;
 		float arrivalBeatTime_;
 
+		std::string seName_ = "";
 		NoteState* noteState_ = nullptr;
 		Animator* animator_ = nullptr;
 		Velocity* velocity_ = nullptr;
@@ -72,6 +73,7 @@ namespace ECS
 		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
 			asd_(nd.animSData),
 			hitJudge_(nd.hitJudge),
+			seName_(nd.seName),
 			arrivalBeatTime_(arrivalBeatTime),
 			transCounter_(0, 8) {}
 
@@ -160,6 +162,12 @@ namespace ECS
 			return noteState_->dir;
 		}
 
+		//ノーツに使用されるSEの名前を取得する
+		[[nodiscard]]const std::string& getSEName() const
+		{
+			return seName_;
+		}
+
 	private:
 
 		//状態を遷移と各ノーツの挙動を行う
@@ -208,7 +216,7 @@ namespace ECS
 				{
 					changeNoteAnim(1, true, 5);
 					noteState_->state = NoteState::State::HITTED;
-					Sound se("onion");
+					Sound se(seName_);
 					se.play(false,true);
 				}
 					break;

@@ -199,6 +199,7 @@ private:
 			notesData_.back().xsize,
 			notesData_.back().ysize);
 		//SE
+		ResourceManager::GetSound().load(notesData_.back().seName, notesData_.back().seName, SoundType::SE);
 
 		fin.close();
 	}

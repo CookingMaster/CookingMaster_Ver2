@@ -185,7 +185,7 @@ namespace Scene
 
 			if (itnotestate.isActiveNote())
 			{
-				Sound se("onion");
+				Sound se(itnotestate.getSEName());
 				//入力方向とノーツの向きが一致していない場合は無効
 				if (itnotestate.getNoteDir() != dir)
 				{
