@@ -99,7 +99,7 @@ void Scene::Result::draw()
 
 Scene::Result::~Result()
 {
-	entityManager_->allDestory();
+	entityManager_->removeAll();
 }
 
 Vec2 Scene::Result::setDishImg()

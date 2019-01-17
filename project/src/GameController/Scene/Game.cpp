@@ -144,7 +144,7 @@ namespace Scene
 	{
 		ResourceManager::GetSound().remove("onion");
 		ResourceManager::GetSound().remove(bgmName_);
-		entityManager_->allDestory();
+		entityManager_->removeAll();
 	}
 	
 	//ノーツ判定処理とスコアの取得

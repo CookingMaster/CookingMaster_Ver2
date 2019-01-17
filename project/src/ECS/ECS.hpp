@@ -334,7 +334,7 @@ namespace ECS
 			}
 		}
 		//!すべてのエンティティを削除します
-		void allDestory()
+		void removeAll()
 		{
 			for (auto& e : entityes_)
 			{

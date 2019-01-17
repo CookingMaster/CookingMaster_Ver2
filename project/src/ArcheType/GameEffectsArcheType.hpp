@@ -124,7 +124,7 @@ namespace ECS
 			e.addComponent<SpriteAnimationDraw>(divGraphicName);
 			//e.addComponent<Animator>();
 			e.addComponent<Canvas>();
-			e.addGroup(ENTITY_GROUP::BACK_OBJECT);
+			e.addGroup(ENTITY_GROUP::MASTER);
 			return &e;
 		}
 		//!おやっさんの顔(表情)
@@ -133,7 +133,7 @@ namespace ECS
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.addComponent<SpriteAnimationDraw>(divGraphicName);
-			e.addGroup(ENTITY_GROUP::BACK_OBJECT);
+			e.addGroup(ENTITY_GROUP::MASTER);
 			return &e;
 		}
 		//!おやっさんのセリフ(吹き出し用)

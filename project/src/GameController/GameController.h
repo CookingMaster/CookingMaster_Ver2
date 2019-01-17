@@ -23,7 +23,7 @@ class GameController final : public Scene::IOnSceneChangeCallback
 {
 private:
 	ECS::EntityManager entityManager_;
-	std::stack<std::unique_ptr<Scene::AbstractScene>> sceneStack;	//シーンのスタック
+	std::stack<std::unique_ptr<Scene::AbstractScene>> sceneStack_;	//シーンのスタック
 	void resourceLoad();
 public:
 
