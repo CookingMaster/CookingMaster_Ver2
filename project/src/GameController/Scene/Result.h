@@ -47,7 +47,7 @@ namespace Scene
 		//! スコア
 		int score_;
 		//! 最大コンボ数
-		int combo_ = 100;
+		int combo_;
 		//! 経過フレームカウンタ
 		Counter counter_;
 		//! ステージ情報

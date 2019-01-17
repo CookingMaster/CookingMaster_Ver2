@@ -15,7 +15,7 @@ Scene::Result::Result(IOnSceneChangeCallback * sceneTitleChange, [[maybe_unused]
 	if (parame != nullptr) {
 		bgmName_ = (parame->get<std::string>("BGM_name"));
 		score_ = (parame->get<int>("score"));
-		//combo_ = (parame->get<int>("maxcombo"));
+		combo_ = (parame->get<int>("maxcombo"));
 	}
 }
 
