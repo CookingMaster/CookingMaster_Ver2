@@ -84,7 +84,7 @@ namespace ECS
 			entity->addComponent<Expand>(Vec2{ 1.f,1.f }, Easing::ExpoIn, 20.f);
 			entity->addComponent<Rectangle>(0, 0, 59, 75);
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 59.f / 2,75.f / 2 });
-			entity->addComponent<DrawFont2>(59.f, 75.f).setNumber(score);
+			entity->addComponent<DrawFont2>(59.f, 75.f, score);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}

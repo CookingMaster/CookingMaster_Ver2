@@ -162,7 +162,7 @@ namespace ECS
 			e.addComponent<AlphaBlend>();
 			e.addComponent<Rectangle>(rectAngle);
 			e.addComponent<SpriteRectDraw>(graphicName);
-			e.addComponent<DrawFont2>(50.f, 100.f).setNumber(combNum);
+			e.addComponent<DrawFont2>(50.f, 100.f, combNum);
 			e.addComponent<KillEntity>(lifeSpan);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;

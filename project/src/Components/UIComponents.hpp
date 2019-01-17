@@ -555,7 +555,6 @@ namespace ECS
 				rectangle_->x = font_[i] * (int)rect_.x;
 
 				pos_->val.x = initPos_.x + (i * rect_.x);
-				rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
 				if (isDraw)
 				{
 					rectDraw_->draw2D();
@@ -564,8 +563,8 @@ namespace ECS
 		}
 
 	public:
-		DrawFont2(float rectW, float rectH) :
-			num_(0)
+		DrawFont2(float rectW, float rectH, const int num) :
+			num_(num)
 		{
 			rect_.x = rectW;
 			rect_.y = rectH;
@@ -580,7 +579,7 @@ namespace ECS
 			initPos_ = pos_->val;
 			rectangle_->x = (int)rect_.x * num_;
 			rectangle_->w = (int)rect_.x;
-			setRectAndDraw(false);
+			rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
 		}
 
 		void update() override
