@@ -51,7 +51,7 @@ namespace ECS {
 		BeatByTrigger* beatTrigger_;
 		PlayerState* state_;
 
-		Counter animCnt_;
+		Counter animCnt_;	//切りモーションの終了までの時間を計測したりする
 		bool handup = false;
 
 	public:
@@ -88,14 +88,21 @@ namespace ECS {
 		//入力や時間経過に対応してアニメーションと状態を遷移させる
 		void transitionState()
 		{
-			//切りモーション終了、または
-			if ((state_->val != PlayerState::State::Idle &&  animCnt_.isMax()) ||
-				(state_->val == PlayerState::State::Idle && beatTrigger_->getTrigger()))
+			//待機動作が次のリズムのタイミングになったらパタパタ
+			if (state_->val == PlayerState::State::Idle && beatTrigger_->getTrigger())
+			{
+				handup = !handup;
+				animator_->setIsMinusAnim(handup);
+				recData_->setAnimData((int)PlayerState::State::Idle, false);
+			}
+			//切りモーションが終了したら待機
+			if (state_->val != PlayerState::State::Idle && animCnt_.isMax())
 			{
 				handup = !handup;
 				animator_->setIsMinusAnim(handup);
 				state_->val = PlayerState::State::Idle;
 				recData_->setAnimData((int)PlayerState::State::Idle, false);
+				animator_->setIndexMax();
 			}
 
 			//同時押しは許さない

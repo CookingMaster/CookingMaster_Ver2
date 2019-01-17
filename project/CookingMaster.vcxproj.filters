@@ -173,6 +173,9 @@
     <ClInclude Include="src\Class\BossController.hpp">
       <Filter>src\Class</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\BossAnimator.hpp">
+      <Filter>src\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
