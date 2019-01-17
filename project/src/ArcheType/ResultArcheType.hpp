@@ -51,7 +51,7 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 			Random rand;
-			entity->addComponent<Transform>().setPosition(rand.getRand(0.f, 1280.f), rand.getRand(-1000.f, -100.f));
+			entity->addComponent<Transform>().setPosition(rand.getRand(0.f, 1280.f), rand.getRand(-1100.f, -200.f));
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(srcXY.x, srcXY.y, srcWH.x, srcWH.y);

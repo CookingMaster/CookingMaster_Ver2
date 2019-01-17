@@ -104,8 +104,6 @@ void Scene::Result::update()
 				);
 			}
 		}
-	}
-	if (counter_.getCurrentCount() == Timing::CONFETTI) {
 		//ƒNƒƒbƒVƒ…”ò‚Î‚·
 		cloche_->addComponent<ECS::FlyAway>(Vec2{ 1920,600 }, 3.f);
 		//—¿—Šg‘å
