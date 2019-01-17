@@ -36,7 +36,8 @@ namespace ECS
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteAnimationDraw>(divGraphicName).setPivot(Vec2{0.f,0.f});
-			//e.addComponent<Animator>();
+			e.getComponent<Scale>().val;
+			e.addComponent<Animator>(0,0,7,0,7);
 			e.addGroup(ENTITY_GROUP::BACK_OBJECT);
 			return &e;
 		}
