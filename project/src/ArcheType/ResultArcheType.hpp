@@ -71,19 +71,8 @@ namespace ECS
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
-			entity->addGroup(ENTITY_GROUP::EFFECT);
+			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
-		static Entity* CreateBlackEntity(const char* graphicName, const Vec2& pos, EntityManager& entityManager, const Group group)
-		{
-			auto* entity = &entityManager.addEntity();
-			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
-			entity->addComponent<Color>();
-			entity->addComponent<AlphaBlend>().alpha = 50;
-			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2{ 0.f,0.f });
-			entity->addGroup(group);
-			return entity;
-		}
-
 	};
 }

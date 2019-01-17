@@ -32,7 +32,8 @@ void Scene::Result::initialize()
 	//評価フォント
 	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
 	//フォント
-	ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
+	ResourceManager::GetGraph().load("Resource/image/scorefont.png", "scorefont");
+
 
 	//プレイしたステージを割り出す
 	setStage();
@@ -41,7 +42,7 @@ void Scene::Result::initialize()
 
 	//カウンタ初期化
 	counter_.reset();
-	counter_.setEndTime(300, 0);
+	counter_.setEndTime(600, 0);
 	//エンティティ初期化
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity(
 		"cloche",
@@ -64,7 +65,7 @@ void Scene::Result::initialize()
 		"fade",
 		Vec2{ 0.f,0.f },
 		*entityManager_,
-		ENTITY_GROUP::UI
+		ENTITY_GROUP::FADE
 	);
 	int index = getEvaluationIndex();
 	evaluation_ = ECS::ResultArcheType::CreateEvaluationEntity(
@@ -73,12 +74,6 @@ void Scene::Result::initialize()
 		Vec2{ System::SCREEN_WIDIH / 2.f, 125.f },
 		Vec2_i{ 598,203 },
 		*entityManager_
-	);
-	black_ = ECS::ArcheType::CreateEntity(
-		"black",
-		Vec2{ System::SCREEN_WIDIH / 2 - 300.f,-720.f },
-		*entityManager_, 
-		ENTITY_GROUP::EFFECT
 	);
 }
 
@@ -108,7 +103,7 @@ void Scene::Result::update()
 			}
 		}
 	}
-	if (counter_.getCurrentCount() >= Timing::CONFETTI) {
+	if (counter_.getCurrentCount() == Timing::CONFETTI) {
 		//クロッシュ飛ばす
 		cloche_->addComponent<ECS::FlyAway>(Vec2{ 1920,600 }, 3.f);
 		//料理拡大
@@ -117,34 +112,40 @@ void Scene::Result::update()
 			Easing::ExpoIn,
 			20.f
 			);
-		if (dish_->getComponent<ECS::Expand>().isEaseEnd()) {
-			//料理縮小
-			dish_->addComponent<ECS::Reduction>(
-				Vec2{ 1.2f,1.2f },
-				Easing::ExpoOut, 8.f
-				);
-		}
 	}
-	if (counter_.getCurrentCount() >= Timing::EVALUATION) {
+	if (dish_->hasComponent<ECS::Expand>() && dish_->getComponent<ECS::Expand>().isEaseEnd()) {
+		//料理縮小
+		dish_->addComponent<ECS::Reduction>(
+			Vec2{ 1.2f,1.2f },
+			Easing::ExpoOut, 8.f
+			);
+	}
+	if (counter_.getCurrentCount() == Timing::EVALUATION) {
 		//評価フォント拡大
 		evaluation_->addComponent<ECS::Expand>(Vec2{ 1.f,1.f }, Easing::ExpoOut, 5.f);
 		//クロッシュ戻ってくるので移動コンポーネントを消す
 		cloche_->removeComponent<ECS::FlyAway>();
 	}
-	if (counter_.getCurrentCount() >= Timing::SCORE_BACK) {
+	if (counter_.getCurrentCount() == Timing::SCORE_BACK) {
 		//スコア背景入場
-		auto black = ECS::ResultArcheType::CreateBlackEntity(
+		auto black = ECS::ArcheType::CreateEntity(
 			"black",
-			Vec2{ System::SCREEN_WIDIH / 2 - 300.f,-720.f },
+			Vec2{ System::SCREEN_WIDIH / 2 - 500.f,-720.f },
 			*entityManager_, ENTITY_GROUP::EFFECT);
 		black->addComponent<ECS::EasingMove>(
 			Easing::LinearIn,
-			Vec2{ System::SCREEN_WIDIH / 2 - 300.f,0.f },
+			Vec2{ System::SCREEN_WIDIH / 2 - 500.f,0.f },
 			10.f
 			);
 	}
-	if (counter_.getCurrentCount() >= Timing::SCORE) {
-
+	if (counter_.getCurrentCount() == Timing::SCORE) {
+		//スコアフォント入場
+		/*auto scorefont = */ECS::ArcheType::CreateEntity(
+			"scorefont",
+			Vec2{ System::SCREEN_WIDIH / 2.f - 500.f, System::SCREEN_HEIGHT / 2.f - 100.f },
+			*entityManager_,
+			ENTITY_GROUP::UI
+		);
 	}
 	if (counter_.getCurrentCount() >= Timing::FADE_OUT) {
 		isFadeOut_ = true;

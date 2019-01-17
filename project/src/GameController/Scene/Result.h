@@ -60,7 +60,7 @@ namespace Scene
 			EVALUATION = 140,	//評価フォント出す
 			SCORE_BACK = 200,	//スコア用背景出す
 			SCORE = 230,		//スコア出す
-			FADE_OUT = 250,		//フェードアウト開始
+			FADE_OUT = 550,		//フェードアウト開始
 		};
 
 		//! スコアから料理の画像を設定する
