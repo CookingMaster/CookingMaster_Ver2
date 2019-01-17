@@ -122,14 +122,16 @@ namespace Scene
 				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
 				return;
 			}
+			//デバッグ関数------------------------------------------------------------------------------
 			if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1)
 			{
-				getCallBack().onSceneChange(SceneName::RESULT, nullptr, StackPopFlag::POP, true);
-				return;
+				changeResultScene();
 			}
+			//-----------------------------------------------------------------------------------------
 
 			changeResultScene();
 			changePauseScene();
+			saveMaxComb();
 		}
 		
 	}
@@ -162,7 +164,7 @@ namespace Scene
 				if (notestate == ECS::NoteState::State::MISS)
 				{
 					DOUT << "MISS" << std::endl;
-					ComboReset();
+					comboReset();
 				}
 			}
 			return 0;
@@ -194,11 +196,11 @@ namespace Scene
 				{
 				case ECS::NoteState::State::MISS:
 					DOUT << "MISS" << std::endl;
-					ComboReset();
+					comboReset();
 					return 0;
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
-					ComboReset();
+					comboReset();
 					return 0;
 				case ECS::NoteState::State::GOOD:
 					DOUT << "GOOD" << std::endl;
@@ -244,6 +246,7 @@ namespace Scene
 			auto sendParame = std::make_unique<Parameter>();
 			sendParame->add<std::string>("BGM_name", bgmName_);
 			sendParame->add<int>("score", scoreNum_);
+			sendParame->add<int>("maxcombo", maxComb_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			switch (stageNum_)
@@ -263,10 +266,17 @@ namespace Scene
 	}
 
 	//コンボを0にしておやっさんを怒らせる
-	void Game::ComboReset()
+	void Game::comboReset()
 	{
 		comb_ = 0;
 		//↓おやっさんを怒らせる処理
 		boss_->angry();
+	}
+	void Game::saveMaxComb()
+	{
+		if (maxComb_ < comb_)
+		{
+			maxComb_ = comb_;
+		}
 	}
 }

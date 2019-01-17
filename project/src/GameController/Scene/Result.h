@@ -46,6 +46,8 @@ namespace Scene
 		ECS::Entity* black_ = nullptr;
 		//! スコア
 		int score_;
+		//! 最大コンボ数
+		int combo_;
 		//! 経過フレームカウンタ
 		Counter counter_;
 		//! ステージ情報
@@ -59,7 +61,9 @@ namespace Scene
 			CONFETTI = 100,		//紙吹雪出す
 			EVALUATION = 140,	//評価フォント出す
 			SCORE_BACK = 200,	//スコア用背景出す
-			SCORE = 230,		//スコア出す
+			SCOREFONT = 230,	//スコアとコンボの文字出す
+			SCORE = 250,		//スコア数字出す
+			COMBO = 300,		//コンボ数出す
 			FADE_OUT = 550,		//フェードアウト開始
 		};
 
