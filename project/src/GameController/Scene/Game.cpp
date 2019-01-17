@@ -125,7 +125,13 @@ namespace Scene
 			//デバッグ関数------------------------------------------------------------------------------
 			if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1)
 			{
-				changeResultScene();
+				auto sendParame = std::make_unique<Parameter>();
+				sendParame->add<std::string>("BGM_name", bgmName_);
+				sendParame->add<int>("score", scoreNum_);
+				sendParame->add<int>("maxcombo", maxComb_);
+				//BGMを停止する
+				Sound(bgmName_).stop();
+				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
 			//-----------------------------------------------------------------------------------------
 
