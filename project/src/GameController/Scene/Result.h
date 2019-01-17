@@ -39,9 +39,11 @@ namespace Scene
 		//! 料理
 		ECS::Entity* dish_ = nullptr;
 		//! 紙吹雪
-		std::vector<ECS::Entity*> confetties_;
+		std::vector<ECS::Entity*> confetties_{ nullptr };
 		//! 評価フォント
 		ECS::Entity* evaluation_ = nullptr;
+		//! スコア背景
+		ECS::Entity* black_ = nullptr;
 		//! スコア
 		int score_;
 		//! 経過フレームカウンタ
@@ -52,7 +54,14 @@ namespace Scene
 		//! フェードアウトフラグ
 		bool isFadeOut_;
 
-
+		//リザルトの進行度を管理する
+		enum Timing {
+			CONFETTI = 100,		//紙吹雪出す
+			EVALUATION = 140,	//評価フォント出す
+			SCORE_BACK = 200,	//スコア用背景出す
+			SCORE = 230,		//スコア出す
+			FADE_OUT = 250,		//フェードアウト開始
+		};
 
 		//! スコアから料理の画像を設定する
 		Vec2 setDishImg();

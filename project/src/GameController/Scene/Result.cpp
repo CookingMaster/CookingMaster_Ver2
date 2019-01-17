@@ -28,6 +28,7 @@ void Scene::Result::initialize()
 	ResourceManager::GetGraph().load("Resource/image/menuback.png", "result_back");
 	ResourceManager::GetGraph().load("Resource/image/dish.png", "dish");
 	ResourceManager::GetGraph().load("Resource/image/confetti.png", "confetti");
+	ResourceManager::GetGraph().load("Resource/image/result_black.png", "black");
 	//評価フォント
 	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
 	//フォント
@@ -37,29 +38,53 @@ void Scene::Result::initialize()
 	setStage();
 	//stageとスコアによって料理の画像を変える
 	Vec2 dishImgPos = setDishImg();
-	//エンティティ初期化
+
+	//カウンタ初期化
 	counter_.reset();
 	counter_.setEndTime(300, 0);
+	//エンティティ初期化
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity(
-		"cloche", Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 100.f }, *entityManager_
+		"cloche",
+		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f },
+		*entityManager_
 	);
 	back_ = ECS::ResultArcheType::CreateBackEntity(
-		"result_back", Vec2{ 0,0 }, *entityManager_
+		"result_back",
+		Vec2{ 0,0 },
+		*entityManager_
 	);
 	dish_ = ECS::ResultArcheType::CreateDishEntity(
-		"dish", dishImgPos, Vec2{ 512.f,512.f }, Vec2{ System::SCREEN_WIDIH/2.f, System::SCREEN_HEIGHT/2.f + 100.f }, *entityManager_
+		"dish",
+		dishImgPos,
+		Vec2{ 512.f,512.f },
+		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f },
+		*entityManager_
 	);
 	fade_ = ECS::ArcheType::CreateEntity(
-		"fade", Vec2{ 0.f,0.f }, *entityManager_, ENTITY_GROUP::UI
+		"fade",
+		Vec2{ 0.f,0.f },
+		*entityManager_,
+		ENTITY_GROUP::UI
 	);
 	int index = getEvaluationIndex();
 	evaluation_ = ECS::ResultArcheType::CreateEvaluationEntity(
-		"evaluation", index, Vec2{ System::SCREEN_WIDIH / 2.f, 120.f }, Vec2_i{ 598,203 } , *entityManager_
+		"evaluation",
+		index,
+		Vec2{ System::SCREEN_WIDIH / 2.f, 125.f },
+		Vec2_i{ 598,203 },
+		*entityManager_
+	);
+	black_ = ECS::ArcheType::CreateEntity(
+		"black",
+		Vec2{ System::SCREEN_WIDIH / 2 - 300.f,-720.f },
+		*entityManager_, 
+		ENTITY_GROUP::EFFECT
 	);
 }
 
 void Scene::Result::update()
 {
+	//フェードイン
 	if (!isFadeOut_ && fade_->getComponent<ECS::AlphaBlend>().alpha >= 0) {
 		fade_->getComponent<ECS::AlphaBlend>().alpha -= 6;
 		return;
@@ -68,26 +93,60 @@ void Scene::Result::update()
 	counter_.add();
 	entityManager_->update();
 
-	if (counter_.getCurrentCount() == 100) {
+	if (counter_.getCurrentCount() == Timing::CONFETTI) {
+		//紙吹雪
 		if (score_ >= SCORE_GREAT) {
 			for (int i = 0; i < 50; ++i) {
-				confetties_.push_back(ECS::ResultArcheType::CreateConfettiEntity("confetti", Vec2_i{ 100 * (i % 5),0 }, Vec2_i{ 100,100 }, *entityManager_));
+				confetties_.push_back(
+					ECS::ResultArcheType::CreateConfettiEntity(
+						"confetti", 
+						Vec2_i{ 100 * (i % 5),0 }, 
+						Vec2_i{ 100,100 }, 
+						*entityManager_
+					)
+				);
 			}
 		}
 	}
-	if (counter_.getCurrentCount() >= 100) {
+	if (counter_.getCurrentCount() >= Timing::CONFETTI) {
+		//クロッシュ飛ばす
 		cloche_->addComponent<ECS::FlyAway>(Vec2{ 1920,600 }, 3.f);
-		//拡大
-		dish_->addComponent<ECS::Expand>(Vec2{ 1.8f,1.8f }, Easing::ExpoIn, 20.f);
+		//料理拡大
+		dish_->addComponent<ECS::Expand>(
+			Vec2{ 1.8f,1.8f },
+			Easing::ExpoIn,
+			20.f
+			);
 		if (dish_->getComponent<ECS::Expand>().isEaseEnd()) {
-			//縮小
-			dish_->addComponent<ECS::Reduction>(Vec2{ 1.2f,1.2f }, Easing::ExpoOut, 8.f);
+			//料理縮小
+			dish_->addComponent<ECS::Reduction>(
+				Vec2{ 1.2f,1.2f },
+				Easing::ExpoOut, 8.f
+				);
 		}
 	}
-	if (counter_.getCurrentCount() >= 140) {
-		evaluation_->addComponent<ECS::Expand>(Vec2{ 1.f,1.f },Easing::ExpoOut, 5.f);
+	if (counter_.getCurrentCount() >= Timing::EVALUATION) {
+		//評価フォント拡大
+		evaluation_->addComponent<ECS::Expand>(Vec2{ 1.f,1.f }, Easing::ExpoOut, 5.f);
+		//クロッシュ戻ってくるので移動コンポーネントを消す
+		cloche_->removeComponent<ECS::FlyAway>();
 	}
-	if (counter_.getCurrentCount() >= 250) {
+	if (counter_.getCurrentCount() >= Timing::SCORE_BACK) {
+		//スコア背景入場
+		auto black = ECS::ResultArcheType::CreateBlackEntity(
+			"black",
+			Vec2{ System::SCREEN_WIDIH / 2 - 300.f,-720.f },
+			*entityManager_, ENTITY_GROUP::EFFECT);
+		black->addComponent<ECS::EasingMove>(
+			Easing::LinearIn,
+			Vec2{ System::SCREEN_WIDIH / 2 - 300.f,0.f },
+			10.f
+			);
+	}
+	if (counter_.getCurrentCount() >= Timing::SCORE) {
+
+	}
+	if (counter_.getCurrentCount() >= Timing::FADE_OUT) {
 		isFadeOut_ = true;
 	}
 	if (isFadeOut_) {
