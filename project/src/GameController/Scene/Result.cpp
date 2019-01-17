@@ -15,6 +15,7 @@ Scene::Result::Result(IOnSceneChangeCallback * sceneTitleChange, [[maybe_unused]
 	if (parame != nullptr) {
 		bgmName_ = (parame->get<std::string>("BGM_name"));
 		score_ = (parame->get<int>("score"));
+		//combo_ = (parame->get<int>("maxcombo"));
 	}
 }
 
@@ -152,7 +153,7 @@ void Scene::Result::update()
 		//スコア出現
 		ECS::ResultArcheType::CreateScoreEntity(
 			"scorefont",
-			Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f - 30.f},
+			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f - 30.f},
 			score_,
 			*entityManager_
 		);
@@ -161,8 +162,8 @@ void Scene::Result::update()
 		//コンボ出現
 		ECS::ResultArcheType::CreateScoreEntity(
 			"scorefont",
-			Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f },
-			score_,
+			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f + 120.f },
+			combo_,
 			*entityManager_
 		);
 	}

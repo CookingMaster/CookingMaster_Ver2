@@ -46,6 +46,8 @@ namespace Scene
 		ECS::Entity* black_ = nullptr;
 		//! スコア
 		int score_;
+		//! 最大コンボ数
+		int combo_ = 100;
 		//! 経過フレームカウンタ
 		Counter counter_;
 		//! ステージ情報
