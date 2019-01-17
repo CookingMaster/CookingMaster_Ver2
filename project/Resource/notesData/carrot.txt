@@ -2,7 +2,7 @@ Resource/image/note_carrot.png
 carrot
 Resource/sound/SE/carrot.ogg
 2
-4
+6
 1
 1
 7

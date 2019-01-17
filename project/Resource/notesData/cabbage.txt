@@ -2,7 +2,7 @@ Resource/image/note_cabbage.png
 cabbage
 Resource/sound/SE/cabbage.ogg
 2
-4
+6
 1
 1
 7

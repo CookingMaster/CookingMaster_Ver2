@@ -2,7 +2,7 @@ Resource/image/note_tomato.png
 tomato
 Resource/sound/SE/tomato.ogg
 2
-4
+6
 1
 1
 7
