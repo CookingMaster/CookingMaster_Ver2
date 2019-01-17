@@ -1,8 +1,8 @@
 Resource/image/note_onion.png
 onion
-se.ogg
+Resource/sound/SE/onion.ogg
 2
-4
+6
 1
 1
 7
