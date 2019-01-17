@@ -1,6 +1,6 @@
 Resource/image/note_carrot.png
 carrot
-se.ogg
+Resource/sound/SE/carrot.ogg
 2
 4
 1
