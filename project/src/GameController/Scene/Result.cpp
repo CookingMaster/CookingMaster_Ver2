@@ -39,6 +39,8 @@ void Scene::Result::initialize()
 	setStage();
 	//stageとスコアによって料理の画像を変える
 	Vec2 dishImgPos = setDishImg();
+	//スコアによって評価フォントの画像を変える
+	int index = getEvaluationIndex();
 
 	//カウンタ初期化
 	counter_.reset();
@@ -46,19 +48,19 @@ void Scene::Result::initialize()
 	//エンティティ初期化
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity(
 		"cloche",
-		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f },
-		*entityManager_
-	);
-	back_ = ECS::ResultArcheType::CreateBackEntity(
-		"result_back",
-		Vec2{ 0,0 },
+		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 50.f },
 		*entityManager_
 	);
 	dish_ = ECS::ResultArcheType::CreateDishEntity(
 		"dish",
 		dishImgPos,
 		Vec2{ 512.f,512.f },
-		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f },
+		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 100.f },
+		*entityManager_
+	);
+	back_ = ECS::ResultArcheType::CreateBackEntity(
+		"result_back",
+		Vec2{ 0,0 },
 		*entityManager_
 	);
 	fade_ = ECS::ArcheType::CreateEntity(
@@ -67,7 +69,6 @@ void Scene::Result::initialize()
 		*entityManager_,
 		ENTITY_GROUP::FADE
 	);
-	int index = getEvaluationIndex();
 	evaluation_ = ECS::ResultArcheType::CreateEvaluationEntity(
 		"evaluation",
 		index,
@@ -94,9 +95,9 @@ void Scene::Result::update()
 			for (int i = 0; i < 50; ++i) {
 				confetties_.push_back(
 					ECS::ResultArcheType::CreateConfettiEntity(
-						"confetti", 
-						Vec2_i{ 100 * (i % 5),0 }, 
-						Vec2_i{ 100,100 }, 
+						"confetti",
+						Vec2_i{ 100 * (i % 5),0 },
+						Vec2_i{ 100,100 },
 						*entityManager_
 					)
 				);

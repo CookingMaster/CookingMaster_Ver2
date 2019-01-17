@@ -122,11 +122,16 @@ namespace Scene
 				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
 				return;
 			}
+			//デバッグ関数------------------------------------------------------------------------------
 			if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1)
 			{
-				getCallBack().onSceneChange(SceneName::RESULT, nullptr, StackPopFlag::POP, true);
+				auto sendParame = std::make_unique<Parameter>();
+				sendParame->add<std::string>("BGM_name", bgmName_);
+				sendParame->add<int>("score", scoreNum_);
+				getCallBack().onSceneChange(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 				return;
 			}
+			//-----------------------------------------------------------------------------------------
 
 			changeResultScene();
 			changePauseScene();
