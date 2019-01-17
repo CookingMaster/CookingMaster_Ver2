@@ -74,5 +74,20 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
+		static Entity* CreateScoreEntity(const char* graphicName, const Vec2 pos, const int score, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Expand>(Vec2{ 1.f,1.f }, Easing::ExpoIn, 20.f);
+			entity->addComponent<Rectangle>(0, 0, 59, 75);
+			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 59.f / 2,75.f / 2 });
+			entity->addComponent<DrawFont2>(59.f, 75.f).setNumber(score);
+			entity->addGroup(ENTITY_GROUP::UI);
+			return entity;
+		}
+
 	};
 }

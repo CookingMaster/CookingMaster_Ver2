@@ -32,8 +32,8 @@ void Scene::Result::initialize()
 	//評価フォント
 	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
 	//フォント
-	ResourceManager::GetGraph().load("Resource/image/scorefont.png", "scorefont");
-
+	ResourceManager::GetGraph().load("Resource/image/score_combo.png", "scorecombo");
+	ResourceManager::GetGraph().load("Resource/image/score_font.png", "scorefont");
 
 	//プレイしたステージを割り出す
 	setStage();
@@ -139,13 +139,31 @@ void Scene::Result::update()
 			10.f
 			);
 	}
-	if (counter_.getCurrentCount() == Timing::SCORE) {
+	if (counter_.getCurrentCount() == Timing::SCOREFONT) {
 		//スコアフォント入場
-		/*auto scorefont = */ECS::ArcheType::CreateEntity(
-			"scorefont",
+		ECS::ArcheType::CreateEntity(
+			"scorecombo",
 			Vec2{ System::SCREEN_WIDIH / 2.f - 500.f, System::SCREEN_HEIGHT / 2.f - 100.f },
 			*entityManager_,
 			ENTITY_GROUP::UI
+		);
+	}
+	if (counter_.getCurrentCount() == Timing::SCORE) {
+		//スコア出現
+		ECS::ResultArcheType::CreateScoreEntity(
+			"scorefont",
+			Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f - 30.f},
+			score_,
+			*entityManager_
+		);
+	}
+	if (counter_.getCurrentCount() == Timing::COMBO) {
+		//コンボ出現
+		ECS::ResultArcheType::CreateScoreEntity(
+			"scorefont",
+			Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f },
+			score_,
+			*entityManager_
 		);
 	}
 	if (counter_.getCurrentCount() >= Timing::FADE_OUT) {
@@ -159,6 +177,7 @@ void Scene::Result::update()
 		DOUT << "BackToTitle" << std::endl;
 		ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::ALL_CLEAR, true);
 	}
+
 }
 
 void Scene::Result::draw()
