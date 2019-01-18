@@ -25,7 +25,7 @@ namespace ECS
 			marker.addComponent<Color>();
 			marker.addComponent<AlphaBlend>();
 			marker.addComponent<SpriteDraw>(graphicName);
-			marker.addGroup(ENTITY_GROUP::UI);
+			marker.addGroup(ENTITY_GROUP::MARKER);
 			return &marker;
 		}
 		//!鍋
