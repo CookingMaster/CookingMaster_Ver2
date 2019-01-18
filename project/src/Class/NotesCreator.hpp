@@ -21,10 +21,15 @@ private:
 	float goalTime_ = 0.f;	//次にtrueとなる時間
 	Sound sound_;			//音楽
 	Counter cntBar_;		//ノーツ数
+	Vec2 targetPos[2];		//ノーツの到着する座標
 
 public:
-	NotesCreator(const std::string& soundName):
-		sound_(soundName) {}
+	NotesCreator(const std::string& soundName, const Vec2& targetL, const Vec2& targetR):
+		sound_(soundName)
+	{
+		targetPos[0] = targetL;
+		targetPos[1] = targetR;
+	}
 
 	/**
 	* @brief 各種データ設定
@@ -80,15 +85,15 @@ private:
 			//そのノーツが画面内に出現するまでの待ち時間を計算
 			float waitTime = beat.calcOneBar_Frame() * 2.f - (float(scoreData[nextBar].size() - i) * noteFlame) - arrivalBeatTime;
 
-			Vec2 targetPos;
+			Vec2 tp;
 			switch (scoreData[nextBar][i].dir)
 			{
 			case ECS::Direction::Dir::L:	//左から飛んでくるノーツ
-				targetPos = Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f);
+				tp = targetPos[0];
 				break;
 
 			case ECS::Direction::Dir::R:	//右から飛んでくるノーツ
-				targetPos = Vec2((System::SCREEN_WIDIH / 2.f)  + 200.f, System::SCREEN_HEIGHT / 2.f);
+				tp = targetPos[1];
 				break;
 			}
 			//ノーツを生成
@@ -97,7 +102,7 @@ private:
 				scoreData[nextBar][i].dir,
 				waitTime,
 				arrivalBeatTime,
-				targetPos,
+				tp,
 				entityManager);
 		}
 
