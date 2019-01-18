@@ -2,8 +2,8 @@ Resource/image/note_brory.png
 brory
 Resource/sound/SE/brory_.ogg
 2
-6
-1
+7
+2
 1
 7
 157 100

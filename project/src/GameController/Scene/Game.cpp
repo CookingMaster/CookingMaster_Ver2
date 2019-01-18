@@ -206,6 +206,7 @@ namespace Scene
 				auto nowstate = itnotestate.getNoteState();
 				//ノーツの状態を遷移
 				itnotestate.ActionToChangeNoteState();
+				int combBonus = comb_ / 20;
 				switch (nowstate)
 				{
 				case ECS::NoteState::State::MISS:
@@ -220,17 +221,17 @@ namespace Scene
 					DOUT << "GOOD" << std::endl;
 					se.play(false, true);
 					++comb_;
-					return 5;
+					return 2 + combBonus;
 				case ECS::NoteState::State::GREAT:
 					DOUT << "GREAT" << std::endl;
 					se.play(false, true);
 					++comb_;
-					return 8;
+					return 5 + combBonus;
 				case ECS::NoteState::State::PARFECT:
 					DOUT << "PARFECT" << std::endl;
 					se.play(false, true);
 					++comb_;
-					return 10;
+					return 8 + combBonus;
 				}
 				break;
 			}
