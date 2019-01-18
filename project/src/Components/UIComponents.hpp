@@ -580,6 +580,7 @@ namespace ECS
 			rectangle_->x = (int)rect_.x * num_;
 			rectangle_->w = (int)rect_.x;
 			rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
+			setNumber();
 		}
 
 		void update() override
@@ -589,9 +590,14 @@ namespace ECS
 		{
 			setRectAndDraw();
 		}
+		void setNumber()
+		{
+			font_[2] = num_ % 10;		//一桁目(一の位)
+			font_[1] = num_ % 100 / 10;	//二桁目(十の位)
+			font_[0] = num_ / 100;		//三桁目(百の位)
+		}
 		void setNumber(int num)
 		{
-			num_ = num;
 			font_[2] = num % 10;		//一桁目(一の位)
 			font_[1] = num % 100 / 10;	//二桁目(十の位)
 			font_[0] = num / 100;		//三桁目(百の位)
