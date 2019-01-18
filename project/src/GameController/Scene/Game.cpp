@@ -14,7 +14,9 @@ namespace Scene
 		, entityManager_(entityManager)
 		, bgmName_(parame->get<std::string>("BGM_name"))
 		, stageNum_(parame->get<size_t>("stageNum"))
-		, nc_(bgmName_)
+		, nc_(	bgmName_,
+				Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f),
+				Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f))
 	{
 		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + bgmName_ + "/" + bgmName_ + ".txt");
 	}
@@ -36,7 +38,8 @@ namespace Scene
 
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
-
+		//マーカーの画像読み込み
+		ResourceManager::GetGraph().load("Resource/image/marker_kari.png", "marker"/*, 1, 1, 1, 200, 200*/);
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
@@ -60,6 +63,11 @@ namespace Scene
 		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
+		//マーカー(左右に一つずつ)
+		ECS::GameEffectsArcheType::CreateMarker("marker",
+			Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
+		ECS::GameEffectsArcheType::CreateMarker("marker",
+			Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 
 		fade_ = ECS::ArcheType::CreateEntity
 		(

@@ -43,6 +43,7 @@ public:
 		COOKING_AREA,	//調理台や床
 		GIRL,			//女の子
 		RECEIVE_STAFF,	//食材を受け取るスタッフ
+		MARKER,			//マーカー(ノーツの判定位置)
 		NOTE,			//音符(食材)
 		EFFECT,			//演出用エフェクト
 		UI,				//時計やスコアゲージ等のUI
