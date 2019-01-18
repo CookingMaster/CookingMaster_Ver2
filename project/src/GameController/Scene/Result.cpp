@@ -140,9 +140,10 @@ void Scene::Result::update()
 	}
 	if (counter_.getCurrentCount() == Timing::SCOREFONT) {
 		//スコアフォント入場
-		ECS::ArcheType::CreateEntity(
+		ECS::ArcheType::CreateRectEntity(
 			"scorecombo",
-			Vec2{ System::SCREEN_WIDIH / 2.f - 500.f, System::SCREEN_HEIGHT / 2.f - 100.f },
+			Vec2{ System::SCREEN_WIDIH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f - 100.f },
+			ECS::Rectangle{ 0,0,500,150 },
 			*entityManager_,
 			ENTITY_GROUP::UI
 		);
@@ -151,16 +152,25 @@ void Scene::Result::update()
 		//スコア出現
 		ECS::ResultArcheType::CreateScoreEntity(
 			"scorefont",
-			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f - 30.f},
+			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f - 30.f },
 			score_,
 			*entityManager_
+		);
+	}	if (counter_.getCurrentCount() == Timing::COMBOFONT) {
+		//コンボフォント入場
+		ECS::ArcheType::CreateRectEntity(
+			"scorecombo",
+			Vec2{ System::SCREEN_WIDIH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f + 50.f },
+			ECS::Rectangle{ 0,150,500,150 },
+			*entityManager_,
+			ENTITY_GROUP::UI
 		);
 	}
 	if (counter_.getCurrentCount() == Timing::COMBO) {
 		//コンボ出現
 		ECS::ResultArcheType::CreateScoreEntity(
 			"scorefont",
-			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f + 120.f },
+			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f + 110.f },
 			combo_,
 			*entityManager_
 		);
