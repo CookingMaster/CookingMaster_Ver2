@@ -2,8 +2,8 @@ Resource/image/note_tomato.png
 tomato
 Resource/sound/SE/tomato.ogg
 2
-6
-1
+7
+2
 1
 7
 153 100
