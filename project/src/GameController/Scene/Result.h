@@ -61,10 +61,10 @@ namespace Scene
 			CONFETTI = 100,		//紙吹雪出す
 			EVALUATION = 140,	//評価フォント出す
 			SCORE_BACK = 200,	//スコア用背景出す
-			SCOREFONT = 230,	//スコアとコンボの文字出す
-			SCORE = 250,		//スコア数字出す
-			COMBO = 300,		//コンボ数出す
-			FADE_OUT = 550,		//フェードアウト開始
+			SCOREFONT = 260,	//スコアとコンボの文字出す
+			SCORE = 290,		//スコア数字出す
+			COMBO = 320,		//コンボ数出す
+			FADE_OUT = 500,		//フェードアウト開始
 		};
 
 		//! スコアから料理の画像を設定する

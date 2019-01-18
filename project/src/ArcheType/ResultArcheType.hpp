@@ -51,7 +51,7 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 			Random rand;
-			entity->addComponent<Transform>().setPosition(rand.getRand(0.f, 1280.f), rand.getRand(-1000.f, -100.f));
+			entity->addComponent<Transform>().setPosition(rand.getRand(0.f, 1280.f), rand.getRand(-1100.f, -200.f));
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(srcXY.x, srcXY.y, srcWH.x, srcWH.y);
@@ -84,7 +84,7 @@ namespace ECS
 			entity->addComponent<Expand>(Vec2{ 1.f,1.f }, Easing::ExpoIn, 20.f);
 			entity->addComponent<Rectangle>(0, 0, 59, 75);
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 59.f / 2,75.f / 2 });
-			entity->addComponent<DrawFont2>(59.f, 75.f).setNumber(score);
+			entity->addComponent<DrawFont2>(59.f, 75.f, score);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
