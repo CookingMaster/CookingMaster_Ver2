@@ -33,7 +33,7 @@ namespace ECS
 
 		static constexpr float PI = 3.141592653589793f;
 	public:
-		//!ˆÚ“®‚Ì‰ñ“]’†S‚Æ‘¬“x‚ð‰Šú‰»‚µ‚Ü‚·
+		//!ˆÚ“®‚Ì‰ñ“]’†S‚Æ‰ñ“]‘¬“x‚ð‰Šú‰»‚µ‚Ü‚·
 		FlyAway(const Vec2 center, const float speed)
 			:
 			center_(center),
@@ -52,8 +52,8 @@ namespace ECS
 			cnt_.add();
 			//‰æ‘œŽ©‘Ì‚Ì‰ñ“]
 			rotate_->val = cnt_.getCurrentCount();
-			//‰æ‘œ‚Ì‰ñ“]ˆÚ“®ˆ—
-			double angle = PI / 180.0;
+			//‰æ‘œ‚Ì‰ñ“]ˆÚ“®ˆ—(’x‚©‚Á‚½‚©‚ç”÷–­‚É’²®)
+			double angle = PI / 180.0 + 0.015;
 			position_->val.x = static_cast<float>(
 				center_.x 
 				+ (position_->val.x - center_.x) * cos(angle) 
@@ -129,7 +129,7 @@ namespace ECS
 			scale_->val.x = ease_.getVolume(startSize_.x, endSize_.x);
 			scale_->val.y = ease_.getVolume(startSize_.y, endSize_.y);
 		}
-		[[nodiscard]] bool isEaseEnd() {
+		[[nodiscard]] const bool isEaseEnd() {
 			return ease_.isEaseEnd();
 		}
 	};
@@ -143,7 +143,7 @@ namespace ECS
 		Rotation* rotation_ = nullptr;
 		float speed_;
 	public:
-		Rotate(float speed)
+		Rotate(const float speed)
 			:
 			speed_(speed)
 		{}
@@ -171,7 +171,7 @@ namespace ECS
 		float shift_;
 		Counter_f angleCnt_;
 	public:
-		FallDance(float shift, float angleInit, float rotateSpeed)
+		FallDance(const float shift, const float angleInit, const float rotateSpeed)
 			:
 			shift_(shift)
 		{
@@ -185,6 +185,42 @@ namespace ECS
 		{
 			position_->val.x += static_cast<float>(sin(++angleCnt_) * 10.f) + shift_;
 			position_->val.y += 10;
+		}
+	};
+
+	/**
+	* @brief Žw’è‚µ‚½À•W‚Ü‚ÅƒC[ƒWƒ“ƒO‚ÅˆÚ“®
+	*/
+	class EasingMove final : public ComponentSystem
+	{
+	private:
+		Position * position_ = nullptr;
+		Easing ease_;
+		Ease em_;
+		Vec2 startPos_;
+		Vec2 endPos_;
+		float durationTime_;
+	public:
+		EasingMove(const Ease em, Vec2 endPos, float durationTime)
+			:
+			em_(em),
+			endPos_(endPos),
+			durationTime_(durationTime)
+		{}
+		void initialize() override
+		{
+			position_ = &entity->getComponent<Position>();
+			startPos_ = position_->val;
+		}
+		void update() override
+		{
+			ease_.run(em_, durationTime_);
+			position_->val.x = ease_.getVolume(startPos_.x, endPos_.x);
+			position_->val.y = ease_.getVolume(startPos_.y, endPos_.y);
+		}
+		[[nodiscard]] const bool isEaseEnd() 
+		{
+			return ease_.isEaseEnd();
 		}
 	};
 }

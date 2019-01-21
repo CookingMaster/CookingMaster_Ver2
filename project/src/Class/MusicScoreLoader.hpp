@@ -21,7 +21,8 @@ private:
 	int bpm_;
 	int beat_;
 	int offsetTime_;
-	int noteNum_;	//休符以外のノーツの数
+	int noteAllNum_;	//休符以外のノーツの総数
+	int maxPoint_;		//最大点数
 	std::vector<NotesData> notesData_;
 	MusicData scoreData_;
 
@@ -29,7 +30,8 @@ public:
 	MusicScoreLoader() :
 		bpm_(0),
 		offsetTime_(0),
-		noteNum_(0){}
+		noteAllNum_(0),
+		maxPoint_(0){}
 
 	/**
 	* @brief 譜面データを読み込む
@@ -68,6 +70,13 @@ public:
 		}
 
 		fin.close();
+
+		int combBonus = 0;
+		for (int i = 0; i < noteAllNum_; ++i)
+		{
+			combBonus += i / 20;
+		}
+		maxPoint_ = (noteAllNum_ * 8) + combBonus;
 	}
 
 	/**
@@ -77,7 +86,8 @@ public:
 	{
 		bpm_ = 0;
 		offsetTime_ = 0;
-		noteNum_ = 0;
+		noteAllNum_ = 0;
+		maxPoint_ = 0;
 
 		notesData_.clear();
 		notesData_.shrink_to_fit();
@@ -137,7 +147,7 @@ public:
 	*/
 	[[nodiscard]]int getMaxPoint()
 	{
-		return noteNum_ * 10;
+		return maxPoint_;
 	}
 
 private:
@@ -199,6 +209,7 @@ private:
 			notesData_.back().xsize,
 			notesData_.back().ysize);
 		//SE
+		ResourceManager::GetSound().load(notesData_.back().seName, notesData_.back().seName, SoundType::SE);
 
 		fin.close();
 	}
@@ -261,7 +272,7 @@ private:
 				continue;
 			}
 
-			++noteNum_;
+			++noteAllNum_;
 			//ノーツの番号を取得
 			scoreData_.back()[i].notesID = int(idstr[i][1] - '0');
 		}

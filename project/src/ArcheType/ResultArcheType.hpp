@@ -51,7 +51,7 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 			Random rand;
-			entity->addComponent<Transform>().setPosition(rand.getRand(0.f, 1280.f), rand.getRand(-1000.f, -100.f));
+			entity->addComponent<Transform>().setPosition(rand.getRand(0.f, 1280.f), rand.getRand(-1100.f, -200.f));
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(srcXY.x, srcXY.y, srcWH.x, srcWH.y);
@@ -61,5 +61,33 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::EFFECT);
 			return entity;
 		}
+		static Entity* CreateEvaluationEntity(const char* graphicName, const int index, const Vec2 pos, const Vec2_i imageSize, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			Vec2 pivot(imageSize.x / 2.f, imageSize.y / 2.f);
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setPivot(pivot);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
+			entity->addGroup(ENTITY_GROUP::UI);
+			return entity;
+		}
+		static Entity* CreateScoreEntity(const char* graphicName, const Vec2 pos, const int score, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<Expand>(Vec2{ 1.f,1.f }, Easing::ExpoIn, 20.f);
+			entity->addComponent<Rectangle>(0, 0, 59, 75);
+			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 59.f / 2,75.f / 2 });
+			entity->addComponent<DrawFont2>(59.f, 75.f, score);
+			entity->addGroup(ENTITY_GROUP::UI);
+			return entity;
+		}
+
 	};
 }

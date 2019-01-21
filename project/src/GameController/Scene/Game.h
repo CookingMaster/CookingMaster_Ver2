@@ -27,6 +27,7 @@ namespace Scene
 		MusicScoreLoader msl_;
 		NotesCreator nc_;
 		int comb_ = 0;
+		int maxComb_ = 0;
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();
@@ -38,6 +39,7 @@ namespace Scene
 		int getNoteScore();
 		void changePauseScene();
 		void changeResultScene();
-		void ComboReset();
+		void comboReset();
+		void saveMaxComb();
 	};
 }

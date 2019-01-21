@@ -53,7 +53,7 @@ namespace ECS
 			entity->addComponent<ScoreData>();
 			int hi = entity->addComponent<ScoreSystem>(stageName).getHighScore(stageName);
 			entity->addComponent<SpriteRectDraw>(grapName).setPivot(Vec2{ 12.5f,22.5f });
-			entity->addComponent<DrawFont2>(50.f, 100.f).setNumber(hi);
+			entity->addComponent<DrawFont2>(50.f, 100.f, hi);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}

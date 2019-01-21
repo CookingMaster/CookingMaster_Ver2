@@ -15,6 +15,7 @@ Scene::Result::Result(IOnSceneChangeCallback * sceneTitleChange, [[maybe_unused]
 	if (parame != nullptr) {
 		bgmName_ = (parame->get<std::string>("BGM_name"));
 		score_ = (parame->get<int>("score"));
+		combo_ = (parame->get<int>("maxcombo"));
 	}
 }
 
@@ -28,24 +29,59 @@ void Scene::Result::initialize()
 	ResourceManager::GetGraph().load("Resource/image/menuback.png", "result_back");
 	ResourceManager::GetGraph().load("Resource/image/dish.png", "dish");
 	ResourceManager::GetGraph().load("Resource/image/confetti.png", "confetti");
+	ResourceManager::GetGraph().load("Resource/image/result_black.png", "black");
+	//評価フォント
+	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
 	//フォント
-	ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
+	ResourceManager::GetGraph().load("Resource/image/score_combo.png", "scorecombo");
+	ResourceManager::GetGraph().load("Resource/image/score_font.png", "scorefont");
 
 	//プレイしたステージを割り出す
 	setStage();
 	//stageとスコアによって料理の画像を変える
 	Vec2 dishImgPos = setDishImg();
-	//エンティティ初期化
+	//スコアによって評価フォントの画像を変える
+	int index = getEvaluationIndex();
+
+	//カウンタ初期化
 	counter_.reset();
-	counter_.setEndTime(300, 0);
-	cloche_ = ECS::ResultArcheType::CreateClocheEntity("cloche", Vec2{ 650,400 }, *entityManager_);
-	back_ = ECS::ResultArcheType::CreateBackEntity("result_back", Vec2{ 0,0 }, *entityManager_);
-	dish_ = ECS::ResultArcheType::CreateDishEntity("dish", dishImgPos, Vec2{ 512,512 }, Vec2{ System::SCREEN_WIDIH/2.f, System::SCREEN_HEIGHT/2.f }, *entityManager_);
-	fade_ = ECS::ArcheType::CreateEntity("fade", Vec2{ 0.f,0.f }, *entityManager_, ENTITY_GROUP::TOP_FADE);
+	counter_.setEndTime(600, 0);
+	//エンティティ初期化
+	cloche_ = ECS::ResultArcheType::CreateClocheEntity(
+		"cloche",
+		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 50.f },
+		*entityManager_
+	);
+	dish_ = ECS::ResultArcheType::CreateDishEntity(
+		"dish",
+		dishImgPos,
+		Vec2{ 512.f,512.f },
+		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 100.f },
+		*entityManager_
+	);
+	back_ = ECS::ResultArcheType::CreateBackEntity(
+		"result_back",
+		Vec2{ 0,0 },
+		*entityManager_
+	);
+	fade_ = ECS::ArcheType::CreateEntity(
+		"fade",
+		Vec2{ 0.f,0.f },
+		*entityManager_,
+		ENTITY_GROUP::FADE
+	);
+	evaluation_ = ECS::ResultArcheType::CreateEvaluationEntity(
+		"evaluation",
+		index,
+		Vec2{ System::SCREEN_WIDIH / 2.f, 125.f },
+		Vec2_i{ 598,203 },
+		*entityManager_
+	);
 }
 
 void Scene::Result::update()
 {
+	//フェードイン
 	if (!isFadeOut_ && fade_->getComponent<ECS::AlphaBlend>().alpha >= 0) {
 		fade_->getComponent<ECS::AlphaBlend>().alpha -= 6;
 		return;
@@ -54,21 +90,92 @@ void Scene::Result::update()
 	counter_.add();
 	entityManager_->update();
 
-	if (counter_.getCurrentCount() == 100) {
-		for (int i = 0; i < 50; ++i) {
-			confetties_.push_back(ECS::ResultArcheType::CreateConfettiEntity("confetti", Vec2_i{ 100 * (i % 5),0 }, Vec2_i{ 100,100 }, *entityManager_));
+	if (counter_.getCurrentCount() == Timing::CONFETTI) {
+		//紙吹雪
+		if (score_ >= SCORE_GREAT) {
+			for (int i = 0; i < 50; ++i) {
+				confetties_.push_back(
+					ECS::ResultArcheType::CreateConfettiEntity(
+						"confetti",
+						Vec2_i{ 100 * (i % 5),0 },
+						Vec2_i{ 100,100 },
+						*entityManager_
+					)
+				);
+			}
 		}
-	}
-	if (counter_.getCurrentCount() >= 100) {
+		//クロッシュ飛ばす
 		cloche_->addComponent<ECS::FlyAway>(Vec2{ 1920,600 }, 3.f);
-		//拡大
-		dish_->addComponent<ECS::Expand>(Vec2{ 1.8f,1.8f }, Easing::ExpoIn, 20.f);
-		if (dish_->getComponent<ECS::Expand>().isEaseEnd()) {
-			//縮小
-			dish_->addComponent<ECS::Reduction>(Vec2{ 1.2f,1.2f }, Easing::ExpoOut, 8.f);
-		}
+		//料理拡大
+		dish_->addComponent<ECS::Expand>(
+			Vec2{ 1.8f,1.8f },
+			Easing::ExpoIn,
+			20.f
+			);
 	}
-	if (counter_.getCurrentCount() >= 250) {
+	if (dish_->hasComponent<ECS::Expand>() && dish_->getComponent<ECS::Expand>().isEaseEnd()) {
+		//料理縮小
+		dish_->addComponent<ECS::Reduction>(
+			Vec2{ 1.2f,1.2f },
+			Easing::ExpoOut, 8.f
+			);
+	}
+	if (counter_.getCurrentCount() == Timing::EVALUATION) {
+		//評価フォント拡大
+		evaluation_->addComponent<ECS::Expand>(Vec2{ 1.f,1.f }, Easing::ExpoOut, 5.f);
+		//クロッシュ戻ってくるので移動コンポーネントを消す
+		cloche_->removeComponent<ECS::FlyAway>();
+	}
+	if (counter_.getCurrentCount() == Timing::SCORE_BACK) {
+		//スコア背景入場
+		auto black = ECS::ArcheType::CreateEntity(
+			"black",
+			Vec2{ System::SCREEN_WIDIH / 2 - 500.f,-720.f },
+			*entityManager_, ENTITY_GROUP::EFFECT);
+		black->addComponent<ECS::EasingMove>(
+			Easing::LinearIn,
+			Vec2{ System::SCREEN_WIDIH / 2 - 500.f,0.f },
+			10.f
+			);
+	}
+	if (counter_.getCurrentCount() == Timing::SCOREFONT) {
+		//スコアフォント入場
+		ECS::ArcheType::CreateRectEntity(
+			"scorecombo",
+			Vec2{ System::SCREEN_WIDIH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f - 100.f },
+			ECS::Rectangle{ 0,0,500,150 },
+			*entityManager_,
+			ENTITY_GROUP::UI
+		);
+	}
+	if (counter_.getCurrentCount() == Timing::SCORE) {
+		//スコア出現
+		ECS::ResultArcheType::CreateScoreEntity(
+			"scorefont",
+			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f - 30.f },
+			score_,
+			*entityManager_
+		);
+	}	if (counter_.getCurrentCount() == Timing::COMBOFONT) {
+		//コンボフォント入場
+		ECS::ArcheType::CreateRectEntity(
+			"scorecombo",
+			Vec2{ System::SCREEN_WIDIH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f + 50.f },
+			ECS::Rectangle{ 0,150,500,150 },
+			*entityManager_,
+			ENTITY_GROUP::UI
+		);
+	}
+	if (counter_.getCurrentCount() == Timing::COMBO) {
+		//コンボ出現
+		ECS::ResultArcheType::CreateScoreEntity(
+			"scorefont",
+			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f + 110.f },
+			combo_,
+			*entityManager_
+		);
+	}
+	if (counter_.getCurrentCount() >= Timing::FADE_OUT) {
 		isFadeOut_ = true;
 	}
 	if (isFadeOut_) {
@@ -79,6 +186,7 @@ void Scene::Result::update()
 		DOUT << "BackToTitle" << std::endl;
 		ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::ALL_CLEAR, true);
 	}
+
 }
 
 void Scene::Result::draw()
@@ -96,10 +204,10 @@ Vec2 Scene::Result::setDishImg()
 	Vec2 dishImgPos;
 
 	//スコアによってx座標を変える
-	if (score_ >= 80) {
+	if (score_ >= SCORE_GREAT) {
 		dishImgPos.x = 0;
 	}
-	else if (score_ >= 50) {
+	else if (score_ >= SCORE_GOOD) {
 		dishImgPos.x = 512;
 	}
 	else {
@@ -125,5 +233,17 @@ void Scene::Result::setStage()
 	}
 	else {
 		stage_ = ECS::StageHighScore::STAGE1;
+	}
+}
+
+int Scene::Result::getEvaluationIndex() {
+	if (score_ >= SCORE_GREAT) {
+		return 2;
+	}
+	else if (score_ >= SCORE_GOOD) {
+		return 1;
+	}
+	else {
+		return 0;
 	}
 }

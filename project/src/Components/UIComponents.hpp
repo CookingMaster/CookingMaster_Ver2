@@ -27,7 +27,7 @@ namespace ECS
 	class TimerNeedleMove final : public ComponentSystem
 	{
 	private:
-		Rotation* rotate_ = nullptr;
+		Rotation * rotate_ = nullptr;
 		Counter_f cnt_;
 
 		float speed_;
@@ -58,16 +58,16 @@ namespace ECS
 	class FadeComponent final : public ComponentSystem
 	{
 	private:
-		AlphaBlend* alpha_ = nullptr;
+		AlphaBlend * alpha_ = nullptr;
 		Easing ease;
 		float start_, end_, spd_;
 
 	public:
 		//!フェードの遷移(0~255)と継続時間を設定
-		FadeComponent():
+		FadeComponent() :
 			start_(0.f),
 			end_(0.f),
-			spd_(0.f){}
+			spd_(0.f) {}
 
 		void initialize() override
 		{
@@ -106,7 +106,7 @@ namespace ECS
 	class ExpandReduceComponentSystem final : public ComponentSystem
 	{
 	private:
-		Scale* scale_ = nullptr;
+		Scale * scale_ = nullptr;
 		Counter_f cnt_;
 
 		float magni_;
@@ -120,7 +120,7 @@ namespace ECS
 			speed_ = speed;
 			frame_ = 0.f;
 		}
-		
+
 		void initialize() override
 		{
 			scale_ = &entity->getComponent<Scale>();
@@ -148,7 +148,7 @@ namespace ECS
 				scale_->val = frame_;
 			}
 		}
-		
+
 		void onExpand(bool flag)
 		{
 			flag_ = flag;
@@ -164,7 +164,7 @@ namespace ECS
 	class ExpandComponentSystem final : public ComponentSystem
 	{
 	private:
-		Scale* scale_ = nullptr;
+		Scale * scale_ = nullptr;
 		Counter_f cnt_;
 
 		float magni_min_;
@@ -207,7 +207,7 @@ namespace ECS
 	class BarComponentSystemX final : public ComponentSystem
 	{
 	private:
-		Rectangle* rectangle_;
+		Rectangle * rectangle_;
 		Easing ease_;
 
 		int maxScore_;
@@ -218,8 +218,8 @@ namespace ECS
 		BarComponentSystemX(int rectX, int maxScore) :
 			maxScore_(maxScore),
 			imgRect_x_(rectX),
-			score_(0){}
-		
+			score_(0) {}
+
 		void initialize() override
 		{
 			rectangle_ = &entity->getComponent<Rectangle>();
@@ -302,20 +302,20 @@ namespace ECS
 	class DrawFont final : public ComponentSystem
 	{
 	private:
-		Position* pos_ = nullptr;
+		Position * pos_ = nullptr;
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
-		
+
 		int num_;
 		Vec2 rect_;
 		Vec2 initPos_;
-		
+
 		int font_[4];
-		
+
 		void setRectAndDraw(const bool isDraw = true)
 		{
 			int keta = 0;
-			for (int i = 0; i < std::size(font_); ++i) 
+			for (int i = 0; i < std::size(font_); ++i)
 			{
 				//十の位、百の位が0の時は各値を表示しない
 				if ((i == 1 && num_ < 10) || (i == 0 && num_ < 100))
@@ -324,7 +324,7 @@ namespace ECS
 					continue;
 				}
 				rectangle_->x = font_[i] * (int)rect_.x;
-				
+
 				pos_->val.x = initPos_.x + (i * rect_.x);
 				rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
 				if (isDraw)
@@ -335,7 +335,7 @@ namespace ECS
 		}
 
 	public:
-		DrawFont(float rectW, float rectH):
+		DrawFont(float rectW, float rectH) :
 			num_(0)
 		{
 			rect_.x = rectW;
@@ -375,7 +375,7 @@ namespace ECS
 	class ButtonCommponent final : public ComponentSystem
 	{
 	private:
-		Position* pos_ = nullptr;
+		Position * pos_ = nullptr;
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
@@ -434,7 +434,7 @@ namespace ECS
 	class ButtonMojiCommponent  final : public ComponentSystem
 	{
 	private:
-		Position* pos_ = nullptr;
+		Position * pos_ = nullptr;
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
@@ -483,7 +483,7 @@ namespace ECS
 
 	class SelectFrame final : public ComponentSystem {
 	private:
-		Position* pos_ = nullptr;
+		Position * pos_ = nullptr;
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
@@ -509,7 +509,7 @@ namespace ECS
 		{
 			if (num != 1 && num != -1) {
 				DOUT << "param is incorrect" << std::endl;
-				return; 
+				return;
 			}
 			//select_が0,1,2の中ひとつがなるように
 			select_ = (select_ + num + 3) % 3;
@@ -531,7 +531,7 @@ namespace ECS
 	class DrawFont2 final : public ComponentSystem
 	{
 	private:
-		Position* pos_ = nullptr;
+		Position * pos_ = nullptr;
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
@@ -544,6 +544,7 @@ namespace ECS
 		void setRectAndDraw(const bool isDraw = true)
 		{
 			int keta = 0;
+			rectDraw_->drawEnable();
 			for (int i = 0; i < std::size(font_); ++i)
 			{
 				//十の位、百の位が0の時は各値を表示しない
@@ -553,19 +554,18 @@ namespace ECS
 					continue;
 				}
 				rectangle_->x = font_[i] * (int)rect_.x;
-
 				pos_->val.x = initPos_.x + (i * rect_.x);
-				rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
 				if (isDraw)
 				{
 					rectDraw_->draw2D();
 				}
 			}
+			rectDraw_->drawDisable();
 		}
 
 	public:
-		DrawFont2(float rectW, float rectH) :
-			num_(0)
+		DrawFont2(float rectW, float rectH, const int num) :
+			num_(num)
 		{
 			rect_.x = rectW;
 			rect_.y = rectH;
@@ -580,7 +580,8 @@ namespace ECS
 			initPos_ = pos_->val;
 			rectangle_->x = (int)rect_.x * num_;
 			rectangle_->w = (int)rect_.x;
-			setRectAndDraw(false);
+			rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
+			setNumber();
 		}
 
 		void update() override
@@ -590,11 +591,17 @@ namespace ECS
 		{
 			setRectAndDraw();
 		}
+		void setNumber()
+		{
+			font_[2] = num_ % 10;		//一桁目(一の位)
+			font_[1] = (num_ % 100) / 10;	//二桁目(十の位)
+			font_[0] = num_ / 100;		//三桁目(百の位)
+		}
 		void setNumber(int num)
 		{
 			num_ = num;
 			font_[2] = num % 10;		//一桁目(一の位)
-			font_[1] = num % 100 / 10;	//二桁目(十の位)
+			font_[1] = (num % 100) / 10;	//二桁目(十の位)
 			font_[0] = num / 100;		//三桁目(百の位)
 		}
 	};

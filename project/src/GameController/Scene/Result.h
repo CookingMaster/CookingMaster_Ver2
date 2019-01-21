@@ -25,6 +25,10 @@ namespace Scene
 	class Result : public AbstractScene
 	{
 	private:
+		//! 定数
+		const int SCORE_GREAT = 80;
+		const int SCORE_GOOD = 50;
+		//! エンティティマネージャー
 		ECS::EntityManager* entityManager_ = nullptr;
 		//! フェード
 		ECS::Entity* fade_ = nullptr;
@@ -35,9 +39,15 @@ namespace Scene
 		//! 料理
 		ECS::Entity* dish_ = nullptr;
 		//! 紙吹雪
-		std::vector<ECS::Entity*> confetties_;
+		std::vector<ECS::Entity*> confetties_{ nullptr };
+		//! 評価フォント
+		ECS::Entity* evaluation_ = nullptr;
+		//! スコア背景
+		ECS::Entity* black_ = nullptr;
 		//! スコア
 		int score_;
+		//! 最大コンボ数
+		int combo_;
 		//! 経過フレームカウンタ
 		Counter counter_;
 		//! ステージ情報
@@ -46,12 +56,24 @@ namespace Scene
 		//! フェードアウトフラグ
 		bool isFadeOut_;
 
-
+		//リザルトの進行度を管理する
+		enum Timing {
+			CONFETTI = 100,		//紙吹雪出す
+			EVALUATION = 140,	//評価フォント出す
+			SCORE_BACK = 200,	//スコア用背景出す
+			SCOREFONT = 260,	//スコアの文字出す
+			SCORE = 265,		//スコア数字出す
+			COMBOFONT = 320,	//コンボの文字出す
+			COMBO = 325,		//コンボ数出す
+			FADE_OUT = 500,		//フェードアウト開始
+		};
 
 		//! スコアから料理の画像を設定する
 		Vec2 setDishImg();
 		//! スコアを取得する
 		void setStage();
+		//! スコアから評価フォントのインデックスを設定する
+		int getEvaluationIndex();
 	public:
 		Result(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		void initialize() override;

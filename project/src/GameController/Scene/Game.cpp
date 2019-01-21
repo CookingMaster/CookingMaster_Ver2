@@ -14,7 +14,9 @@ namespace Scene
 		, entityManager_(entityManager)
 		, bgmName_(parame->get<std::string>("BGM_name"))
 		, stageNum_(parame->get<size_t>("stageNum"))
-		, nc_(bgmName_)
+		, nc_(	bgmName_,
+				Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f),
+				Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f))
 	{
 		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + bgmName_ + "/" + bgmName_ + ".txt");
 	}
@@ -36,12 +38,13 @@ namespace Scene
 
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
-
+		//マーカーの画像読み込み
+		ResourceManager::GetGraph().load("Resource/image/marker_kari.png", "marker"/*, 1, 1, 1, 200, 200*/);
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
 		ECS::ArcheType::CreateEntity("bg_back", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
-		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK);
+		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		//鍋
 		ECS::GameEffectsArcheType::CreateSaucepan("nabe1", Vec2(431.f, 175.f), entityManager_);
 		//プレイヤー
@@ -59,7 +62,12 @@ namespace Scene
 		//得点(パーセンテージ)表示
 		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
 		//おやっさんを攻撃表示で召喚する
-		boss_ = std::make_unique<BossController>(*entityManager_);
+		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
+		//マーカー(左右に一つずつ)
+		ECS::GameEffectsArcheType::CreateMarker("marker",
+			Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
+		ECS::GameEffectsArcheType::CreateMarker("marker",
+			Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 
 		fade_ = ECS::ArcheType::CreateEntity
 		(
@@ -122,14 +130,22 @@ namespace Scene
 				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
 				return;
 			}
+			//デバッグ関数------------------------------------------------------------------------------
 			if (Input::Get().getKeyFrame(KEY_INPUT_RETURN) == 1)
 			{
-				getCallBack().onSceneChange(SceneName::RESULT, nullptr, StackPopFlag::POP, true);
-				return;
+				auto sendParame = std::make_unique<Parameter>();
+				sendParame->add<std::string>("BGM_name", bgmName_);
+				sendParame->add<int>("score", scoreNum_);
+				sendParame->add<int>("maxcombo", maxComb_);
+				//BGMを停止する
+				Sound(bgmName_).stop();
+				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
+			//-----------------------------------------------------------------------------------------
 
 			changeResultScene();
 			changePauseScene();
+			saveMaxComb();
 		}
 		
 	}
@@ -162,7 +178,7 @@ namespace Scene
 				if (notestate == ECS::NoteState::State::MISS)
 				{
 					DOUT << "MISS" << std::endl;
-					ComboReset();
+					comboReset();
 				}
 			}
 			return 0;
@@ -180,7 +196,7 @@ namespace Scene
 
 			if (itnotestate.isActiveNote())
 			{
-				Sound se("onion");
+				Sound se(itnotestate.getSEName());
 				//入力方向とノーツの向きが一致していない場合は無効
 				if (itnotestate.getNoteDir() != dir)
 				{
@@ -190,31 +206,32 @@ namespace Scene
 				auto nowstate = itnotestate.getNoteState();
 				//ノーツの状態を遷移
 				itnotestate.ActionToChangeNoteState();
+				int combBonus = comb_ / 20;
 				switch (nowstate)
 				{
 				case ECS::NoteState::State::MISS:
 					DOUT << "MISS" << std::endl;
-					ComboReset();
+					comboReset();
 					return 0;
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
-					ComboReset();
+					comboReset();
 					return 0;
 				case ECS::NoteState::State::GOOD:
 					DOUT << "GOOD" << std::endl;
 					se.play(false, true);
 					++comb_;
-					return 5;
+					return 2 + combBonus;
 				case ECS::NoteState::State::GREAT:
 					DOUT << "GREAT" << std::endl;
 					se.play(false, true);
 					++comb_;
-					return 8;
+					return 5 + combBonus;
 				case ECS::NoteState::State::PARFECT:
 					DOUT << "PARFECT" << std::endl;
 					se.play(false, true);
 					++comb_;
-					return 10;
+					return 8 + combBonus;
 				}
 				break;
 			}
@@ -244,6 +261,7 @@ namespace Scene
 			auto sendParame = std::make_unique<Parameter>();
 			sendParame->add<std::string>("BGM_name", bgmName_);
 			sendParame->add<int>("score", scoreNum_);
+			sendParame->add<int>("maxcombo", maxComb_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			switch (stageNum_)
@@ -263,10 +281,17 @@ namespace Scene
 	}
 
 	//コンボを0にしておやっさんを怒らせる
-	void Game::ComboReset()
+	void Game::comboReset()
 	{
 		comb_ = 0;
 		//↓おやっさんを怒らせる処理
 		boss_->angry();
+	}
+	void Game::saveMaxComb()
+	{
+		if (maxComb_ < comb_)
+		{
+			maxComb_ = comb_;
+		}
 	}
 }

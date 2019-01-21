@@ -279,7 +279,11 @@ namespace ECS
 		{
 			index_ = index;
 		}
-	
+		//!現在のインデックス値を取得する
+		int getIndex()
+		{
+			return index_;
+		}
 	};
 
 	/*!

@@ -50,12 +50,14 @@ namespace ECS
 		std::array<float, 4> hitJudge_;
 		float arrivalBeatTime_;
 
+		std::string seName_ = "";
 		NoteState* noteState_ = nullptr;
 		Animator* animator_ = nullptr;
 		Velocity* velocity_ = nullptr;
 		Position* position_ = nullptr;
 		Rotation* rotation_ = nullptr;
 		Gravity* gravity_ = nullptr;
+		AlphaBlend* alphaBlend_ = nullptr;
 
 		std::array<float, 6> hitTimeLine_;
 		Counter transCounter_;		//ó‘Ô‘JˆÚ‚ÌƒJƒEƒ“ƒg
@@ -72,6 +74,7 @@ namespace ECS
 		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
 			asd_(nd.animSData),
 			hitJudge_(nd.hitJudge),
+			seName_(nd.seName),
 			arrivalBeatTime_(arrivalBeatTime),
 			transCounter_(0, 8) {}
 
@@ -83,6 +86,7 @@ namespace ECS
 			position_ = &entity->getComponent<Position>();
 			rotation_ = &entity->getComponent<Rotation>();
 			gravity_ = &entity->getComponent<Gravity>();
+			alphaBlend_ = &entity->getComponent<AlphaBlend>();
 
 			/*NON ¨ BAD ¨ GOOD ¨ GREAT ¨ PARFECT ¨ GOOD ¨ MISSED ‚Æó‘Ô‚ª‘JˆÚ‚·‚é
 			BAD‚ÌŽž‚É“ü—Í‚ª‚ ‚é‚ÆGRAZED‚Ö‘JˆÚ‚·‚é
@@ -160,27 +164,21 @@ namespace ECS
 			return noteState_->dir;
 		}
 
+		//ƒm[ƒc‚ÉŽg—p‚³‚ê‚éSE‚Ì–¼‘O‚ðŽæ“¾‚·‚é
+		[[nodiscard]]const std::string& getSEName() const
+		{
+			return seName_;
+		}
+
 	private:
 
 		//ó‘Ô‚ð‘JˆÚ‚ÆŠeƒm[ƒc‚Ì‹““®‚ðs‚¤
 		void transitionAndMove()
 		{
-			if (noteState_->state == NoteState::State::MISSED ||
-				noteState_->state == NoteState::State::HITTED)
-				return;
-
-			//ó‘Ô‚ªMISS‚¾‚Á‚½‚çMISSED‚É•ÏX‚·‚é
-			if (noteState_->state == NoteState::State::MISS)
+			switch (noteState_->state)
 			{
-				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
-				{
-					ChangeStateMISSED();
-				}
-				return;
-			}
-
-			if (noteState_->state == NoteState::State::GRAZED)
-			{
+			//‚©‚·‚èó‘Ô‚¾‚Á‚½‚ç‰ñ“]‚µ‚È‚ª‚ç”ò‚ñ‚Å‚¢‚­
+			case NoteState::State::GRAZED:
 				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
 				{
 					ChangeStateMISSED();
@@ -188,6 +186,28 @@ namespace ECS
 				else
 				{
 					rotation_->val += 40.f;
+				}
+				return;
+
+			//ó‘Ô‚ªMISS‚¾‚Á‚½‚çMISSED‚É•ÏX‚·‚é
+			case NoteState::State::MISS:
+				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
+				{
+					ChangeStateMISSED();
+				}
+				return;
+
+			//Á–Å‚ÌŠÔÛ‚É”–‚­‚È‚Á‚ÄÁ‚¦‚é
+			case NoteState::State::MISSED:
+				if (animator_->isAnimEnd() && alphaBlend_->alpha > 0)
+				{
+					alphaBlend_->alpha -= 5;
+				}
+				return;
+			case NoteState::State::HITTED:
+				if (animator_->isAnimEnd() && alphaBlend_->alpha > 0)
+				{
+					alphaBlend_->alpha -= 20;
 				}
 				return;
 			}
@@ -208,7 +228,7 @@ namespace ECS
 				{
 					changeNoteAnim(1, true, 5);
 					noteState_->state = NoteState::State::HITTED;
-					Sound se("onion");
+					Sound se(seName_);
 					se.play(false,true);
 				}
 					break;

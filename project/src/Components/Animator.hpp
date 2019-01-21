@@ -44,14 +44,30 @@ namespace ECS {
 		bool isAnimEnd_ = false;		//!アニメーションが終了したか否か
 
 	public:
-		//!アニメーションの遷移フレーム数を設定する
-		Animator(const int animspd, const int maxX, const int maxY)
+		//!アニメーションのデータを設定する
+		Animator(const int xmin, const int ymin, const int xmax, const int ymax, const int animspd)
 			:
-			maxImgXNum_(maxX),
-			maxImgYNum_(maxY)
+			maxImgXNum_(xmax),
+			maxImgYNum_(ymax)
+		{
+			animData_.minXnum_ = xmin;
+			animData_.minYnum_ = ymin;
+			animData_.maxXnum_ = xmax + 1;
+			animData_.maxYnum_ = ymax + 1;
+			animData_.speed_ = animspd;
+		}
+		//!アニメーションスピードとXYの最大値を設定
+		Animator(const int animspd, const int xmax, const int ymax)
+			:
+			maxImgXNum_(xmax),
+			maxImgYNum_(ymax)
 		{
 			animData_.speed_ = animspd;
 		}
+		Animator()
+			:
+			maxImgXNum_(0),
+			maxImgYNum_(0){}
 		void initialize() override
 		{
 			animation_ = &entity->getComponent<SpriteAnimationDraw>();
@@ -62,14 +78,14 @@ namespace ECS {
 		{
 			if (++counter_ >= animData_.speed_)
 			{
-				//画像のX方向を次に進め、その値がXの最大値を超えていた場合Yを進める
+				//画像のX方向を次に進め、その値がXの最大値以上の場合Yを進める
 				bool isNextImg = false;
 				if (!isMinusAnim_)	{ ++indexX_; isNextImg = (indexX_ >= animData_.maxXnum_); }
 				else				{ --indexX_; isNextImg = (indexX_ <= animData_.minXnum_); }
 
 				if (isNextImg)
 				{
-					//画像のY方向を次に進め、その値がYの最大値を超えていた場合最初に戻す(または停止する)
+					//画像のY方向を次に進め、その値がYの最大値以上の場合最初に戻す(または停止する)
 					if (!isMinusAnim_)	{ ++indexY_; isNextImg = (indexY_ >= animData_.maxYnum_); }
 					else				{ --indexY_; isNextImg = (indexY_ <= animData_.minYnum_); }
 
@@ -156,6 +172,15 @@ namespace ECS {
 		}
 
 		/**
+		* @brief 現在のインデックスを最大値に設定する
+		*/
+		void setIndexMax()
+		{
+			indexX_ = animData_.maxXnum_ - 1;
+			indexY_ = animData_.maxYnum_ - 1;
+		}
+
+		/**
 		* @brief アニメーションが一巡したら停止するか否かを設定する
 		* @param isEndStopAnim アニメーションを停止するか否か
 		*/
@@ -171,6 +196,7 @@ namespace ECS {
 		void setIsMinusAnim(const bool isMinusAnim)
 		{
 			isMinusAnim_ = isMinusAnim;
+			isAnimEnd_ = false;
 		}
 
 		/**
@@ -196,7 +222,7 @@ namespace ECS {
 		*/
 		bool isAnimEnd()
 		{
-			if (isEndStopAnim_)
+			if (!isEndStopAnim_)
 			{
 				return false;
 			}

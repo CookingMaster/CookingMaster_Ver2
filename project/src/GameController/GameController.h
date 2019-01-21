@@ -36,13 +36,14 @@ public:
 	{
 		LAYER1,			//テスト用
 		BACK,			//最背面背景
+		MASTER,			//おやっさん
 		BACK_OBJECT,	//背景の鍋や皿などの調理器具
 		BACK_STAFF,		//後ろで働く従業員
-		MASTER,			//おやっさん
 		KITCHENWARE,	//調理台に上に載ったオブジェクト
 		COOKING_AREA,	//調理台や床
 		GIRL,			//女の子
 		RECEIVE_STAFF,	//食材を受け取るスタッフ
+		MARKER,			//マーカー(ノーツの判定位置)
 		NOTE,			//音符(食材)
 		EFFECT,			//演出用エフェクト
 		UI,				//時計やスコアゲージ等のUI
