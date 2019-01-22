@@ -204,7 +204,7 @@ namespace ECS
 	*　max_		最大数値
 	*　size_w_	表示する画像の幅
 	*/
-	class BarComponentSystemX final : public ComponentSystem
+	/*class BarComponentSystemX final : public ComponentSystem
 	{
 	private:
 		Rectangle * rectangle_;
@@ -250,7 +250,7 @@ namespace ECS
 		{
 			return int(((float)score_ / (float)maxScore_) * 100.f);
 		}
-	};
+	};*/
 
 	/*
 	*@brief　Y軸のバーを描画します
@@ -260,38 +260,57 @@ namespace ECS
 	*　max_		最大数値
 	*　size_h_	表示する画像の高さ
 	*/
-	/*class BarComponentSystemY final : public ComponentSystem
+	class BarComponentSystemY final : public ComponentSystem
 	{
 	private:
-		SpriteRectDraw* rect_;
-		Rectangle* rectangle_;
+		Rectangle * rectangle_;
+		Position* position_;
+		Easing ease_;
 
-		int rect_y_;
-		int now_;
-		int max_;
-		int size_h_;
+		float posY = 0.f;
+		int maxScore_ = 0;
+		int imgRect_y_ = 0;
+		int score_ = 0;
 
 	public:
-
-		BarComponentSystemY(int rectY, int now, int max)
-		{
-			rect_y_ = rectY;
-			now_ = now;
-			max_ = max;
-		}
+		BarComponentSystemY(int rectY, int maxScore) :
+			maxScore_(maxScore),
+			imgRect_y_(rectY) {}
 
 		void initialize() override
 		{
-			rect_ = &entity->getComponent<SpriteRectDraw>();
 			rectangle_ = &entity->getComponent<Rectangle>();
-
-			size_h_ = (int)(now_ * rectangle_->h / (float)max_);
+			position_ = &entity->getComponent<Position>();
+			posY = position_->val.y;
 		}
+
 		void update() override
 		{
-			rect_->setRect(rectangle_->x, rectangle_->y, rectangle_->w, size_h_);
+			if (!ease_.isEaseEnd())
+			{
+				ease_.run(Easing::CircIn, 10);
+			}
+
+			float size_h_ = (float)rectangle_->h - (imgRect_y_ * ((float)score_ / (float)maxScore_));
+			rectangle_->y = (int)ease_.getVolume((float)rectangle_->y, size_h_);
+			position_->val.y = posY + rectangle_->y;
 		}
-	};*/
+
+		void addScore(const int addscore)
+		{
+			score_ += addscore;
+			if (score_ > maxScore_)
+			{
+				score_ = maxScore_;
+			}
+			ease_.reset();
+		}
+
+		int getScore()
+		{
+			return int(((float)score_ / (float)maxScore_) * 100.f);
+		}
+	};
 
 	/*
 	*@brief フォント画像を描画します
