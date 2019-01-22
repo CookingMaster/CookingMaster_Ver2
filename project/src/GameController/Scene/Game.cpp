@@ -30,8 +30,8 @@ namespace Scene
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/bg_back.png", "bg_back");
 		ResourceManager::GetGraph().load("Resource/image/bg_table.png", "bg_table");
-		ResourceManager::GetGraph().load("Resource/image/bar_empty.png", "bar_empty");
-		ResourceManager::GetGraph().load("Resource/image/bar_full.png", "bar_full");
+		ResourceManager::GetGraph().load("Resource/image/mori1.png", "mori_full");
+		ResourceManager::GetGraph().load("Resource/image/mori2.png", "mori_empty");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
@@ -39,7 +39,7 @@ namespace Scene
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 		//マーカーの画像読み込み
-		ResourceManager::GetGraph().load("Resource/image/marker_kari.png", "marker"/*, 1, 1, 1, 200, 200*/);
+		ResourceManager::GetGraph().load/*Div*/("Resource/image/marker_kari.png", "marker"/*, 1, 1, 1, 200, 200*/);
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
@@ -56,11 +56,11 @@ namespace Scene
 			msl_.getBPM(),
 			msl_.getBeat(),
 			*entityManager_);
-		//スコアのバー
-		ECS::UIArcheType::CreateEmptyBarUI("bar_empty", Vec2(431.f, 44.f), Vec2(0.f, 0.f), *entityManager_);
-		ECS::UIArcheType::CreateFullBarUI("bar_full", Vec2(424.f, 38.f), Vec2(0.f, 0.f), msl_.getMaxPoint(), *entityManager_);
+		//スコア表示
+		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), *entityManager_);
+		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), msl_.getMaxPoint(), *entityManager_);
 		//得点(パーセンテージ)表示
-		ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
+		//ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
 		//マーカー(左右に一つずつ)
@@ -108,12 +108,12 @@ namespace Scene
 
 			if (score > 0)
 			{
-				for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::UI))
+				for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::KITCHENWARE))
 				{
-					if (it->hasComponent<ECS::BarComponentSystemX>())
+					if (it->hasComponent<ECS::BarComponentSystemY>())
 					{
-						it->getComponent<ECS::BarComponentSystemX>().addScore(score);
-						scoreNum_ = it->getComponent<ECS::BarComponentSystemX>().getScore();
+						it->getComponent<ECS::BarComponentSystemY>().addScore(score);
+						scoreNum_ = it->getComponent<ECS::BarComponentSystemY>().getScore();
 					}
 					if (it->hasComponent<ECS::ExpandReduceComponentSystem>())
 					{

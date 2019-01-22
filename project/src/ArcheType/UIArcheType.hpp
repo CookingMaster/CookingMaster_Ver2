@@ -23,7 +23,7 @@ namespace ECS
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<Rectangle>(0, 0, (int)rect.x, (int)rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
-			entity->addGroup(ENTITY_GROUP::UI);
+			entity->addGroup(ENTITY_GROUP::KITCHENWARE);
 			return entity;
 		}
 		//!バーの中身（スコア表示用）
@@ -33,10 +33,10 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
-			entity->addComponent<Rectangle>(0, 0, 0, (int)rect.y);
+			entity->addComponent<Rectangle>(0, (int)rect.y, (int)rect.x, (int)rect.y);
 			entity->addComponent<SpriteRectDraw>(graphicName);
-			entity->addComponent<BarComponentSystemX>((int)rect.x, maxScore);
-			entity->addGroup(ENTITY_GROUP::UI);
+			entity->addComponent<BarComponentSystemY>((int)rect.y, maxScore);
+			entity->addGroup(ENTITY_GROUP::KITCHENWARE);
 			return entity;
 		}
 		//!時計
