@@ -8,6 +8,7 @@
 #include "../ECS/ECS.hpp"
 #include "../Components/Renderer.hpp"
 #include "../Utility/Vec.hpp"
+#include "../Class/Sound.hpp"
 #include "musicName.hpp"
 #include <DxLib.h>
 
@@ -51,17 +52,23 @@ namespace ECS
 				//上下
 				if (Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
 				{
+					Sound se("move");
+					se.play(false,true);
 					if (index_ > BGM_SLIDER) { --index_; }
 					else { index_ = BACK; }
 				}
 				if (Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
 				{
+					Sound se("move");
+					se.play(false, true);
 					if (index_ < BACK) { ++index_; }
 					else { index_ = BGM_SLIDER; }
 				}
 				//ステージ選択に移行
 				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == BACK)
 				{
+					Sound se("turn");
+					se.play(false, true);
 					isOptionSelect_ = false;
 					index_ = OPTION;
 				}
@@ -69,6 +76,8 @@ namespace ECS
 				{
 					if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 					{
+						Sound se("volume");
+						se.play(false, true);
 						isSliderSelect_ = true;
 						blend_->alpha = 100;
 					}
@@ -89,29 +98,39 @@ namespace ECS
 			//上下
 			if (index_ != OPTION && Input::Get().getKeyFrame(KEY_INPUT_UP) == 1)
 			{
+				Sound se("move");
+				se.play(false, true);
 				if (index_ > STAGE1) { --index_; }
 				else { index_ = STAGE3; }
 				preIndex = index_;
 			}
 			if (index_ != OPTION && Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
 			{
+				Sound se("move");
+				se.play(false, true);
 				if (index_ < STAGE3) { ++index_; }
 				else { index_ = STAGE1; }
 				preIndex = index_;
 			}
 
 			//左右
-			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
+			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1 && index_ != OPTION)
 			{
+				Sound se("turn");
+				se.play(false, true);
 				if (index_ != OPTION) { index_ = OPTION; }
 			}
-			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1)
+			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1 && index_ == OPTION)
 			{
+				Sound se("move");
+				se.play(false, true);
 				if (index_ == OPTION) { index_ = preIndex; }
 			}
 			//オプションに移行
 			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == OPTION)
 			{
+				Sound se("turn");
+				se.play(false,true);
 				isOptionSelect_ = true;
 			}
 		}
