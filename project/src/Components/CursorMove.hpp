@@ -88,6 +88,8 @@ namespace ECS
 			{
 				if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1)
 				{
+					Sound se("volume");
+					se.play(false, true);
 					isSliderSelect_ = false;
 					blend_->alpha = 255;
 				}
