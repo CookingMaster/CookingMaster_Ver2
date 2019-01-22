@@ -40,7 +40,7 @@ namespace Scene
 		//フォント
 		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
 		//料理
-		ResourceManager::GetGraph().loadDiv("Resource/image/dish.png", "dish",9,3,3,512,512);
+		ResourceManager::GetGraph().loadDiv("Resource/image/dish_menu.png", "dish",3,3,1,256,256);
 		//サウンド情報の読み込み
 		std::ifstream ifs("Resource/system/gain.bin");
 		ifs >> bgmVal_ >> seVal_;
@@ -223,7 +223,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
-			dish_[0]->getComponent<ECS::Scale>().val /= 2;
+			//dish_[0]->getComponent<ECS::Scale>().val /= 2;
 			dish_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			dish_[1] = ECS::ArcheType::CreateAnimationEntity
 			(
@@ -232,8 +232,8 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
-			dish_[1]->getComponent<ECS::Scale>().val /= 2;
-			dish_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(3);
+			//dish_[1]->getComponent<ECS::Scale>().val /= 2;
+			dish_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
 			dish_[2] = ECS::ArcheType::CreateAnimationEntity
 			(
 				"dish",
@@ -241,8 +241,8 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
-			dish_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(6);
-			dish_[2]->getComponent<ECS::Scale>().val /= 2;
+			dish_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
+			//dish_[2]->getComponent<ECS::Scale>().val /= 2;
 		}
 		//数字
 		{
