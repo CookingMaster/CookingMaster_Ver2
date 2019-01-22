@@ -31,6 +31,8 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/option2.png", "option");
 		//カーソル
 		ResourceManager::GetGraph().load("Resource/image/menu_cursor.png", "cursor");
+		//キラキラ
+		ResourceManager::GetGraph().load("Resource/image/effect_menu.png", "effect");
 		//スライダー
 		ResourceManager::GetGraph().load("Resource/image/sliderempty.png", "slider");
 		ResourceManager::GetGraph().load("Resource/image/sliderfull.png", "slider_full");
@@ -214,6 +216,17 @@ namespace Scene
 				++i;
 			}	
 		}
+		//キラキラ
+		{
+			effect_ = ECS::ArcheType::CreateEntity
+			(
+				"effect",
+				Vec2{ DISH_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::EFFECT
+			);
+			effect_->getComponent<ECS::AlphaBlend>().blendMode = ECS::AlphaBlend::ADD;
+		}
 		//料理
 		{
 			dish_[0] = ECS::ArcheType::CreateAnimationEntity
@@ -361,6 +374,7 @@ namespace Scene
 			bgmBar_->changeGroup(ENTITY_GROUP::UI);
 			seBar_->changeGroup(ENTITY_GROUP::UI);
 			score_->changeGroup(ENTITY_GROUP::LAYER1);
+			effect_->changeGroup(ENTITY_GROUP::BACK);
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
 			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
@@ -374,6 +388,8 @@ namespace Scene
 			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
 			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
 			score_->changeGroup(ENTITY_GROUP::UI);
+			effect_->changeGroup(ENTITY_GROUP::EFFECT);
+
 		}
 	}
 
