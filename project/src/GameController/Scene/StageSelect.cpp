@@ -433,6 +433,7 @@ namespace Scene
 			effects_[0]->changeGroup(ENTITY_GROUP::BACK);
 			effects_[1]->changeGroup(ENTITY_GROUP::BACK);
 			effects_[2]->changeGroup(ENTITY_GROUP::BACK);
+			effects_[3]->changeGroup(ENTITY_GROUP::BACK);
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
 			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
@@ -449,7 +450,7 @@ namespace Scene
 			effects_[0]->changeGroup(ENTITY_GROUP::EFFECT);
 			effects_[1]->changeGroup(ENTITY_GROUP::EFFECT);
 			effects_[2]->changeGroup(ENTITY_GROUP::EFFECT);
-
+			effects_[3]->changeGroup(ENTITY_GROUP::EFFECT);
 		}
 	}
 
