@@ -18,13 +18,19 @@ namespace ECS
 	struct GameEffectsArcheType
 	{
 		//!マーカー
-		static Entity* CreateMarker(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
+		static Entity* CreateMarker(const char* graphicName, ECS::Direction::Dir dir, const Vec2& pos, EntityManager* entityManager)
 		{
 			auto& marker = entityManager->addEntity();
 			marker.addComponent<Transform>().setPosition(pos.x, pos.y);
 			marker.addComponent<Color>();
 			marker.addComponent<AlphaBlend>();
+
 			marker.addComponent<SpriteDraw>(graphicName);
+			if (dir == ECS::Direction::Dir::L)
+			{
+				auto& draw = marker.getComponent<SpriteDraw>();
+				//draw.turnGraph();
+			}
 			marker.addGroup(ENTITY_GROUP::MARKER);
 			return &marker;
 		}

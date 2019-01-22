@@ -39,7 +39,7 @@ namespace Scene
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 		//マーカーの画像読み込み
-		ResourceManager::GetGraph().load/*Div*/("Resource/image/marker_kari.png", "marker"/*, 1, 1, 1, 200, 200*/);
+		ResourceManager::GetGraph().load/*Div*/("Resource/image/note_marker.png", "marker"/*, 1, 1, 1, 200, 200*/);
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
@@ -64,9 +64,9 @@ namespace Scene
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
 		//マーカー(左右に一つずつ)
-		ECS::GameEffectsArcheType::CreateMarker("marker",
+		ECS::GameEffectsArcheType::CreateMarker("marker", ECS::Direction::Dir::L,
 			Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
-		ECS::GameEffectsArcheType::CreateMarker("marker",
+		ECS::GameEffectsArcheType::CreateMarker("marker", ECS::Direction::Dir::R,
 			Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 
 		fade_ = ECS::ArcheType::CreateEntity
