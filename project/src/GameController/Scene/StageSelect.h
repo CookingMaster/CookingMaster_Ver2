@@ -28,6 +28,7 @@ namespace Scene
 		ECS::Entity* star_[3]{};
 		ECS::Entity* dish_[3]{};
 		ECS::Entity* score_{};
+		ECS::Entity* effect_ = nullptr;
 		ECS::Entity* fade_ = nullptr;
 		ECS::EntityManager* entityManager_ = nullptr;
 		std::vector<ECS::Entity*> cursorTargets{};

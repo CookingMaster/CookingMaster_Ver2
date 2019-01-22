@@ -31,6 +31,8 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/option2.png", "option");
 		//カーソル
 		ResourceManager::GetGraph().load("Resource/image/menu_cursor.png", "cursor");
+		//キラキラ
+		ResourceManager::GetGraph().load("Resource/image/effect_menu.png", "effect");
 		//スライダー
 		ResourceManager::GetGraph().load("Resource/image/sliderempty.png", "slider");
 		ResourceManager::GetGraph().load("Resource/image/sliderfull.png", "slider_full");
@@ -40,7 +42,7 @@ namespace Scene
 		//フォント
 		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
 		//料理
-		ResourceManager::GetGraph().loadDiv("Resource/image/dish.png", "dish",9,3,3,512,512);
+		ResourceManager::GetGraph().loadDiv("Resource/image/dish_menu.png", "dish",3,3,1,256,256);
 		//サウンド情報の読み込み
 		std::ifstream ifs("Resource/system/gain.bin");
 		ifs >> bgmVal_ >> seVal_;
@@ -214,6 +216,17 @@ namespace Scene
 				++i;
 			}	
 		}
+		//キラキラ
+		{
+			effect_ = ECS::ArcheType::CreateEntity
+			(
+				"effect",
+				Vec2{ DISH_POSITION },
+				*entityManager_,
+				ENTITY_GROUP::EFFECT
+			);
+			effect_->getComponent<ECS::AlphaBlend>().blendMode = ECS::AlphaBlend::ADD;
+		}
 		//料理
 		{
 			dish_[0] = ECS::ArcheType::CreateAnimationEntity
@@ -223,7 +236,7 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
-			dish_[0]->getComponent<ECS::Scale>().val /= 2;
+			//dish_[0]->getComponent<ECS::Scale>().val /= 2;
 			dish_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			dish_[1] = ECS::ArcheType::CreateAnimationEntity
 			(
@@ -232,8 +245,8 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
-			dish_[1]->getComponent<ECS::Scale>().val /= 2;
-			dish_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(3);
+			//dish_[1]->getComponent<ECS::Scale>().val /= 2;
+			dish_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
 			dish_[2] = ECS::ArcheType::CreateAnimationEntity
 			(
 				"dish",
@@ -241,8 +254,8 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
-			dish_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(6);
-			dish_[2]->getComponent<ECS::Scale>().val /= 2;
+			dish_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
+			//dish_[2]->getComponent<ECS::Scale>().val /= 2;
 		}
 		//数字
 		{
@@ -361,6 +374,7 @@ namespace Scene
 			bgmBar_->changeGroup(ENTITY_GROUP::UI);
 			seBar_->changeGroup(ENTITY_GROUP::UI);
 			score_->changeGroup(ENTITY_GROUP::LAYER1);
+			effect_->changeGroup(ENTITY_GROUP::BACK);
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
 			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
@@ -374,6 +388,8 @@ namespace Scene
 			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
 			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
 			score_->changeGroup(ENTITY_GROUP::UI);
+			effect_->changeGroup(ENTITY_GROUP::EFFECT);
+
 		}
 	}
 
