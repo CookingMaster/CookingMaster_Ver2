@@ -1,6 +1,6 @@
-bg_fan1, bg_fan2
+bg_fan2
 1087,9
-ï`âÊÇÕfan2->fan1, âÒÇ∑ÇÃÇÕfan2
+ç°ÇÃÇ∆Ç±ÇÎfan2ÇµÇ©égÇÌÇ»Ç¢
 
 mori1, mori2
 1074, 228
