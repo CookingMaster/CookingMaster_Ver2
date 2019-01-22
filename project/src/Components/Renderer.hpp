@@ -211,7 +211,7 @@ namespace ECS
 					scale_->val.x,
 					scale_->val.y,
 					DirectX::XMConvertToRadians(rota_->val),
-					ResourceManager::GetGraph().getHandle(name_), true);
+					ResourceManager::GetGraph().getHandle(name_), true, isTurn);
 				RenderUtility::ResetRenderState();
 			}
 
@@ -239,19 +239,9 @@ namespace ECS
 		//!画像を反転させます
 		void turnGraph()
 		{
-			if (!isTurn)
-			{
-				isTurn = true;
-				pos_->val.x += size_.x;
-				scale_->val.x *= -1;
-			}
-			else
-			{
-				isTurn = false;
-				pos_->val.x -= size_.x;
-				scale_->val.x *= -1;
-			}
+			isTurn = !isTurn;
 		}
+
 	};
 
 	/*!
