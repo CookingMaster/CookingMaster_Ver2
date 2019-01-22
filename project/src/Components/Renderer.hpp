@@ -165,6 +165,7 @@ namespace ECS
 		std::string name_;
 		Vec2_i size_;
 		bool isDraw_ = true;
+		bool isTurn = false;
 		Vec2 pivot_;
 	public:
 		//!登録した画像名を指定して初期化します
@@ -234,6 +235,22 @@ namespace ECS
 		const Vec2_i& getSize() const
 		{
 			return size_;
+		}
+		//!画像を反転させます
+		void turnGraph()
+		{
+			if (!isTurn)
+			{
+				isTurn = true;
+				pos_->val.x += size_.x;
+				scale_->val.x *= -1;
+			}
+			else
+			{
+				isTurn = false;
+				pos_->val.x -= size_.x;
+				scale_->val.x *= -1;
+			}
 		}
 	};
 

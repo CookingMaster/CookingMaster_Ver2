@@ -32,7 +32,7 @@ namespace Scene
 		//カーソル
 		ResourceManager::GetGraph().load("Resource/image/menu_cursor.png", "cursor");
 		//キラキラ
-		ResourceManager::GetGraph().load("Resource/image/effect_menu.png", "effect");
+		ResourceManager::GetGraph().loadDiv("Resource/image/effect_menu.png", "effect",3,3,1,128,128);
 		//スライダー
 		ResourceManager::GetGraph().load("Resource/image/sliderempty.png", "slider");
 		ResourceManager::GetGraph().load("Resource/image/sliderfull.png", "slider_full");
@@ -218,14 +218,69 @@ namespace Scene
 		}
 		//キラキラ
 		{
-			effect_ = ECS::ArcheType::CreateEntity
+			class CyclicalAlpha final : public ECS::ComponentSystem
+			{
+			private:
+				ECS::AlphaBlend* a_ = nullptr;
+				int add_ = 5;
+				int initAlpha_ = 0;
+			public:
+				CyclicalAlpha(const int setAlpha, const int addSpeed)
+				{
+					initAlpha_ = setAlpha;
+					add_ = addSpeed;
+				}
+				void initialize() override
+				{
+					a_ = &entity->getComponent<ECS::AlphaBlend>();
+					a_->alpha = initAlpha_;
+				}
+				void update() override
+				{
+					if (a_->alpha >= 255 || a_->alpha <= 0)
+					{
+						add_ *= -1;
+					}
+					a_->alpha += add_;
+				}
+			};
+
+			effects_[0] = ECS::ArcheType::CreateAnimationEntity
 			(
 				"effect",
-				Vec2{ DISH_POSITION },
+				Vec2{ DISH_POSITION.x + 40 , DISH_POSITION.y },
 				*entityManager_,
 				ENTITY_GROUP::EFFECT
 			);
-			effect_->getComponent<ECS::AlphaBlend>().blendMode = ECS::AlphaBlend::ADD;
+			effects_[0]->addComponent<CyclicalAlpha>(222,4);
+			effects_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			effects_[1] = ECS::ArcheType::CreateAnimationEntity
+			(
+				"effect",
+				Vec2{ DISH_POSITION.x -30 ,DISH_POSITION.y + 30 },
+				*entityManager_,
+				ENTITY_GROUP::EFFECT
+			);
+			effects_[1]->addComponent<CyclicalAlpha>(120,6);
+			effects_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
+			effects_[2] = ECS::ArcheType::CreateAnimationEntity
+			(
+				"effect",
+				Vec2{ DISH_POSITION.x , DISH_POSITION.y - 20 },
+				*entityManager_,
+				ENTITY_GROUP::EFFECT
+			);
+			effects_[2]->addComponent<CyclicalAlpha>(90,8);
+			effects_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
+			effects_[3] = ECS::ArcheType::CreateAnimationEntity
+			(
+				"effect",
+				Vec2{ DISH_POSITION.x + 160, DISH_POSITION.y + 140 },
+				*entityManager_,
+				ENTITY_GROUP::EFFECT
+			);
+			effects_[3]->addComponent<CyclicalAlpha>(190, 3);
+			effects_[3]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 		}
 		//料理
 		{
@@ -238,6 +293,7 @@ namespace Scene
 			);
 			//dish_[0]->getComponent<ECS::Scale>().val /= 2;
 			dish_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
+			
 			dish_[1] = ECS::ArcheType::CreateAnimationEntity
 			(
 				"dish",
@@ -374,7 +430,9 @@ namespace Scene
 			bgmBar_->changeGroup(ENTITY_GROUP::UI);
 			seBar_->changeGroup(ENTITY_GROUP::UI);
 			score_->changeGroup(ENTITY_GROUP::LAYER1);
-			effect_->changeGroup(ENTITY_GROUP::BACK);
+			effects_[0]->changeGroup(ENTITY_GROUP::BACK);
+			effects_[1]->changeGroup(ENTITY_GROUP::BACK);
+			effects_[2]->changeGroup(ENTITY_GROUP::BACK);
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
 			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
@@ -388,7 +446,9 @@ namespace Scene
 			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
 			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
 			score_->changeGroup(ENTITY_GROUP::UI);
-			effect_->changeGroup(ENTITY_GROUP::EFFECT);
+			effects_[0]->changeGroup(ENTITY_GROUP::EFFECT);
+			effects_[1]->changeGroup(ENTITY_GROUP::EFFECT);
+			effects_[2]->changeGroup(ENTITY_GROUP::EFFECT);
 
 		}
 	}
