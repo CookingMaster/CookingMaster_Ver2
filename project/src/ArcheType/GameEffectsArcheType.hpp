@@ -29,7 +29,7 @@ namespace ECS
 			if (dir == ECS::Direction::Dir::L)
 			{
 				auto& draw = marker.getComponent<SpriteDraw>();
-				//draw.turnGraph();
+				draw.turnGraph();
 			}
 			marker.addGroup(ENTITY_GROUP::MARKER);
 			return &marker;
