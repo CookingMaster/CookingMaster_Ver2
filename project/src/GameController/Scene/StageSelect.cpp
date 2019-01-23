@@ -19,8 +19,14 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
 		//セレクト曲
 		ResourceManager::GetSound().load("Resource/sound/BGM/Welcome.ogg", "selectBGM",SoundType::BGM);
+		//オプション決定音
+		ResourceManager::GetSound().load("Resource/sound/SE/turnthepaper.wav", "turn", SoundType::SE);
 		//セレクト効果音
 		ResourceManager::GetSound().load("Resource/sound/SE/select.wav", "selectSE", SoundType::SE);
+		//音量調整効果音
+		ResourceManager::GetSound().load("Resource/sound/SE/volume.ogg", "volume", SoundType::SE);
+		//カーソル移動
+		ResourceManager::GetSound().load("Resource/sound/SE/movecursor.ogg", "move", SoundType::SE);
 		//背景
 		ResourceManager::GetGraph().load("Resource/image/menuback.png", "back"); 
 		//本
@@ -291,7 +297,6 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
-			//dish_[0]->getComponent<ECS::Scale>().val /= 2;
 			dish_[0]->getComponent<ECS::SpriteAnimationDraw>().setIndex(0);
 			
 			dish_[1] = ECS::ArcheType::CreateAnimationEntity
@@ -301,7 +306,6 @@ namespace Scene
 				*entityManager_,
 				ENTITY_GROUP::BACK_OBJECT
 			);
-			//dish_[1]->getComponent<ECS::Scale>().val /= 2;
 			dish_[1]->getComponent<ECS::SpriteAnimationDraw>().setIndex(1);
 			dish_[2] = ECS::ArcheType::CreateAnimationEntity
 			(
@@ -311,7 +315,6 @@ namespace Scene
 				ENTITY_GROUP::BACK_OBJECT
 			);
 			dish_[2]->getComponent<ECS::SpriteAnimationDraw>().setIndex(2);
-			//dish_[2]->getComponent<ECS::Scale>().val /= 2;
 		}
 		//数字
 		{
@@ -433,6 +436,7 @@ namespace Scene
 			effects_[0]->changeGroup(ENTITY_GROUP::BACK);
 			effects_[1]->changeGroup(ENTITY_GROUP::BACK);
 			effects_[2]->changeGroup(ENTITY_GROUP::BACK);
+			effects_[3]->changeGroup(ENTITY_GROUP::BACK);
 		}
 		if (cursor_->getComponent<ECS::CursorMove>().getIndex() == 3u
 			&& !cursor_->getComponent<ECS::CursorMove>().isOptionSelected()
@@ -449,7 +453,7 @@ namespace Scene
 			effects_[0]->changeGroup(ENTITY_GROUP::EFFECT);
 			effects_[1]->changeGroup(ENTITY_GROUP::EFFECT);
 			effects_[2]->changeGroup(ENTITY_GROUP::EFFECT);
-
+			effects_[3]->changeGroup(ENTITY_GROUP::EFFECT);
 		}
 	}
 

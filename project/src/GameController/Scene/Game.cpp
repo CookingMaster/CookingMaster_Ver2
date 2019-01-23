@@ -47,6 +47,9 @@ namespace Scene
 		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		//鍋
 		ECS::GameEffectsArcheType::CreateSaucepan("nabe1", Vec2(431.f, 175.f), entityManager_);
+		//ファン
+		ResourceManager::GetGraph().load("Resource/image/bg_fan2.png", "fan");
+		ECS::GameEffectsArcheType::CreateFan("fan", Vec2{ 1173.f, 96.f }, entityManager_);
 		//プレイヤー
 		ECS::Player::CreatePlayer(
 			bgmName_,
@@ -81,14 +84,19 @@ namespace Scene
 	void Game::update()
 	{
 		auto fade = entityManager_->getEntitiesByGroup(ENTITY_GROUP::TOP_FADE);
-		for (auto& it : fade)
+		auto backs = entityManager_->getEntitiesByGroup(ENTITY_GROUP::BACK_OBJECT);
+		if (!isPlay_)
 		{
-			if (!isPlay_)
+			for (auto& it : fade)
 			{
 				it->getComponent<ECS::AlphaBlend>().alpha -= 6;
 			}
-			 
+			for (auto& it : backs)
+			{
+				it->update();
+			}
 		}
+			 
 		if (!isPlay_ && fade[0]->getComponent<ECS::AlphaBlend>().alpha <= 0)
 		{
 			isPlay_ = true;

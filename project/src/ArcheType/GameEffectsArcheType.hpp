@@ -47,6 +47,32 @@ namespace ECS
 			e.addGroup(ENTITY_GROUP::BACK_OBJECT);
 			return &e;
 		}
+		static Entity* CreateFan(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.addComponent<Color>();
+			e.addComponent<AlphaBlend>();
+			e.addComponent<SpriteDraw>(graphicName);
+			e.getComponent<Scale>().val;
+			class RotationFan : public ComponentSystem
+			{
+			private:
+				Rotation* rota_ = nullptr;
+			public:
+				void initialize() override
+				{
+					rota_ = &entity->getComponent<Rotation>();
+				}
+				void update() override
+				{
+					rota_->val += 16;
+				}
+			};
+			e.addComponent<RotationFan>();
+			e.addGroup(ENTITY_GROUP::BACK_OBJECT);
+			return &e;
+		}
 		//!斬撃エフェクト
 		static Entity* CreateSlashEffect(const char* divGraphicName, const Vec2& pos, const int& lifeSpan,EntityManager* entityManager)
 		{
