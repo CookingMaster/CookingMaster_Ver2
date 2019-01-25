@@ -1,4 +1,4 @@
-Resource/image/note_brory.png
+Resource/image/notes/broccoli.png
 brory
 Resource/sound/SE/brory_.ogg
 2
@@ -6,9 +6,9 @@ Resource/sound/SE/brory_.ogg
 2
 1
 7
-157 100
+300 200
 10
-4 3
+6 3
 0 0 1 1
-0 1 4 2
+0 1 6 2
 0 2 3 3

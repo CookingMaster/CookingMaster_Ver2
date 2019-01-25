@@ -1,4 +1,4 @@
-Resource/image/note_onion.png
+Resource/image/notes/onion.png
 onion
 Resource/sound/SE/onion.ogg
 2
@@ -6,9 +6,9 @@ Resource/sound/SE/onion.ogg
 2
 1
 7
-179 100
+300 200
 10
-4 3
+6 3
 0 0 1 1
-0 1 4 2
+0 1 6 2
 0 2 3 3

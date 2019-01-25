@@ -130,7 +130,7 @@ namespace ECS
 			case NoteState::State::GOOD:	//‚¿‚á‚ñ‚ÆØ‚ê‚é
 			case NoteState::State::GREAT:
 			case NoteState::State::PARFECT:
-				changeNoteAnim(1, true, 5);
+				changeNoteAnim(1, true, 2);
 				noteState_->state = NoteState::State::HITTED;
 				break;
 			}
@@ -226,7 +226,7 @@ namespace ECS
 			case 3:	noteState_->state = NoteState::State::PARFECT;
 				if (autoPerfectMode)
 				{
-					changeNoteAnim(1, true, 5);
+					changeNoteAnim(1, true, 2);
 					noteState_->state = NoteState::State::HITTED;
 					Sound se(seName_);
 					se.play(false,true);
@@ -254,7 +254,7 @@ namespace ECS
 				true);
 			animator_->changeFrame(animspd);
 			animator_->setIsEndStopAnim(isStopMove);
-			entity->stopComponent<Physics>();
+			//entity->stopComponent<Physics>();
 			entity->updateComponent<KillEntity>();
 		}
 
