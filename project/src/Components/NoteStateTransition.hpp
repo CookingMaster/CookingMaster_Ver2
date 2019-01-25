@@ -1,6 +1,6 @@
 /**
 * @file NoteStateTransition.hpp
-* @brief ƒm[ƒc‚Ìó‘Ô‘JˆÚ‚ğs‚¤
+* @brief ï¿½mï¿½[ï¿½cï¿½Ìï¿½Ô‘Jï¿½Ú‚ï¿½sï¿½ï¿½
 * @author feveleK5563
 * @date 2018/10/26
 */
@@ -19,19 +19,19 @@ namespace ECS
 	{
 		enum struct State : short
 		{
-			NON,		//”»’è‚È‚µ
-			BAD,		//‚©‚·‚é
-			GOOD,		//“–‚½‚é(–})
-			GREAT,		//“–‚½‚é(—Ç)
-			PARFECT,	//“–‚½‚é(—D)
-			MISS,		//ƒ~ƒX
+			NON,		//ï¿½ï¿½ï¿½ï¿½È‚ï¿½
+			BAD,		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			GOOD,		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½})
+			GREAT,		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½)
+			PARFECT,	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½D)
+			MISS,		//ï¿½~ï¿½X
 
-			MISSED,		//“–‚½‚ç‚È‚©‚Á‚½
-			GRAZED,		//‚©‚·‚Á‚½
-			HITTED,		//“–‚½‚Á‚½
+			MISSED,		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½
+			GRAZED,		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			HITTED,		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		} state;
 
-		//Œü‚«
+		//ï¿½ï¿½ï¿½ï¿½
 		ECS::Direction::Dir dir;
 
 		NoteState():
@@ -40,13 +40,13 @@ namespace ECS
 	};
 
 	/**
-	* @brief ƒm[ƒc‚Ìó‘Ô‘JˆÚŠÇ—ƒ}ƒ“
-	* - NoteStateAAnimatorByFrameAVelocityATransformAGravity‚ª•K—v
+	* @brief ï¿½mï¿½[ï¿½cï¿½Ìï¿½Ô‘Jï¿½ÚŠÇ—ï¿½ï¿½}ï¿½ï¿½
+	* - NoteStateï¿½AAnimatorByFrameï¿½AVelocityï¿½ATransformï¿½AGravityï¿½ï¿½ï¿½Kï¿½v
 	*/
 	class NoteStateTransition : public ComponentSystem
 	{
 	private:
-		std::array<AnimSheetData, 3> asd_;	//ƒAƒjƒ[ƒVƒ‡ƒ“‘JˆÚ‚Ì‚â‚Â
+		std::array<AnimSheetData, 3> asd_;	//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Ú‚Ì‚ï¿½ï¿½
 		std::array<float, 4> hitJudge_;
 		float arrivalBeatTime_;
 
@@ -60,11 +60,11 @@ namespace ECS
 		AlphaBlend* alphaBlend_ = nullptr;
 
 		std::array<float, 6> hitTimeLine_;
-		Counter transCounter_;		//ó‘Ô‘JˆÚ‚ÌƒJƒEƒ“ƒg
-		Counter deathCounter_;		//€‚Ê‚Ü‚Å‚ÌŠÔŒv‘ª
+		Counter transCounter_;		//ï¿½ï¿½Ô‘Jï¿½Ú‚ÌƒJï¿½Eï¿½ï¿½ï¿½g
+		Counter deathCounter_;		//ï¿½ï¿½ï¿½Ê‚Ü‚Å‚Ìï¿½ï¿½ÔŒvï¿½ï¿½
 		Counter_f flameCounter_;
 
-		//‚±‚¢‚Â‚ğtrue‚É‚·‚é‚ÆƒI[ƒgƒ‚[ƒh‚É‚È‚é‚¼I
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½trueï¿½É‚ï¿½ï¿½ï¿½ÆƒIï¿½[ï¿½gï¿½ï¿½ï¿½[ï¿½hï¿½É‚È‚é‚¼ï¿½I
 		bool autoPerfectMode = 
 			//*
 			IS_AUTO_PLAY/*/
@@ -88,10 +88,10 @@ namespace ECS
 			gravity_ = &entity->getComponent<Gravity>();
 			alphaBlend_ = &entity->getComponent<AlphaBlend>();
 
-			/*NON ¨ BAD ¨ GOOD ¨ GREAT ¨ PARFECT ¨ GOOD ¨ MISSED ‚Æó‘Ô‚ª‘JˆÚ‚·‚é
-			BAD‚Ì‚É“ü—Í‚ª‚ ‚é‚ÆGRAZED‚Ö‘JˆÚ‚·‚é
-			GOOD,GREAT,PARFECT‚Ì‚É“ü—Í‚ª‚ ‚é‚ÆHITTED‚Ö‘JˆÚ‚·‚é
-			ˆÈ‰º‚Ì—…—ñ‚ÍŠe”»’èŠJnŠÔ‚ÌŒvZ*/
+			/*NON ï¿½ï¿½ BAD ï¿½ï¿½ GOOD ï¿½ï¿½ GREAT ï¿½ï¿½ PARFECT ï¿½ï¿½ GOOD ï¿½ï¿½ MISSED ï¿½Æï¿½Ô‚ï¿½ï¿½Jï¿½Ú‚ï¿½ï¿½ï¿½
+			BADï¿½Ìï¿½ï¿½É“ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½GRAZEDï¿½Ö‘Jï¿½Ú‚ï¿½ï¿½ï¿½
+			GOOD,GREAT,PARFECTï¿½Ìï¿½ï¿½É“ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½HITTEDï¿½Ö‘Jï¿½Ú‚ï¿½ï¿½ï¿½
+			ï¿½È‰ï¿½ï¿½Ì—ï¿½ï¿½ï¿½ÍŠeï¿½ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½Ô‚ÌŒvï¿½Z*/
 			hitTimeLine_[0] = arrivalBeatTime_ - ((hitJudge_[3] / 2.f) + hitJudge_[2] + hitJudge_[1] + hitJudge_[0]);	//Non
 			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge_[0];	//BAD
 			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge_[1];	//GOOD
@@ -123,31 +123,31 @@ namespace ECS
 		}
 
 		/**
-		* @brief “ü—Í‚ğó‚¯‚½Œã‚Ìƒm[ƒc‚Ìó‘Ô‘JˆÚ‚ğs‚¤
+		* @brief ï¿½ï¿½ï¿½Í‚ï¿½ó‚¯‚ï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½cï¿½Ìï¿½Ô‘Jï¿½Ú‚ï¿½sï¿½ï¿½
 		*/
 		void ActionToChangeNoteState()
 		{
 			switch (noteState_->state)
 			{
-			case NoteState::State::BAD:	//‚©‚·‚Á‚Ä”ò‚ñ‚Å‚¢‚­
+			case NoteState::State::BAD:	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä”ï¿½ï¿½Å‚ï¿½ï¿½ï¿½
 				noteState_->state = NoteState::State::GRAZED;
 				velocity_->val.x /= 1.1f;
 				velocity_->val.y = -30.f;
 				gravity_->val = 1.5f;
 				break;
 
-			case NoteState::State::GOOD:	//‚¿‚á‚ñ‚ÆØ‚ê‚é
+			case NoteState::State::GOOD:	//ï¿½ï¿½ï¿½ï¿½ï¿½ÆØ‚ï¿½ï¿½
 			case NoteState::State::GREAT:
 			case NoteState::State::PARFECT:
-				changeNoteAnim(1, true, 5);
+				changeNoteAnim(1, true, 2);
 				noteState_->state = NoteState::State::HITTED;
 				break;
 			}
 		}
 
 		/**
-		* @brief ƒm[ƒc‚Ìƒqƒbƒgˆ—‚ª—LŒø‚©”Û‚©‚ğæ“¾‚·‚é
-		* @return bool ƒqƒbƒgˆ—‚ª—LŒø‚©
+		* @brief ï¿½mï¿½[ï¿½cï¿½Ìƒqï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Û‚ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
+		* @return bool ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½
 		*/
 		[[nodiscard]] bool isActiveNote() const
 		{
@@ -161,19 +161,19 @@ namespace ECS
 			return false;
 		}
 
-		//Œ»İ‚Ìƒm[ƒc‚Ìó‘Ô‚ğæ“¾‚·‚é
+		//ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½cï¿½Ìï¿½Ô‚ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
 		[[nodiscard]]NoteState::State getNoteState() const
 		{
 			return noteState_->state;
 		}
 
-		//ƒm[ƒc‚ª¶‰E‚Ç‚¿‚ç‚©‚ç—ˆ‚Ä‚¢‚é‚©‚ğæ“¾‚·‚é
+		//ï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½Eï¿½Ç‚ï¿½ï¿½ç‚©ï¿½ç—ˆï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
 		[[nodiscard]]ECS::Direction::Dir getNoteDir() const
 		{
 			return noteState_->dir;
 		}
 
-		//ƒm[ƒc‚Ég—p‚³‚ê‚éSE‚Ì–¼‘O‚ğæ“¾‚·‚é
+		//ï¿½mï¿½[ï¿½cï¿½Égï¿½pï¿½ï¿½ï¿½ï¿½ï¿½SEï¿½Ì–ï¿½ï¿½Oï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
 		[[nodiscard]]const std::string& getSEName() const
 		{
 			return seName_;
@@ -181,12 +181,12 @@ namespace ECS
 
 	private:
 
-		//ó‘Ô‚ğ‘JˆÚ‚ÆŠeƒm[ƒc‚Ì‹““®‚ğs‚¤
+		//ï¿½ï¿½Ô‚ï¿½Jï¿½Ú‚ÆŠeï¿½mï¿½[ï¿½cï¿½Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
 		void transitionAndMove()
 		{
 			switch (noteState_->state)
 			{
-			//‚©‚·‚èó‘Ô‚¾‚Á‚½‚ç‰ñ“]‚µ‚È‚ª‚ç”ò‚ñ‚Å‚¢‚­
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½
 			case NoteState::State::GRAZED:
 				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
 				{
@@ -198,7 +198,7 @@ namespace ECS
 				}
 				return;
 
-			//ó‘Ô‚ªMISS‚¾‚Á‚½‚çMISSED‚É•ÏX‚·‚é
+			//ï¿½ï¿½Ô‚ï¿½MISSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MISSEDï¿½É•ÏXï¿½ï¿½ï¿½ï¿½
 			case NoteState::State::MISS:
 				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
 				{
@@ -206,7 +206,7 @@ namespace ECS
 				}
 				return;
 
-			//Á–Å‚ÌŠÔÛ‚É”–‚­‚È‚Á‚ÄÁ‚¦‚é
+			//ï¿½ï¿½ï¿½Å‚ÌŠÔÛ‚É”ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½
 			case NoteState::State::MISSED:
 				if (animator_->isAnimEnd() && alphaBlend_->alpha > 0)
 				{
@@ -246,7 +246,7 @@ namespace ECS
 			++transCounter_;
 		}
 
-		//ƒm[ƒc‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğ•ÏX‚µAˆê’èƒtƒŒ[ƒ€Œã‚ÉÁ‚¦‚é‚æ‚¤‚Éİ’è‚·‚é
+		//ï¿½mï¿½[ï¿½cï¿½ÌƒAï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏXï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½Éİ’è‚·ï¿½ï¿½
 		void changeNoteAnim(int animMode, bool isStopMove, int animspd)
 		{
 			animator_->setSpriteNum(
@@ -257,11 +257,11 @@ namespace ECS
 				true);
 			animator_->changeFrame(animspd);
 			animator_->setIsEndStopAnim(isStopMove);
-			entity->stopComponent<Physics>();
+			//entity->stopComponent<Physics>();
 			entity->updateComponent<KillEntity>();
 		}
 
-		//ó‘Ô‚ğMISSED(ƒOƒ`ƒƒ‚Á‚Ä‚È‚éƒAƒjƒ[ƒVƒ‡ƒ“)‚É•ÏX‚·‚é
+		//ï¿½ï¿½Ô‚ï¿½MISSED(ï¿½Oï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚È‚ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½)ï¿½É•ÏXï¿½ï¿½ï¿½ï¿½
 		void ChangeStateMISSED()
 		{
 			transCounter_.setCounter(5, 1, 0, 1000);
