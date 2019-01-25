@@ -269,7 +269,9 @@ namespace Scene
 	void Game::changeResultScene()
 	{
 		Sound sound(bgmName_);
-		if (!sound.isPlay()) {
+		DOUT << "total" << sound.getTotalTime() << std::endl;
+		DOUT << "current" << sound.getCurrentTime() << std::endl;
+		if (sound.getTotalTime() <= sound.getCurrentTime()) {
 			auto sendParame = std::make_unique<Parameter>();
 			sendParame->add<std::string>("BGM_name", bgmName_);
 			sendParame->add<int>("score", scoreNum_);
