@@ -40,6 +40,8 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 		//マーカーの画像読み込み
 		ResourceManager::GetGraph().load/*Div*/("Resource/image/marker_kari.png", "marker"/*, 1, 1, 1, 200, 200*/);
+		//スコア貼り紙
+		ResourceManager::GetGraph().load("Resource/image/score_paper.png", "paper");
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
@@ -62,6 +64,8 @@ namespace Scene
 		//スコア表示
 		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), *entityManager_);
 		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), msl_.getMaxPoint(), *entityManager_);
+		//スコア％表示用貼り紙
+		ECS::ArcheType::CreateEntity("paper", Vec2{ 1030.f,370.f }, *entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		//得点(パーセンテージ)表示
 		//ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
 		//おやっさんを攻撃表示で召喚する
