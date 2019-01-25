@@ -532,6 +532,7 @@ namespace Scene
 		}
 		if (isPlay_)
 		{
+			cursor_->stopComponent<ECS::CursorMove>();
 			fade_->getComponent<ECS::AlphaBlend>().alpha += 6;
 		}
 

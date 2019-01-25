@@ -39,7 +39,9 @@ namespace Scene
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 		//マーカーの画像読み込み
-		ResourceManager::GetGraph().load/*Div*/("Resource/image/marker_kari.png", "marker"/*, 1, 1, 1, 200, 200*/);
+		ResourceManager::GetGraph().load/*Div*/("Resource/image/note_marker.png", "marker"/*, 1, 1, 1, 200, 200*/);
+		//スコア貼り紙
+		ResourceManager::GetGraph().load("Resource/image/score_paper.png", "paper");
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
@@ -62,14 +64,16 @@ namespace Scene
 		//スコア表示
 		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), *entityManager_);
 		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), msl_.getMaxPoint(), *entityManager_);
+		//スコア％表示用貼り紙
+		ECS::ArcheType::CreateEntity("paper", Vec2{ 1030.f,370.f }, *entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		//得点(パーセンテージ)表示
 		//ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
 		//マーカー(左右に一つずつ)
-		ECS::GameEffectsArcheType::CreateMarker("marker",
+		ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::L,
 			Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
-		ECS::GameEffectsArcheType::CreateMarker("marker",
+		ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::R,
 			Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 
 		fade_ = ECS::ArcheType::CreateEntity
@@ -265,7 +269,9 @@ namespace Scene
 	void Game::changeResultScene()
 	{
 		Sound sound(bgmName_);
-		if (!sound.isPlay()) {
+		DOUT << "total" << sound.getTotalTime() << std::endl;
+		DOUT << "current" << sound.getCurrentTime() << std::endl;
+		if (sound.getTotalTime() <= sound.getCurrentTime()) {
 			auto sendParame = std::make_unique<Parameter>();
 			sendParame->add<std::string>("BGM_name", bgmName_);
 			sendParame->add<int>("score", scoreNum_);

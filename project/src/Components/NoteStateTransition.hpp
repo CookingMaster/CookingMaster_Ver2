@@ -46,6 +46,9 @@ namespace ECS
 	class NoteStateTransition : public ComponentSystem
 	{
 	private:
+		const int hittedAnimSpd = 4;
+		const int missedAnimSpd = 5;
+
 		std::array<AnimSheetData, 3> asd_;	//アニメーション遷移のやつ
 		std::array<float, 4> hitJudge_;
 		float arrivalBeatTime_;
@@ -66,7 +69,7 @@ namespace ECS
 
 		//こいつをtrueにするとオートモードになるぞ！
 		bool autoPerfectMode = 
-			/*
+			//*
 			IS_AUTO_PLAY/*/
 			false/**/;
 
@@ -106,6 +109,15 @@ namespace ECS
 		{
 			if (transCounter_.isMax()) return;
 
+			if (autoPerfectMode && noteState_->state == NoteState::State::PARFECT)
+			{
+				changeNoteAnim(1, hittedAnimSpd, true, false);
+				noteState_->state = NoteState::State::HITTED;
+				Sound se(seName_);
+				se.play(false, true);
+				return;
+			};
+
 			if (flameCounter_.getCurrentCount() >= hitTimeLine_[transCounter_.getCurrentCount()])
 			{
 				transitionAndMove();
@@ -130,7 +142,7 @@ namespace ECS
 			case NoteState::State::GOOD:	//ちゃんと切れる
 			case NoteState::State::GREAT:
 			case NoteState::State::PARFECT:
-				changeNoteAnim(1, true, 5);
+				changeNoteAnim(1, hittedAnimSpd, true, false);
 				noteState_->state = NoteState::State::HITTED;
 				break;
 			}
@@ -224,13 +236,7 @@ namespace ECS
 					break;
 
 			case 3:	noteState_->state = NoteState::State::PARFECT;
-				if (autoPerfectMode)
-				{
-					changeNoteAnim(1, true, 5);
-					noteState_->state = NoteState::State::HITTED;
-					Sound se(seName_);
-					se.play(false,true);
-				}
+				
 					break;
 			case 4:	noteState_->state = NoteState::State::GOOD;
 					break;
@@ -244,7 +250,7 @@ namespace ECS
 		}
 
 		//ノーツのアニメーションを変更し、一定フレーム後に消えるように設定する
-		void changeNoteAnim(int animMode, bool isStopMove, int animspd)
+		void changeNoteAnim(int animMode, int animspd, bool isStopMove, bool isEndPhysics)
 		{
 			animator_->setSpriteNum(
 				asd_[animMode].xmin,
@@ -254,7 +260,10 @@ namespace ECS
 				true);
 			animator_->changeFrame(animspd);
 			animator_->setIsEndStopAnim(isStopMove);
-			entity->stopComponent<Physics>();
+			if (isEndPhysics)
+			{
+				entity->stopComponent<Physics>();
+			}
 			entity->updateComponent<KillEntity>();
 		}
 
@@ -263,7 +272,7 @@ namespace ECS
 		{
 			transCounter_.setCounter(5, 1, 0, 1000);
 			noteState_->state = NoteState::State::MISSED;
-			changeNoteAnim(2, true, 5);
+			changeNoteAnim(2, missedAnimSpd, true, true);
 			rotation_->val = 0.f;
 		}
 	};

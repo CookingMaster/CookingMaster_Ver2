@@ -102,6 +102,7 @@ public:
 		StopSoundMem(handle_);
 	}
 	//!サウンドが再生中か取得します
+	//! - 停止した曲を途中から再生した場合、終了したのにfalseになるバグ?がある、ライブラリ由来のものか不明
 	[[nodiscard]] const bool isPlay() const
 	{
 		switch (CheckSoundMem(handle_))
