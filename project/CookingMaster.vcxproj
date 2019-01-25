@@ -84,7 +84,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{3FD7EF5E-4359-47D9-9E85-A69DF9FDA696}</ProjectGuid>
     <RootNamespace>DXlibGame</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
