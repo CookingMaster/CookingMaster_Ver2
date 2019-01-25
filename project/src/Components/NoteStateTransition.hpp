@@ -66,7 +66,7 @@ namespace ECS
 
 		//こいつをtrueにするとオートモードになるぞ！
 		bool autoPerfectMode = 
-			/*
+			//*
 			IS_AUTO_PLAY/*/
 			false/**/;
 
@@ -105,6 +105,15 @@ namespace ECS
 		void update() override
 		{
 			if (transCounter_.isMax()) return;
+
+			if (autoPerfectMode && noteState_->state == NoteState::State::PARFECT)
+			{
+				changeNoteAnim(1, true, 5);
+				noteState_->state = NoteState::State::HITTED;
+				Sound se(seName_);
+				se.play(false, true);
+				return;
+			};
 
 			if (flameCounter_.getCurrentCount() >= hitTimeLine_[transCounter_.getCurrentCount()])
 			{
@@ -224,13 +233,7 @@ namespace ECS
 					break;
 
 			case 3:	noteState_->state = NoteState::State::PARFECT;
-				if (autoPerfectMode)
-				{
-					changeNoteAnim(1, true, 5);
-					noteState_->state = NoteState::State::HITTED;
-					Sound se(seName_);
-					se.play(false,true);
-				}
+				
 					break;
 			case 4:	noteState_->state = NoteState::State::GOOD;
 					break;

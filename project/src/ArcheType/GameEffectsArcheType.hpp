@@ -12,13 +12,14 @@
 #include "../Components/UIComponents.hpp"
 #include "../Components/TitleUIComponents.hpp"
 #include "../Components/BossAnimator.hpp"
+#include "../Components/BeatByTrigger.hpp"
 
 namespace ECS
 {
 	struct GameEffectsArcheType
 	{
 		//!マーカー
-		static Entity* CreateMarker(const char* graphicName, ECS::Direction::Dir dir, const Vec2& pos, EntityManager* entityManager)
+		static Entity* CreateMarker(const char* graphicName, const std::string& musicName, int bpm, int beat, ECS::Direction::Dir dir, const Vec2& pos, EntityManager* entityManager)
 		{
 			auto& marker = entityManager->addEntity();
 			marker.addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -31,6 +32,8 @@ namespace ECS
 				auto& draw = marker.getComponent<SpriteDraw>();
 				draw.turnGraph();
 			}
+			marker.addComponent<MarkerBodyController>(bpm, beat, musicName);
+
 			marker.addGroup(ENTITY_GROUP::MARKER);
 			return &marker;
 		}

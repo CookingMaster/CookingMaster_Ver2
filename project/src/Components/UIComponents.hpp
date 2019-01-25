@@ -17,6 +17,7 @@
 #include "../Utility/Counter.hpp"
 #include "Renderer.hpp"
 #include "../Utility/Easing.hpp"
+#include "BeatByTrigger.hpp"
 #include <DxLib.h>
 #include <functional>
 namespace ECS
@@ -156,43 +157,40 @@ namespace ECS
 	};
 
 	/**
-	*@brief 画像を拡大します
-	* @param magni_min_　始まる数値（1が元サイズ）
-	* @param magni_max_ 拡大する数値（1が元サイズ）
+	*@brief 画像をイージングで拡大、縮小する
+	* @param magni_start_　始まる数値（1.0fが元サイズ）
+	* @param magni_end_ 目標の数値（1.0fが元サイズ）
 	* @param speed 速さ（大きいほど速い）
 	*/
 	class ExpandComponentSystem final : public ComponentSystem
 	{
 	private:
 		Scale * scale_ = nullptr;
-		Counter_f cnt_;
+		Easing ease_;
 
-		float magni_min_;
-		float magni_max_;
-		float speed_;
+		float start_, end_, speed_;
+
 	public:
-		ExpandComponentSystem(float magni_min, float magni_max, float speed)
-		{
-			magni_min_ = magni_min;
-			magni_max_ = magni_max;
-			speed_ = speed;
-		}
+		ExpandComponentSystem(float start, float end, float speed):
+			start_(start),
+			end_(end),
+			speed_(speed){}
 
 		void initialize() override
 		{
 			scale_ = &entity->getComponent<Scale>();
-			cnt_.setCounter(magni_min_, speed_, magni_min_, magni_max_);
 		}
 
 		void update() override
 		{
-			cnt_.add();
-			scale_->val = cnt_.getCurrentCount();
+			ease_.run(ease_.CubicIn, speed_);
+			scale_->val = ease_.getVolume(start_, end_);
 		}
 
-		bool endFlag()
+		void reset()
 		{
-			return cnt_.isMax();
+			ease_.reset();
+			scale_->val = ease_.getVolume(start_, end_);
 		}
 	};
 
@@ -622,6 +620,44 @@ namespace ECS
 			font_[2] = num % 10;		//一桁目(一の位)
 			font_[1] = (num % 100) / 10;	//二桁目(十の位)
 			font_[0] = num / 100;		//三桁目(百の位)
+		}
+	};
+
+	/*
+	*@brief マーカーをリズムに合わせてビクンビクンさせる（ExpandComponentSystemが必要）
+	*/
+	class MarkerBodyController final : public ComponentSystem
+	{
+	private:
+		ExpandComponentSystem* expander;
+		BeatByTrigger* beatbt;
+		
+		int bpm_;
+		int beat_;
+		std::string soundName_;
+
+	public:
+		MarkerBodyController(int bpm, int beat, const std::string& soundName) :
+			bpm_(bpm),
+			beat_(beat),
+			soundName_(soundName) {}
+
+		void initialize() override
+		{
+			CalcurationBeat beat(bpm_, beat_);
+			entity->addComponent<ExpandComponentSystem>(1.2f, 1.f, beat.calcNote_Frame((float)beat_));
+			expander = &entity->getComponent<ExpandComponentSystem>();
+
+			entity->addComponent<BeatByTrigger>(bpm_, beat_, (float)beat_, soundName_);
+			beatbt = &entity->getComponent<BeatByTrigger>();
+		}
+
+		void update() override
+		{
+			if (beatbt->getTrigger())
+			{
+				expander->reset();
+			}
 		}
 	};
 } //namespce ECS
