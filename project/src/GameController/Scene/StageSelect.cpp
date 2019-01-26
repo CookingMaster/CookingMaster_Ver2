@@ -517,14 +517,10 @@ namespace Scene
 			if (!isPlay_)
 			{
 				stageNum_ = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
-				ResourceManager::GetSound().load(
-					"Resource/sound/MUSIC/stage" + std::to_string(stageNum_) + "/" + bgm_path,
-					"stage" + std::to_string(stageNum_),
-					SoundType::BGM);
-				
 				std::ofstream ofs("Resource/system/gain.bin");
 				ofs << bgmVal_ << "\n" << seVal_;
 				isPlay_ = true;
+				bgmPath_ = bgm_path;
 				fade_->getComponent<ECS::SpriteDraw>().drawEnable();
 				Sound se("selectSE");
 				se.play(false,true);
@@ -542,6 +538,7 @@ namespace Scene
 			auto parameter = std::make_unique<Parameter>();
 			parameter->add<std::string>("BGM_name", "stage" + std::to_string(stageNum_));
 			parameter->add<size_t>("stageNum", stageNum_);
+			parameter->add<std::string>("BGM_path", bgmPath_);
 			ON_SCENE_CHANGE(SceneName::GAME, parameter.get(), StackPopFlag::POP, true);
 		}
 	}

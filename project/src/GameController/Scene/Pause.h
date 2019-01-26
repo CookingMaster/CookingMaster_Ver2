@@ -22,6 +22,7 @@ namespace Scene
 		ECS::Entity* frame;
 		ECS::Entity* bg;
 		std::string name;
+		std::string bgmPath;
 
 		void selectButton();
 		void backToGame();

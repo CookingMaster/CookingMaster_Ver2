@@ -70,8 +70,16 @@ private:
 	int handle_;
 	float gain_ = 1.f;
 public:
+	Sound() = default;
 	//!コンストラクタで登録したサウンドハンドル名を指定します
 	Sound(const std::string& soundName)
+	{
+		assert(ResourceManager::GetSound().hasHandle(soundName));
+		handle_ = ResourceManager::GetSound().getHandle(soundName);
+		name_ = soundName;
+	}
+	//!登録したサウンドハンドル名を指定します
+	void setSoundHandle(const std::string& soundName)
 	{
 		assert(ResourceManager::GetSound().hasHandle(soundName));
 		handle_ = ResourceManager::GetSound().getHandle(soundName);

@@ -13,11 +13,17 @@ namespace Scene
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
 		, bgmName_(parame->get<std::string>("BGM_name"))
+		, bgmPath_(parame->get<std::string>("BGM_path"))
 		, stageNum_(parame->get<size_t>("stageNum"))
-		, nc_(	bgmName_,
-				Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f),
-				Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f))
 	{
+		//パラメーターに保存してある曲情報をもとに音楽ファイルと譜面を読み込む
+		ResourceManager::GetSound().load(
+			"Resource/sound/MUSIC/stage" + std::to_string(stageNum_) + "/" + bgmPath_,
+			"stage" + std::to_string(stageNum_),
+			SoundType::BGM);
+		nc_.initialize(bgmName_,
+			Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f),
+			Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f));
 		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + bgmName_ + "/" + bgmName_ + ".txt");
 	}
 	void Game::initialize()
@@ -259,6 +265,7 @@ namespace Scene
 		{
 			auto bgm_name = std::make_unique<Parameter>();
 			bgm_name->add<std::string>("BGM_name", bgmName_);
+			bgm_name->add<std::string>("BGM_path", bgmPath_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
