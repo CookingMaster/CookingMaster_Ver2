@@ -24,6 +24,7 @@ private:
 	Vec2 targetPos[2];		//ノーツの到着する座標
 
 public:
+	NotesCreator() = default;
 	NotesCreator(const std::string& soundName, const Vec2& targetL, const Vec2& targetR):
 		sound_(soundName)
 	{
@@ -31,6 +32,12 @@ public:
 		targetPos[1] = targetR;
 	}
 
+	void initialize(const std::string& soundName, const Vec2& targetL, const Vec2& targetR)
+	{
+		targetPos[0] = targetL;
+		targetPos[1] = targetR;
+		sound_.setSoundHandle(soundName);
+	}
 	/**
 	* @brief 各種データ設定
 	*/

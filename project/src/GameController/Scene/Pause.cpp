@@ -19,6 +19,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/button_frame.png", "frame");
 
 		name = parame->get<std::string>("BGM_name");
+		bgmPath = parame->get<std::string>("BGM_path");
 		bg = ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
 		
 		//size(522,255), pos(640,360):3Ç¬ÇÃÉ{É^ÉìÇÃÇ§Çøç∂ÇÃç∂è„
@@ -77,7 +78,10 @@ namespace Scene
 			{
 				DOUT << "Restart" << std::endl;
 				bgm_name->add<std::string>("BGM_name", name);
-				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, true);
+				auto number = name.back();
+				bgm_name->add<size_t>("stageNum", static_cast<size_t>(atoi(&number)));
+				bgm_name->add<std::string>("BGM_path", bgmPath);
+				ON_SCENE_CHANGE(SceneName::GAME, bgm_name.get(), StackPopFlag::ALL_CLEAR, true);
 				break;
 			}
 			case 2:

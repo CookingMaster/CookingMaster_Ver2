@@ -37,6 +37,7 @@ namespace Scene
 		float bgmVal_ = 0;
 		float seVal_ = 0;
 		int backVal_ = 0;
+		std::string bgmPath_;
 		bool isPlay_ = false;
 		size_t stageNum_ = 0u;
 		void entitySetUp();
