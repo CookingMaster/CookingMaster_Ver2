@@ -68,8 +68,8 @@ namespace Scene
 			msl_.getBeat(),
 			*entityManager_);
 		//スコア表示
-		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), *entityManager_);
-		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), msl_.getMaxPoint(), *entityManager_);
+		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), *entityManager_);
+		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), msl_.getMaxPoint(), *entityManager_);
 		//スコア％表示用貼り紙
 		ECS::ArcheType::CreateEntity("paper", Vec2{ 1030.f,370.f }, *entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		//得点(パーセンテージ)表示
