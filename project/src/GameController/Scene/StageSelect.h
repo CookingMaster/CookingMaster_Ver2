@@ -32,7 +32,6 @@ namespace Scene
 		ECS::Entity* fade_ = nullptr;
 		ECS::EntityManager* entityManager_ = nullptr;
 		std::vector<ECS::Entity*> cursorTargets{};
-		std::unique_ptr<Parameter> param_;
 		Counter cnt_;
 		float bgmVal_ = 0;
 		float seVal_ = 0;
