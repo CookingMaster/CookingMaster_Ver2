@@ -13,11 +13,17 @@ namespace Scene
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
 		, bgmName_(parame->get<std::string>("BGM_name"))
+		, bgmPath_(parame->get<std::string>("BGM_path"))
 		, stageNum_(parame->get<size_t>("stageNum"))
-		, nc_(	bgmName_,
-				Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f),
-				Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f))
 	{
+		//パラメーターに保存してある曲情報をもとに音楽ファイルと譜面を読み込む
+		ResourceManager::GetSound().load(
+			"Resource/sound/MUSIC/stage" + std::to_string(stageNum_) + "/" + bgmPath_,
+			"stage" + std::to_string(stageNum_),
+			SoundType::BGM);
+		nc_.initialize(bgmName_,
+			Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f),
+			Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f));
 		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + bgmName_ + "/" + bgmName_ + ".txt");
 	}
 	void Game::initialize()
@@ -62,8 +68,8 @@ namespace Scene
 			msl_.getBeat(),
 			*entityManager_);
 		//スコア表示
-		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), *entityManager_);
-		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(189.f, 97.f), Vec2(1074.f, 228.f), msl_.getMaxPoint(), *entityManager_);
+		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), *entityManager_);
+		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), msl_.getMaxPoint(), *entityManager_);
 		//スコア％表示用貼り紙
 		ECS::ArcheType::CreateEntity("paper", Vec2{ 1030.f,370.f }, *entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		//得点(パーセンテージ)表示
@@ -259,6 +265,7 @@ namespace Scene
 		{
 			auto bgm_name = std::make_unique<Parameter>();
 			bgm_name->add<std::string>("BGM_name", bgmName_);
+			bgm_name->add<std::string>("BGM_path", bgmPath_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
@@ -269,7 +276,7 @@ namespace Scene
 	void Game::changeResultScene()
 	{
 		Sound sound(bgmName_);
-		if (!sound.isPlay()) {
+		if (sound.getTotalTime() <= sound.getCurrentTime()) {
 			auto sendParame = std::make_unique<Parameter>();
 			sendParame->add<std::string>("BGM_name", bgmName_);
 			sendParame->add<int>("score", scoreNum_);

@@ -70,8 +70,16 @@ private:
 	int handle_;
 	float gain_ = 1.f;
 public:
+	Sound() = default;
 	//!コンストラクタで登録したサウンドハンドル名を指定します
 	Sound(const std::string& soundName)
+	{
+		assert(ResourceManager::GetSound().hasHandle(soundName));
+		handle_ = ResourceManager::GetSound().getHandle(soundName);
+		name_ = soundName;
+	}
+	//!登録したサウンドハンドル名を指定します
+	void setSoundHandle(const std::string& soundName)
 	{
 		assert(ResourceManager::GetSound().hasHandle(soundName));
 		handle_ = ResourceManager::GetSound().getHandle(soundName);
@@ -102,6 +110,7 @@ public:
 		StopSoundMem(handle_);
 	}
 	//!サウンドが再生中か取得します
+	//! - 停止した曲を途中から再生した場合、終了したのにfalseになるバグ?がある、ライブラリ由来のものか不明
 	[[nodiscard]] const bool isPlay() const
 	{
 		switch (CheckSoundMem(handle_))
