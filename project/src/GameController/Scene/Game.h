@@ -29,6 +29,13 @@ namespace Scene
 		NotesCreator nc_;
 		int comb_ = 0;
 		int maxComb_ = 0;
+
+		//こいつをtrueにするとオートモードになるぞ！
+		const bool autoPerfectMode =
+			//*
+			IS_AUTO_PLAY/*/
+			false/**/;
+
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();

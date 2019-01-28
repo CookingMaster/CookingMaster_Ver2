@@ -185,6 +185,37 @@ namespace Scene
 	[[nodiscard]]int Game::getNoteScore()
 	{
 		auto& input = Input::Get();
+
+		//オートモードがオンのときの処理
+		if (autoPerfectMode)
+		{
+			auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
+			for (auto& it : note)
+			{
+				auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
+
+				if (itnotestate.isActiveNote())
+				{
+					Sound se(itnotestate.getSEName());
+
+					auto nowstate = itnotestate.getNoteState();
+					switch (nowstate)
+					{
+					case ECS::NoteState::State::PARFECT:
+						//ノーツの状態を遷移
+						itnotestate.ActionToChangeNoteState();
+						
+						DOUT << "PARFECT" << std::endl;
+						se.play(false, true);
+						++comb_;
+						return msl_.getPoint(nowstate, comb_);
+					}
+					break;
+				}
+			}
+			return 0;
+		}
+
 		//入力無し、同時押し時はMISSのノーツのみ調べる
 		if ((input.getKeyFrame(KEY_INPUT_LEFT) == 1 && input.getKeyFrame(KEY_INPUT_RIGHT) == 1) ||
 			(input.getKeyFrame(KEY_INPUT_LEFT) == 0 && input.getKeyFrame(KEY_INPUT_RIGHT) == 0))
@@ -224,32 +255,34 @@ namespace Scene
 				auto nowstate = itnotestate.getNoteState();
 				//ノーツの状態を遷移
 				itnotestate.ActionToChangeNoteState();
-				int combBonus = comb_ / 20;
+
+				//コンボ数から追加ポイントを計算
+				int score = msl_.getPoint(nowstate, comb_);
 				switch (nowstate)
 				{
 				case ECS::NoteState::State::MISS:
 					DOUT << "MISS" << std::endl;
 					comboReset();
-					return 0;
+					return score;
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
 					comboReset();
-					return 0;
+					return score;
 				case ECS::NoteState::State::GOOD:
 					DOUT << "GOOD" << std::endl;
 					se.play(false, true);
 					++comb_;
-					return 2 + combBonus;
+					return score;
 				case ECS::NoteState::State::GREAT:
 					DOUT << "GREAT" << std::endl;
 					se.play(false, true);
 					++comb_;
-					return 5 + combBonus;
+					return score;
 				case ECS::NoteState::State::PARFECT:
 					DOUT << "PARFECT" << std::endl;
 					se.play(false, true);
 					++comb_;
-					return 8 + combBonus;
+					return score;
 				}
 				break;
 			}

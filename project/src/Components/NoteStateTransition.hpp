@@ -67,12 +67,6 @@ namespace ECS
 		Counter deathCounter_;		//死ぬまでの時間計測
 		Counter_f flameCounter_;
 
-		//こいつをtrueにするとオートモードになるぞ！
-		bool autoPerfectMode = 
-			//*
-			IS_AUTO_PLAY/*/
-			false/**/;
-
 	public:
 		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
 			asd_(nd.animSData),
@@ -108,15 +102,6 @@ namespace ECS
 		void update() override
 		{
 			if (transCounter_.isMax()) return;
-
-			if (autoPerfectMode && noteState_->state == NoteState::State::PARFECT)
-			{
-				changeNoteAnim(1, hittedAnimSpd, true, false);
-				noteState_->state = NoteState::State::HITTED;
-				Sound se(seName_);
-				se.play(false, true);
-				return;
-			};
 
 			if (flameCounter_.getCurrentCount() >= hitTimeLine_[transCounter_.getCurrentCount()])
 			{
