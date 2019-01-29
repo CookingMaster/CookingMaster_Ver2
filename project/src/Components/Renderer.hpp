@@ -276,7 +276,7 @@ namespace ECS
 					__super::scale_->val.x,
 					__super::scale_->val.y,
 					DirectX::XMConvertToRadians(__super::rota_->val),
-					ResourceManager::GetGraph().getDivHandle(__super::name_,index_), true);
+					ResourceManager::GetGraph().getDivHandle(__super::name_,index_), true, isTurn);
 				RenderUtility::ResetRenderState();
 			}
 
