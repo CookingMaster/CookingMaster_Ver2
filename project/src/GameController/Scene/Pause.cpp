@@ -70,7 +70,7 @@ namespace Scene
 				DOUT << "Game Continue" << std::endl;
 				bgm_name->add<std::string>("BGM_name", name);
 				Sound bgm(name);
-				bgm.play(true, false);
+				bgm.play(false, false);
 				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
 				break;
 			}
