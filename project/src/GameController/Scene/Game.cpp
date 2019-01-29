@@ -33,6 +33,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
 		//鍋
 		ResourceManager::GetGraph().loadDiv("Resource/image/bg_nabe1.png", "nabe1", 8, 8, 1, 140, 148);
+		ResourceManager::GetGraph().loadDiv("Resource/image/bg_nabe2.png", "nabe2", 8, 8, 1, 186, 98);
 		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/bg_back.png", "bg_back");
@@ -65,6 +66,8 @@ namespace Scene
 		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		//鍋
 		ECS::GameEffectsArcheType::CreateSaucepan("nabe1", Vec2(431.f, 175.f), entityManager_);
+		auto nabe2 = ECS::GameEffectsArcheType::CreateSaucepan("nabe2", Vec2{ 720.f,217.f }, entityManager_);
+		nabe2->getComponent < ECS::Animator>().changeFrame(5);
 		//ファン
 		ResourceManager::GetGraph().load("Resource/image/bg_fan2.png", "fan");
 		ECS::GameEffectsArcheType::CreateFan("fan", Vec2{ 1173.f, 96.f }, entityManager_);
@@ -76,7 +79,7 @@ namespace Scene
 			Vec2(System::SCREEN_WIDIH / 2.f, (System::SCREEN_HEIGHT / 2.f) + 30),
 			msl_.getBPM(),
 			msl_.getBeat(),
-			autoPerfectMode,
+			autoPerfectMode_,
 			*entityManager_);
 		//スコア表示
 		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), *entityManager_);
@@ -193,7 +196,7 @@ namespace Scene
 		auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
 
 		//オートモードがオンのときの処理
-		if (autoPerfectMode)
+		if (autoPerfectMode_)
 		{
 			for (auto& it : note)
 			{
@@ -331,17 +334,21 @@ namespace Scene
 			sendParame->add<int>("maxcombo", maxComb_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
-			switch (stageNum_)
+			//オートモードは記録しない
+			if (!autoPerfectMode_)
 			{
-			case 1:
-				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_);
-				break;
-			case 2:
-				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_);
-				break;
-			case 3:
-				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
-				break;
+				switch (stageNum_)
+				{
+				case 1:
+					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_);
+					break;
+				case 2:
+					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_);
+					break;
+				case 3:
+					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
+					break;
+				}
 			}
 			ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 		}
