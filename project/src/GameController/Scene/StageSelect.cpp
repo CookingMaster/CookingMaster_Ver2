@@ -46,7 +46,7 @@ namespace Scene
 		//難易度の星
 		ResourceManager::GetGraph().loadDiv("Resource/image/star.png", "star", 2,2,1,55,53);
 		//フォント
-		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
+		ResourceManager::GetGraph().load("Resource/image/number2.png", "scorefont");
 		//料理
 		ResourceManager::GetGraph().loadDiv("Resource/image/dish_menu.png", "dish",3,3,1,256,256);
 		//サウンド情報の読み込み
@@ -320,7 +320,7 @@ namespace Scene
 		{
 			score_ = ECS::ScoreArcheType::CreateSelectScoreEntity
 			(
-				"number",
+				"scorefont",
 				Vec2{ 740.f, 620.f },
 				ECS::StageHighScore::STAGE1,
 				*entityManager_

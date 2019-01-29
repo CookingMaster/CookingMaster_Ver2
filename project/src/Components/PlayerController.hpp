@@ -54,9 +54,12 @@ namespace ECS {
 		Counter animCnt_;	//切りモーションの終了までの時間を計測したりする
 		bool handup = false;
 
+		const bool isAutoMode_;
+
 	public:
-		PlayerController() :
-			animCnt_(0, 15) {};
+		PlayerController(bool isAuto) :
+			animCnt_(0, 15),
+			isAutoMode_(isAuto) {};
 
 		void initialize() override
 		{
@@ -84,6 +87,37 @@ namespace ECS {
 			transitionState();
 		}
 
+		//切りアニメーション実行
+		void playSlashAnim(ECS::Direction::Dir dir)
+		{
+			switch (dir)
+			{
+			//右切り
+			case ECS::Direction::Dir::R:
+				if (state_->val == PlayerState::State::Right1)
+				{
+					changeState(PlayerState::State::Right2);
+				}
+				else
+				{
+					changeState(PlayerState::State::Right1);
+				}
+				break;
+
+			//左切り
+			case ECS::Direction::Dir::L:
+				if (state_->val == PlayerState::State::Left1)
+				{
+					changeState(PlayerState::State::Left2);
+				}
+				else
+				{
+					changeState(PlayerState::State::Left1);
+				}
+				break;
+			}
+		}
+
 	private:
 		//入力や時間経過に対応してアニメーションと状態を遷移させる
 		void transitionState()
@@ -106,35 +140,28 @@ namespace ECS {
 			}
 
 			//同時押しは許さない
-			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1 &&
-				Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
+			if ((Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1 &&
+				 Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1))
 			{
+				return;
+			}
+
+			//オートモードだったら入力させない
+			if (isAutoMode_)
+			{
+				animCnt_.add();
 				return;
 			}
 
 			//左カーソルを押すと左切り状態
 			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1)
 			{
-				if (state_->val == PlayerState::State::Left1)
-				{
-					changeState(PlayerState::State::Left2);
-				}
-				else
-				{
-					changeState(PlayerState::State::Left1);
-				}
+				playSlashAnim(ECS::Direction::Dir::L);
 			}
 			//右カーソルを押すと右切り状態
 			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
 			{
-				if (state_->val == PlayerState::State::Right1)
-				{
-					changeState(PlayerState::State::Right2);
-				}
-				else
-				{
-					changeState(PlayerState::State::Right1);
-				}
+				playSlashAnim(ECS::Direction::Dir::R);
 			}
 
 			animCnt_.add();

@@ -77,15 +77,27 @@ namespace ECS
 			return &e;
 		}
 		//!斬撃エフェクト
-		static Entity* CreateSlashEffect(const char* divGraphicName, const Vec2& pos, const int& lifeSpan,EntityManager* entityManager)
+		static Entity* CreateSlashEffect(
+			const char* divGraphicName,
+			const Vec2& pos,
+			ECS::Direction::Dir dir,
+			EntityManager* entityManager,
+			AlphaBlend::BlendMode bm = AlphaBlend::BlendMode::ADD)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.addComponent<Color>();
-			e.addComponent<AlphaBlend>();
-			e.addComponent<SpriteAnimationDraw>(divGraphicName);
-			//e.addComponent<Animator>();
-			e.addComponent<KillEntity>(lifeSpan);
+			e.addComponent<AlphaBlend>().blendMode = bm;
+			if (dir == ECS::Direction::Dir::R)
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName).turnGraph();
+			}
+			else
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName);
+			}
+			e.addComponent<Animator>(0, 0, 3, 0, 2).setIsEndStopAnim(true);
+			e.addComponent<KillEntity>(8);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
@@ -179,11 +191,13 @@ namespace ECS
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteDraw>(graphicName);
 			e.addComponent<KillEntity>(lifeSpan);
 			e.addComponent<Canvas>();
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
@@ -193,12 +207,14 @@ namespace ECS
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<Rectangle>(rectAngle);
 			e.addComponent<SpriteRectDraw>(graphicName);
-			e.addComponent<DrawFont2>(50.f, 100.f, combNum);
+			e.addComponent<DrawFont2>(59.f, 75.f, combNum);
 			e.addComponent<KillEntity>(lifeSpan);
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}

@@ -12,6 +12,7 @@
 #include <math.h>
 #include "NotesAndScoreData.hpp"
 #include "ResourceManager.hpp"
+#include "../Components/NoteStateTransition.hpp"
 
 //-----------------------------------------------------------------------------
 //読み込み&提供くん
@@ -71,12 +72,10 @@ public:
 
 		fin.close();
 
-		int combBonus = 0;
 		for (int i = 0; i < noteAllNum_; ++i)
 		{
-			combBonus += i / 20;
+			maxPoint_ += getPoint(ECS::NoteState::State::PARFECT, i);
 		}
-		maxPoint_ = (noteAllNum_ * 8) + combBonus;
 	}
 
 	/**
@@ -148,6 +147,35 @@ public:
 	[[nodiscard]]int getMaxPoint()
 	{
 		return maxPoint_;
+	}
+
+	/**
+	* @brief コンボ数とノーツ状態からスコアを取得する
+	* @return int スコア
+	*/
+	[[nodiscard]] int getPoint(ECS::NoteState::State state, int combo)
+	{
+		//コンボ数から追加ポイントを計算
+		int combBonus = combo / 20;
+		if (combBonus > 2) combBonus = 2;
+
+		switch (state)
+		{
+		case ECS::NoteState::State::MISS:
+		case ECS::NoteState::State::NON:
+		case ECS::NoteState::State::BAD:
+			return 0;
+
+		case ECS::NoteState::State::GOOD:
+			return 2 + combBonus;
+
+		case ECS::NoteState::State::GREAT:
+			return 5 + combBonus;
+
+		case ECS::NoteState::State::PARFECT:
+			return 8 + combBonus;
+		}
+		return 0;
 	}
 
 private:

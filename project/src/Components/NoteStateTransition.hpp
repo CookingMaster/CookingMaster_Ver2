@@ -67,12 +67,6 @@ namespace ECS
 		Counter deathCounter_;		//死ぬまでの時間計測
 		Counter_f flameCounter_;
 
-		//こいつをtrueにするとオートモードになるぞ！
-		bool autoPerfectMode = 
-			//*
-			IS_AUTO_PLAY/*/
-			false/**/;
-
 	public:
 		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
 			asd_(nd.animSData),
@@ -108,15 +102,6 @@ namespace ECS
 		void update() override
 		{
 			if (transCounter_.isMax()) return;
-
-			if (autoPerfectMode && noteState_->state == NoteState::State::PARFECT)
-			{
-				changeNoteAnim(1, hittedAnimSpd, true, false);
-				noteState_->state = NoteState::State::HITTED;
-				Sound se(seName_);
-				se.play(false, true);
-				return;
-			};
 
 			if (flameCounter_.getCurrentCount() >= hitTimeLine_[transCounter_.getCurrentCount()])
 			{
@@ -182,6 +167,11 @@ namespace ECS
 			return seName_;
 		}
 
+		[[nodiscard]]const Vec2& getPos() const
+		{
+			return position_->val;
+		}
+
 	private:
 
 		//状態を遷移と各ノーツの挙動を行う
@@ -226,23 +216,29 @@ namespace ECS
 
 			switch (transCounter_.getCurrentCount())
 			{
-			case 0:	noteState_->state = NoteState::State::BAD;
-					break;
+			case 0:	
+				noteState_->state = NoteState::State::BAD;
+				break;
 
-			case 1:	noteState_->state = NoteState::State::GOOD;
-					break;
+			case 1:
+				noteState_->state = NoteState::State::GOOD;
+				break;
 
-			case 2:	noteState_->state = NoteState::State::GREAT;
-					break;
+			case 2:
+				noteState_->state = NoteState::State::GREAT;
+				break;
 
-			case 3:	noteState_->state = NoteState::State::PARFECT;
-				
-					break;
-			case 4:	noteState_->state = NoteState::State::GOOD;
-					break;
+			case 3:	
+				noteState_->state = NoteState::State::PARFECT;
+				break;
 
-			case 5:	noteState_->state = NoteState::State::MISS;
-					return;
+			case 4:	
+				noteState_->state = NoteState::State::GOOD;
+				break;
+
+			case 5:	
+				noteState_->state = NoteState::State::MISS;
+				return;
 
 			default: return;
 			}
@@ -270,6 +266,9 @@ namespace ECS
 		//状態をMISSED(グチャってなるアニメーション)に変更する
 		void ChangeStateMISSED()
 		{
+			Sound se("miss");
+			se.play(false, true);
+
 			transCounter_.setCounter(5, 1, 0, 1000);
 			noteState_->state = NoteState::State::MISSED;
 			changeNoteAnim(2, missedAnimSpd, true, true);
