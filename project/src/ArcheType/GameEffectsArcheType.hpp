@@ -77,15 +77,27 @@ namespace ECS
 			return &e;
 		}
 		//!斬撃エフェクト
-		static Entity* CreateSlashEffect(const char* divGraphicName, const Vec2& pos, const int& lifeSpan,EntityManager* entityManager)
+		static Entity* CreateSlashEffect(
+			const char* divGraphicName,
+			const Vec2& pos,
+			ECS::Direction::Dir dir,
+			EntityManager* entityManager,
+			AlphaBlend::BlendMode bm = AlphaBlend::BlendMode::ADD)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.addComponent<Color>();
-			e.addComponent<AlphaBlend>();
-			e.addComponent<SpriteAnimationDraw>(divGraphicName);
-			//e.addComponent<Animator>();
-			e.addComponent<KillEntity>(lifeSpan);
+			e.addComponent<AlphaBlend>().blendMode = bm;
+			if (dir == ECS::Direction::Dir::R)
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName).turnGraph();
+			}
+			else
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName);
+			}
+			e.addComponent<Animator>(0, 0, 3, 0, 2).setIsEndStopAnim(true);
+			e.addComponent<KillEntity>(8);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}

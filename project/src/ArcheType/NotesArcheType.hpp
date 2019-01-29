@@ -16,7 +16,13 @@ namespace ECS
 {
 	struct NotesArcheType
 	{
-		static Entity* CreateNotes(const NotesData& notesData, const ECS::Direction::Dir& dir, float wait, float arrivalBeatTime, const Vec2& targetPos, EntityManager& entityManager_)
+		static Entity* CreateNotes(
+			const NotesData& notesData,
+			const ECS::Direction::Dir& dir,
+			float wait,
+			float arrivalBeatTime,
+			const Vec2& targetPos,
+			EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 
