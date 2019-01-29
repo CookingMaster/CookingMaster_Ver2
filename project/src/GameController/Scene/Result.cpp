@@ -197,6 +197,8 @@ void Scene::Result::draw()
 Scene::Result::~Result()
 {
 	entityManager_->removeAll();
+	ResourceManager::GetGraph().removeAll();
+	ResourceManager::GetSound().removeAll();
 }
 
 Vec2 Scene::Result::setDishImg()
