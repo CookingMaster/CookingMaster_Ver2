@@ -72,9 +72,9 @@ namespace Scene
 		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), *entityManager_);
 		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), msl_.getMaxPoint(), *entityManager_);
 		//スコア％表示用貼り紙
+		ResourceManager::GetGraph().load("Resource/image/test_font.png", "score_font");
 		ECS::ArcheType::CreateEntity("paper", Vec2{ 1030.f,370.f }, *entityManager_, ENTITY_GROUP::BACK_OBJECT);
-		//得点(パーセンテージ)表示
-		//ECS::UIArcheType::CreateFontUI("font", Vec2(25.f, 45.f), Vec2(50.f, 50.f), *entityManager_);
+		scoreFont_ = ECS::UIArcheType::CreateFontUI("score_font", Vec2{ 25.f, 45.f }, Vec2{ 1120.f,450.f }, *entityManager_);		
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
 		//マーカー(左右に一つずつ)
@@ -124,7 +124,6 @@ namespace Scene
 			//おやっさんにコンボを入れる
 			boss_->speekComb(comb_);
 			int score = getNoteScore();
-
 			if (score > 0)
 			{
 				for (auto& it : entityManager_->getEntitiesByGroup(ENTITY_GROUP::KITCHENWARE))
@@ -134,13 +133,9 @@ namespace Scene
 						it->getComponent<ECS::BarComponentSystemY>().addScore(score);
 						scoreNum_ = it->getComponent<ECS::BarComponentSystemY>().getScore();
 					}
-					if (it->hasComponent<ECS::ExpandReduceComponentSystem>())
-					{
-						//スコアのフォント
-						it->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
-						it->getComponent<ECS::DrawFont>().setNumber(scoreNum_);
-					}
 				}
+				scoreFont_->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
+				scoreFont_->getComponent<ECS::DrawFont>().setNumber(scoreNum_);
 			}
 			nc_.run(msl_.getNotesData(), msl_.getScoreData(), *entityManager_);
 
