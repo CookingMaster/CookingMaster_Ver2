@@ -79,7 +79,7 @@ namespace Scene
 			Vec2(System::SCREEN_WIDIH / 2.f, (System::SCREEN_HEIGHT / 2.f) + 30),
 			msl_.getBPM(),
 			msl_.getBeat(),
-			autoPerfectMode,
+			autoPerfectMode_,
 			*entityManager_);
 		//スコア表示
 		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), *entityManager_);
@@ -196,7 +196,7 @@ namespace Scene
 		auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
 
 		//オートモードがオンのときの処理
-		if (autoPerfectMode)
+		if (autoPerfectMode_)
 		{
 			for (auto& it : note)
 			{
@@ -334,17 +334,21 @@ namespace Scene
 			sendParame->add<int>("maxcombo", maxComb_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
-			switch (stageNum_)
+			//オートモードは記録しない
+			if (!autoPerfectMode_)
 			{
-			case 1:
-				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_);
-				break;
-			case 2:
-				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_);
-				break;
-			case 3:
-				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
-				break;
+				switch (stageNum_)
+				{
+				case 1:
+					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_);
+					break;
+				case 2:
+					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_);
+					break;
+				case 3:
+					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
+					break;
+				}
 			}
 			ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 		}
