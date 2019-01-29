@@ -50,5 +50,6 @@ namespace Scene
 		void changeResultScene();
 		void comboReset();
 		void saveMaxComb();
+		void createRankFont(int rank);
 	};
 }

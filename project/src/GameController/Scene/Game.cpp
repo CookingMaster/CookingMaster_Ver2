@@ -48,7 +48,9 @@ namespace Scene
 		ResourceManager::GetGraph().load/*Div*/("Resource/image/note_marker.png", "marker"/*, 1, 1, 1, 200, 200*/);
 		//スコア貼り紙
 		ResourceManager::GetGraph().load("Resource/image/score_paper.png", "paper");
-		
+		//斬ったときの評価フォント
+		ResourceManager::GetGraph().loadDiv("Resource/image/hyouka_font.png", "rank", 4, 1, 4, 256, 64);
+
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
 		ECS::ArcheType::CreateEntity("bg_back", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
@@ -74,7 +76,7 @@ namespace Scene
 		//スコア％表示用貼り紙
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "score_font");
 		ECS::ArcheType::CreateEntity("paper", Vec2{ 1030.f,370.f }, *entityManager_, ENTITY_GROUP::BACK_OBJECT);
-		scoreFont_ = ECS::UIArcheType::CreateFontUI("score_font", Vec2{ 25.f, 45.f }, Vec2{ 1120.f,450.f }, *entityManager_);		
+		scoreFont_ = ECS::UIArcheType::CreateFontUI("score_font", Vec2{ 25.f, 45.f }, Vec2{ 1120.f,450.f }, *entityManager_);
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
 		//マーカー(左右に一つずつ)
@@ -82,7 +84,6 @@ namespace Scene
 			Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 		ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::R,
 			Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
-
 		fade_ = ECS::ArcheType::CreateEntity
 		(
 			"fade",
@@ -107,7 +108,7 @@ namespace Scene
 				it->update();
 			}
 		}
-			 
+
 		if (!isPlay_ && fade[0]->getComponent<ECS::AlphaBlend>().alpha <= 0)
 		{
 			isPlay_ = true;
@@ -161,7 +162,7 @@ namespace Scene
 			changePauseScene();
 			saveMaxComb();
 		}
-		
+
 	}
 
 	void Game::draw()
@@ -176,7 +177,7 @@ namespace Scene
 		ResourceManager::GetSound().remove(bgmName_);
 		entityManager_->removeAll();
 	}
-	
+
 	//ノーツ判定処理とスコアの取得
 	[[nodiscard]]int Game::getNoteScore()
 	{
@@ -203,7 +204,7 @@ namespace Scene
 
 						//ノーツの状態を遷移
 						itnotestate.ActionToChangeNoteState();
-						
+
 						DOUT << "PARFECT" << std::endl;
 						se.play(false, true);
 						++comb_;
@@ -234,7 +235,7 @@ namespace Scene
 
 		//入力方向を取得
 		ECS::Direction::Dir dir = ECS::Direction::Dir::U;
-		if (input.getKeyFrame(KEY_INPUT_LEFT) == 1)	 { dir = ECS::Direction::Dir::L; }
+		if (input.getKeyFrame(KEY_INPUT_LEFT) == 1) { dir = ECS::Direction::Dir::L; }
 		if (input.getKeyFrame(KEY_INPUT_RIGHT) == 1) { dir = ECS::Direction::Dir::R; }
 
 		auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
@@ -266,20 +267,24 @@ namespace Scene
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
 					comboReset();
+					createRankFont(3);
 					return score;
 				case ECS::NoteState::State::GOOD:
 					DOUT << "GOOD" << std::endl;
 					se.play(false, true);
+					createRankFont(2);
 					++comb_;
 					return score;
 				case ECS::NoteState::State::GREAT:
 					DOUT << "GREAT" << std::endl;
 					se.play(false, true);
+					createRankFont(1);
 					++comb_;
 					return score;
 				case ECS::NoteState::State::PARFECT:
 					DOUT << "PARFECT" << std::endl;
 					se.play(false, true);
+					createRankFont(0);
 					++comb_;
 					return score;
 				}
@@ -344,5 +349,11 @@ namespace Scene
 		{
 			maxComb_ = comb_;
 		}
+	}
+	void Game::createRankFont(int rank)
+	{
+		ECS::UIArcheType::CreateRankFont("rank", Vec2{ System::SCREEN_WIDIH / 2.f, 200.f }, *entityManager_)
+			->getComponent<ECS::SpriteAnimationDraw>().setIndex(rank);
+		entityManager_->refresh();
 	}
 }
