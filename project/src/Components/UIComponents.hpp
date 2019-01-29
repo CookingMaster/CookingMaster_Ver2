@@ -660,5 +660,39 @@ namespace ECS
 			}
 		}
 	};
+
+	//! 指定フレーム後に指定スピードでアルファ値を変更する
+	class ChangeAlphaComponent final : public ComponentSystem
+	{
+	private:
+		AlphaBlend * alphaBlend_ = nullptr;
+		int elapse_ = 0;
+		int fadeSpeed_ = 0;
+		Counter counter_;
+
+	public:
+		ChangeAlphaComponent(const int elapse, const int fadeSpeed)
+			:
+			elapse_(elapse),
+			fadeSpeed_(fadeSpeed)
+		{}
+		void initialize() override
+		{
+			alphaBlend_ = &entity->getComponent<AlphaBlend>();
+			counter_.setCounter(0, 1, 0, elapse_);
+		}
+		void update() override
+		{
+			counter_.add();
+			if (counter_.isMax())
+			{
+				alphaBlend_->alpha -= fadeSpeed_;
+				if (alphaBlend_->alpha <= 0) {
+					alphaBlend_->alpha = 0;
+					entity->destroy();		//死ぬ
+				}
+			}
+		}
+	};
 } //namespce ECS
 
