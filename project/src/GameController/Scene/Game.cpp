@@ -66,6 +66,7 @@ namespace Scene
 			Vec2(System::SCREEN_WIDIH / 2.f, (System::SCREEN_HEIGHT / 2.f) + 30),
 			msl_.getBPM(),
 			msl_.getBeat(),
+			autoPerfectMode,
 			*entityManager_);
 		//スコア表示
 		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), *entityManager_);
@@ -202,6 +203,9 @@ namespace Scene
 					switch (nowstate)
 					{
 					case ECS::NoteState::State::PARFECT:
+						auto& player = entityManager_->getEntitiesByGroup(ENTITY_GROUP::GIRL)[0]->getComponent<ECS::PlayerController>();
+						player.playSlashAnim(itnotestate.getNoteDir());
+
 						//ノーツの状態を遷移
 						itnotestate.ActionToChangeNoteState();
 						
