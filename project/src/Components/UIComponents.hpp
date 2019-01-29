@@ -369,7 +369,7 @@ namespace ECS
 			rectangle_->x = (int)rect_.x * num_;
 			rectangle_->w = (int)rect_.x;
 			font_[3] = 10;
-			setRectAndDraw(false);
+			//setRectAndDraw(false);
 		}
 
 		void update() override
