@@ -1,8 +1,8 @@
 ﻿/**
 * @file Game.hpp
 * @brief ゲームシーンでの動作を記述します
-* @author 
-* @date 
+* @author
+* @date
 */
 #pragma once
 #include "../../ECS/ECS.hpp"
@@ -29,6 +29,7 @@ namespace Scene
 		NotesCreator nc_;
 		int comb_ = 0;
 		int maxComb_ = 0;
+		ECS::Entity* scoreFont_ = nullptr;
 
 		//こいつをtrueにするとオートモードになるぞ！
 		const bool autoPerfectMode =
@@ -42,7 +43,7 @@ namespace Scene
 		void initialize() override;
 		void update() override;
 		void draw() override;
-	
+
 	private:
 		int getNoteScore();
 		void changePauseScene();
