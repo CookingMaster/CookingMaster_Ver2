@@ -7,6 +7,7 @@
 #include "../../ArcheType/ScoreArcheType.hpp"
 #include "../../ArcheType/PlayerArcheType.hpp"
 #include "../../Components/NoteStateTransition.hpp"
+#include "../../Components/Renderer.hpp"
 namespace Scene
 {
 	Game::Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager)
@@ -48,6 +49,11 @@ namespace Scene
 		ResourceManager::GetGraph().load/*Div*/("Resource/image/note_marker.png", "marker"/*, 1, 1, 1, 200, 200*/);
 		//スコア貼り紙
 		ResourceManager::GetGraph().load("Resource/image/score_paper.png", "paper");
+
+		//斬撃エフェクト(良)
+		ResourceManager::GetGraph().loadDiv("Resource/image/cut_effect_d.png", "slash", 4, 4, 1, 384, 256);
+		//斬撃エフェクト(悪)
+		ResourceManager::GetGraph().loadDiv("Resource/image/cut_effect_bad_d.png", "slash_bad", 4, 4, 1, 256, 256);
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
@@ -186,11 +192,11 @@ namespace Scene
 	[[nodiscard]]int Game::getNoteScore()
 	{
 		auto& input = Input::Get();
+		auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
 
 		//オートモードがオンのときの処理
 		if (autoPerfectMode)
 		{
-			auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
 			for (auto& it : note)
 			{
 				auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
@@ -211,7 +217,8 @@ namespace Scene
 						
 						DOUT << "PARFECT" << std::endl;
 						se.play(false, true);
-						++comb_;
+						++comb_; 
+						ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_, ECS::AlphaBlend::BlendMode::SUB);
 						return msl_.getPoint(nowstate, comb_);
 					}
 					break;
@@ -224,7 +231,6 @@ namespace Scene
 		if ((input.getKeyFrame(KEY_INPUT_LEFT) == 1 && input.getKeyFrame(KEY_INPUT_RIGHT) == 1) ||
 			(input.getKeyFrame(KEY_INPUT_LEFT) == 0 && input.getKeyFrame(KEY_INPUT_RIGHT) == 0))
 		{
-			auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
 			for (auto& it : note)
 			{
 				auto notestate = it->getComponent<ECS::NoteStateTransition>().getNoteState();
@@ -242,7 +248,6 @@ namespace Scene
 		if (input.getKeyFrame(KEY_INPUT_LEFT) == 1)	 { dir = ECS::Direction::Dir::L; }
 		if (input.getKeyFrame(KEY_INPUT_RIGHT) == 1) { dir = ECS::Direction::Dir::R; }
 
-		auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
 		for (auto& it : note)
 		{
 			auto& itnotestate = it->getComponent<ECS::NoteStateTransition>();
@@ -270,20 +275,24 @@ namespace Scene
 					return score;
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
+					ECS::GameEffectsArcheType::CreateSlashEffect("slash_bad", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
 					comboReset();
 					return score;
 				case ECS::NoteState::State::GOOD:
 					DOUT << "GOOD" << std::endl;
+					ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
 					se.play(false, true);
 					++comb_;
 					return score;
 				case ECS::NoteState::State::GREAT:
 					DOUT << "GREAT" << std::endl;
+					ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
 					se.play(false, true);
 					++comb_;
 					return score;
 				case ECS::NoteState::State::PARFECT:
 					DOUT << "PARFECT" << std::endl;
+					ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
 					se.play(false, true);
 					++comb_;
 					return score;

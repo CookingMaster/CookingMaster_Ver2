@@ -32,7 +32,7 @@ namespace Scene
 
 		//こいつをtrueにするとオートモードになるぞ！
 		const bool autoPerfectMode =
-			//*
+			/*
 			IS_AUTO_PLAY/*/
 			false/**/;
 

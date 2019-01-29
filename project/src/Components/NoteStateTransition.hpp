@@ -167,6 +167,11 @@ namespace ECS
 			return seName_;
 		}
 
+		[[nodiscard]]const Vec2& getPos() const
+		{
+			return position_->val;
+		}
+
 	private:
 
 		//状態を遷移と各ノーツの挙動を行う
@@ -211,23 +216,29 @@ namespace ECS
 
 			switch (transCounter_.getCurrentCount())
 			{
-			case 0:	noteState_->state = NoteState::State::BAD;
-					break;
+			case 0:	
+				noteState_->state = NoteState::State::BAD;
+				break;
 
-			case 1:	noteState_->state = NoteState::State::GOOD;
-					break;
+			case 1:
+				noteState_->state = NoteState::State::GOOD;
+				break;
 
-			case 2:	noteState_->state = NoteState::State::GREAT;
-					break;
+			case 2:
+				noteState_->state = NoteState::State::GREAT;
+				break;
 
-			case 3:	noteState_->state = NoteState::State::PARFECT;
-				
-					break;
-			case 4:	noteState_->state = NoteState::State::GOOD;
-					break;
+			case 3:	
+				noteState_->state = NoteState::State::PARFECT;
+				break;
 
-			case 5:	noteState_->state = NoteState::State::MISS;
-					return;
+			case 4:	
+				noteState_->state = NoteState::State::GOOD;
+				break;
+
+			case 5:	
+				noteState_->state = NoteState::State::MISS;
+				return;
 
 			default: return;
 			}
@@ -255,6 +266,9 @@ namespace ECS
 		//状態をMISSED(グチャってなるアニメーション)に変更する
 		void ChangeStateMISSED()
 		{
+			//Sound se("");
+			//se.play();
+
 			transCounter_.setCounter(5, 1, 0, 1000);
 			noteState_->state = NoteState::State::MISSED;
 			changeNoteAnim(2, missedAnimSpd, true, true);
