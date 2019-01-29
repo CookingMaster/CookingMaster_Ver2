@@ -266,8 +266,8 @@ namespace ECS
 		//状態をMISSED(グチャってなるアニメーション)に変更する
 		void ChangeStateMISSED()
 		{
-			//Sound se("");
-			//se.play();
+			Sound se("miss");
+			se.play(false, true);
 
 			transCounter_.setCounter(5, 1, 0, 1000);
 			noteState_->state = NoteState::State::MISSED;

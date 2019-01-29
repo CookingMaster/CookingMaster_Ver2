@@ -54,6 +54,9 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/cut_effect_d.png", "slash", 4, 4, 1, 384, 256);
 		//斬撃エフェクト(悪)
 		ResourceManager::GetGraph().loadDiv("Resource/image/cut_effect_bad_d.png", "slash_bad", 4, 4, 1, 256, 256);
+
+		//グチャ
+		ResourceManager::GetSound().load("Resource/sound/SE/miss.ogg", "miss", SoundType::SE);
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
