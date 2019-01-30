@@ -20,6 +20,7 @@ namespace Scene
 
 		name_ = parame->get<std::string>("BGM_name");
 		bgmPath_ = parame->get<std::string>("BGM_path");
+		isAuto_ = parame->get<bool>("autoFlag");
 		bg_ = ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
 		
 		//size(522,255), pos(640,360):3‚Â‚Ìƒ{ƒ^ƒ“‚Ì‚¤‚¿¶‚Ì¶ã
@@ -38,7 +39,6 @@ namespace Scene
 		bg_->update();
 
 		moveCursor();
-		backToGame();
 		selectButton();
 
 	}
@@ -61,26 +61,27 @@ namespace Scene
 	{
 		if (Input::Get().getKeyFrame(KEY_INPUT_Z)) {
 			int select = frame_->getComponent<ECS::SelectFrame>().getSelect();
-			auto bgm_name = std::make_unique<Parameter>();
+			auto send_paramerter = std::make_unique<Parameter>();
 			switch (select)
 			{
 			case 0:
 			{
 				DOUT << "Game Continue" << std::endl;
-				bgm_name->add<std::string>("BGM_name", name_);
+				send_paramerter->add<std::string>("BGM_name", name_);
 				Sound bgm(name_);
 				bgm.play(false, false);
-				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
+				ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, send_paramerter.get(), StackPopFlag::POP, false);
 				break;
 			}
 			case 1:
 			{
 				DOUT << "Restart" << std::endl;
-				bgm_name->add<std::string>("BGM_name", name_);
+				send_paramerter->add<std::string>("BGM_name", name_);
 				auto number = name_.back();
-				bgm_name->add<size_t>("stageNum", static_cast<size_t>(atoi(&number)));
-				bgm_name->add<std::string>("BGM_path", bgmPath_);
-				ON_SCENE_CHANGE(SceneName::GAME, bgm_name.get(), StackPopFlag::ALL_CLEAR, true);
+				send_paramerter->add<size_t>("stageNum", static_cast<size_t>(atoi(&number)));
+				send_paramerter->add<std::string>("BGM_path", bgmPath_);
+				send_paramerter->add<bool>("autoFlag", isAuto_);
+				ON_SCENE_CHANGE(SceneName::GAME, send_paramerter.get(), StackPopFlag::ALL_CLEAR, true);
 				break;
 			}
 			case 2:
@@ -91,16 +92,6 @@ namespace Scene
 				break;
 			}
 			}
-		}
-	}
-	void Pause::backToGame()
-	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
-		{
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", name_);
-			Sound(name_).play(false, false);
-			ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
 		}
 	}
 

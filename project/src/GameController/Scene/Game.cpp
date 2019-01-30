@@ -16,6 +16,7 @@ namespace Scene
 		, bgmName_(parame->get<std::string>("BGM_name"))
 		, bgmPath_(parame->get<std::string>("BGM_path"))
 		, stageNum_(parame->get<size_t>("stageNum"))
+		, autoPerfectMode_(parame->get<bool>("autoFlag"))
 	{
 		//パラメーターに保存してある曲情報をもとに音楽ファイルと譜面を読み込む
 		ResourceManager::GetSound().load(
@@ -314,12 +315,13 @@ namespace Scene
 		//ポーズ画面遷移
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", bgmName_);
-			bgm_name->add<std::string>("BGM_path", bgmPath_);
+			auto send_parameter = std::make_unique<Parameter>();
+			send_parameter->add<std::string>("BGM_name", bgmName_);
+			send_parameter->add<std::string>("BGM_path", bgmPath_);
+			send_parameter->add<bool>("autoFlag", autoPerfectMode_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
-			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
+			ON_SCENE_CHANGE(SceneName::PAUSE, send_parameter.get(), StackPopFlag::NON, true);
 		}
 	}
 
