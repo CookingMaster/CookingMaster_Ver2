@@ -39,7 +39,6 @@ namespace Scene
 		bg_->update();
 
 		moveCursor();
-		backToGame();
 		selectButton();
 
 	}
@@ -93,16 +92,6 @@ namespace Scene
 				break;
 			}
 			}
-		}
-	}
-	void Pause::backToGame()
-	{
-		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
-		{
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", name_);
-			Sound(name_).play(false, false);
-			ON_SCENE_CHANGE(SceneName::BACK_TO_SCENE, bgm_name.get(), StackPopFlag::POP, false);
 		}
 	}
 
