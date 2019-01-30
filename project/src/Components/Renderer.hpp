@@ -80,6 +80,7 @@ namespace ECS
 			NOBLEND    = DX_BLENDMODE_NOBLEND,		//ノーブレンド（デフォルト）
 			ALPHA      = DX_BLENDMODE_ALPHA,		//ブレンド
 			ADD        = DX_BLENDMODE_ADD,			//加算ブレンド
+			HALF_ADD   = DX_BLENDMODE_HALF_ADD,		//半加算ブレンド
 			SUB        = DX_BLENDMODE_SUB,			//減算ブレンド
 			MULA	   = DX_BLENDMODE_MULA,			//乗算ブレンド
 			INVSRC     = DX_BLENDMODE_INVSRC,		//反転ブレンド
