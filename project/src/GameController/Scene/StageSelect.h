@@ -38,6 +38,7 @@ namespace Scene
 		int backVal_ = 0;
 		std::string bgmPath_;
 		bool isPlay_ = false;
+		bool isAuto_ = false;
 		size_t stageNum_ = 0u;
 		void entitySetUp();
 		void optionSheetMove();

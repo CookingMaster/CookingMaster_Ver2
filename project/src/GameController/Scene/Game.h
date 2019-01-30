@@ -32,7 +32,7 @@ namespace Scene
 		ECS::Entity* scoreFont_ = nullptr;
 
 		//こいつをtrueにするとオートモードになるぞ！
-		bool autoPerfectMode_ = false;
+		bool autoPerfectMode_;
 
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);

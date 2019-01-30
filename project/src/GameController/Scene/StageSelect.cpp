@@ -6,7 +6,7 @@
 #include "../src/Class/Sound.hpp"
 #include "../src/ArcheType/ArcheType.hpp"
 #include "../src/Components/musicName.hpp"
-
+#include "../src/Utility/String.hpp"
 namespace Scene
 {
 	
@@ -511,8 +511,8 @@ namespace Scene
 		optionSheetMove();
 		changeLayer();
 		setSoundVolume();
-		const auto bgm_path = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
-		if (bgm_path != "")
+		const auto select_bgm_path = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
+		if (select_bgm_path != "")
 		{
 			if (!isPlay_)
 			{
@@ -520,7 +520,17 @@ namespace Scene
 				std::ofstream ofs("Resource/system/gain.bin");
 				ofs << bgmVal_ << "\n" << seVal_;
 				isPlay_ = true;
-				bgmPath_ = bgm_path;
+				extension::std::String path = select_bgm_path;
+				if (path.split('|').size() >= 2)
+				{
+					auto str = path.split('|');
+					bgmPath_ = str[0];
+					isAuto_ = true;
+				}
+				else
+				{
+					bgmPath_ = select_bgm_path;
+				}
 				fade_->getComponent<ECS::SpriteDraw>().drawEnable();
 				Sound se("selectSE");
 				se.play(false,true);
@@ -539,6 +549,7 @@ namespace Scene
 			parameter->add<std::string>("BGM_name", "stage" + std::to_string(stageNum_));
 			parameter->add<size_t>("stageNum", stageNum_);
 			parameter->add<std::string>("BGM_path", bgmPath_);
+			parameter->add<bool>("autoFlag", isAuto_);
 			ON_SCENE_CHANGE(SceneName::GAME, parameter.get(), StackPopFlag::POP, true);
 		}
 	}

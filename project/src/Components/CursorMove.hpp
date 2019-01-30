@@ -201,12 +201,16 @@ namespace ECS
 			{
 				return stageNames[index_];
 			}
+			else if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1 && index_ < 3)
+			{
+				return stageNames[index_] + "|AUTO";
+			}
 			return "";
 		}
-		//!決定ボタン(Z)を押すと選択したステージ番号を返します
+		//!決定ボタン(ZまたはX)を押すと選択したステージ番号を返します
 		[[nodiscard]] const size_t getStageNumber() const
 		{
-			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ < 3)
+			if ((Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 || Input::Get().getKeyFrame(KEY_INPUT_X) == 1) && index_ < 3)
 			{
 				switch (index_)
 				{

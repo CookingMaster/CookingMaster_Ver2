@@ -23,9 +23,8 @@ namespace Scene
 		ECS::Entity* bg_ = nullptr;
 		std::string name_;
 		std::string bgmPath_;
-
+		bool isAuto_;
 		void selectButton();
-		void backToGame();
 		void moveCursor();
 
 	public:
