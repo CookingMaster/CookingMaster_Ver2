@@ -1,5 +1,6 @@
 Resource/image/notes/onion.png
 onion
+2
 Resource/sound/SE/onion.ogg
 2
 7

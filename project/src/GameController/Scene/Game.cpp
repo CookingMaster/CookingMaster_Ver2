@@ -58,6 +58,8 @@ namespace Scene
 
 		//グチャ
 		ResourceManager::GetSound().load("Resource/sound/SE/miss.ogg", "miss", SoundType::SE);
+		//グチャ画像
+		ResourceManager::GetGraph().loadDiv("Resource/image/dirty.png", "dirty", 3, 3, 1, 128, 75);
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景

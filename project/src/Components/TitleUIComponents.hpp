@@ -24,11 +24,13 @@ namespace ECS
 		Easing ease_;
 		bool bright_;
 		bool isDelete_;
+		float deleteTime_;
 
 	public:
 		FlashImage() :
 			bright_(false),
-			isDelete_(false) {}
+			isDelete_(false),
+			deleteTime_(0.f) {}
 
 		void initialize() override
 		{
@@ -44,7 +46,7 @@ namespace ECS
 		{
 			if (isDelete_)
 			{
-				ease_.run(Easing::CubicOut, 30.f);
+				ease_.run(Easing::CubicOut, deleteTime_);
 				alpha_->alpha = int(ease_.getVolume(255.f, 0.f));
 				if (ease_.isEaseEnd())
 				{
@@ -72,9 +74,10 @@ namespace ECS
 			}
 		}
 
-		void setIsDelete(bool isDelete)
+		void setIsDelete(bool isDelete, float deleteTime = 30.f)
 		{
 			isDelete_ = isDelete;
+			deleteTime_ = deleteTime;
 			ease_.reset();
 		}
 	};

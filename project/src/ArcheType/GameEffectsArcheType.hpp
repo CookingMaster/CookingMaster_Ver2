@@ -214,5 +214,36 @@ namespace ECS
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
+
+		//!グチャってなった残骸
+		static Entity* CreateDirty(
+			const char* divGraphicName,
+			const int id,
+			const Vec2& pos,
+			ECS::Direction::Dir dir,
+			EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+			float randx = float(GetRand(100) - 50);
+			float randy = 15.f;
+			e.addComponent<Transform>().setPosition(pos.x + randx, pos.y + randy);
+			e.addComponent<Color>();
+			e.addComponent<AlphaBlend>();
+			if (dir == ECS::Direction::Dir::R)
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName).turnGraph();
+			}
+			else
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName);
+			}
+			e.getComponent<SpriteAnimationDraw>().setIndex(id);
+
+			e.addComponent<FlashImage>().setIsDelete(true, 420.f);
+			e.addGroup(ENTITY_GROUP::GUCHA);
+
+			DOUT << entityManager->getEntitiesByGroup(ENTITY_GROUP::GUCHA).size() << std::endl;
+			return &e;
+		}
 	};
 }	//namespace ECS
