@@ -215,7 +215,7 @@ namespace Scene
 
 						//ノーツの状態を遷移
 						itnotestate.ActionToChangeNoteState();
-
+						createRankFont(0);
 						DOUT << "PARFECT" << std::endl;
 						se.play(false, true);
 						++comb_; 
@@ -370,8 +370,8 @@ namespace Scene
 	}
 	void Game::createRankFont(int rank)
 	{
-		ECS::UIArcheType::CreateRankFont("rank", Vec2{ System::SCREEN_WIDIH / 2.f, 200.f }, *entityManager_)
-			->getComponent<ECS::SpriteAnimationDraw>().setIndex(rank);
+		auto font = ECS::UIArcheType::CreateRankFont("rank", Vec2{ System::SCREEN_WIDIH / 2.f, 200.f }, *entityManager_);
+		font->getComponent<ECS::SpriteAnimationDraw>().setIndex(rank);
 		entityManager_->refresh();
 	}
 }

@@ -45,7 +45,6 @@ namespace Scene
 	void Pause::draw()
 	{
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		DrawFormatString(0, 0, 0xffffffff, "PAUSE");
 	}
 
 	Pause::~Pause()

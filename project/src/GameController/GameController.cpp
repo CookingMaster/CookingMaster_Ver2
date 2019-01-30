@@ -97,7 +97,7 @@ void GameController::update()
 void GameController::draw()
 {
 	//グループ順に描画
-	SetDrawMode(DX_DRAWMODE_BILINEAR);
+	SetDrawMode(DX_DRAWMODE_ANISOTROPIC);
 	sceneStack_.top()->draw();
 	SetDrawMode(DX_DRAWMODE_NEAREST);
 }
