@@ -166,7 +166,7 @@ namespace ECS
 	{
 	private:
 		Scale * scale_ = nullptr;
-		Easing ease_;
+		Easing easing_;
 
 		float start_, end_, speed_;
 
@@ -183,14 +183,19 @@ namespace ECS
 
 		void update() override
 		{
-			ease_.run(ease_.CubicIn, speed_);
-			scale_->val = ease_.getVolume(start_, end_);
+			easing_.run(easing_.CubicIn, speed_);
+			scale_->val = easing_.getVolume(start_, end_);
 		}
 
 		void reset()
 		{
-			ease_.reset();
-			scale_->val = ease_.getVolume(start_, end_);
+			easing_.reset();
+			scale_->val = easing_.getVolume(start_, end_);
+		}
+
+		[[nodiscard]] const bool isEaseEnd()
+		{
+			return easing_.isEaseEnd();
 		}
 	};
 
