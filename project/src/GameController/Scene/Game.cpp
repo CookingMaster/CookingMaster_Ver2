@@ -62,6 +62,9 @@ namespace Scene
 		ResourceManager::GetSound().load("Resource/sound/SE/miss.ogg", "miss", SoundType::SE);
 		//グチャ画像
 		ResourceManager::GetGraph().loadDiv("Resource/image/dirty.png", "dirty", 3, 3, 1, 128, 75);
+
+		//BAD時の音
+		ResourceManager::GetSound().load("Resource/sound/SE/suka.ogg", "suka", SoundType::SE);
 		
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
@@ -280,7 +283,11 @@ namespace Scene
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
 					ECS::GameEffectsArcheType::CreateSlashEffect("slash_bad", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
-					comboReset();
+					comboReset(); 
+					{
+						Sound suka("suka");
+						suka.play(false, true);
+					}
 					createRankFont(3);
 					return score;
 				case ECS::NoteState::State::GOOD:
