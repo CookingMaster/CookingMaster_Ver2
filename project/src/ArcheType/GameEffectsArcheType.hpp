@@ -191,11 +191,13 @@ namespace ECS
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteDraw>(graphicName);
 			e.addComponent<KillEntity>(lifeSpan);
 			e.addComponent<Canvas>();
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
@@ -205,12 +207,14 @@ namespace ECS
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<Rectangle>(rectAngle);
 			e.addComponent<SpriteRectDraw>(graphicName);
-			e.addComponent<DrawFont2>(50.f, 100.f, combNum);
+			e.addComponent<DrawFont2>(59.f, 75.f, combNum);
 			e.addComponent<KillEntity>(lifeSpan);
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}

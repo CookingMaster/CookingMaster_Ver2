@@ -16,6 +16,7 @@ namespace Scene
 		, bgmName_(parame->get<std::string>("BGM_name"))
 		, bgmPath_(parame->get<std::string>("BGM_path"))
 		, stageNum_(parame->get<size_t>("stageNum"))
+		, autoPerfectMode_(parame->get<bool>("autoFlag"))
 	{
 		//パラメーターに保存してある曲情報をもとに音楽ファイルと譜面を読み込む
 		ResourceManager::GetSound().load(
@@ -33,6 +34,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
 		//鍋
 		ResourceManager::GetGraph().loadDiv("Resource/image/bg_nabe1.png", "nabe1", 8, 8, 1, 140, 148);
+		ResourceManager::GetGraph().loadDiv("Resource/image/bg_nabe2.png", "nabe2", 8, 8, 1, 186, 98);
 		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/bg_back.png", "bg_back");
@@ -67,6 +69,8 @@ namespace Scene
 		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		//鍋
 		ECS::GameEffectsArcheType::CreateSaucepan("nabe1", Vec2(431.f, 175.f), entityManager_);
+		auto nabe2 = ECS::GameEffectsArcheType::CreateSaucepan("nabe2", Vec2{ 720.f,217.f }, entityManager_);
+		nabe2->getComponent < ECS::Animator>().changeFrame(5);
 		//ファン
 		ResourceManager::GetGraph().load("Resource/image/bg_fan2.png", "fan");
 		ECS::GameEffectsArcheType::CreateFan("fan", Vec2{ 1173.f, 96.f }, entityManager_);
@@ -78,7 +82,7 @@ namespace Scene
 			Vec2(System::SCREEN_WIDIH / 2.f, (System::SCREEN_HEIGHT / 2.f) + 30),
 			msl_.getBPM(),
 			msl_.getBeat(),
-			autoPerfectMode,
+			autoPerfectMode_,
 			*entityManager_);
 		//スコア表示
 		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), *entityManager_);
@@ -195,7 +199,7 @@ namespace Scene
 		auto& note = entityManager_->getEntitiesByGroup(ENTITY_GROUP::NOTE);
 
 		//オートモードがオンのときの処理
-		if (autoPerfectMode)
+		if (autoPerfectMode_)
 		{
 			for (auto& it : note)
 			{
@@ -214,7 +218,7 @@ namespace Scene
 
 						//ノーツの状態を遷移
 						itnotestate.ActionToChangeNoteState();
-
+						createRankFont(0);
 						DOUT << "PARFECT" << std::endl;
 						se.play(false, true);
 						++comb_; 
@@ -313,12 +317,13 @@ namespace Scene
 		//ポーズ画面遷移
 		if (Input::Get().getKeyFrame(KEY_INPUT_C) == 1)
 		{
-			auto bgm_name = std::make_unique<Parameter>();
-			bgm_name->add<std::string>("BGM_name", bgmName_);
-			bgm_name->add<std::string>("BGM_path", bgmPath_);
+			auto send_parameter = std::make_unique<Parameter>();
+			send_parameter->add<std::string>("BGM_name", bgmName_);
+			send_parameter->add<std::string>("BGM_path", bgmPath_);
+			send_parameter->add<bool>("autoFlag", autoPerfectMode_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
-			ON_SCENE_CHANGE(SceneName::PAUSE, bgm_name.get(), StackPopFlag::NON, true);
+			ON_SCENE_CHANGE(SceneName::PAUSE, send_parameter.get(), StackPopFlag::NON, true);
 		}
 	}
 
@@ -333,17 +338,21 @@ namespace Scene
 			sendParame->add<int>("maxcombo", maxComb_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
-			switch (stageNum_)
+			//オートモードは記録しない
+			if (!autoPerfectMode_)
 			{
-			case 1:
-				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_);
-				break;
-			case 2:
-				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_);
-				break;
-			case 3:
-				ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
-				break;
+				switch (stageNum_)
+				{
+				case 1:
+					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_);
+					break;
+				case 2:
+					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_);
+					break;
+				case 3:
+					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
+					break;
+				}
 			}
 			ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 		}
@@ -365,8 +374,8 @@ namespace Scene
 	}
 	void Game::createRankFont(int rank)
 	{
-		ECS::UIArcheType::CreateRankFont("rank", Vec2{ System::SCREEN_WIDIH / 2.f, 200.f }, *entityManager_)
-			->getComponent<ECS::SpriteAnimationDraw>().setIndex(rank);
+		auto font = ECS::UIArcheType::CreateRankFont("rank", Vec2{ System::SCREEN_WIDIH / 2.f, 200.f }, *entityManager_);
+		font->getComponent<ECS::SpriteAnimationDraw>().setIndex(rank);
 		entityManager_->refresh();
 	}
 }

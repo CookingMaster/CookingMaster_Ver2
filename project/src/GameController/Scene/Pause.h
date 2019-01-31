@@ -16,16 +16,15 @@ namespace Scene
 	{
 	private:
 		ECS::EntityManager* entityManager_;
-		ECS::Entity* slide;
-		ECS::Entity* button;
-		ECS::Entity* moji;
-		ECS::Entity* frame;
-		ECS::Entity* bg;
-		std::string name;
-		std::string bgmPath;
-
+		ECS::Entity* slide_ = nullptr;
+		ECS::Entity* button_ = nullptr;
+		ECS::Entity* moji_ = nullptr;
+		ECS::Entity* frame_ = nullptr;
+		ECS::Entity* bg_ = nullptr;
+		std::string name_;
+		std::string bgmPath_;
+		bool isAuto_;
 		void selectButton();
-		void backToGame();
 		void moveCursor();
 
 	public:

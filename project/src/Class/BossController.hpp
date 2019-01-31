@@ -24,9 +24,8 @@ private:
 	ECS::EntityManager& manager_;
 	void setComb(const int& num)
 	{
-		bossBalloon_ = ECS::GameEffectsArcheType::CreateBossBalloon("balloon", Vec2{ 300,140 }, 120, &manager_);
-		bossBalloon_->getComponent<ECS::Scale>().val = 1;
-		bossMessage_ = ECS::GameEffectsArcheType::CreateBossMessage("number", Vec2{ 150,120 }, ECS::Rectangle(0, 0, 50, 100), num, 120, &manager_);
+		bossBalloon_ = ECS::GameEffectsArcheType::CreateBossBalloon("balloon", Vec2{ 280,140 }, 120, &manager_);
+		bossMessage_ = ECS::GameEffectsArcheType::CreateBossMessage("number", Vec2{ 170,115 }, ECS::Rectangle(0, 0, 59, 75), num, 120, &manager_);
 	}
 public:
 	BossController(ECS::EntityManager& manager, int bpm, int beat, const std::string& soundName) :
@@ -35,7 +34,7 @@ public:
 	{
 		ResourceManager::GetGraph().loadDiv("Resource/image/chef.png","Boss",3,3,1,132,243);
 		ResourceManager::GetGraph().loadDiv("Resource/image/chef_face.png", "BossFace", 2,2, 1, 86, 70);
-		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");//かり
+		ResourceManager::GetGraph().load("Resource/image/score_font.png", "number");//かり
 		ResourceManager::GetGraph().load("Resource/image/hukidasi.png", "balloon");//かり
 		bossBody_ = ECS::GameEffectsArcheType::CreateBossBody("Boss", Vec2{100.f,235.f}, bpm, beat, soundName, &manager_);
 		bossFace_ = ECS::GameEffectsArcheType::CreateBossFace("BossFace", Vec2{ 10.f,12.f }, &manager_);

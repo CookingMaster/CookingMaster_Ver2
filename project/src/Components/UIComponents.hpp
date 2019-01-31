@@ -598,6 +598,7 @@ namespace ECS
 			rectangle_->x = (int)rect_.x * num_;
 			rectangle_->w = (int)rect_.x;
 			rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
+			rectDraw_->drawDisable();
 			setNumber();
 		}
 
