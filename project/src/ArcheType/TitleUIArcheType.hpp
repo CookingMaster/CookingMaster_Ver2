@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "../GameController/GameController.h"
 #include "../Components/TitleUIComponents.hpp"
 #include "../Components/UIComponents.hpp"
@@ -20,7 +20,7 @@ namespace ECS
 				goalpos,
 				90.f);
 
-			//ƒC[ƒWƒ“ƒO‚ªI—¹‚µ‚½‚çƒƒS‚Æˆê‚ÉÁ‚¦‚é
+			//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãŒçµ‚äº†ã—ãŸã‚‰ãƒ­ã‚´ã¨ä¸€ç·’ã«æ¶ˆãˆã‚‹
 			auto func = [](ECS::Entity* entity, EntityManager& entityManager, bool& isPushed)
 			{
 				if (!isPushed && entity->getComponent<EasingPosMove>().getIsEaseEnd())

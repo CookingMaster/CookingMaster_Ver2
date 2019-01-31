@@ -1,15 +1,15 @@
-/**
+ï»¿/**
 * @file Result.h
-* @brief ƒŠƒUƒ‹ƒgƒV[ƒ“
+* @brief ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³
 * @author yokota0717
 * @date 2018.11.22
 * @param history
 #- 2018.11.27 yokota0717
-- ƒNƒƒbƒVƒ…‚Æ—¿—’Ç‰Á
-- †á’Ç‰Á
+- ã‚¯ãƒ­ãƒƒã‚·ãƒ¥ã¨æ–™ç†è¿½åŠ 
+- ç´™å¹é›ªè¿½åŠ 
 #- 2018.11.29 yokota0717
-- ƒXƒRƒA“Ç‚İ‚İb’è”Å
-- Œ»“_‚Å‚ÍƒnƒCƒXƒRƒA‚ğ“Ç‚İ‚İA‚»‚ê‚ğ‚à‚Æ‚É—¿—‚Ì‰æ‘œ‚ğ•Ï‚¦‚Ä‚¢‚é
+- ã‚¹ã‚³ã‚¢èª­ã¿è¾¼ã¿æš«å®šç‰ˆ
+- ç¾æ™‚ç‚¹ã§ã¯ãƒã‚¤ã‚¹ã‚³ã‚¢ã‚’èª­ã¿è¾¼ã¿ã€ãã‚Œã‚’ã‚‚ã¨ã«æ–™ç†ã®ç”»åƒã‚’å¤‰ãˆã¦ã„ã‚‹
 */
 
 #pragma once
@@ -25,54 +25,54 @@ namespace Scene
 	class Result final : public AbstractScene
 	{
 	private:
-		//! ’è”
+		//! å®šæ•°
 		const int SCORE_GREAT = 80;
 		const int SCORE_GOOD = 50;
-		//! ƒGƒ“ƒeƒBƒeƒBƒ}ƒl[ƒWƒƒ[
+		//! ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 		ECS::EntityManager* entityManager_ = nullptr;
-		//! ƒtƒF[ƒh
+		//! ãƒ•ã‚§ãƒ¼ãƒ‰
 		ECS::Entity* fade_ = nullptr;
-		//! ”wŒi
+		//! èƒŒæ™¯
 		ECS::Entity* back_ = nullptr;
-		//! ƒNƒƒbƒVƒ…
+		//! ã‚¯ãƒ­ãƒƒã‚·ãƒ¥
 		ECS::Entity* cloche_ = nullptr;
-		//! —¿—
+		//! æ–™ç†
 		ECS::Entity* dish_ = nullptr;
-		//! †á
+		//! ç´™å¹é›ª
 		std::vector<ECS::Entity*> confetties_{ nullptr };
-		//! •]‰¿ƒtƒHƒ“ƒg
+		//! è©•ä¾¡ãƒ•ã‚©ãƒ³ãƒˆ
 		ECS::Entity* evaluation_ = nullptr;
-		//! ƒXƒRƒA”wŒi
+		//! ã‚¹ã‚³ã‚¢èƒŒæ™¯
 		ECS::Entity* black_ = nullptr;
-		//! ƒXƒRƒA
+		//! ã‚¹ã‚³ã‚¢
 		int score_ = 0;
-		//! Å‘åƒRƒ“ƒ{”
+		//! æœ€å¤§ã‚³ãƒ³ãƒœæ•°
 		int combo_ = 0;
-		//! Œo‰ßƒtƒŒ[ƒ€ƒJƒEƒ“ƒ^
+		//! çµŒéãƒ•ãƒ¬ãƒ¼ãƒ ã‚«ã‚¦ãƒ³ã‚¿
 		Counter counter_;
-		//! ƒXƒe[ƒWî•ñ
+		//! ã‚¹ãƒ†ãƒ¼ã‚¸æƒ…å ±
 		std::string bgmName_ = "";
 		ECS::StageHighScore stage_ = ECS::StageHighScore::NON;
-		//! ƒtƒF[ƒhƒAƒEƒgƒtƒ‰ƒO
+		//! ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆãƒ•ãƒ©ã‚°
 		bool isFadeOut_ = false;
 
-		//ƒŠƒUƒ‹ƒg‚Ìis“x‚ğŠÇ—‚·‚é
+		//ãƒªã‚¶ãƒ«ãƒˆã®é€²è¡Œåº¦ã‚’ç®¡ç†ã™ã‚‹
 		enum Timing {
-			CONFETTI = 100,		//†áo‚·
-			EVALUATION = 140,	//•]‰¿ƒtƒHƒ“ƒgo‚·
-			SCORE_BACK = 200,	//ƒXƒRƒA—p”wŒio‚·
-			SCOREFONT = 260,	//ƒXƒRƒA‚Ì•¶šo‚·
-			SCORE = 265,		//ƒXƒRƒA”šo‚·
-			COMBOFONT = 320,	//ƒRƒ“ƒ{‚Ì•¶šo‚·
-			COMBO = 325,		//ƒRƒ“ƒ{”o‚·
-			FADE_OUT = 500,		//ƒtƒF[ƒhƒAƒEƒgŠJn
+			CONFETTI = 100,		//ç´™å¹é›ªå‡ºã™
+			EVALUATION = 140,	//è©•ä¾¡ãƒ•ã‚©ãƒ³ãƒˆå‡ºã™
+			SCORE_BACK = 200,	//ã‚¹ã‚³ã‚¢ç”¨èƒŒæ™¯å‡ºã™
+			SCOREFONT = 260,	//ã‚¹ã‚³ã‚¢ã®æ–‡å­—å‡ºã™
+			SCORE = 265,		//ã‚¹ã‚³ã‚¢æ•°å­—å‡ºã™
+			COMBOFONT = 320,	//ã‚³ãƒ³ãƒœã®æ–‡å­—å‡ºã™
+			COMBO = 325,		//ã‚³ãƒ³ãƒœæ•°å‡ºã™
+			FADE_OUT = 500,		//ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆé–‹å§‹
 		};
 
-		//! ƒXƒRƒA‚©‚ç—¿—‚Ì‰æ‘œ‚ğİ’è‚·‚é
+		//! ã‚¹ã‚³ã‚¢ã‹ã‚‰æ–™ç†ã®ç”»åƒã‚’è¨­å®šã™ã‚‹
 		Vec2 setDishImg();
-		//! ƒXƒRƒA‚ğæ“¾‚·‚é
+		//! ã‚¹ã‚³ã‚¢ã‚’å–å¾—ã™ã‚‹
 		void setStage();
-		//! ƒXƒRƒA‚©‚ç•]‰¿ƒtƒHƒ“ƒg‚ÌƒCƒ“ƒfƒbƒNƒX‚ğİ’è‚·‚é
+		//! ã‚¹ã‚³ã‚¢ã‹ã‚‰è©•ä¾¡ãƒ•ã‚©ãƒ³ãƒˆã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’è¨­å®šã™ã‚‹
 		int getEvaluationIndex();
 	public:
 		Result(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);

@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file NoteStateTransition.hpp
-* @brief ƒm[ƒc‚Ìó‘Ô‘JˆÚ‚ğs‚¤
+* @brief ãƒãƒ¼ãƒ„ã®çŠ¶æ…‹é·ç§»ã‚’è¡Œã†
 * @author feveleK5563
 * @date 2018/10/26
 */
@@ -20,20 +20,20 @@ namespace ECS
 	{
 		enum struct State : short
 		{
-			NON,		//”»’è‚È‚µ
-			BAD,		//‚©‚·‚é
-			GOOD,		//“–‚½‚é(–})
-			GREAT,		//“–‚½‚é(—Ç)
-			PARFECT,	//“–‚½‚é(—D)
-			AUTO,		//ƒI[ƒgƒ‚[ƒh”»’è
-			MISS,		//ƒ~ƒX
+			NON,		//åˆ¤å®šãªã—
+			BAD,		//ã‹ã™ã‚‹
+			GOOD,		//å½“ãŸã‚‹(å‡¡)
+			GREAT,		//å½“ãŸã‚‹(è‰¯)
+			PARFECT,	//å½“ãŸã‚‹(å„ª)
+			AUTO,		//ã‚ªãƒ¼ãƒˆãƒ¢ãƒ¼ãƒ‰åˆ¤å®š
+			MISS,		//ãƒŸã‚¹
 
-			MISSED,		//“–‚½‚ç‚È‚©‚Á‚½
-			GRAZED,		//‚©‚·‚Á‚½
-			HITTED,		//“–‚½‚Á‚½
+			MISSED,		//å½“ãŸã‚‰ãªã‹ã£ãŸ
+			GRAZED,		//ã‹ã™ã£ãŸ
+			HITTED,		//å½“ãŸã£ãŸ
 		} state;
 
-		//Œü‚«
+		//å‘ã
 		ECS::Direction::Dir dir;
 
 		NoteState():
@@ -42,8 +42,8 @@ namespace ECS
 	};
 
 	/**
-	* @brief ƒm[ƒc‚Ìó‘Ô‘JˆÚŠÇ—ƒ}ƒ“
-	* - NoteStateAAnimatorByFrameAVelocityATransformAGravity‚ª•K—v
+	* @brief ãƒãƒ¼ãƒ„ã®çŠ¶æ…‹é·ç§»ç®¡ç†ãƒãƒ³
+	* - NoteStateã€AnimatorByFrameã€Velocityã€Transformã€GravityãŒå¿…è¦
 	*/
 	class NoteStateTransition final : public ComponentSystem
 	{
@@ -51,7 +51,7 @@ namespace ECS
 		const int HITTED_ANIMSPD = 4;
 		const int MISSED_ANIMSPD = 5;
 
-		std::array<AnimSheetData, 3> asd_;	//ƒAƒjƒ[ƒVƒ‡ƒ“‘JˆÚ‚Ì‚â‚Â
+		std::array<AnimSheetData, 3> asd_;	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é·ç§»ã®ã‚„ã¤
 		std::array<float, 4> hitJudge_;
 		float arrivalBeatTime_;
 		int dirtyID_;
@@ -66,8 +66,8 @@ namespace ECS
 		AlphaBlend* alphaBlend_ = nullptr;
 
 		std::array<float, 7> hitTimeLine_{};
-		Counter transCounter_;		//ó‘Ô‘JˆÚ‚ÌƒJƒEƒ“ƒg
-		Counter deathCounter_;		//€‚Ê‚Ü‚Å‚ÌŠÔŒv‘ª
+		Counter transCounter_;		//çŠ¶æ…‹é·ç§»ã®ã‚«ã‚¦ãƒ³ãƒˆ
+		Counter deathCounter_;		//æ­»ã¬ã¾ã§ã®æ™‚é–“è¨ˆæ¸¬
 		Counter_f flameCounter_;
 
 		EntityManager& entityManager_;
@@ -92,17 +92,17 @@ namespace ECS
 			gravity_ = &entity->getComponent<Gravity>();
 			alphaBlend_ = &entity->getComponent<AlphaBlend>();
 
-			/*NON ¨ BAD ¨ GOOD ¨ GREAT ¨ PARFECT ¨ AUTO ¨ GOOD ¨ MISS ‚Æó‘Ô‚ª‘JˆÚ‚·‚é
-			BAD‚Ì‚É“ü—Í‚ª‚ ‚é‚ÆGRAZED‚Ö‘JˆÚ‚·‚é
-			GOOD,GREAT,PARFECT‚Ì‚É“ü—Í‚ª‚ ‚é‚ÆHITTED‚Ö‘JˆÚ‚·‚é
-			ˆÈ‰º‚Ì—…—ñ‚ÍŠe”»’èŠJnŠÔ‚ÌŒvZ*/
-			hitTimeLine_[0] = arrivalBeatTime_ - (hitJudge_[3] + hitJudge_[2] + hitJudge_[1] + hitJudge_[0]);	//Non¨BAD
-			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge_[0];	//BAD¨GOOD
-			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge_[1];	//GOOD¨GREAT
-			hitTimeLine_[3] = hitTimeLine_[2] + hitJudge_[2];	//GREAT¨PARFECT
-			hitTimeLine_[4] = hitTimeLine_[3] + (hitJudge_[3] / 2.f);	//PARFECT¨AUTO
-			hitTimeLine_[5] = hitTimeLine_[3] + hitJudge_[3];	//AUTO¨GOOD
-			hitTimeLine_[6] = hitTimeLine_[4] + 10.f;			//GOOD¨MISS
+			/*NON â†’ BAD â†’ GOOD â†’ GREAT â†’ PARFECT â†’ AUTO â†’ GOOD â†’ MISS ã¨çŠ¶æ…‹ãŒé·ç§»ã™ã‚‹
+			BADã®æ™‚ã«å…¥åŠ›ãŒã‚ã‚‹ã¨GRAZEDã¸é·ç§»ã™ã‚‹
+			GOOD,GREAT,PARFECTã®æ™‚ã«å…¥åŠ›ãŒã‚ã‚‹ã¨HITTEDã¸é·ç§»ã™ã‚‹
+			ä»¥ä¸‹ã®ç¾…åˆ—ã¯å„åˆ¤å®šé–‹å§‹æ™‚é–“ã®è¨ˆç®—*/
+			hitTimeLine_[0] = arrivalBeatTime_ - (hitJudge_[3] + hitJudge_[2] + hitJudge_[1] + hitJudge_[0]);	//Nonâ†’BAD
+			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge_[0];	//BADâ†’GOOD
+			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge_[1];	//GOODâ†’GREAT
+			hitTimeLine_[3] = hitTimeLine_[2] + hitJudge_[2];	//GREATâ†’PARFECT
+			hitTimeLine_[4] = hitTimeLine_[3] + (hitJudge_[3] / 2.f);	//PARFECTâ†’AUTO
+			hitTimeLine_[5] = hitTimeLine_[3] + hitJudge_[3];	//AUTOâ†’GOOD
+			hitTimeLine_[6] = hitTimeLine_[4] + 10.f;			//GOODâ†’MISS
 
 			noteState_->state = NoteState::State::NON;
 		}
@@ -119,20 +119,20 @@ namespace ECS
 		}
 
 		/**
-		* @brief “ü—Í‚ğó‚¯‚½Œã‚Ìƒm[ƒc‚Ìó‘Ô‘JˆÚ‚ğs‚¤
+		* @brief å…¥åŠ›ã‚’å—ã‘ãŸå¾Œã®ãƒãƒ¼ãƒ„ã®çŠ¶æ…‹é·ç§»ã‚’è¡Œã†
 		*/
 		void ActionToChangeNoteState()
 		{
 			switch (noteState_->state)
 			{
-			case NoteState::State::BAD:	//‚©‚·‚Á‚Ä”ò‚ñ‚Å‚¢‚­
+			case NoteState::State::BAD:	//ã‹ã™ã£ã¦é£›ã‚“ã§ã„ã
 				noteState_->state = NoteState::State::GRAZED;
 				velocity_->val.x /= 1.1f;
 				velocity_->val.y = -30.f;
 				gravity_->val = 1.5f;
 				break;
 
-			case NoteState::State::GOOD:	//‚¿‚á‚ñ‚ÆØ‚ê‚é
+			case NoteState::State::GOOD:	//ã¡ã‚ƒã‚“ã¨åˆ‡ã‚Œã‚‹
 			case NoteState::State::GREAT:
 			case NoteState::State::PARFECT:
 			case NoteState::State::AUTO:
@@ -143,8 +143,8 @@ namespace ECS
 		}
 
 		/**
-		* @brief ƒm[ƒc‚Ìƒqƒbƒgˆ—‚ª—LŒø‚©”Û‚©‚ğæ“¾‚·‚é
-		* @return bool ƒqƒbƒgˆ—‚ª—LŒø‚©
+		* @brief ãƒãƒ¼ãƒ„ã®ãƒ’ãƒƒãƒˆå‡¦ç†ãŒæœ‰åŠ¹ã‹å¦ã‹ã‚’å–å¾—ã™ã‚‹
+		* @return bool ãƒ’ãƒƒãƒˆå‡¦ç†ãŒæœ‰åŠ¹ã‹
 		*/
 		[[nodiscard]] bool isActiveNote() const
 		{
@@ -159,25 +159,25 @@ namespace ECS
 			return false;
 		}
 
-		//Œ»İ‚Ìƒm[ƒc‚Ìó‘Ô‚ğæ“¾‚·‚é
+		//ç¾åœ¨ã®ãƒãƒ¼ãƒ„ã®çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹
 		[[nodiscard]]NoteState::State getNoteState() const
 		{
 			return noteState_->state;
 		}
 
-		//ƒm[ƒc‚ª¶‰E‚Ç‚¿‚ç‚©‚ç—ˆ‚Ä‚¢‚é‚©‚ğæ“¾‚·‚é
+		//ãƒãƒ¼ãƒ„ãŒå·¦å³ã©ã¡ã‚‰ã‹ã‚‰æ¥ã¦ã„ã‚‹ã‹ã‚’å–å¾—ã™ã‚‹
 		[[nodiscard]]ECS::Direction::Dir getNoteDir() const
 		{
 			return noteState_->dir;
 		}
 
-		//ƒm[ƒc‚Ég—p‚³‚ê‚éSE‚Ì–¼‘O‚ğæ“¾‚·‚é
+		//ãƒãƒ¼ãƒ„ã«ä½¿ç”¨ã•ã‚Œã‚‹SEã®åå‰ã‚’å–å¾—ã™ã‚‹
 		[[nodiscard]]const std::string& getSEName() const
 		{
 			return seName_;
 		}
 
-		//ƒm[ƒc‚ÌÀ•W‚ğæ“¾‚·‚é
+		//ãƒãƒ¼ãƒ„ã®åº§æ¨™ã‚’å–å¾—ã™ã‚‹
 		[[nodiscard]]const Vec2& getPos() const
 		{
 			return position_->val;
@@ -185,12 +185,12 @@ namespace ECS
 
 	private:
 
-		//ó‘Ô‚ğ‘JˆÚ‚ÆŠeƒm[ƒc‚Ì‹““®‚ğs‚¤
+		//çŠ¶æ…‹ã‚’é·ç§»ã¨å„ãƒãƒ¼ãƒ„ã®æŒ™å‹•ã‚’è¡Œã†
 		void transitionAndMove()
 		{
 			switch (noteState_->state)
 			{
-			//‚©‚·‚èó‘Ô‚¾‚Á‚½‚ç‰ñ“]‚µ‚È‚ª‚ç”ò‚ñ‚Å‚¢‚­
+			//ã‹ã™ã‚ŠçŠ¶æ…‹ã ã£ãŸã‚‰å›è»¢ã—ãªãŒã‚‰é£›ã‚“ã§ã„ã
 			case NoteState::State::GRAZED:
 				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
 				{
@@ -202,7 +202,7 @@ namespace ECS
 				}
 				return;
 
-			//ó‘Ô‚ªMISS‚¾‚Á‚½‚çMISSED‚É•ÏX‚·‚é
+			//çŠ¶æ…‹ãŒMISSã ã£ãŸã‚‰MISSEDã«å¤‰æ›´ã™ã‚‹
 			case NoteState::State::MISS:
 				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
 				{
@@ -210,7 +210,7 @@ namespace ECS
 				}
 				return;
 
-			//Á–Å‚ÌŠÔÛ‚É”–‚­‚È‚Á‚ÄÁ‚¦‚é
+			//æ¶ˆæ»…ã®é–“éš›ã«è–„ããªã£ã¦æ¶ˆãˆã‚‹
 			case NoteState::State::MISSED:
 				if (animator_->isAnimEnd() && alphaBlend_->alpha > 0)
 				{
@@ -260,7 +260,7 @@ namespace ECS
 			++transCounter_;
 		}
 
-		//ƒm[ƒc‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğ•ÏX‚µAˆê’èƒtƒŒ[ƒ€Œã‚ÉÁ‚¦‚é‚æ‚¤‚Éİ’è‚·‚é
+		//ãƒãƒ¼ãƒ„ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å¤‰æ›´ã—ã€ä¸€å®šãƒ•ãƒ¬ãƒ¼ãƒ å¾Œã«æ¶ˆãˆã‚‹ã‚ˆã†ã«è¨­å®šã™ã‚‹
 		void changeNoteAnim(int animMode, int animspd, bool isStopMove, bool isEndPhysics)
 		{
 			animator_->setSpriteNum(
@@ -278,7 +278,7 @@ namespace ECS
 			entity->updateComponent<KillEntity>();
 		}
 
-		//ó‘Ô‚ğMISSED(ƒOƒ`ƒƒ‚Á‚Ä‚È‚éƒAƒjƒ[ƒVƒ‡ƒ“)‚É•ÏX‚·‚é
+		//çŠ¶æ…‹ã‚’MISSED(ã‚°ãƒãƒ£ã£ã¦ãªã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³)ã«å¤‰æ›´ã™ã‚‹
 		void changeStateMISSED()
 		{
 			Sound se("miss");
@@ -289,7 +289,7 @@ namespace ECS
 			changeNoteAnim(2, MISSED_ANIMSPD, true, true);
 			rotation_->val = 0.f;
 
-			//ƒOƒ`ƒƒ‚Á‚Ä‚È‚Á‚½‚â‚Â‚Ì¶¬
+			//ã‚°ãƒãƒ£ã£ã¦ãªã£ãŸã‚„ã¤ã®ç”Ÿæˆ
 			ECS::GameEffectsArcheType::CreateDirty(
 				"dirty",
 				dirtyID_,
