@@ -275,6 +275,8 @@ namespace ECS
 			scale.val = 0;
 			auto& rota = std::get<3>(e_.back());
 			rota.val = 0;
+			//即反映する
+			update();
 		}
 		/*
 		@brief 子のエンティティの座標を指定した分だけずらします
