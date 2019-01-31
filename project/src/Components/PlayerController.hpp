@@ -46,18 +46,18 @@ namespace ECS {
 	class PlayerController final : public ComponentSystem
 	{
 	private:
-		Animator* animator_;
-		RecordAnimation* recData_;
-		BeatByTrigger* beatTrigger_;
-		PlayerState* state_;
+		Animator* animator_ = nullptr;
+		RecordAnimation* recData_ = nullptr;
+		BeatByTrigger* beatTrigger_ = nullptr;
+		PlayerState* state_ = nullptr;
 
 		Counter animCnt_;	//切りモーションの終了までの時間を計測したりする
-		bool handup = false;
+		bool handup_ = false;
 
 		const bool isAutoMode_;
 
 	public:
-		PlayerController(bool isAuto) :
+		PlayerController(const bool isAuto) :
 			animCnt_(0, 15),
 			isAutoMode_(isAuto) {};
 
@@ -125,15 +125,15 @@ namespace ECS {
 			//待機動作が次のリズムのタイミングになったらパタパタ
 			if (state_->val == PlayerState::State::Idle && beatTrigger_->getTrigger())
 			{
-				handup = !handup;
-				animator_->setIsMinusAnim(handup);
+				handup_ = !handup_;
+				animator_->setIsMinusAnim(handup_);
 				recData_->setAnimData((int)PlayerState::State::Idle, false);
 			}
 			//切りモーションが終了したら待機
 			if (state_->val != PlayerState::State::Idle && animCnt_.isMax())
 			{
-				handup = !handup;
-				animator_->setIsMinusAnim(handup);
+				handup_ = !handup_;
+				animator_->setIsMinusAnim(handup_);
 				state_->val = PlayerState::State::Idle;
 				recData_->setAnimData((int)PlayerState::State::Idle, false);
 				animator_->setIndexMax();

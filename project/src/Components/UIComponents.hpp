@@ -113,13 +113,14 @@ namespace ECS
 		float magni_;
 		float speed_;
 		float frame_;
-		bool flag_;
+		bool flag_ = false;
 	public:
-		ExpandReduceComponentSystem(float magni, float speed)
+		ExpandReduceComponentSystem(const float magni, const float speed):
+			magni_(magni),
+			speed_(speed),
+			frame_(0.f)
 		{
-			magni_ = magni;
-			speed_ = speed;
-			frame_ = 0.f;
+			
 		}
 
 		void initialize() override
@@ -266,8 +267,8 @@ namespace ECS
 	class BarComponentSystemY final : public ComponentSystem
 	{
 	private:
-		Rectangle * rectangle_;
-		Position* position_;
+		Rectangle* rectangle_ = nullptr;
+		Position* position_ = nullptr;
 		Easing ease_;
 
 		float posY = 0.f;
@@ -276,7 +277,7 @@ namespace ECS
 		int score_ = 0;
 
 	public:
-		BarComponentSystemY(int rectY, int maxScore) :
+		BarComponentSystemY(const int rectY, const int maxScore) :
 			maxScore_(maxScore),
 			imgRect_y_(rectY) {}
 
@@ -324,15 +325,15 @@ namespace ECS
 	class DrawFont final : public ComponentSystem
 	{
 	private:
-		Position * pos_ = nullptr;
+		Position* pos_ = nullptr;
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
 		int num_;
-		Vec2 rect_;
-		Vec2 initPos_;
+		Vec2 rect_{};
+		Vec2 initPos_{};
 
-		int font_[4];
+		int font_[4]{};
 
 		void setRectAndDraw(const bool isDraw = true)
 		{
@@ -357,7 +358,7 @@ namespace ECS
 		}
 
 	public:
-		DrawFont(float rectW, float rectH) :
+		DrawFont(const float rectW, const float rectH) :
 			num_(0)
 		{
 			rect_.x = rectW;
@@ -397,12 +398,12 @@ namespace ECS
 	class ButtonCommponent final : public ComponentSystem
 	{
 	private:
-		Position * pos_ = nullptr;
+		Position* pos_ = nullptr;
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
-		bool button_[3];
-		float posX_;
+		bool button_[3]{};
+		float posX_ = 0.f;
 		int rectW_;
 
 		void setRect(SpriteRectDraw* draw)
@@ -428,10 +429,9 @@ namespace ECS
 			}
 		}
 	public:
-		ButtonCommponent(int rect_w)
-		{
-			rectW_ = rect_w;
-		}
+		ButtonCommponent(const int rect_w):
+			rectW_(rect_w)
+		{}
 
 		void initialize() override
 		{
@@ -460,8 +460,8 @@ namespace ECS
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
-		int moji_[3];
-		float posX_;
+		int moji_[3]{};
+		float posX_ = 0.f;
 		int rectW_;
 
 		void setRect(SpriteRectDraw* draw)
@@ -479,10 +479,9 @@ namespace ECS
 			}
 		}
 	public:
-		ButtonMojiCommponent(int rectW)
-		{
-			rectW_ = rectW;
-		}
+		ButtonMojiCommponent(const int rectW):
+			rectW_(rectW)
+		{}
 		void initialize() override
 		{
 			pos_ = &entity->getComponent<Position>();
@@ -509,8 +508,8 @@ namespace ECS
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
-		float posX_;
-		int select_;
+		float posX_ = 0;
+		int select_ = 0;
 	public:
 		SelectFrame() {}
 		void initialize() override {
@@ -518,7 +517,6 @@ namespace ECS
 			rectangle_ = &entity->getComponent<Rectangle>();
 			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
 			posX_ = pos_->val.x;
-			select_ = 0;
 		}
 		void update() override {}
 		void draw2D() override {}
@@ -558,10 +556,10 @@ namespace ECS
 		SpriteRectDraw* rectDraw_ = nullptr;
 
 		int num_;
-		Vec2 rect_;
-		Vec2 initPos_;
+		Vec2 rect_{};
+		Vec2 initPos_{};
 
-		int font_[3];
+		int font_[3]{};
 
 		void setRectAndDraw(const bool isDraw = true)
 		{
@@ -586,7 +584,7 @@ namespace ECS
 		}
 
 	public:
-		DrawFont2(float rectW, float rectH, const int num) :
+		DrawFont2(const float rectW, const float rectH, const int num) :
 			num_(num)
 		{
 			rect_.x = rectW;
@@ -635,8 +633,8 @@ namespace ECS
 	class MarkerBodyController final : public ComponentSystem
 	{
 	private:
-		ExpandComponentSystem* expander;
-		BeatByTrigger* beatbt;
+		ExpandComponentSystem* expander = nullptr;
+		BeatByTrigger* beatbt = nullptr;
 		
 		int bpm_;
 		int beat_;
@@ -672,8 +670,8 @@ namespace ECS
 	{
 	private:
 		AlphaBlend * alphaBlend_ = nullptr;
-		int elapse_ = 0;
-		int fadeSpeed_ = 0;
+		int elapse_;
+		int fadeSpeed_;
 		Counter counter_;
 
 	public:

@@ -48,8 +48,8 @@ namespace ECS
 	class NoteStateTransition final : public ComponentSystem
 	{
 	private:
-		const int hittedAnimSpd = 4;
-		const int missedAnimSpd = 5;
+		const int HITTED_ANIMSPD = 4;
+		const int MISSED_ANIMSPD = 5;
 
 		std::array<AnimSheetData, 3> asd_;	//アニメーション遷移のやつ
 		std::array<float, 4> hitJudge_;
@@ -65,7 +65,7 @@ namespace ECS
 		Gravity* gravity_ = nullptr;
 		AlphaBlend* alphaBlend_ = nullptr;
 
-		std::array<float, 7> hitTimeLine_;
+		std::array<float, 7> hitTimeLine_{};
 		Counter transCounter_;		//状態遷移のカウント
 		Counter deathCounter_;		//死ぬまでの時間計測
 		Counter_f flameCounter_;
@@ -136,7 +136,7 @@ namespace ECS
 			case NoteState::State::GREAT:
 			case NoteState::State::PARFECT:
 			case NoteState::State::AUTO:
-				changeNoteAnim(1, hittedAnimSpd, true, false);
+				changeNoteAnim(1, HITTED_ANIMSPD, true, false);
 				noteState_->state = NoteState::State::HITTED;
 				break;
 			}
@@ -286,7 +286,7 @@ namespace ECS
 
 			transCounter_.setCounter(5, 1, 0, 1000);
 			noteState_->state = NoteState::State::MISSED;
-			changeNoteAnim(2, missedAnimSpd, true, true);
+			changeNoteAnim(2, MISSED_ANIMSPD, true, true);
 			rotation_->val = 0.f;
 
 			//グチャってなったやつの生成

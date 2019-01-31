@@ -40,8 +40,8 @@ namespace ECS
 		std::vector<Entity*> targetEntity_{};
 		Vec2 point_{0.f, 0.f};		//指し示す位置(主にメニューの名前が配置されている座標を格納)
 		size_t index_ = 0;
-		size_t preIndex = 0;
-		std::string stageNames[3]{};	//とりあえず3つ
+		size_t preIndex_ = 0;
+		std::string stageNames_[3]{};	//とりあえず3つ
 
 		void selectOption()
 		{
@@ -104,7 +104,7 @@ namespace ECS
 				se.play(false, true);
 				if (index_ > STAGE1) { --index_; }
 				else { index_ = STAGE3; }
-				preIndex = index_;
+				preIndex_ = index_;
 			}
 			if (index_ != OPTION && Input::Get().getKeyFrame(KEY_INPUT_DOWN) == 1)
 			{
@@ -112,7 +112,7 @@ namespace ECS
 				se.play(false, true);
 				if (index_ < STAGE3) { ++index_; }
 				else { index_ = STAGE1; }
-				preIndex = index_;
+				preIndex_ = index_;
 			}
 
 			//左右
@@ -126,7 +126,7 @@ namespace ECS
 			{
 				Sound se("move");
 				se.play(false, true);
-				if (index_ == OPTION) { index_ = preIndex; }
+				if (index_ == OPTION) { index_ = preIndex_; }
 			}
 			//オプションに移行
 			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ == OPTION)
@@ -169,9 +169,9 @@ namespace ECS
 		{
 			//曲名のセット
 			{
-				stageNames[0] = targetEntity_.at(0)->getComponent<ECS::MusicName>().val;
-				stageNames[1] = targetEntity_.at(1)->getComponent<ECS::MusicName>().val;
-				stageNames[2] = targetEntity_.at(2)->getComponent<ECS::MusicName>().val;
+				stageNames_[0] = targetEntity_.at(0)->getComponent<ECS::MusicName>().val;
+				stageNames_[1] = targetEntity_.at(1)->getComponent<ECS::MusicName>().val;
+				stageNames_[2] = targetEntity_.at(2)->getComponent<ECS::MusicName>().val;
 			}
 			select();
 			trans_->setPosition(point_.x - 100, point_.y);
@@ -199,11 +199,11 @@ namespace ECS
 		{
 			if (Input::Get().getKeyFrame(KEY_INPUT_Z) == 1 && index_ < 3)
 			{
-				return stageNames[index_];
+				return stageNames_[index_];
 			}
 			else if (Input::Get().getKeyFrame(KEY_INPUT_X) == 1 && index_ < 3)
 			{
-				return stageNames[index_] + "|AUTO";
+				return stageNames_[index_] + "|AUTO";
 			}
 			return "";
 		}

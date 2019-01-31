@@ -53,17 +53,15 @@ namespace ECS
 			//‰æ‘œŽ©‘Ì‚Ì‰ñ“]
 			rotate_->val = cnt_.getCurrentCount();
 			//‰æ‘œ‚Ì‰ñ“]ˆÚ“®ˆ—(’x‚©‚Á‚½‚©‚ç”÷–­‚É’²®)
-			double angle = PI / 180.0 + 0.015;
-			position_->val.x = static_cast<float>(
+			float angle = PI / 180.0f + 0.015f;
+			position_->val.x = 
 				center_.x 
-				+ (position_->val.x - center_.x) * cos(angle) 
-				- (position_->val.y - center_.y) * sin(angle)
-				);
-			position_->val.y = static_cast<float>(
+				+ (position_->val.x - center_.x) * cosf(angle) 
+				- (position_->val.y - center_.y) * sinf(angle);
+			position_->val.y = 
 				center_.y 
-				+ (position_->val.x - center_.x) * sin(angle) 
-				+ (position_->val.y - center_.y) * cos(angle)
-				);
+				+ (position_->val.x - center_.x) * sinf(angle) 
+				+ (position_->val.y - center_.y) * cosf(angle);
 		}
 	};
 
