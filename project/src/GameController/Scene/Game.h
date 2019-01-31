@@ -30,6 +30,9 @@ namespace Scene
 		int comb_ = 0;
 		int maxComb_ = 0;
 		ECS::Entity* scoreFont_ = nullptr;
+		ECS::Entity* start_ = nullptr;
+		Counter startUIcounter_;
+		const int startUIstopTime = 40;
 
 		//こいつをtrueにするとオートモードになるぞ！
 		bool autoPerfectMode_;
@@ -48,5 +51,6 @@ namespace Scene
 		void comboReset();
 		void saveMaxComb();
 		void createRankFont(int rank);
+		[[nodiscard]] const bool isStartUIEnd();
 	};
 }

@@ -13,6 +13,8 @@
 #include "../Components/TitleUIComponents.hpp"
 #include "../Components/BossAnimator.hpp"
 #include "../Components/BeatByTrigger.hpp"
+#include "../Utility/Easing.hpp"
+#include "../Components/ResultComponent.hpp"
 
 namespace ECS
 {
@@ -131,10 +133,11 @@ namespace ECS
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteDraw>(graphicName);
-			e.addComponent<EasingPosMove>();
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f)/*.setEasingFunction(Easing::CircIn)*/;
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}

@@ -44,6 +44,10 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
+		//CookingStartUI
+		ResourceManager::GetGraph().load("Resource/image/gameStart/gameStart.png", "start");
+		ResourceManager::GetGraph().loadDiv("Resource/image/gameStart/gong.png", "gong", 2, 2, 1, 150, 128);
+		ResourceManager::GetGraph().loadDiv("Resource/image/gameStart/star.png", "star", 2, 2, 1, 55, 53);
 
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
@@ -60,7 +64,7 @@ namespace Scene
 
 		//グチャ
 		ResourceManager::GetSound().load("Resource/sound/SE/miss.ogg", "miss", SoundType::SE);
-		
+
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
 		ECS::ArcheType::CreateEntity("bg_back", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
@@ -123,12 +127,14 @@ namespace Scene
 
 		if (!isPlay_ && fade[0]->getComponent<ECS::AlphaBlend>().alpha <= 0)
 		{
-			isPlay_ = true;
-			//曲の再生
-			Sound s(bgmName_);
-			if (!s.isPlay())
-			{
-				s.play(false, false);
+			if (isStartUIEnd()) {
+				isPlay_ = true;
+				//曲の再生
+				Sound s(bgmName_);
+				if (!s.isPlay())
+				{
+					s.play(false, false);
+				}
 			}
 		}
 		if (isPlay_)
@@ -219,7 +225,7 @@ namespace Scene
 						createRankFont(0);
 						DOUT << "PARFECT" << std::endl;
 						se.play(false, true);
-						++comb_; 
+						++comb_;
 						ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_, ECS::AlphaBlend::BlendMode::SUB);
 						return msl_.getPoint(nowstate, comb_);
 					}
@@ -375,5 +381,33 @@ namespace Scene
 		auto font = ECS::UIArcheType::CreateRankFont("rank", Vec2{ System::SCREEN_WIDIH / 2.f, 200.f }, *entityManager_);
 		font->getComponent<ECS::SpriteAnimationDraw>().setIndex(rank);
 		entityManager_->refresh();
+	}
+	const bool Game::isStartUIEnd()
+	{
+		//CookingStartUI
+		//拡大から停止まで
+		if (start_ == nullptr)
+		{
+			start_ = ECS::GameEffectsArcheType::CreateStartLogo("start", Vec2{ System::SCREEN_WIDIH / 2.f,System::SCREEN_HEIGHT / 2.f }, entityManager_);
+			startUIcounter_.setCounter(0, 1, 0, startUIstopTime);
+		}
+		if (start_->getComponent<ECS::ExpandComponentSystem>().isEaseEnd())
+		{
+			//止まる
+			startUIcounter_.add();
+		}
+		if (startUIcounter_.getCurrentCount() == startUIstopTime)
+		{
+			startUIcounter_.reset();
+			start_->removeComponent<ECS::ExpandComponentSystem>();
+			start_->addComponent<ECS::ExpandComponentSystem>(1.f, 10.f, 5.f);
+		}
+		start_->getComponent<ECS::ExpandComponentSystem>().update();
+		if (start_->getComponent<ECS::Scale>().val.x >= 10.f)
+		{
+			start_->destroy();
+			return true;
+		}
+		return false;
 	}
 }
