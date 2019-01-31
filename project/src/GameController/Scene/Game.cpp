@@ -215,7 +215,7 @@ namespace Scene
 					auto nowstate = itnotestate.getNoteState();
 					switch (nowstate)
 					{
-					case ECS::NoteState::State::PARFECT:
+					case ECS::NoteState::State::AUTO:
 						auto& player = entityManager_->getEntitiesByGroup(ENTITY_GROUP::GIRL)[0]->getComponent<ECS::PlayerController>();
 						player.playSlashAnim(itnotestate.getNoteDir());
 
@@ -305,6 +305,7 @@ namespace Scene
 					++comb_;
 					return score;
 				case ECS::NoteState::State::PARFECT:
+				case ECS::NoteState::State::AUTO:
 					DOUT << "PARFECT" << std::endl;
 					ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
 					se.play(false, true);
