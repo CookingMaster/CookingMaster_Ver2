@@ -58,7 +58,7 @@ namespace ECS
 				true);
 
 			entity->addComponent<NoteState>().dir = dir;
-			entity->addComponent<NoteStateTransition>(notesData, arrivalBeatTime);
+			entity->addComponent<NoteStateTransition>(notesData, arrivalBeatTime, entityManager_);
 
 			entity->addComponent<ReplayNotesComponents>(int(wait));
 

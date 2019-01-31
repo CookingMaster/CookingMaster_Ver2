@@ -1,5 +1,6 @@
 Resource/image/notes/potato.png
 potato
+2
 Resource/sound/SE/potato.ogg
 2
 7
