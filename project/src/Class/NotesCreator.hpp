@@ -11,7 +11,7 @@
 #include "../ArcheType/NotesArcheType.hpp"
 #include "../Class/Sound.hpp"
 
-class NotesCreator
+class NotesCreator final
 {
 #undef max
 private:

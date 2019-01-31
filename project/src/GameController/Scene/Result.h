@@ -22,7 +22,7 @@
 
 namespace Scene
 {
-	class Result : public AbstractScene
+	class Result final : public AbstractScene
 	{
 	private:
 		//! 定数
@@ -45,16 +45,16 @@ namespace Scene
 		//! スコア背景
 		ECS::Entity* black_ = nullptr;
 		//! スコア
-		int score_;
+		int score_ = 0;
 		//! 最大コンボ数
-		int combo_;
+		int combo_ = 0;
 		//! 経過フレームカウンタ
 		Counter counter_;
 		//! ステージ情報
-		std::string bgmName_;
-		ECS::StageHighScore stage_;
+		std::string bgmName_ = "";
+		ECS::StageHighScore stage_ = ECS::StageHighScore::NON;
 		//! フェードアウトフラグ
-		bool isFadeOut_;
+		bool isFadeOut_ = false;
 
 		//リザルトの進行度を管理する
 		enum Timing {

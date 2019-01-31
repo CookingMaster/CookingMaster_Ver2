@@ -6,7 +6,7 @@
 
 namespace ECS
 {
-	struct TitleUIArcheType
+	struct TitleUIArcheType final
 	{
 		static Entity* CreateMessageArchetype(const std::string& imgName, const Vec2& goalpos, EntityManager& entityManager)
 		{

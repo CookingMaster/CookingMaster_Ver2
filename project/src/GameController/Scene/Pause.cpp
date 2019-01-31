@@ -88,6 +88,7 @@ namespace Scene
 			{
 				DOUT << "Back To Select" << std::endl;
 				Sound(name_).stop();
+				ResourceManager::GetGraph().removeAll();
 				ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::ALL_CLEAR, true);
 				break;
 			}

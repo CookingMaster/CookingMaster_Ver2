@@ -14,22 +14,25 @@
 #include "../src/Class/BossController.hpp"
 namespace Scene
 {
-	class Game : public AbstractScene
+	class Game final : public AbstractScene
 	{
 	private:
 		ECS::Entity* fade_ = nullptr;
 		bool isPlay_ = false;
 		ECS::EntityManager* entityManager_ = nullptr;
-		int scoreNum_;
-		std::string bgmName_;
-		std::string bgmPath_;
+		int scoreNum_ = 0;
+		std::string bgmName_ = "";
+		std::string bgmPath_ = "";
 		size_t stageNum_;
-		std::unique_ptr<BossController> boss_;
+		std::unique_ptr<BossController> boss_ = nullptr;
 		MusicScoreLoader msl_;
 		NotesCreator nc_;
 		int comb_ = 0;
 		int maxComb_ = 0;
 		ECS::Entity* scoreFont_ = nullptr;
+		ECS::Entity* start_ = nullptr;
+		Counter startUIcounter_;
+		const int startUIstopTime = 40;
 
 		//こいつをtrueにするとオートモードになるぞ！
 		bool autoPerfectMode_;
@@ -48,5 +51,6 @@ namespace Scene
 		void comboReset();
 		void saveMaxComb();
 		void createRankFont(int rank);
+		[[nodiscard]] const bool isStartUIEnd();
 	};
 }

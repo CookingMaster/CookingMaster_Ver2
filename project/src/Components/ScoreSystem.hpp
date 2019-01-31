@@ -22,6 +22,7 @@ namespace ECS
 		STAGE2,
 		STAGE3,
 		STAGE4,
+		NON
 	};
 	struct ScoreData : public ComponentData
 	{

@@ -16,7 +16,7 @@
 
 //-----------------------------------------------------------------------------
 //読み込み&提供くん
-class MusicScoreLoader
+class MusicScoreLoader final
 {
 private:
 	int bpm_;
@@ -24,12 +24,13 @@ private:
 	int offsetTime_;
 	int noteAllNum_;	//休符以外のノーツの総数
 	int maxPoint_;		//最大点数
-	std::vector<NotesData> notesData_;
-	MusicData scoreData_;
+	std::vector<NotesData> notesData_{};
+	MusicData scoreData_{};
 
 public:
 	MusicScoreLoader() :
 		bpm_(0),
+		beat_(0),
 		offsetTime_(0),
 		noteAllNum_(0),
 		maxPoint_(0){}
@@ -173,6 +174,7 @@ public:
 			return 5 + combBonus;
 
 		case ECS::NoteState::State::PARFECT:
+		case ECS::NoteState::State::AUTO:
 			return 8 + combBonus;
 		}
 		return 0;

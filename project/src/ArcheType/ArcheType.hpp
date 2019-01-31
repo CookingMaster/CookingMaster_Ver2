@@ -18,7 +18,7 @@
 #include "../Input/Input.hpp"
 namespace ECS
 {
-	struct ArcheType
+	struct ArcheType final
 	{
 		//!Transformだけ持っているエンティティの生成
 		static Entity* CreatePlainEntity(const Vec2& pos, EntityManager& entityManager)

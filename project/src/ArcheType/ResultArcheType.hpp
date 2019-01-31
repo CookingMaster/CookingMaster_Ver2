@@ -13,7 +13,7 @@
 
 namespace ECS
 {
-	struct ResultArcheType
+	struct ResultArcheType final
 	{
 		static Entity* CreateClocheEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
 		{

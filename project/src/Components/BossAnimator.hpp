@@ -19,7 +19,7 @@ namespace ECS
 		SpriteAnimationDraw* sad_ = nullptr;
 		BeatByTrigger* beatTrigger_ = nullptr;
 		Position* position_ = nullptr;
-		bool shoulderUp = false;
+		bool shoulderUp_ = false;
 		Vec2 pos_ =  Vec2(0, 0);
 
 	public:
@@ -42,19 +42,19 @@ namespace ECS
 			//肩上げ状態からスタート
 			sad_->setIndex(0);
 			animator_->setIsMinusAnim(true);
-			shoulderUp = true;
+			shoulderUp_ = true;
 		}
 
 		void update() override
 		{
 			//肩上げの動きを行っている時
-			if (shoulderUp)
+			if (shoulderUp_)
 			{
 				//肩が完全に上がったら下げる
 				if (animator_->isAnimEnd())
 				{
 					animator_->setIsMinusAnim(false);
-					shoulderUp = false;
+					shoulderUp_ = false;
 				}
 			}
 			//肩下げの動きを行っている時
@@ -64,7 +64,7 @@ namespace ECS
 				if (beatTrigger_->getTrigger())
 				{
 					animator_->setIsMinusAnim(true);
-					shoulderUp = true;
+					shoulderUp_ = true;
 				}
 			}
 
