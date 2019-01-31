@@ -22,12 +22,14 @@ namespace ECS
 	private:
 		AlphaBlend* alpha_ = nullptr;
 		Easing ease_;
+		Counter waitCnt_;
 		bool bright_;
 		bool isDelete_;
 		float deleteTime_;
 
 	public:
 		FlashImage() :
+			waitCnt_(0, 1, 0, 0),
 			bright_(false),
 			isDelete_(false),
 			deleteTime_(0.f) {}
@@ -44,6 +46,12 @@ namespace ECS
 
 		void update() override
 		{
+			waitCnt_.add();
+			if (!waitCnt_.isMax())
+			{
+				return;
+			}
+
 			if (isDelete_)
 			{
 				ease_.run(Easing::CubicOut, deleteTime_);
@@ -79,6 +87,12 @@ namespace ECS
 			isDelete_ = isDelete;
 			deleteTime_ = deleteTime;
 			ease_.reset();
+		}
+
+		void setWaitTime(int waitTime)
+		{
+			waitCnt_.reset();
+			waitCnt_.setCounter(0, 1, 0, waitTime);
 		}
 	};
 
