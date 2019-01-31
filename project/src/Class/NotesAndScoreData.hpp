@@ -12,13 +12,13 @@
 #include "../Components/BasicComponents.hpp"
 
 //アニメーションのスタート位置と枚数
-struct AnimSheetData
+struct AnimSheetData final
 {
 	int xmin, ymin, xmax, ymax;
 };
 
 //ノーツに使用される各種データ
-struct NotesData
+struct NotesData final
 {
 	std::string imagePath;	//画像のパス
 	std::string imageName;	//画像名
@@ -36,7 +36,7 @@ struct NotesData
 };
 
 //一つの音符のデータ
-struct OneNoteData
+struct OneNoteData final
 {
 	int notesID;				//ノーツ番号
 	ECS::Direction::Dir dir;	//ノーツの向き

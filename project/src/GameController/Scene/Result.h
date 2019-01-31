@@ -22,7 +22,7 @@
 
 namespace Scene
 {
-	class Result : public AbstractScene
+	class Result final : public AbstractScene
 	{
 	private:
 		//! ’è”

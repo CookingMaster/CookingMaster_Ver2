@@ -14,7 +14,7 @@
 #include "../src/Class/BossController.hpp"
 namespace Scene
 {
-	class Game : public AbstractScene
+	class Game final : public AbstractScene
 	{
 	private:
 		ECS::Entity* fade_ = nullptr;

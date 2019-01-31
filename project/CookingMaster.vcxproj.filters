@@ -140,9 +140,6 @@
     <ClInclude Include="src\Components\TitleUIComponents.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\ArcheType\SelectArchetype.hpp">
-      <Filter>src\ArcheType</Filter>
-    </ClInclude>
     <ClInclude Include="src\Components\CursorMove.hpp">
       <Filter>src\Components</Filter>
     </ClInclude>

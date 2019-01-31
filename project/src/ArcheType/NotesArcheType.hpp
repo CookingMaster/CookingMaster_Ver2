@@ -14,7 +14,7 @@
 
 namespace ECS
 {
-	struct NotesArcheType
+	struct NotesArcheType final
 	{
 		static Entity* CreateNotes(
 			const NotesData& notesData,

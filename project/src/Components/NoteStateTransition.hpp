@@ -16,7 +16,7 @@
 #include "../ArcheType/GameEffectsArcheType.hpp"
 namespace ECS
 {
-	struct NoteState : public ComponentData
+	struct NoteState final : public ComponentData
 	{
 		enum struct State : short
 		{
@@ -45,7 +45,7 @@ namespace ECS
 	* @brief ノーツの状態遷移管理マン
 	* - NoteState、AnimatorByFrame、Velocity、Transform、Gravityが必要
 	*/
-	class NoteStateTransition : public ComponentSystem
+	class NoteStateTransition final : public ComponentSystem
 	{
 	private:
 		const int hittedAnimSpd = 4;

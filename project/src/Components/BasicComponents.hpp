@@ -249,7 +249,6 @@ namespace ECS
 	@brief UI等の配置に適したコンポーネントです
 	@details Transformが必要です。
 	- Canvasに追従する形で子のエンティティは動きます
-	- 子になっているエンティティ単体では動かせません
 	*/
 	class Canvas final : public ComponentSystem
 	{
@@ -371,4 +370,4 @@ namespace ECS
 		}
 
 	};
-}
+}	//namespace ECS

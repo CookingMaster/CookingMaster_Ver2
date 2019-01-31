@@ -18,7 +18,7 @@
 
 namespace ECS
 {
-	struct GameEffectsArcheType
+	struct GameEffectsArcheType final
 	{
 		//!マーカー
 		static Entity* CreateMarker(const char* graphicName, const std::string& musicName, int bpm, int beat, ECS::Direction::Dir dir, const Vec2& pos, EntityManager* entityManager)

@@ -12,7 +12,7 @@
 
 namespace Scene
 {
-	class Title : public AbstractScene
+	class Title final : public AbstractScene
 	{
 	private:
 		ECS::EntityManager* entityManager_;

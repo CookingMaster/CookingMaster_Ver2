@@ -15,7 +15,7 @@ namespace ECS
 	/*
 	@brief 曲名保存用のデータです。拡張子まで指定してください
 	*/
-	struct MusicName : public ComponentData
+	struct MusicName final : public ComponentData
 	{
 		std::string val = "";
 		MusicName(const std::string& name) :

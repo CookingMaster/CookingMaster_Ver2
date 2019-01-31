@@ -12,7 +12,7 @@
 
 namespace ECS
 {
-	struct Player
+	struct Player final
 	{
 		static Entity* CreatePlayer(std::string& soundName, const char* graphicName, const Vec2& imgSize, const Vec2& pos, const int bpm, const int beat, bool isAuto, EntityManager& entityManager_)
 		{

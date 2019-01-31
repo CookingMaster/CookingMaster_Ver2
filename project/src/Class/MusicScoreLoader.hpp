@@ -16,7 +16,7 @@
 
 //-----------------------------------------------------------------------------
 //読み込み&提供くん
-class MusicScoreLoader
+class MusicScoreLoader final
 {
 private:
 	int bpm_;

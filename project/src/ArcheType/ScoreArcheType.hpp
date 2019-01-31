@@ -13,7 +13,7 @@
 
 namespace ECS
 {
-	struct ScoreArcheType
+	struct ScoreArcheType final
 	{
 
 		//!リザルト画面で得点を表示するためのエンティティです。生成時にハイスコアを保存します
