@@ -128,7 +128,7 @@ namespace ECS
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
-		//!開始の合図
+		//!CookingStartのフォント
 		static Entity* CreateStartLogo(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
@@ -137,6 +137,19 @@ namespace ECS
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteDraw>(graphicName);
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f)/*.setEasingFunction(Easing::CircIn)*/;
+			e.addGroup(ENTITY_GROUP::UI);
+			return &e;
+		}
+		//! お玉とフライパン
+		static Entity* CreateStartLogo(const char* graphicName, const int index, const Vec2& pos, EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			e.addComponent<Color>();
+			e.addComponent<AlphaBlend>();
+			e.addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
 			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f)/*.setEasingFunction(Easing::CircIn)*/;
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
@@ -219,6 +232,38 @@ namespace ECS
 			e.addComponent<KillEntity>(lifeSpan);
 			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
+			return &e;
+		}
+
+		//!グチャってなった残骸
+		static Entity* CreateDirty(
+			const char* divGraphicName,
+			const int id,
+			const Vec2& pos,
+			ECS::Direction::Dir dir,
+			EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+			float randx = float(GetRand(100) - 50);
+			float randy = 15.f;
+			e.addComponent<Transform>().setPosition(pos.x + randx, pos.y + randy);
+			e.addComponent<Color>();
+			e.addComponent<AlphaBlend>();
+			if (dir == ECS::Direction::Dir::R)
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName).turnGraph();
+			}
+			else
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName);
+			}
+			e.getComponent<SpriteAnimationDraw>().setIndex(id);
+
+			e.addComponent<FlashImage>().setIsDelete(true);
+			e.getComponent<FlashImage>().setWaitTime(400);
+			e.addGroup(ENTITY_GROUP::GUCHA);
+
+			DOUT << entityManager->getEntitiesByGroup(ENTITY_GROUP::GUCHA).size() << std::endl;
 			return &e;
 		}
 	};

@@ -208,6 +208,7 @@ private:
 		notesData_.emplace_back();
 		fin >> notesData_.back().imagePath
 			>> notesData_.back().imageName
+			>> notesData_.back().dirtyID
 			>> notesData_.back().seName
 			>> notesData_.back().arrivalBeatTime
 			>> notesData_.back().hitJudge[0]	//BAD

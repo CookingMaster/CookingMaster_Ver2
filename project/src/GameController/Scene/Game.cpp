@@ -38,6 +38,7 @@ namespace Scene
 		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/bg_back.png", "bg_back");
+		ResourceManager::GetGraph().load("Resource/image/rakugaki.png", "rakugaki");
 		ResourceManager::GetGraph().load("Resource/image/bg_table.png", "bg_table");
 		ResourceManager::GetGraph().load("Resource/image/mori1.png", "mori_full");
 		ResourceManager::GetGraph().load("Resource/image/mori2.png", "mori_empty");
@@ -64,11 +65,17 @@ namespace Scene
 
 		//グチャ
 		ResourceManager::GetSound().load("Resource/sound/SE/miss.ogg", "miss", SoundType::SE);
+		//グチャ画像
+		ResourceManager::GetGraph().loadDiv("Resource/image/dirty.png", "dirty", 3, 3, 1, 128, 75);
+
+		//BAD時の音
+		ResourceManager::GetSound().load("Resource/sound/SE/suka.ogg", "suka", SoundType::SE);
 
 		nc_.set(msl_.getBPM(), msl_.getBeat(), msl_.getOffsetTime());
 		//背景
 		ECS::ArcheType::CreateEntity("bg_back", Vec2(0.f, 0.f), *entityManager_, ENTITY_GROUP::BACK);
 		ECS::ArcheType::CreateEntity("bg_table", Vec2(0.f, 193.f), *entityManager_, ENTITY_GROUP::BACK_OBJECT);
+		ECS::ArcheType::CreateEntity("rakugaki", Vec2{ 0.f,-28.f }, *entityManager_, ENTITY_GROUP::BACK_OBJECT);
 		//鍋
 		ECS::GameEffectsArcheType::CreateSaucepan("nabe1", Vec2(431.f, 175.f), entityManager_);
 		auto nabe2 = ECS::GameEffectsArcheType::CreateSaucepan("nabe2", Vec2{ 720.f,217.f }, entityManager_);
@@ -284,7 +291,11 @@ namespace Scene
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
 					ECS::GameEffectsArcheType::CreateSlashEffect("slash_bad", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
-					comboReset();
+					comboReset(); 
+					{
+						Sound suka("suka");
+						suka.play(false, true);
+					}
 					createRankFont(3);
 					return score;
 				case ECS::NoteState::State::GOOD:
@@ -388,7 +399,9 @@ namespace Scene
 		//拡大から停止まで
 		if (start_ == nullptr)
 		{
-			start_ = ECS::GameEffectsArcheType::CreateStartLogo("start", Vec2{ System::SCREEN_WIDIH / 2.f,System::SCREEN_HEIGHT / 2.f }, entityManager_);
+			start_ = ECS::GameEffectsArcheType::CreateStartLogo(
+				"start", Vec2{ System::SCREEN_WIDIH / 2.f,System::SCREEN_HEIGHT / 2.f }, entityManager_
+			);
 			startUIcounter_.setCounter(0, 1, 0, startUIstopTime);
 		}
 		if (start_->getComponent<ECS::ExpandComponentSystem>().isEaseEnd())
@@ -398,6 +411,7 @@ namespace Scene
 		}
 		if (startUIcounter_.getCurrentCount() == startUIstopTime)
 		{
+			//拡大して消えていく
 			startUIcounter_.reset();
 			start_->removeComponent<ECS::ExpandComponentSystem>();
 			start_->addComponent<ECS::ExpandComponentSystem>(1.f, 10.f, 5.f);
@@ -405,6 +419,7 @@ namespace Scene
 		start_->getComponent<ECS::ExpandComponentSystem>().update();
 		if (start_->getComponent<ECS::Scale>().val.x >= 10.f)
 		{
+			//完全に消す
 			start_->destroy();
 			return true;
 		}

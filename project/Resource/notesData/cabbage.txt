@@ -1,5 +1,6 @@
 Resource/image/notes/cabbage.png
 cabbage
+1
 Resource/sound/SE/cabbage.ogg
 2
 7
