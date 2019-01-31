@@ -25,6 +25,7 @@ namespace ECS
 			GOOD,		//当たる(凡)
 			GREAT,		//当たる(良)
 			PARFECT,	//当たる(優)
+			AUTO,		//オートモード判定
 			MISS,		//ミス
 
 			MISSED,		//当たらなかった
@@ -64,7 +65,7 @@ namespace ECS
 		Gravity* gravity_ = nullptr;
 		AlphaBlend* alphaBlend_ = nullptr;
 
-		std::array<float, 6> hitTimeLine_;
+		std::array<float, 7> hitTimeLine_;
 		Counter transCounter_;		//状態遷移のカウント
 		Counter deathCounter_;		//死ぬまでの時間計測
 		Counter_f flameCounter_;
@@ -91,16 +92,17 @@ namespace ECS
 			gravity_ = &entity->getComponent<Gravity>();
 			alphaBlend_ = &entity->getComponent<AlphaBlend>();
 
-			/*NON → BAD → GOOD → GREAT → PARFECT → GOOD → MISSED と状態が遷移する
+			/*NON → BAD → GOOD → GREAT → PARFECT → AUTO → GOOD → MISS と状態が遷移する
 			BADの時に入力があるとGRAZEDへ遷移する
 			GOOD,GREAT,PARFECTの時に入力があるとHITTEDへ遷移する
 			以下の羅列は各判定開始時間の計算*/
-			hitTimeLine_[0] = arrivalBeatTime_ - ((hitJudge_[3] / 2.f) + hitJudge_[2] + hitJudge_[1] + hitJudge_[0]);	//Non
-			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge_[0];	//BAD
-			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge_[1];	//GOOD
-			hitTimeLine_[3] = hitTimeLine_[2] + hitJudge_[2];	//GREAT
-			hitTimeLine_[4] = hitTimeLine_[3] + hitJudge_[3];	//PARFECT
-			hitTimeLine_[5] = hitTimeLine_[4] + 10.f;			//MISSED
+			hitTimeLine_[0] = arrivalBeatTime_ - (hitJudge_[3] + hitJudge_[2] + hitJudge_[1] + hitJudge_[0]);	//Non→BAD
+			hitTimeLine_[1] = hitTimeLine_[0] + hitJudge_[0];	//BAD→GOOD
+			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge_[1];	//GOOD→GREAT
+			hitTimeLine_[3] = hitTimeLine_[2] + hitJudge_[2];	//GREAT→PARFECT
+			hitTimeLine_[4] = hitTimeLine_[3] + (hitJudge_[3] / 2.f);	//PARFECT→AUTO
+			hitTimeLine_[5] = hitTimeLine_[3] + hitJudge_[3];	//AUTO→GOOD
+			hitTimeLine_[6] = hitTimeLine_[4] + 10.f;			//GOOD→MISS
 
 			noteState_->state = NoteState::State::NON;
 		}
@@ -133,6 +135,7 @@ namespace ECS
 			case NoteState::State::GOOD:	//ちゃんと切れる
 			case NoteState::State::GREAT:
 			case NoteState::State::PARFECT:
+			case NoteState::State::AUTO:
 				changeNoteAnim(1, hittedAnimSpd, true, false);
 				noteState_->state = NoteState::State::HITTED;
 				break;
@@ -148,7 +151,8 @@ namespace ECS
 			if (noteState_->state == NoteState::State::BAD		||
 				noteState_->state == NoteState::State::GOOD		||
 				noteState_->state == NoteState::State::GREAT	||
-				noteState_->state == NoteState::State::PARFECT)
+				noteState_->state == NoteState::State::PARFECT	||
+				noteState_->state == NoteState::State::AUTO)
 			{
 				return true;
 			}
@@ -238,12 +242,16 @@ namespace ECS
 			case 3:	
 				noteState_->state = NoteState::State::PARFECT;
 				break;
-
-			case 4:	
-				noteState_->state = NoteState::State::GOOD;
+				
+			case 4:
+				noteState_->state = NoteState::State::AUTO;
 				break;
 
 			case 5:	
+				noteState_->state = NoteState::State::GOOD;
+				break;
+
+			case 6:	
 				noteState_->state = NoteState::State::MISS;
 				return;
 

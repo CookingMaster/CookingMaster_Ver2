@@ -5,8 +5,8 @@ Resource/sound/SE/tomato.ogg
 2
 7
 2
-1
-7
+2
+6
 300 200
 10
 5 3
