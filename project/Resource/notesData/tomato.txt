@@ -1,5 +1,6 @@
 Resource/image/notes/tomato.png
 tomato
+0
 Resource/sound/SE/tomato.ogg
 2
 7

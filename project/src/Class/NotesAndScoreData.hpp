@@ -22,6 +22,7 @@ struct NotesData
 {
 	std::string imagePath;	//画像のパス
 	std::string imageName;	//画像名
+	int dirtyID;			//グチャってなったときの画像番号
 	std::string seName;		//SE名
 	int arrivalBeatTime;	//ターゲットまでの到達時間
 	std::array<float, 4> hitJudge;		//判定時間

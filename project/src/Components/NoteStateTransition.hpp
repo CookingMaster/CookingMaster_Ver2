@@ -13,6 +13,7 @@
 #include "BasicComponents.hpp"
 #include "../ECS/ECS.hpp"
 #include "../Class/Sound.hpp"
+#include "../ArcheType/GameEffectsArcheType.hpp"
 namespace ECS
 {
 	struct NoteState : public ComponentData
@@ -52,6 +53,7 @@ namespace ECS
 		std::array<AnimSheetData, 3> asd_;	//アニメーション遷移のやつ
 		std::array<float, 4> hitJudge_;
 		float arrivalBeatTime_;
+		int dirtyID_;
 
 		std::string seName_ = "";
 		NoteState* noteState_ = nullptr;
@@ -67,13 +69,17 @@ namespace ECS
 		Counter deathCounter_;		//死ぬまでの時間計測
 		Counter_f flameCounter_;
 
+		EntityManager& entityManager_;
+
 	public:
-		NoteStateTransition(const NotesData& nd, float arrivalBeatTime) :
+		NoteStateTransition(const NotesData& nd, float arrivalBeatTime, EntityManager& entityManager) :
 			asd_(nd.animSData),
 			hitJudge_(nd.hitJudge),
 			seName_(nd.seName),
+			dirtyID_(nd.dirtyID),
 			arrivalBeatTime_(arrivalBeatTime),
-			transCounter_(0, 8) {}
+			transCounter_(0, 8),
+			entityManager_(entityManager) {}
 
 		void initialize() override
 		{
@@ -167,6 +173,7 @@ namespace ECS
 			return seName_;
 		}
 
+		//ノーツの座標を取得する
 		[[nodiscard]]const Vec2& getPos() const
 		{
 			return position_->val;
@@ -183,7 +190,7 @@ namespace ECS
 			case NoteState::State::GRAZED:
 				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
 				{
-					ChangeStateMISSED();
+					changeStateMISSED();
 				}
 				else
 				{
@@ -195,7 +202,7 @@ namespace ECS
 			case NoteState::State::MISS:
 				if (position_->val.y > (System::SCREEN_HEIGHT - 100.f))
 				{
-					ChangeStateMISSED();
+					changeStateMISSED();
 				}
 				return;
 
@@ -264,7 +271,7 @@ namespace ECS
 		}
 
 		//状態をMISSED(グチャってなるアニメーション)に変更する
-		void ChangeStateMISSED()
+		void changeStateMISSED()
 		{
 			Sound se("miss");
 			se.play(false, true);
@@ -273,6 +280,14 @@ namespace ECS
 			noteState_->state = NoteState::State::MISSED;
 			changeNoteAnim(2, missedAnimSpd, true, true);
 			rotation_->val = 0.f;
+
+			//グチャってなったやつの生成
+			ECS::GameEffectsArcheType::CreateDirty(
+				"dirty",
+				dirtyID_,
+				position_->val,
+				noteState_->dir,
+				&entityManager_);
 		}
 	};
 }
