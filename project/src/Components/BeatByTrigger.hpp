@@ -66,5 +66,11 @@ namespace ECS {
 		{
 			rhythm_ = rhythm;
 		}
+
+		//曲が終了したか否かを取得する(終了したらtrue)
+		[[nodiscard]] bool isEndSound()
+		{
+			return sound_.getCurrentTime() >= sound_.getTotalTime();
+		}
 	};
 }
