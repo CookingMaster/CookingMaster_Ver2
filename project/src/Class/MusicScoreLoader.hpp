@@ -173,6 +173,7 @@ public:
 			return 5 + combBonus;
 
 		case ECS::NoteState::State::PARFECT:
+		case ECS::NoteState::State::AUTO:
 			return 8 + combBonus;
 		}
 		return 0;
