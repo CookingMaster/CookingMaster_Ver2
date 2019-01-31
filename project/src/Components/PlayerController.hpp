@@ -140,7 +140,8 @@ namespace ECS {
 			}
 
 			//同時押しは許さない
-			if ((Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1 &&
+			if (beatTrigger_->isEndSound() ||
+				(Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1 &&
 				 Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1))
 			{
 				return;
