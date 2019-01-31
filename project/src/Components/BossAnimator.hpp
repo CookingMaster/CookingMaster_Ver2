@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file BossAnimator.hpp
-* @brief ‚¨‚â‚Á‚³‚ñ‚ðƒŠƒYƒ€‚É‡‚í‚¹‚ÄƒAƒjƒ[ƒVƒ‡ƒ“‚³‚¹‚éƒRƒ“ƒ|[ƒlƒ“ƒg
+* @brief ãŠã‚„ã£ã•ã‚“ã‚’ãƒªã‚ºãƒ ã«åˆã‚ã›ã¦ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã•ã›ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 * @author feveleK5563
 * @date 2019.1.10
 */
@@ -39,7 +39,7 @@ namespace ECS
 			position_ = &entity->getComponent<Position>();
 			pos_ = position_->val;
 
-			//Œ¨ã‚°ó‘Ô‚©‚çƒXƒ^[ƒg
+			//è‚©ä¸Šã’çŠ¶æ…‹ã‹ã‚‰ã‚¹ã‚¿ãƒ¼ãƒˆ
 			sad_->setIndex(0);
 			animator_->setIsMinusAnim(true);
 			shoulderUp_ = true;
@@ -47,20 +47,20 @@ namespace ECS
 
 		void update() override
 		{
-			//Œ¨ã‚°‚Ì“®‚«‚ðs‚Á‚Ä‚¢‚éŽž
+			//è‚©ä¸Šã’ã®å‹•ãã‚’è¡Œã£ã¦ã„ã‚‹æ™‚
 			if (shoulderUp_)
 			{
-				//Œ¨‚ªŠ®‘S‚Éã‚ª‚Á‚½‚ç‰º‚°‚é
+				//è‚©ãŒå®Œå…¨ã«ä¸ŠãŒã£ãŸã‚‰ä¸‹ã’ã‚‹
 				if (animator_->isAnimEnd())
 				{
 					animator_->setIsMinusAnim(false);
 					shoulderUp_ = false;
 				}
 			}
-			//Œ¨‰º‚°‚Ì“®‚«‚ðs‚Á‚Ä‚¢‚éŽž
+			//è‚©ä¸‹ã’ã®å‹•ãã‚’è¡Œã£ã¦ã„ã‚‹æ™‚
 			else
 			{
-				//ƒ^ƒCƒ~ƒ“ƒO—Ç‚­Œ¨‚ðã‚°‚é
+				//ã‚¿ã‚¤ãƒŸãƒ³ã‚°è‰¯ãè‚©ã‚’ä¸Šã’ã‚‹
 				if (beatTrigger_->getTrigger())
 				{
 					animator_->setIsMinusAnim(true);
@@ -68,7 +68,7 @@ namespace ECS
 				}
 			}
 
-			//Œ»Ý‚ÌƒCƒ“ƒfƒbƒNƒX’l‚É‚æ‚Á‚Ä‚¨‚â‚Á‚³‚ñ‚Ì‚‚³‚ð•Ï‚¦‚é
+			//ç¾åœ¨ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹å€¤ã«ã‚ˆã£ã¦ãŠã‚„ã£ã•ã‚“ã®é«˜ã•ã‚’å¤‰ãˆã‚‹
 			switch (sad_->getIndex())
 			{
 			case 0: position_->val.y = pos_.y + 6; break;

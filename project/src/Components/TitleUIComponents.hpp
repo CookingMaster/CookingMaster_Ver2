@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file TitleUIComponents.hpp
-* @brief ƒ^ƒCƒgƒ‹ƒV[ƒ“‚Åg—p‚·‚éUI‚Ì‚½‚ß‚Éì‚Á‚½ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì•ûX
+* @brief ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³ã§ä½¿ç”¨ã™ã‚‹UIã®ãŸã‚ã«ä½œã£ãŸã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æ–¹ã€…
 * @author feveleK5563
 * @date 2018/11/22
 */
@@ -14,8 +14,8 @@
 namespace ECS
 {
 	/*!
-	@brief ‰æ‘œ‚ğ“_–Å‚³‚¹‚éi‹­’²‚³‚¹‚éjAƒtƒ‰ƒO‚ğtrue‚É‚·‚é‚ÆÁ–Å‚·‚é
-	* - AlphaBlend‚ª•K—vA‚È‚¯‚ê‚ÎŸè‚Éì‚é
+	@brief ç”»åƒã‚’ç‚¹æ»…ã•ã›ã‚‹ï¼ˆå¼·èª¿ã•ã›ã‚‹ï¼‰ã€ãƒ•ãƒ©ã‚°ã‚’trueã«ã™ã‚‹ã¨æ¶ˆæ»…ã™ã‚‹
+	* - AlphaBlendãŒå¿…è¦ã€ãªã‘ã‚Œã°å‹æ‰‹ã«ä½œã‚‹
 	*/
 	class FlashImage final : public ComponentSystem
 	{
@@ -97,17 +97,17 @@ namespace ECS
 	};
 
 	/*!
-	@brief ƒC[ƒWƒ“ƒO‚ÅÀ•W‚ğ‘€ì‚·‚é
-	* - Position‚ª•K—vA‚È‚¯‚ê‚ÎŸè‚Éì‚é
+	@brief ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã§åº§æ¨™ã‚’æ“ä½œã™ã‚‹
+	* - PositionãŒå¿…è¦ã€ãªã‘ã‚Œã°å‹æ‰‹ã«ä½œã‚‹
 	*/
 	class EasingPosMove final : public ComponentSystem
 	{
 	private:
-		Position* pos_ = nullptr;		//À•W
-		Easing ease_;		//ƒC[ƒWƒ“ƒO
-		Vec2 start_;		//ƒXƒ^[ƒgˆÊ’u
-		Vec2 goal_;			//ƒS[ƒ‹ˆÊ’u
-		float durationTime;	//Œo‰ßŠÔ
+		Position* pos_ = nullptr;		//åº§æ¨™
+		Easing ease_;		//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
+		Vec2 start_;		//ã‚¹ã‚¿ãƒ¼ãƒˆä½ç½®
+		Vec2 goal_;			//ã‚´ãƒ¼ãƒ«ä½ç½®
+		float durationTime;	//çµŒéæ™‚é–“
 
 	public:
 		EasingPosMove() :
@@ -147,7 +147,7 @@ namespace ECS
 	};
 
 	/*!
-	@brief ‚È‚ñ‚©‚Ìƒ{ƒ^ƒ““ü—Í‚ª‚ ‚Á‚½‚çAˆø”‚Éw’è‚µ‚½ŠÖ”‚ğÀs‚·‚é
+	@brief ãªã‚“ã‹ã®ãƒœã‚¿ãƒ³å…¥åŠ›ãŒã‚ã£ãŸã‚‰ã€å¼•æ•°ã«æŒ‡å®šã—ãŸé–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	class AnyInputFunction final : public ComponentSystem
 	{
@@ -181,8 +181,8 @@ namespace ECS
 	};
 
 	/*!
-	@brief ‰æ‘œ‚Ìw’èÀ•W‚ÉŒü‚©‚Á‚ÄŠg‘å‚·‚é
-	* - Position‚ÆScale‚ÆSpriteDraw‚ª•K—v
+	@brief ç”»åƒã®æŒ‡å®šåº§æ¨™ã«å‘ã‹ã£ã¦æ‹¡å¤§ã™ã‚‹
+	* - Positionã¨Scaleã¨SpriteDrawãŒå¿…è¦
 	*/
 	class ZoomIn final : public ComponentSystem
 	{
