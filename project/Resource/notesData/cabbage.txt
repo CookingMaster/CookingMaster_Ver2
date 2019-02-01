@@ -5,8 +5,8 @@ Resource/sound/SE/cabbage.ogg
 2
 7
 2
-2
-6
+1
+7
 300 200
 10
 5 3
