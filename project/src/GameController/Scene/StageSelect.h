@@ -36,6 +36,7 @@ namespace Scene
 		float bgmVal_ = 0;
 		float seVal_ = 0;
 		int backVal_ = 0;
+		float fadeGain_ = 0;
 		std::string bgmPath_;
 		bool isPlay_ = false;
 		bool isAuto_ = false;
@@ -45,6 +46,7 @@ namespace Scene
 		void setSoundVolume();
 		void changeLayer();
 		void showDishParameter();
+		void gainAdjustment();
 	public:
 		StageSelect(IOnSceneChangeCallback* sceneChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~StageSelect();
