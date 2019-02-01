@@ -422,7 +422,13 @@ namespace Scene
 		MasterSound::Get().setAllBGMGain(bgmVal_);
 		MasterSound::Get().setAllSEGain(seVal_);
 	}
-
+	void StageSelect::gainAdjustment()
+	{
+		if (bgmVal_ >= 1.f && bgmVal_ <= 1.1f) { bgmVal_ = 1.f; }
+		if (seVal_ >= 1.f && seVal_ <= 1.1f) { seVal_ = 1.f; }
+		if (bgmVal_ < 0.f) { bgmVal_ = 0.f; }
+		if (seVal_ < 0.f) { seVal_ = 0.f; }
+	}
 	void StageSelect::changeLayer()
 	{
 		//レイヤー入れ替え
@@ -523,7 +529,9 @@ namespace Scene
 			{
 				stageNum_ = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
 				std::ofstream ofs("Resource/system/gain.bin");
+				gainAdjustment();
 				ofs << bgmVal_ << "\n" << seVal_;
+				fadeGain_= bgmVal_;
 				isPlay_ = true;
 				extension::std::String path = select_bgm_path;
 				if (path.split('|').size() >= 2)
@@ -545,11 +553,16 @@ namespace Scene
 		{
 			cursor_->stopComponent<ECS::CursorMove>();
 			fade_->getComponent<ECS::AlphaBlend>().alpha += 6;
+			//BGMのフェードアウト
+			fadeGain_ -= 0.02f;
+			MasterSound::Get().setAllBGMGain(fadeGain_);
 		}
 
 
-		if (fade_->getComponent<ECS::AlphaBlend>().alpha >= 255)
+		if (fade_->getComponent<ECS::AlphaBlend>().alpha >= 255 && fadeGain_ < 0.f)
 		{
+			ResourceManager::GetSound().remove("selectBGM");
+			MasterSound::Get().setAllBGMGain(bgmVal_);
 			auto parameter = std::make_unique<Parameter>();
 			parameter->add<std::string>("BGM_name", "stage" + std::to_string(stageNum_));
 			parameter->add<size_t>("stageNum", stageNum_);
@@ -567,7 +580,7 @@ namespace Scene
 	{
 		entityManager_->removeAll();
 		ResourceManager::GetGraph().removeAll();
-		ResourceManager::GetSound().remove("selectBGM");
+
 	}
 
 }// namespace Scene

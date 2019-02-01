@@ -19,18 +19,18 @@ private:
 		float bgmGain_ = 1.0f;
 	public:
 		//!BGM音量の読み込み
-		const float getBGMGain() { return bgmGain_; }
-		const float getSEGain() { return seGain_; }
+		const float getBGMGain() const { return bgmGain_; }
+		const float getSEGain() const { return seGain_; }
 		//!すべてのSEサウンドの音量を0.0f~1.fで指定
-		void setAllSEGain(float gain)
+		void setAllSEGain(const float gain)
 		{
-			if (gain >= 1.f || gain <= 0) { return; }
+			if (gain > 1.f || gain < 0) { return; }
 			seGain_ = gain;
 		}
 		//!すべてのBGMサウンドの音量を0.0f~1.fで指定
-		void setAllBGMGain(float gain)
+		void setAllBGMGain(const float gain)
 		{
-			if (gain >= 1.f || gain <= 0) { return; }
+			if (gain > 1.f || gain < 0) { return; }
 			bgmGain_ = gain;
 		}
 		//!登録されているサウンドの更新を行います
@@ -139,4 +139,5 @@ public:
 	{
 		ChangePanSoundMem(panPosition,handle_);
 	}
+
 };
