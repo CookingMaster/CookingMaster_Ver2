@@ -66,8 +66,8 @@ public:
 class Sound final
 {
 private:
-	std::string name_;
-	int handle_;
+	std::string name_ = "";
+	int handle_ = -1;
 	float gain_ = 1.f;
 public:
 	Sound() = default;

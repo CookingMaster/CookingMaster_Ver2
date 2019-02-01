@@ -565,4 +565,4 @@ namespace Scene
 		ResourceManager::GetSound().remove("selectBGM");
 	}
 
-}// namespace StageSelect
+}// namespace Scene

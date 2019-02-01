@@ -10,10 +10,10 @@
 #include "../Components/Renderer.hpp"
 #include "../Components/UIComponents.hpp"
 #include "../Components/TitleUIComponents.hpp"
-
+#include "../Components/CursorMove.hpp"
 namespace ECS
 {
-	struct UIArcheType
+	struct UIArcheType final
 	{
 		//!空っぽのバー（スコア表示用）
 		static Entity* CreateEmptyBarUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)

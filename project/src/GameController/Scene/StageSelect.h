@@ -14,7 +14,7 @@
 
 namespace Scene
 {
-	class StageSelect : public AbstractScene
+	class StageSelect final : public AbstractScene
 	{
 	private:
 		ECS::Entity* option_ = nullptr;

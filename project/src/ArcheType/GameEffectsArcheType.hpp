@@ -13,10 +13,12 @@
 #include "../Components/TitleUIComponents.hpp"
 #include "../Components/BossAnimator.hpp"
 #include "../Components/BeatByTrigger.hpp"
+#include "../Utility/Easing.hpp"
+#include "../Components/ResultComponent.hpp"
 
 namespace ECS
 {
-	struct GameEffectsArcheType
+	struct GameEffectsArcheType final
 	{
 		//!マーカー
 		static Entity* CreateMarker(const char* graphicName, const std::string& musicName, int bpm, int beat, ECS::Direction::Dir dir, const Vec2& pos, EntityManager* entityManager)
@@ -126,15 +128,29 @@ namespace ECS
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
-		//!開始の合図
+		//!CookingStartのフォント
 		static Entity* CreateStartLogo(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteDraw>(graphicName);
-			e.addComponent<EasingPosMove>();
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f)/*.setEasingFunction(Easing::CircIn)*/;
+			e.addGroup(ENTITY_GROUP::UI);
+			return &e;
+		}
+		//! お玉とフライパン
+		static Entity* CreateStartLogo(const char* graphicName, const int index, const Vec2& pos, EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			e.addComponent<Color>();
+			e.addComponent<AlphaBlend>();
+			e.addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f)/*.setEasingFunction(Easing::CircIn)*/;
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}

@@ -104,10 +104,10 @@ namespace ECS
 		friend class EntityManager;
 		std::string tag_ = "";
 		EntityManager& manager_;
-		Group nowGroup_;
+		Group nowGroup_ = 0u;
 		bool isActive_ = true;
 		std::vector<std::unique_ptr<ComponentSystem>> components_;
-		ComponentArray  componentArray_;
+		ComponentArray  componentArray_{};
 		ComponentBitSet componentBitSet_;
 		GroupBitSet groupBitSet_;
 		//!非アクティブなコンポーネントを消す

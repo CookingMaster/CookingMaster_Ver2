@@ -12,31 +12,31 @@
 #include "../Components/BasicComponents.hpp"
 
 //アニメーションのスタート位置と枚数
-struct AnimSheetData
+struct AnimSheetData final
 {
 	int xmin, ymin, xmax, ymax;
 };
 
 //ノーツに使用される各種データ
-struct NotesData
+struct NotesData final
 {
 	std::string imagePath;	//画像のパス
 	std::string imageName;	//画像名
 	int dirtyID;			//グチャってなったときの画像番号
 	std::string seName;		//SE名
 	int arrivalBeatTime;	//ターゲットまでの到達時間
-	std::array<float, 4> hitJudge;		//判定時間
+	std::array<float, 4> hitJudge{};		//判定時間
 	
 	int xsize;		//画像のX方向のサイズ
 	int ysize;		//画像のY方向のサイズ
 	int animFlame;	//アニメーションのフレーム数
 	int xnum;		//アニメーションのX方向の枚数
 	int ynum;		//アニメーションのY方向の枚数
-	std::array<AnimSheetData, 3> animSData;	//通常、切断、落下のアニメーション
+	std::array<AnimSheetData, 3> animSData{};	//通常、切断、落下のアニメーション
 };
 
 //一つの音符のデータ
-struct OneNoteData
+struct OneNoteData final
 {
 	int notesID;				//ノーツ番号
 	ECS::Direction::Dir dir;	//ノーツの向き

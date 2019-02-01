@@ -1,4 +1,4 @@
-#include "Pause.h"
+ï»¿#include "Pause.h"
 #include "../../Input/Input.hpp"
 #include "SceneManager.hpp"
 #include "../GameController.h"
@@ -23,7 +23,7 @@ namespace Scene
 		isAuto_ = parame->get<bool>("autoFlag");
 		bg_ = ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
 		
-		//size(522,255), pos(640,360):3‚Â‚Ìƒ{ƒ^ƒ“‚Ì‚¤‚¿¶‚Ì¶ã
+		//size(522,255), pos(640,360):3ã¤ã®ãƒœã‚¿ãƒ³ã®ã†ã¡å·¦ã®å·¦ä¸Š
 		slide_ = ECS::UIArcheType::CreatePauseUI("slide", Vec2{ 522.f,255.f }, Vec2{ 640.f,360.f }, *entityManager);
 		
 		button_ = ECS::UIArcheType::CreateButtonUI("button", Vec2{ 138.f, 56.f }, Vec2{ 400.f, 397.f }, *entityManager);
@@ -88,6 +88,7 @@ namespace Scene
 			{
 				DOUT << "Back To Select" << std::endl;
 				Sound(name_).stop();
+				ResourceManager::GetGraph().removeAll();
 				ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::ALL_CLEAR, true);
 				break;
 			}

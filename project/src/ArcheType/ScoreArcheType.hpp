@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file ScoreArcheType.hpp
-* @brief ƒŠƒUƒ‹ƒg‚Å¶¬‚·‚éƒXƒRƒAƒGƒ“ƒeƒBƒeƒB‚ÌŒ´Œ^‚ğì¬‚µ‚Ü‚·
+* @brief ãƒªã‚¶ãƒ«ãƒˆã§ç”Ÿæˆã™ã‚‹ã‚¹ã‚³ã‚¢ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã®åŸå‹ã‚’ä½œæˆã—ã¾ã™
 * @author tonarinohito
 * @date 2018/10/26
 */
@@ -13,10 +13,10 @@
 
 namespace ECS
 {
-	struct ScoreArcheType
+	struct ScoreArcheType final
 	{
 
-		//!ƒŠƒUƒ‹ƒg‰æ–Ê‚Å“¾“_‚ğ•\¦‚·‚é‚½‚ß‚ÌƒGƒ“ƒeƒBƒeƒB‚Å‚·B¶¬‚ÉƒnƒCƒXƒRƒA‚ğ•Û‘¶‚µ‚Ü‚·
+		//!ãƒªã‚¶ãƒ«ãƒˆç”»é¢ã§å¾—ç‚¹ã‚’è¡¨ç¤ºã™ã‚‹ãŸã‚ã®ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã§ã™ã€‚ç”Ÿæˆæ™‚ã«ãƒã‚¤ã‚¹ã‚³ã‚¢ã‚’ä¿å­˜ã—ã¾ã™
 		static Entity* CreateResultScoreEntity(const char* grapName, const Vec2& pos, const StageHighScore& stageName, const int score, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -33,7 +33,7 @@ namespace ECS
 			return entity;
 		}
 
-		//ƒXƒRƒA‚ğŠO•”ƒtƒ@ƒCƒ‹‚Éo—Í‚µ‚Ü‚·BƒnƒCƒXƒRƒA‚Å‚È‚¢ê‡XV‚³‚ê‚Ü‚¹‚ñ
+		//ã‚¹ã‚³ã‚¢ã‚’å¤–éƒ¨ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›ã—ã¾ã™ã€‚ãƒã‚¤ã‚¹ã‚³ã‚¢ã§ãªã„å ´åˆæ›´æ–°ã•ã‚Œã¾ã›ã‚“
 		static Entity* CreateScoreEntity(const StageHighScore& stageName, const int score, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -42,7 +42,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::LAYER1);
 			return entity;
 		}
-		//!ƒZƒŒƒNƒg‰æ–Ê‚Å“¾“_‚ğ•\¦‚·‚é‚½‚ß‚ÌƒGƒ“ƒeƒBƒeƒB‚Å‚·B
+		//!ã‚»ãƒ¬ã‚¯ãƒˆç”»é¢ã§å¾—ç‚¹ã‚’è¡¨ç¤ºã™ã‚‹ãŸã‚ã®ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã§ã™ã€‚
 		static Entity* CreateSelectScoreEntity(const char* grapName, const Vec2& pos, const StageHighScore& stageName, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();

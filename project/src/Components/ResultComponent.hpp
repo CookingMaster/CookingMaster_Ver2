@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file ResultComponent.hpp
-* @brief ƒŠƒUƒ‹ƒg“Á—L‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğì¬‚·‚é
+* @brief ãƒªã‚¶ãƒ«ãƒˆç‰¹æœ‰ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ä½œæˆã™ã‚‹
 * @author yokota0717
 * @date 2018.11.22
 */
@@ -17,7 +17,7 @@
 namespace ECS
 {
 	/**
-	* @brief ƒNƒƒbƒVƒ…‚ª‰ñ“]‚µ‚È‚ª‚ç‚Ñ‚ã[‚ñ
+	* @brief ã‚¯ãƒ­ãƒƒã‚·ãƒ¥ãŒå›è»¢ã—ãªãŒã‚‰ã³ã‚…ãƒ¼ã‚“
 	*/
 	class FlyAway final : public ComponentSystem
 	{
@@ -26,14 +26,14 @@ namespace ECS
 		Rotation* rotate_ = nullptr;
 		Counter_f cnt_;
 
-		//! ˆÚ“®‚·‚é‚Æ‚«‚Ì‰ñ“]’†S
+		//! ç§»å‹•ã™ã‚‹ã¨ãã®å›è»¢ä¸­å¿ƒ
 		Vec2 center_;
-		//! ‰ñ“]‘¬“x
+		//! å›è»¢é€Ÿåº¦
 		float speed_;
 
 		static constexpr float PI = 3.141592653589793f;
 	public:
-		//!ˆÚ“®‚Ì‰ñ“]’†S‚Æ‰ñ“]‘¬“x‚ğ‰Šú‰»‚µ‚Ü‚·
+		//!ç§»å‹•ã®å›è»¢ä¸­å¿ƒã¨å›è»¢é€Ÿåº¦ã‚’åˆæœŸåŒ–ã—ã¾ã™
 		FlyAway(const Vec2 center, const float speed)
 			:
 			center_(center),
@@ -50,26 +50,24 @@ namespace ECS
 		void update() override
 		{
 			cnt_.add();
-			//‰æ‘œ©‘Ì‚Ì‰ñ“]
+			//ç”»åƒè‡ªä½“ã®å›è»¢
 			rotate_->val = cnt_.getCurrentCount();
-			//‰æ‘œ‚Ì‰ñ“]ˆÚ“®ˆ—(’x‚©‚Á‚½‚©‚ç”÷–­‚É’²®)
-			double angle = PI / 180.0 + 0.015;
-			position_->val.x = static_cast<float>(
+			//ç”»åƒã®å›è»¢ç§»å‹•å‡¦ç†(é…ã‹ã£ãŸã‹ã‚‰å¾®å¦™ã«èª¿æ•´)
+			float angle = PI / 180.0f + 0.015f;
+			position_->val.x = 
 				center_.x 
-				+ (position_->val.x - center_.x) * cos(angle) 
-				- (position_->val.y - center_.y) * sin(angle)
-				);
-			position_->val.y = static_cast<float>(
+				+ (position_->val.x - center_.x) * cosf(angle) 
+				- (position_->val.y - center_.y) * sinf(angle);
+			position_->val.y = 
 				center_.y 
-				+ (position_->val.x - center_.x) * sin(angle) 
-				+ (position_->val.y - center_.y) * cos(angle)
-				);
+				+ (position_->val.x - center_.x) * sinf(angle) 
+				+ (position_->val.y - center_.y) * cosf(angle);
 		}
 	};
 
 	/**
-	* @brief ‰æ‘œ‚ÌŠg‘å‚ğs‚¤
-	*- w’è‚µ‚½ƒC[ƒWƒ“ƒO‚ÅŠg‘å
+	* @brief ç”»åƒã®æ‹¡å¤§ã‚’è¡Œã†
+	*- æŒ‡å®šã—ãŸã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã§æ‹¡å¤§
 	*/
 	class Expand final : public ComponentSystem 
 	{
@@ -101,8 +99,8 @@ namespace ECS
 		}
 	};
 	/**
-	* @brief ‰æ‘œ‚Ìk¬‚ğs‚¤
-	*- w’è‚µ‚½ƒC[ƒWƒ“ƒO‚Åk¬
+	* @brief ç”»åƒã®ç¸®å°ã‚’è¡Œã†
+	*- æŒ‡å®šã—ãŸã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã§ç¸®å°
 	*/
 	class Reduction final : public ComponentSystem
 	{
@@ -135,7 +133,7 @@ namespace ECS
 	};
 
 	/**
-	* @brief w’èƒXƒs[ƒh‚Å‰ñ“]‚³‚¹‚é‚¾‚¯
+	* @brief æŒ‡å®šã‚¹ãƒ”ãƒ¼ãƒ‰ã§å›è»¢ã•ã›ã‚‹ã ã‘
 	*/
 	class Rotate final : public ComponentSystem 
 	{
@@ -158,11 +156,11 @@ namespace ECS
 	};
 	
 	/**
-	* @brief x•ûŒü‚É‰•œ‚µ‚È‚ª‚ç‰º‚É—‚¿‚é
-	* @param shift ¶‰E‚É‚¸‚ê‚é—Ê
-	* @param angleInit ˆÚ“®‚Ég‚¤Šp“x‚Ì‰Šú’l
-	* @param rotateSpeed ¶‰E‚ÉU‚ê‚é‘¬“x
-	* @note ‚±‚ê‚Í‰æ‘œ‚Ì‰ñ“]‚É‚ÍŠÖŒW‚È‚¢A‰ñ“]‚Í•ÊComponent
+	* @brief xæ–¹å‘ã«å¾€å¾©ã—ãªãŒã‚‰ä¸‹ã«è½ã¡ã‚‹
+	* @param shift å·¦å³ã«ãšã‚Œã‚‹é‡
+	* @param angleInit ç§»å‹•ã«ä½¿ã†è§’åº¦ã®åˆæœŸå€¤
+	* @param rotateSpeed å·¦å³ã«æŒ¯ã‚Œã‚‹é€Ÿåº¦
+	* @note ã“ã‚Œã¯ç”»åƒã®å›è»¢ã«ã¯é–¢ä¿‚ãªã„ã€å›è»¢ã¯åˆ¥Component
 	*/
 	class FallDance final : public ComponentSystem
 	{
@@ -189,7 +187,7 @@ namespace ECS
 	};
 
 	/**
-	* @brief w’è‚µ‚½À•W‚Ü‚ÅƒC[ƒWƒ“ƒO‚ÅˆÚ“®
+	* @brief æŒ‡å®šã—ãŸåº§æ¨™ã¾ã§ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã§ç§»å‹•
 	*/
 	class EasingMove final : public ComponentSystem
 	{

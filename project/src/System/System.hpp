@@ -42,7 +42,7 @@ private:
 		//XAudio2を使用する
 		SetEnableXAudioFlag(true);
 		//ウインドウタイトルを変更
-		SetMainWindowText("Game");
+		SetMainWindowText("CookingMaster2");
 		//画面サイズ変更
 		SetGraphMode(SCREEN_WIDIH, SCREEN_HEIGHT, 32);
 		//ウィンドウモード変更
