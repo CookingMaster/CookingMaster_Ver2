@@ -74,7 +74,7 @@ namespace ECS
 			entity->addComponent<SpriteRectDraw>(graphicName);
 			entity->addComponent<DrawFont>(rect.x, rect.y);
 			entity->addComponent<ExpandReduceComponentSystem>(1.5f, 0.1f);
-			entity->addGroup(ENTITY_GROUP::UI);
+			entity->addGroup(ENTITY_GROUP::BACK_STAFF);
 			return entity;
 		}
 		//! 斬った時の評価フォントエンティティ
