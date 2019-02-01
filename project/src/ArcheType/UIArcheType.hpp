@@ -74,7 +74,7 @@ namespace ECS
 			entity->addComponent<SpriteRectDraw>(graphicName);
 			entity->addComponent<DrawFont>(rect.x, rect.y);
 			entity->addComponent<ExpandReduceComponentSystem>(1.5f, 0.1f);
-			entity->addGroup(ENTITY_GROUP::UI);
+			entity->addGroup(ENTITY_GROUP::BACK_STAFF);
 			return entity;
 		}
 		//! 斬った時の評価フォントエンティティ
@@ -153,6 +153,23 @@ namespace ECS
 			entity->addComponent<SelectFrame>();
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
+		}
+
+		//ステージ選択画面の操作方法
+		static Entity* CreateMenuHowTo(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+
+			e.addComponent<Transform>().setPosition(pos.x, -50.f);
+			e.addComponent<EasingPosMove>().setDest(
+				Vec2(pos.x, -50.f),
+				Vec2(pos.x, pos.y),
+				120.f);
+			e.getComponent<EasingPosMove>().isSetAlphaBlend(true);
+			e.addComponent<SpriteDraw>(graphicName).setPivot(Vec2(0.f, 0.f));
+			e.addGroup(ENTITY_GROUP::UI);
+
+			return &e;
 		}
 	};
 }

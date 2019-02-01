@@ -262,8 +262,6 @@ namespace ECS
 			e.addComponent<FlashImage>().setIsDelete(true);
 			e.getComponent<FlashImage>().setWaitTime(400);
 			e.addGroup(ENTITY_GROUP::GUCHA);
-
-			DOUT << entityManager->getEntitiesByGroup(ENTITY_GROUP::GUCHA).size() << std::endl;
 			return &e;
 		}
 	};

@@ -43,7 +43,6 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/mori1.png", "mori_full");
 		ResourceManager::GetGraph().load("Resource/image/mori2.png", "mori_empty");
 		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
-		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
 		//CookingStartUI
 		ResourceManager::GetGraph().load("Resource/image/gameStart/gameStart.png", "start");
@@ -55,7 +54,9 @@ namespace Scene
 		//マーカーの画像読み込み
 		ResourceManager::GetGraph().load/*Div*/("Resource/image/note_marker.png", "marker"/*, 1, 1, 1, 200, 200*/);
 		//スコア貼り紙
-		ResourceManager::GetGraph().load("Resource/image/score_paper.png", "paper");
+		ResourceManager::GetGraph().load("Resource/image/paper.png", "paper");
+		//研修中
+		ResourceManager::GetGraph().load("Resource/image/training.png", "training");
 		//斬ったときの評価フォント
 		ResourceManager::GetGraph().loadDiv("Resource/image/hyouka_font.png", "rank", 4, 1, 4, 256, 64);
 		//斬撃エフェクト(良)
@@ -97,9 +98,14 @@ namespace Scene
 		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), *entityManager_);
 		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), msl_.getMaxPoint(), *entityManager_);
 		//スコア％表示用貼り紙
-		ResourceManager::GetGraph().load("Resource/image/test_font.png", "score_font");
+		ResourceManager::GetGraph().load("Resource/image/score_font2.png", "score_font");
 		ECS::ArcheType::CreateEntity("paper", Vec2{ 1030.f,370.f }, *entityManager_, ENTITY_GROUP::BACK_OBJECT);
-		scoreFont_ = ECS::UIArcheType::CreateFontUI("score_font", Vec2{ 25.f, 45.f }, Vec2{ 1120.f,450.f }, *entityManager_);
+		scoreFont_ = ECS::UIArcheType::CreateFontUI("score_font", Vec2{ 32.f, 64.f }, Vec2{ 1143.f,450.f }, *entityManager_);
+		//研修中
+		if (autoPerfectMode_)
+		{
+			ECS::ArcheType::CreateEntity("training", Vec2{ 0.f,0.f }, *entityManager_, ENTITY_GROUP::KITCHENWARE);
+		}
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
 		//マーカー(左右に一つずつ)
@@ -291,7 +297,7 @@ namespace Scene
 				case ECS::NoteState::State::BAD:
 					DOUT << "BAD" << std::endl;
 					ECS::GameEffectsArcheType::CreateSlashEffect("slash_bad", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
-					comboReset(); 
+					comboReset();
 					{
 						Sound suka("suka");
 						suka.play(false, true);

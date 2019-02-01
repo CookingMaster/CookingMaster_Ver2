@@ -97,23 +97,27 @@ namespace ECS
 	};
 
 	/*!
-	@brief イージングで座標を操作する
+	@brief イージングで座標を操作する、透過具合も操作できる
 	* - Positionが必要、なければ勝手に作る
 	*/
 	class EasingPosMove final : public ComponentSystem
 	{
 	private:
 		Position* pos_ = nullptr;		//座標
+		AlphaBlend* alpha_ = nullptr;	//アルファブレンド
 		Easing ease_;		//イージング
 		Vec2 start_;		//スタート位置
 		Vec2 goal_;			//ゴール位置
 		float durationTime;	//経過時間
 
+		bool isTrans_;	//透過するか否か
+
 	public:
 		EasingPosMove() :
 			start_(0, 0),
 			goal_(0, 0),
-			durationTime(60.f) {}
+			durationTime(60.f),
+			isTrans_(false){}
 
 		void initialize() override
 		{
@@ -122,6 +126,12 @@ namespace ECS
 				entity->addComponent<Position>();
 			}
 			pos_ = &entity->getComponent<Position>();
+
+			if (!entity->hasComponent<AlphaBlend>())
+			{
+				entity->addComponent<AlphaBlend>();
+			}
+			alpha_ = &entity->getComponent<AlphaBlend>();
 		}
 
 		void update() override
@@ -129,6 +139,11 @@ namespace ECS
 			ease_.run(ease_.CircOut, durationTime);
 			pos_->val.x = ease_.getVolume(start_.x, goal_.x);
 			pos_->val.y = ease_.getVolume(start_.y, goal_.y);
+
+			if (isTrans_)
+			{
+				alpha_->alpha = int(ease_.getVolume(0, 255));
+			}
 		}
 
 		void setDest(const Vec2& start, const Vec2& goal, float time)
@@ -144,6 +159,12 @@ namespace ECS
 			return ease_.isEaseEnd();
 		}
 
+		//イージングで透過させるか否か
+		void isSetAlphaBlend(bool isTrans)
+		{
+			isTrans_ = isTrans;
+			alpha_->alpha = 0;
+		}
 	};
 
 	/*!
