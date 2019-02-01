@@ -698,5 +698,59 @@ namespace ECS
 			}
 		}
 	};
+
+	/**
+	* @brief 拡大を二回繰り返すコンポーネント
+	*- 途中で指定フレーム停止する
+	*- GameStartUIに使う
+	* @param float firstEndSize		1回目の拡大の最大サイズ
+	* @param float secondEndSize	2回目の拡大の最大サイズ
+	* @param int pauseFrame			停止するフレーム数
+	* @param float speed			拡大スピード
+	*/
+	class ExpandTwiceComponent final : public ComponentSystem
+	{
+	private:
+		Scale* scale_ = nullptr;
+		Vec2 originSize_;
+		float firstEndSize_, secondEndSize_, endSize_;
+		int pauseFrame_;
+		float speed_;
+		Easing easing_;
+		Counter counter_;
+	public:
+		ExpandTwiceComponent(float firstEndSize, float secondEndSize, int pauseFrame, float speed)
+			:
+			firstEndSize_(firstEndSize),
+			secondEndSize_(secondEndSize),
+			endSize_(firstEndSize),
+			pauseFrame_(pauseFrame),
+			speed_(speed)
+		{}
+		void initialize() override
+		{
+			scale_ = &entity->getComponent<Scale>();
+			originSize_ = scale_->val;
+			easing_.reset();
+			counter_.setCounter(0, 1, 0, pauseFrame_);
+		}
+		void update() override
+		{
+			if (counter_.getCurrentCount() == 0) {
+				easing_.run(easing_.CubicIn, speed_);
+				scale_->val = easing_.getVolume(originSize_.x, endSize_);
+			}
+			if (easing_.isEaseEnd()) 
+			{
+				counter_.add();
+			}
+			if (counter_.getCurrentCount() == pauseFrame_) 
+			{
+				initialize();
+				endSize_ = secondEndSize_;
+			}
+		}
+
+	};
 } //namespce ECS
 

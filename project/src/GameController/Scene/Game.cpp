@@ -24,8 +24,8 @@ namespace Scene
 			"stage" + std::to_string(stageNum_),
 			SoundType::BGM);
 		nc_.initialize(bgmName_,
-			Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f),
-			Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f));
+			Vec2((System::SCREEN_WIDTH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f),
+			Vec2((System::SCREEN_WIDTH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f));
 		msl_.loadMusicScoreData("Resource/sound/MUSIC/" + bgmName_ + "/" + bgmName_ + ".txt");
 	}
 	void Game::initialize()
@@ -89,7 +89,7 @@ namespace Scene
 			bgmName_,
 			"player",
 			Vec2(500.f, 505.f),
-			Vec2(System::SCREEN_WIDIH / 2.f, (System::SCREEN_HEIGHT / 2.f) + 30),
+			Vec2(System::SCREEN_WIDTH / 2.f, (System::SCREEN_HEIGHT / 2.f) + 30),
 			msl_.getBPM(),
 			msl_.getBeat(),
 			autoPerfectMode_,
@@ -100,19 +100,23 @@ namespace Scene
 		//スコア％表示用貼り紙
 		ResourceManager::GetGraph().load("Resource/image/score_font2.png", "score_font");
 		ECS::ArcheType::CreateEntity("paper", Vec2{ 1030.f,370.f }, *entityManager_, ENTITY_GROUP::BACK_OBJECT);
-		scoreFont_ = ECS::UIArcheType::CreateFontUI("score_font", Vec2{ 32.f, 64.f }, Vec2{ 1143.f,450.f }, *entityManager_);
-		//研修中
 		if (autoPerfectMode_)
 		{
+			//オートモードでは研修中の貼り紙表示
 			ECS::ArcheType::CreateEntity("training", Vec2{ 0.f,0.f }, *entityManager_, ENTITY_GROUP::KITCHENWARE);
+		}
+		else
+		{
+			//ノーマルプレイではスコアフォントを表示
+			scoreFont_ = ECS::UIArcheType::CreateFontUI("score_font", Vec2{ 32.f, 64.f }, Vec2{ 1143.f,450.f }, *entityManager_);
 		}
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
 		//マーカー(左右に一つずつ)
 		ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::L,
-			Vec2((System::SCREEN_WIDIH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
+			Vec2((System::SCREEN_WIDTH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 		ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::R,
-			Vec2((System::SCREEN_WIDIH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
+			Vec2((System::SCREEN_WIDTH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 		fade_ = ECS::ArcheType::CreateEntity
 		(
 			"fade",
@@ -396,7 +400,7 @@ namespace Scene
 	}
 	void Game::createRankFont(int rank)
 	{
-		auto font = ECS::UIArcheType::CreateRankFont("rank", Vec2{ System::SCREEN_WIDIH / 2.f, 200.f }, *entityManager_);
+		auto font = ECS::UIArcheType::CreateRankFont("rank", Vec2{ System::SCREEN_WIDTH / 2.f, 200.f }, *entityManager_);
 		font->getComponent<ECS::SpriteAnimationDraw>().setIndex(rank);
 		entityManager_->refresh();
 	}
@@ -406,9 +410,33 @@ namespace Scene
 		//拡大から停止まで
 		if (start_ == nullptr)
 		{
+			//GameStartの文字
 			start_ = ECS::GameEffectsArcheType::CreateStartLogo(
-				"start", Vec2{ System::SCREEN_WIDIH / 2.f,System::SCREEN_HEIGHT / 2.f }, entityManager_
+				"start", Vec2{ System::SCREEN_WIDTH / 2.f,System::SCREEN_HEIGHT / 2.f }, entityManager_
 			);
+			//星の座標を算出しておく
+			Vec2 starPos[4] = {
+				Vec2{ System::SCREEN_WIDTH / 2.f - 200.f,System::SCREEN_HEIGHT / 2.f - 200.f },
+				Vec2{ System::SCREEN_WIDTH / 2.f + 200.f,System::SCREEN_HEIGHT / 2.f - 200.f },
+				Vec2{ System::SCREEN_WIDTH / 2.f - 180.f,System::SCREEN_HEIGHT / 2.f - 170.f },
+				Vec2{ System::SCREEN_WIDTH / 2.f + 180.f,System::SCREEN_HEIGHT / 2.f - 170.f }
+			};
+			//星つくる
+			for (int i = 0; i < 4; ++i) 
+			{
+				stars_[i] = ECS::GameEffectsArcheType::CreateStar("star", i / 2, starPos[i], entityManager_);
+			}
+			//＊＊＊フライパンとお玉も作る＊＊＊
+			//キャンバスにぶち込む
+			startUICanvas = ECS::ArcheType::CreatePlainEntity(Vec2{ 0.f,0.f }, *entityManager_);
+			startUICanvas->addComponent<ECS::ExpandTwiceComponent>(1.f, 10.f, startUIstopTime, 5.f);
+			startUICanvas->addComponent<ECS::Canvas>().addChild(start_);
+			for (int i = 4; i < 4; ++i) {
+				startUICanvas->getComponent<ECS::Canvas>().addChild(stars_[i]);
+			}
+			startUICanvas->addComponent<ECS::Canvas>().addChild(start_);
+			//＊＊＊フライパンとお玉も追加すること＊＊＊
+
 			startUIcounter_.setCounter(0, 1, 0, startUIstopTime);
 		}
 		if (start_->getComponent<ECS::ExpandComponentSystem>().isEaseEnd())
@@ -420,14 +448,21 @@ namespace Scene
 		{
 			//拡大して消えていく
 			startUIcounter_.reset();
-			start_->removeComponent<ECS::ExpandComponentSystem>();
-			start_->addComponent<ECS::ExpandComponentSystem>(1.f, 10.f, 5.f);
+			//start_->removeComponent<ECS::ExpandComponentSystem>();
+			//start_->addComponent<ECS::ExpandComponentSystem>(1.f, 10.f, 5.f);
 		}
-		start_->getComponent<ECS::ExpandComponentSystem>().update();
-		if (start_->getComponent<ECS::Scale>().val.x >= 10.f)
+		//明示的に更新処理を呼ぶ
+		startUICanvas->update();
+		//start_->getComponent<ECS::ExpandComponentSystem>().update();
+		//for (int i = 0; i < 4; ++i)
+		//{
+		//	stars_[i]->update();
+		//}
+		//終了する処理
+		if (startUICanvas->getComponent<ECS::Scale>().val.x >= 10.f)
 		{
 			//完全に消す
-			start_->destroy();
+			startUICanvas->destroy();
 			return true;
 		}
 		return false;

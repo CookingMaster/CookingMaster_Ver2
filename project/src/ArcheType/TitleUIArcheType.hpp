@@ -16,7 +16,7 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(-1000.f, -1000.f);
 			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<EasingPosMove>().setDest(
-				Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT + 100.f),
+				Vec2(System::SCREEN_WIDTH / 2.f, System::SCREEN_HEIGHT + 100.f),
 				goalpos,
 				90.f);
 
@@ -53,7 +53,7 @@ namespace ECS
 			entity->stopComponent<FlashImage>();
 			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<EasingPosMove>().setDest(
-				Vec2(System::SCREEN_WIDIH / 2.f, -50.f),
+				Vec2(System::SCREEN_WIDTH / 2.f, -50.f),
 				goalpos,
 				60.f);
 

@@ -30,7 +30,9 @@ namespace Scene
 		int comb_ = 0;
 		int maxComb_ = 0;
 		ECS::Entity* scoreFont_ = nullptr;
+		ECS::Entity* startUICanvas = nullptr;
 		ECS::Entity* start_ = nullptr;
+		ECS::Entity* stars_[4] = { nullptr };
 		Counter startUIcounter_;
 		const int startUIstopTime = 40;
 
