@@ -92,7 +92,7 @@ namespace ECS
 			gravity_ = &entity->getComponent<Gravity>();
 			alphaBlend_ = &entity->getComponent<AlphaBlend>();
 
-			/*NON → BAD → GOOD → GREAT → PARFECT → AUTO → GOOD → MISS と状態が遷移する
+			/*NON → BAD → GOOD → GREAT → PARFECT → AUTO → GREAT → MISS と状態が遷移する
 			BADの時に入力があるとGRAZEDへ遷移する
 			GOOD,GREAT,PARFECTの時に入力があるとHITTEDへ遷移する
 			以下の羅列は各判定開始時間の計算*/
@@ -101,8 +101,8 @@ namespace ECS
 			hitTimeLine_[2] = hitTimeLine_[1] + hitJudge_[1];	//GOOD→GREAT
 			hitTimeLine_[3] = hitTimeLine_[2] + hitJudge_[2];	//GREAT→PARFECT
 			hitTimeLine_[4] = hitTimeLine_[3] + (hitJudge_[3] / 2.f);	//PARFECT→AUTO
-			hitTimeLine_[5] = hitTimeLine_[3] + hitJudge_[3];	//AUTO→GOOD
-			hitTimeLine_[6] = hitTimeLine_[4] + 10.f;			//GOOD→MISS
+			hitTimeLine_[5] = hitTimeLine_[3] + hitJudge_[3];	//AUTO→GREAT
+			hitTimeLine_[6] = hitTimeLine_[4] + 10.f;			//GREAT→MISS
 
 			noteState_->state = NoteState::State::NON;
 		}
@@ -248,7 +248,7 @@ namespace ECS
 				break;
 
 			case 5:	
-				noteState_->state = NoteState::State::GOOD;
+				noteState_->state = NoteState::State::GREAT;
 				break;
 
 			case 6:	

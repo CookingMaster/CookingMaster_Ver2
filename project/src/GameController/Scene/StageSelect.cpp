@@ -2,6 +2,7 @@
 #include "../src/Input/Input.hpp"
 #include "../src/Components/ScoreSystem.hpp"
 #include "../src/ArcheType/ScoreArcheType.hpp"
+#include "../src/ArcheType/UIArcheType.hpp"
 #include "../src/Components/CursorMove.hpp"
 #include "../src/Class/Sound.hpp"
 #include "../src/ArcheType/ArcheType.hpp"
@@ -49,6 +50,8 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/number2.png", "scorefont");
 		//料理
 		ResourceManager::GetGraph().loadDiv("Resource/image/dish_menu.png", "dish",3,3,1,256,256);
+		//操作方法
+		ResourceManager::GetGraph().load("Resource/image/menu_howto.png", "howto");
 		//サウンド情報の読み込み
 		std::ifstream ifs("Resource/system/gain.bin");
 		ifs >> bgmVal_ >> seVal_;
@@ -87,6 +90,8 @@ namespace Scene
 			*entityManager_,
 			ENTITY_GROUP::BACK_OBJECT
 		);
+
+		ECS::UIArcheType::CreateMenuHowTo("howto", Vec2(0.f, 7.f), entityManager_);
 
 		//ターゲット(アイコンが指すエンティティ)
 		{
