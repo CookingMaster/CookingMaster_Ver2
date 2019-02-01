@@ -187,16 +187,16 @@ namespace Scene
 			bgmBar_ = ECS::ArcheType::CreateEntity
 			(
 				"bar",
-				Vec2{ 0.f,0.f },
+				Vec2{ -100.f,0.f },
 				*entityManager_,
-				ENTITY_GROUP::LAYER1
+				ENTITY_GROUP::BACK
 			);
 			seBar_ = ECS::ArcheType::CreateEntity
 			(
 				"bar",
-				Vec2{ 0.f,0.f },
+				Vec2{ -100.f,0.f },
 				*entityManager_,
-				ENTITY_GROUP::LAYER1
+				ENTITY_GROUP::BACK
 			);
 		}
 		//カーソル生成
@@ -458,8 +458,8 @@ namespace Scene
 			seSlider_->changeGroup(ENTITY_GROUP::BACK);
 			bgmFullSlider_->changeGroup(ENTITY_GROUP::BACK);
 			seFullSlider_->changeGroup(ENTITY_GROUP::BACK);
-			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
-			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
+			bgmBar_->changeGroup(ENTITY_GROUP::BACK);
+			seBar_->changeGroup(ENTITY_GROUP::BACK);
 			score_->changeGroup(ENTITY_GROUP::UI);
 			effects_[0]->changeGroup(ENTITY_GROUP::EFFECT);
 			effects_[1]->changeGroup(ENTITY_GROUP::EFFECT);
