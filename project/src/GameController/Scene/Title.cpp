@@ -15,7 +15,11 @@ namespace Scene
 	{
 		ResourceManager::GetGraph().load("Resource/image/press_any_key.png", "pak");
 		ResourceManager::GetGraph().load("Resource/image/kari_titlelogo.png", "logo");
-		ResourceManager::GetGraph().load("Resource/image/title_backImage.png", "tbi");
+		ResourceManager::GetGraph().load("Resource/image/title_sora.png", "title_back");
+		ResourceManager::GetGraph().load("Resource/image/title_cloud.png", "cloud");
+		ResourceManager::GetGraph().load("Resource/image/title_tennai.png", "title_ten");
+		ResourceManager::GetGraph().load("Resource/image/title_door.png", "title_door");
+		ResourceManager::GetGraph().load("Resource/image/title_gaisou.png", "title_gaisou");
 		ResourceManager::GetGraph().load("Resource/image/fade_white.png", "fw");
 	}
 	void Title::initialize()
@@ -26,7 +30,14 @@ namespace Scene
 			Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f - 200.f),
 			*entityManager_);
 
-		ECS::TitleUIArcheType::CreateTitleBGArchetype("tbi", *entityManager_);
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_back", Vec2(0.f, 0.f), *entityManager_);		//背景
+		for (int i = 0; i < 3; ++i)
+		{
+			//雲
+		}
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_ten", Vec2(607.f, 534.f), *entityManager_);	//店内
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_door", Vec2(607.f, 534.f), *entityManager_);	//ドア
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_gaisou", Vec2(0.f, 0.f), *entityManager_);		//外装
 	}
 	void Title::update()
 	{

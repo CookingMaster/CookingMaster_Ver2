@@ -215,19 +215,18 @@ namespace ECS
 		Vec2 zoomPos_;
 
 	public:
-		ZoomIn(const float zoomSpd, Vec2 zoomPos) :
+		ZoomIn(const float zoomSpd, const Vec2& zoomPos) :
 			cnt_(1.f, zoomSpd, 1.f, 255.f),
 			zoomPos_(zoomPos) {}
 
 		void initialize() override
 		{
 			pos_ = &entity->getComponent<Position>();
-			pos_->val += zoomPos_;
-
+			sd = &entity->getComponent<SpriteDraw>();
 			scale_ = &entity->getComponent<Scale>();
 
-			sd = &entity->getComponent<SpriteDraw>();
-			sd->setPivot(zoomPos_);
+			sd->setPivot(zoomPos_ - pos_->val);
+			pos_->val += zoomPos_ - pos_->val;	//画像の左上が基準であるかのように見せる
 		}
 
 		void update() override

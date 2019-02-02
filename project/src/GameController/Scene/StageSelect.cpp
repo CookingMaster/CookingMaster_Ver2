@@ -91,7 +91,7 @@ namespace Scene
 			ENTITY_GROUP::BACK_OBJECT
 		);
 
-		ECS::UIArcheType::CreateMenuHowTo("howto", Vec2(0.f, 7.f), entityManager_);
+		ECS::UIArcheType::CreateMenuHowTo("howto", Vec2(0.f, 0.f), entityManager_);
 
 		//ターゲット(アイコンが指すエンティティ)
 		{
