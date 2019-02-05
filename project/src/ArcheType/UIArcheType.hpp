@@ -164,7 +164,7 @@ namespace ECS
 			e.addComponent<EasingPosMove>().setDest(
 				Vec2(pos.x, -50.f),
 				Vec2(pos.x, pos.y),
-				120.f);
+				60.f);
 			e.getComponent<EasingPosMove>().isSetAlphaBlend(true);
 			e.addComponent<SpriteDraw>(graphicName).setPivot(Vec2(0.f, 0.f));
 			e.addGroup(ENTITY_GROUP::UI);
