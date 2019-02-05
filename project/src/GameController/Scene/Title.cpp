@@ -14,7 +14,7 @@ namespace Scene
 		, progress(0)
 	{
 		ResourceManager::GetGraph().load("Resource/image/press_any_key.png", "pak");
-		ResourceManager::GetGraph().load("Resource/image/kari_titlelogo.png", "logo");
+		ResourceManager::GetGraph().load("Resource/image/logo.png", "logo");
 		ResourceManager::GetGraph().load("Resource/image/title_bg.png", "title_bg");
 		ResourceManager::GetGraph().load("Resource/image/title_cloud.png", "cloud");
 		ResourceManager::GetGraph().load("Resource/image/title_door.png", "title_door");
@@ -30,9 +30,9 @@ namespace Scene
 			*entityManager_);
 
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_bg", Vec2(0.f, 0.f), *entityManager_);		//背景
-		for (int i = 0; i < 3; ++i)
+		for (int i = 1; i <= 2; ++i)
 		{
-			//雲
+			ECS::TitleUIArcheType::CreateCloud("cloud", 172, i, *entityManager_);//雲
 		}
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_door", Vec2(556.f, 388.f), *entityManager_, true);	//ドア
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_building", Vec2(251.f, 92.f), *entityManager_);	//外装

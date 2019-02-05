@@ -234,8 +234,6 @@ namespace ECS
 
 		void update() override
 		{
-			//sd->setPivot(zoomPos_ - pos_->val);
-
 			if (!stopFlag_)
 			{
 				scale_->val.x = cnt_.getCurrentCount();
@@ -251,27 +249,38 @@ namespace ECS
 	};
 
 	/*!
-	@brief ドアの動き
-	* - Positionが必要
+	@brief タイトル画面で使っている動くやつらの動き（ドアとか雲とか）
+	* - PositionとSpriteDrawが必要
 	*/
-	class DoorMover final : public ComponentSystem
+	class TitleObjectsMover final : public ComponentSystem
 	{
 	private:
 		Position* pos_ = nullptr;
+		SpriteDraw* sd_ = nullptr;
 		Vec2 spd_;
 
 	public:
-		DoorMover(const Vec2& spd):
+		TitleObjectsMover(const Vec2& spd):
 			spd_(spd){}
 
 		void initialize() override
 		{
 			pos_ = &entity->getComponent<Position>();
+			sd_ = &entity->getComponent<SpriteDraw>();
 		}
 
 		void update() override
 		{
 			pos_->val += spd_;
+
+			if (int(pos_->val.x) < -500.f)
+			{
+				pos_->val.x = float(System::SCREEN_WIDIH);
+			}
+			else if (System::SCREEN_WIDIH + 500.f < int(pos_->val.x))
+			{
+				pos_->val.x = float(-sd_->getSize().x);
+			}
 		}
 	};
 }

@@ -35,9 +35,9 @@ namespace ECS
 					for (size_t i = 0; i < bg.size(); ++i)
 					{
 						bg[i]->getComponent<ZoomIn>().setStop(false);
-						if (bg[i]->hasComponent<DoorMover>())
+						if (bg[i]->hasComponent<TitleObjectsMover>())
 						{
-							bg[i]->updateComponent<DoorMover>();
+							bg[i]->updateComponent<TitleObjectsMover>();
 						}
 					}
 					isPushed = true;
@@ -56,11 +56,12 @@ namespace ECS
 			auto* entity = &entityManager_.addEntity();
 
 			entity->addComponent<Transform>().setPosition(-1000.f, -1000.f);
+			entity->getComponent<Scale>().val *= 1.2f;
 			entity->addComponent<FlashImage>();
 			entity->stopComponent<FlashImage>();
 			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<EasingPosMove>().setDest(
-				Vec2(System::SCREEN_WIDIH / 2.f, -50.f),
+				Vec2(System::SCREEN_WIDIH / 2.f, -100.f),
 				goalpos,
 				60.f);
 
@@ -75,12 +76,35 @@ namespace ECS
 
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<SpriteDraw>(imgName.c_str());
-			entity->addComponent<ZoomIn>(0.008f, Vec2(556.f + 66.5f, 400.f + 116.f)).setStop(true);
+			entity->addComponent<ZoomIn>(0.01f, Vec2(556.f + 66.5f, 400.f + 116.f)).setStop(true);
 
 			if (isDoor)
 			{
-				entity->addComponent<DoorMover>(Vec2(3.f, 0.f));
-				entity->stopComponent<DoorMover>();
+				entity->addComponent<TitleObjectsMover>(Vec2(3.f, 0.f));
+				entity->stopComponent<TitleObjectsMover>();
+			}
+
+			entity->addGroup(ENTITY_GROUP::TITLE_BACK);
+
+			return entity;
+		}
+
+		static Entity* CreateCloud(const std::string& imgName, int xSize, int i, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(
+				float(GetRand(System::SCREEN_WIDIH - xSize)),
+				float(GetRand(System::SCREEN_HEIGHT / 5) - 20.f));
+			entity->addComponent<SpriteDraw>(imgName.c_str());
+			entity->addComponent<ZoomIn>(0.01f, Vec2(556.f + 66.5f, 400.f + 116.f)).setStop(true);
+
+			if (i % 2)
+			{
+				entity->addComponent<TitleObjectsMover>(Vec2(1, 0));
+			}
+			else
+			{
+				entity->addComponent<TitleObjectsMover>(Vec2(-1, 0));
 			}
 
 			entity->addGroup(ENTITY_GROUP::TITLE_BACK);
