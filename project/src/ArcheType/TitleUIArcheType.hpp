@@ -16,7 +16,7 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(-1000.f, -1000.f);
 			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<EasingPosMove>().setDest(
-				Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT + 100.f),
+				Vec2(System::SCREEN_WIDTH / 2.f, System::SCREEN_HEIGHT + 100.f),
 				goalpos,
 				90.f);
 
@@ -61,7 +61,7 @@ namespace ECS
 			entity->stopComponent<FlashImage>();
 			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<EasingPosMove>().setDest(
-				Vec2(System::SCREEN_WIDIH / 2.f, -100.f),
+				Vec2(System::SCREEN_WIDTH / 2.f, -100.f),
 				goalpos,
 				60.f);
 
@@ -99,7 +99,7 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(
-				float(GetRand(System::SCREEN_WIDIH - xSize)),
+				float(GetRand(System::SCREEN_WIDTH - xSize)),
 				float(GetRand(System::SCREEN_HEIGHT / 5) - 20.f));
 			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<ZoomIn>(0.01f, Vec2(560.f + 65.f, 389.f + 115.f)).setStop(true);
@@ -121,7 +121,7 @@ namespace ECS
 		static Entity* CreateFade(const std::string& imgName, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Transform>().setPosition(0.f ,0.f);
+			entity->addComponent<Transform>().setPosition(0.f, 0.f);
 			entity->addComponent<FadeComponent>().reset(255.f, 0.f, 60.f);
 			entity->addComponent<SpriteDraw>(imgName.c_str()).setPivot(Vec2{ 0.f,0.f });
 

@@ -32,7 +32,7 @@ namespace Scene
 		ECS::TitleUIArcheType::CreateFade("fw", *entityManager_);
 
 		ECS::TitleUIArcheType::CreateLogoArchetype("logo",
-			Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f - 200.f),
+			Vec2(System::SCREEN_WIDTH / 2.f, System::SCREEN_HEIGHT / 2.f - 200.f),
 			*entityManager_);
 
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_bg", Vec2(0.f, 0.f), *entityManager_);		//背景
@@ -75,7 +75,7 @@ namespace Scene
 			if (logo[0]->getComponent<ECS::EasingPosMove>().getIsEaseEnd())
 			{
 				ECS::TitleUIArcheType::CreateMessageArchetype("pak",
-					Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 200.f),
+					Vec2(System::SCREEN_WIDTH / 2.f, System::SCREEN_HEIGHT / 2.f + 200.f),
 					*entityManager_);
 				++progress;
 			}

@@ -46,9 +46,9 @@ namespace ECS
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
-			e.addComponent<SpriteAnimationDraw>(divGraphicName).setPivot(Vec2{0.f,0.f});
+			e.addComponent<SpriteAnimationDraw>(divGraphicName).setPivot(Vec2{ 0.f,0.f });
 			e.getComponent<Scale>().val;
-			e.addComponent<Animator>(0,0,7,0,7);
+			e.addComponent<Animator>(0, 0, 7, 0, 7);
 			e.addGroup(ENTITY_GROUP::BACK_OBJECT);
 			return &e;
 		}
@@ -63,7 +63,7 @@ namespace ECS
 			class RotationFan : public ComponentSystem
 			{
 			private:
-				Rotation* rota_ = nullptr;
+				Rotation * rota_ = nullptr;
 			public:
 				void initialize() override
 				{
@@ -117,7 +117,7 @@ namespace ECS
 			return &e;
 		}
 		//!蛇口から出る水
-		static Entity* CreateWater(const char* graphicName, const Vec2& pos, const ECS::Rectangle& rect,EntityManager* entityManager)
+		static Entity* CreateWater(const char* graphicName, const Vec2& pos, const ECS::Rectangle& rect, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -129,7 +129,7 @@ namespace ECS
 			return &e;
 		}
 		//!CookingStartのフォント
-		static Entity* CreateStartLogo(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
+		static Entity* CreateStartUIFont(const char* graphicName, const Vec2& pos, const int startUIstopTime, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -137,12 +137,12 @@ namespace ECS
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteDraw>(graphicName);
-			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f)/*.setEasingFunction(Easing::CircIn)*/;
+			e.addComponent<ECS::ExpandTwiceComponent>(1.f, 10.f, startUIstopTime, 20.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
-		//! お玉とフライパン
-		static Entity* CreateStartLogo(const char* graphicName, const int index, const Vec2& pos, EntityManager* entityManager)
+		//! お玉とフライパンと星
+		static Entity* CreateStartUIOrnament(const char* graphicName, const int index, const Vec2& pos, const int startUIstopTime, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -150,7 +150,7 @@ namespace ECS
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
-			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f)/*.setEasingFunction(Easing::CircIn)*/;
+			e.addComponent<ECS::ExpandTwiceComponent>(1.f, 10.f, startUIstopTime, 20.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
@@ -203,7 +203,7 @@ namespace ECS
 			return &e;
 		}
 		//!おやっさんのセリフ(吹き出し用)
-		static Entity* CreateBossBalloon(const char* graphicName, const Vec2& pos,const int& lifeSpan, EntityManager* entityManager)
+		static Entity* CreateBossBalloon(const char* graphicName, const Vec2& pos, const int& lifeSpan, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);

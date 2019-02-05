@@ -31,8 +31,10 @@ namespace Scene
 		int maxComb_ = 0;
 		ECS::Entity* scoreFont_ = nullptr;
 		ECS::Entity* start_ = nullptr;
-		Counter startUIcounter_;
-		const int startUIstopTime = 40;
+		ECS::Entity* otama_ = nullptr;
+		ECS::Entity* pan_ = nullptr;
+		ECS::Entity* stars_[4] = { nullptr };
+		const int startUIstopTime = 70;
 
 		//こいつをtrueにするとオートモードになるぞ！
 		bool autoPerfectMode_;

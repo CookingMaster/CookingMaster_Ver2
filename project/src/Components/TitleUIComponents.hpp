@@ -275,9 +275,9 @@ namespace ECS
 
 			if (int(pos_->val.x) < -500.f)
 			{
-				pos_->val.x = float(System::SCREEN_WIDIH);
+				pos_->val.x = float(System::SCREEN_WIDTH);
 			}
-			else if (System::SCREEN_WIDIH + 500.f < int(pos_->val.x))
+			else if (System::SCREEN_WIDTH + 500.f < int(pos_->val.x))
 			{
 				pos_->val.x = float(-sd_->getSize().x);
 			}
