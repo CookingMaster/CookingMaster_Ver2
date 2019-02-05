@@ -42,7 +42,6 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/bg_table.png", "bg_table");
 		ResourceManager::GetGraph().load("Resource/image/mori1.png", "mori_full");
 		ResourceManager::GetGraph().load("Resource/image/mori2.png", "mori_empty");
-		ResourceManager::GetGraph().load("Resource/image/test_font.png", "font");
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
 		//CookingStartUI
 		ResourceManager::GetGraph().load("Resource/image/gameStart/gameStart.png", "start");
@@ -52,7 +51,7 @@ namespace Scene
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
 		//マーカーの画像読み込み
-		ResourceManager::GetGraph().load/*Div*/("Resource/image/note_marker.png", "marker"/*, 1, 1, 1, 200, 200*/);
+		ResourceManager::GetGraph().load("Resource/image/note_marker.png", "marker");
 		//スコア貼り紙
 		ResourceManager::GetGraph().load("Resource/image/paper.png", "paper");
 		//研修中
