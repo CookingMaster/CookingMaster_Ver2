@@ -2,6 +2,7 @@
 •`‰æ‡@title_bg->title_door->title_building
 title_door 556,388
 title_building 251,92
+title_light 1091 101
 
 bg_fan2
 1087,9
