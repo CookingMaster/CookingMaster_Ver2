@@ -17,7 +17,7 @@ namespace Scene
 	private:
 		ECS::EntityManager* entityManager_;
 		int progress;
-
+		float gain_;
 	public:
 		Title(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Title();
