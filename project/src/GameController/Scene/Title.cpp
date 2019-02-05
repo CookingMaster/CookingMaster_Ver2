@@ -39,8 +39,8 @@ namespace Scene
 		{
 			ECS::TitleUIArcheType::CreateCloud("cloud", 172, i, *entityManager_);//雲
 		}
-		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_door", Vec2(556.f, 388.f), *entityManager_, true);	//ドア
-		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_building", Vec2(251.f, 92.f), *entityManager_);	//外装
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_door", Vec2(560.f, 389.f), *entityManager_, true);	//ドア
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_building", Vec2(0.f, 96.f), *entityManager_);	//外装
 		Sound bgm("titleBGM");
 		bgm.play(true,false);
 	}
