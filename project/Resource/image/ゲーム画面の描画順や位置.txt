@@ -1,8 +1,8 @@
 ＜タイトル関連＞
 描画順　title_bg->title_door->title_building
-title_door 556,388
-title_building 251,92
-title_light 1091 101
+title_door 560,389
+title_building 0,96
+title_light 1084,92
 
 bg_fan2
 1087,9
