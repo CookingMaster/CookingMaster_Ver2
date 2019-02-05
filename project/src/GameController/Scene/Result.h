@@ -32,16 +32,14 @@ namespace Scene
 		ECS::EntityManager* entityManager_ = nullptr;
 		//! フェード
 		ECS::Entity* fade_ = nullptr;
-		//! 背景
-		ECS::Entity* back_ = nullptr;
 		//! クロッシュ
 		ECS::Entity* cloche_ = nullptr;
 		//! 料理
 		ECS::Entity* dish_ = nullptr;
 		//! 紙吹雪
 		std::vector<ECS::Entity*> confetties_{ nullptr };
-		//! 評価フォント
-		ECS::Entity* evaluation_ = nullptr;
+		//! スポットライト
+		ECS::Entity* spotLight[2] = { nullptr };
 		//! スコア背景
 		ECS::Entity* black_ = nullptr;
 		//! スコア

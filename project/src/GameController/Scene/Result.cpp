@@ -40,8 +40,6 @@ void Scene::Result::initialize()
 	setStage();
 	//stageとスコアによって料理の画像を変える
 	Vec2 dishImgPos = setDishImg();
-	//スコアによって評価フォントの画像を変える
-	int index = getEvaluationIndex();
 
 	//カウンタ初期化
 	counter_.reset();
@@ -59,7 +57,7 @@ void Scene::Result::initialize()
 		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 100.f },
 		*entityManager_
 	);
-	back_ = ECS::ResultArcheType::CreateBackEntity(
+	ECS::ResultArcheType::CreateBackEntity(
 		"result_back",
 		Vec2{ 0,0 },
 		*entityManager_
@@ -70,19 +68,11 @@ void Scene::Result::initialize()
 		*entityManager_,
 		ENTITY_GROUP::FADE
 	);
-	evaluation_ = ECS::ResultArcheType::CreateEvaluationEntity(
-		"evaluation",
-		index,
-		Vec2{ System::SCREEN_WIDIH / 2.f, 125.f },
-		Vec2_i{ 598,203 },
-		*entityManager_
-	);
 }
 
 void Scene::Result::update()
 {
-	//フェードイン
-	if (!isFadeOut_ && fade_->getComponent<ECS::AlphaBlend>().alpha >= 0) {
+	if (!isFadeOut_ && fade_->getComponent<ECS::AlphaBlend>().alpha >= 165) {
 		fade_->getComponent<ECS::AlphaBlend>().alpha -= 6;
 		return;
 	}
@@ -91,6 +81,7 @@ void Scene::Result::update()
 	entityManager_->update();
 
 	if (counter_.getCurrentCount() == Timing::CONFETTI) {
+		fade_->getComponent<ECS::AlphaBlend>().alpha = 0;
 		//紙吹雪
 		if (score_ >= SCORE_GREAT) {
 			for (int i = 0; i < 50; ++i) {
@@ -122,7 +113,15 @@ void Scene::Result::update()
 	}
 	if (counter_.getCurrentCount() == Timing::EVALUATION) {
 		//評価フォント拡大
-		evaluation_->addComponent<ECS::Expand>(Vec2{ 1.f,1.f }, Easing::ExpoOut, 5.f);
+		//スコアによって評価フォントの画像を変える
+		int index = getEvaluationIndex();
+		ECS::ResultArcheType::CreateEvaluationEntity(
+			"evaluation",
+			index,
+			Vec2{ System::SCREEN_WIDIH / 2.f, 125.f },
+			Vec2_i{ 598,203 },
+			*entityManager_
+		);			
 		//クロッシュ戻ってくるので移動コンポーネントを消す
 		cloche_->removeComponent<ECS::FlyAway>();
 	}

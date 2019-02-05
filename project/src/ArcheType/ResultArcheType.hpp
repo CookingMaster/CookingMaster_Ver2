@@ -71,6 +71,7 @@ namespace ECS
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
+			entity->addComponent<ECS::Expand>(Vec2{ 1.f,1.f }, Easing::ExpoOut, 5.f);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
