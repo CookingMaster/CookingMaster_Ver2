@@ -34,7 +34,11 @@ namespace ECS
 					auto& bg = entityManager.getEntitiesByGroup(ENTITY_GROUP::TITLE_BACK);
 					for (size_t i = 0; i < bg.size(); ++i)
 					{
-						bg[i]->updateComponent<ZoomIn>();
+						bg[i]->getComponent<ZoomIn>().setStop(false);
+						if (bg[i]->hasComponent<DoorMover>())
+						{
+							bg[i]->updateComponent<DoorMover>();
+						}
 					}
 					isPushed = true;
 				}
@@ -65,14 +69,19 @@ namespace ECS
 			return entity;
 		}
 
-		static Entity* CreateTitleBGArchetype(const std::string& imgName, const Vec2& pos, EntityManager& entityManager_)
+		static Entity* CreateTitleBGArchetype(const std::string& imgName, const Vec2& pos, EntityManager& entityManager_, bool isDoor = false)
 		{
 			auto* entity = &entityManager_.addEntity();
 
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<SpriteDraw>(imgName.c_str());
-			entity->addComponent<ZoomIn>(0.008f, Vec2(575.f, 660.f));
-			entity->stopComponent<ZoomIn>();
+			entity->addComponent<ZoomIn>(0.008f, Vec2(556.f + 66.5f, 400.f + 116.f)).setStop(true);
+
+			if (isDoor)
+			{
+				entity->addComponent<DoorMover>(Vec2(3.f, 0.f));
+				entity->stopComponent<DoorMover>();
+			}
 
 			entity->addGroup(ENTITY_GROUP::TITLE_BACK);
 

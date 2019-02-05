@@ -214,10 +214,13 @@ namespace ECS
 		Counter_f cnt_;
 		Vec2 zoomPos_;
 
+		bool stopFlag_;
+
 	public:
 		ZoomIn(const float zoomSpd, const Vec2& zoomPos) :
 			cnt_(1.f, zoomSpd, 1.f, 255.f),
-			zoomPos_(zoomPos) {}
+			zoomPos_(zoomPos),
+			stopFlag_(false) {}
 
 		void initialize() override
 		{
@@ -231,9 +234,44 @@ namespace ECS
 
 		void update() override
 		{
-			scale_->val.x = cnt_.getCurrentCount();
-			scale_->val.y = cnt_.getCurrentCount();
-			++cnt_;
+			//sd->setPivot(zoomPos_ - pos_->val);
+
+			if (!stopFlag_)
+			{
+				scale_->val.x = cnt_.getCurrentCount();
+				scale_->val.y = cnt_.getCurrentCount();
+				++cnt_;
+			}
+		}
+
+		void setStop(bool isStop)
+		{
+			stopFlag_ = isStop;
+		}
+	};
+
+	/*!
+	@brief ドアの動き
+	* - Positionが必要
+	*/
+	class DoorMover final : public ComponentSystem
+	{
+	private:
+		Position* pos_ = nullptr;
+		Vec2 spd_;
+
+	public:
+		DoorMover(const Vec2& spd):
+			spd_(spd){}
+
+		void initialize() override
+		{
+			pos_ = &entity->getComponent<Position>();
+		}
+
+		void update() override
+		{
+			pos_->val += spd_;
 		}
 	};
 }
