@@ -19,7 +19,7 @@ namespace Scene
 		//Fade
 		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
 		//セレクト曲
-		ResourceManager::GetSound().load("Resource/sound/BGM/Welcome.ogg", "selectBGM",SoundType::BGM);
+		ResourceManager::GetSound().load("Resource/sound/BGM/SelectMenu.ogg", "selectBGM",SoundType::BGM);
 		//オプション決定音
 		ResourceManager::GetSound().load("Resource/sound/SE/turnthepaper.wav", "turn", SoundType::SE);
 		//セレクト効果音
