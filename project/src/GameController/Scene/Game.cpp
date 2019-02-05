@@ -169,8 +169,11 @@ namespace Scene
 						scoreNum_ = it->getComponent<ECS::BarComponentSystemY>().getScore();
 					}
 				}
-				scoreFont_->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
-				scoreFont_->getComponent<ECS::DrawFont>().setNumber(scoreNum_);
+				if (!autoPerfectMode_)
+				{
+					scoreFont_->getComponent<ECS::ExpandReduceComponentSystem>().onExpand(true);
+					scoreFont_->getComponent<ECS::DrawFont>().setNumber(scoreNum_);
+				}
 			}
 			nc_.run(msl_.getNotesData(), msl_.getScoreData(), *entityManager_);
 
