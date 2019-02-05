@@ -46,7 +46,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/pause_.png", "pause");
 		//CookingStartUI
 		ResourceManager::GetGraph().load("Resource/image/gameStart/gameStart.png", "start");
-		ResourceManager::GetGraph().loadDiv("Resource/image/gameStart/gong.png", "gong", 2, 2, 1, 150, 128);
+		ResourceManager::GetGraph().loadDiv("Resource/image/gameStart/gong.png", "gong", 2, 2, 1, 150, 200);
 		ResourceManager::GetGraph().loadDiv("Resource/image/gameStart/star.png", "star", 2, 2, 1, 55, 53);
 
 		//プレイヤーの画像読み込み
@@ -80,7 +80,7 @@ namespace Scene
 		//鍋
 		ECS::GameEffectsArcheType::CreateSaucepan("nabe1", Vec2(431.f, 175.f), entityManager_);
 		auto nabe2 = ECS::GameEffectsArcheType::CreateSaucepan("nabe2", Vec2{ 720.f,217.f }, entityManager_);
-		nabe2->getComponent < ECS::Animator>().changeFrame(5);
+		nabe2->getComponent<ECS::Animator>().changeFrame(5);
 		//ファン
 		ResourceManager::GetGraph().load("Resource/image/bg_fan2.png", "fan");
 		ECS::GameEffectsArcheType::CreateFan("fan", Vec2{ 1173.f, 96.f }, entityManager_);
@@ -410,59 +410,55 @@ namespace Scene
 		//拡大から停止まで
 		if (start_ == nullptr)
 		{
+			//お玉とフライパン
+			pan_ = ECS::GameEffectsArcheType::CreateStartUIOrnament(
+				"gong", 1, Vec2{ System::SCREEN_WIDTH / 2.f + 30.f,System::SCREEN_HEIGHT / 2.f + 50.f }, startUIstopTime, entityManager_
+			);
+			pan_->addComponent<ECS::SoundGongComponent>(40, -40.f);
+			otama_ = ECS::GameEffectsArcheType::CreateStartUIOrnament(
+				"gong", 0, Vec2{ System::SCREEN_WIDTH / 2.f - 10.f,System::SCREEN_HEIGHT / 2.f + 60.f }, startUIstopTime, entityManager_
+			);
+			otama_->addComponent<ECS::SoundGongComponent>(40, 40.f);
 			//GameStartの文字
-			start_ = ECS::GameEffectsArcheType::CreateStartLogo(
-				"start", Vec2{ System::SCREEN_WIDTH / 2.f,System::SCREEN_HEIGHT / 2.f }, entityManager_
+			start_ = ECS::GameEffectsArcheType::CreateStartUIFont(
+				"start", Vec2{ System::SCREEN_WIDTH / 2.f,System::SCREEN_HEIGHT / 2.f }, startUIstopTime, entityManager_
 			);
 			//星の座標を算出しておく
 			Vec2 starPos[4] = {
-				Vec2{ System::SCREEN_WIDTH / 2.f - 200.f,System::SCREEN_HEIGHT / 2.f - 200.f },
-				Vec2{ System::SCREEN_WIDTH / 2.f + 200.f,System::SCREEN_HEIGHT / 2.f - 200.f },
-				Vec2{ System::SCREEN_WIDTH / 2.f - 180.f,System::SCREEN_HEIGHT / 2.f - 170.f },
-				Vec2{ System::SCREEN_WIDTH / 2.f + 180.f,System::SCREEN_HEIGHT / 2.f - 170.f }
+				Vec2{ System::SCREEN_WIDTH / 2.f - 200.f,System::SCREEN_HEIGHT / 2.f - 15.f },
+				Vec2{ System::SCREEN_WIDTH / 2.f + 200.f,System::SCREEN_HEIGHT / 2.f - 15.f },
+				Vec2{ System::SCREEN_WIDTH / 2.f - 150.f,System::SCREEN_HEIGHT / 2.f },
+				Vec2{ System::SCREEN_WIDTH / 2.f + 150.f,System::SCREEN_HEIGHT / 2.f }
 			};
+			//星の角度
+			float starAngle[2] = { 30.f, -30.f };
 			//星つくる
 			for (int i = 0; i < 4; ++i) 
 			{
-				stars_[i] = ECS::GameEffectsArcheType::CreateStar("star", i / 2, starPos[i], entityManager_);
+				stars_[i] = ECS::GameEffectsArcheType::CreateStartUIOrnament(
+					"star", i / 2, starPos[i], startUIstopTime, entityManager_
+				);
 			}
-			//＊＊＊フライパンとお玉も作る＊＊＊
-			//キャンバスにぶち込む
-			startUICanvas = ECS::ArcheType::CreatePlainEntity(Vec2{ 0.f,0.f }, *entityManager_);
-			startUICanvas->addComponent<ECS::ExpandTwiceComponent>(1.f, 10.f, startUIstopTime, 5.f);
-			startUICanvas->addComponent<ECS::Canvas>().addChild(start_);
-			for (int i = 4; i < 4; ++i) {
-				startUICanvas->getComponent<ECS::Canvas>().addChild(stars_[i]);
-			}
-			startUICanvas->addComponent<ECS::Canvas>().addChild(start_);
-			//＊＊＊フライパンとお玉も追加すること＊＊＊
-
-			startUIcounter_.setCounter(0, 1, 0, startUIstopTime);
-		}
-		if (start_->getComponent<ECS::ExpandComponentSystem>().isEaseEnd())
-		{
-			//止まる
-			startUIcounter_.add();
-		}
-		if (startUIcounter_.getCurrentCount() == startUIstopTime)
-		{
-			//拡大して消えていく
-			startUIcounter_.reset();
-			//start_->removeComponent<ECS::ExpandComponentSystem>();
-			//start_->addComponent<ECS::ExpandComponentSystem>(1.f, 10.f, 5.f);
 		}
 		//明示的に更新処理を呼ぶ
-		startUICanvas->update();
-		//start_->getComponent<ECS::ExpandComponentSystem>().update();
-		//for (int i = 0; i < 4; ++i)
-		//{
-		//	stars_[i]->update();
-		//}
+		start_->update();
+		otama_->update();
+		pan_->update();
+		for (int i = 0; i < 4; ++i)
+		{
+			stars_[i]->update();
+		}
 		//終了する処理
-		if (startUICanvas->getComponent<ECS::Scale>().val.x >= 10.f)
+		if (start_->getComponent<ECS::Scale>().val.x >= 10.f)
 		{
 			//完全に消す
-			startUICanvas->destroy();
+			start_->destroy();
+			for (int i = 0; i < 4; ++i)
+			{
+				stars_[i]->destroy();
+			}
+			otama_->destroy();
+			pan_->destroy();
 			return true;
 		}
 		return false;
