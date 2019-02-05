@@ -12,7 +12,12 @@ namespace Scene
 		: AbstractScene(sceneTitleChange)
 		, entityManager_(entityManager)
 		, progress(0)
+		, gain_(MasterSound::Get().getBGMGain())
 	{
+		//曲
+		ResourceManager::GetSound().load("Resource/sound/BGM/Welcome.ogg", "titleBGM", SoundType::BGM);
+		//決定音
+		ResourceManager::GetSound().load("Resource/sound/SE/enterShop.ogg", "enter", SoundType::SE);
 		ResourceManager::GetGraph().load("Resource/image/press_any_key.png", "pak");
 		ResourceManager::GetGraph().load("Resource/image/logo.png", "logo");
 		ResourceManager::GetGraph().load("Resource/image/title_bg.png", "title_bg");
@@ -36,6 +41,8 @@ namespace Scene
 		}
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_door", Vec2(556.f, 388.f), *entityManager_, true);	//ドア
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_building", Vec2(251.f, 92.f), *entityManager_);	//外装
+		Sound bgm("titleBGM");
+		bgm.play(true,false);
 	}
 	void Title::update()
 	{
@@ -45,13 +52,13 @@ namespace Scene
 	void Title::draw()
 	{
 		entityManager_->orderByDraw(ENTITY_GROUP::MAX);
-		DrawFormatString(0, 0, 0xffffffff, "タイトル画面");
 	}
 
 	Title::~Title()
 	{
 		entityManager_->removeAll();
-		ResourceManager::GetSound().remove("pak");
+		ResourceManager::GetSound().removeAll();
+		ResourceManager::GetGraph().removeAll();
 	}
 
 	void Title::BehaviorForProgress()
@@ -59,6 +66,7 @@ namespace Scene
 		auto& logo = entityManager_->getEntitiesByGroup(ENTITY_GROUP::TITLE_LOGO);
 		auto& message = entityManager_->getEntitiesByGroup(ENTITY_GROUP::TITLE_MESSAGE);
 		auto& fade = entityManager_->getEntitiesByGroup(ENTITY_GROUP::TOP_FADE);
+		
 		switch (progress)
 		{
 		case 0:
@@ -76,15 +84,18 @@ namespace Scene
 			{
 				fade[0]->getComponent<ECS::FadeComponent>().reset(0.f, 255.f, 80.f);
 				++progress;
+				
 			}
 			break;
 
 		case 2:
-			if (fade[0]->getComponent<ECS::FadeComponent>().isFadeEnd())
+			gain_ -= 0.02f;
+			if (fade[0]->getComponent<ECS::FadeComponent>().isFadeEnd() && gain_ <= 0.f)
 			{
 				ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::POP, true);
 			}
 			break;
 		}
+		MasterSound::Get().setAllBGMGain(gain_);
 	}
 }
