@@ -76,11 +76,11 @@ namespace ECS
 
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<SpriteDraw>(imgName.c_str());
-			entity->addComponent<ZoomIn>(0.01f, Vec2(556.f + 66.5f, 400.f + 116.f)).setStop(true);
+			entity->addComponent<ZoomIn>(0.01f, Vec2(560.f + 65.f, 389.f + 115.f)).setStop(true);
 
 			if (isDoor)
 			{
-				entity->addComponent<TitleObjectsMover>(Vec2(3.f, 0.f));
+				entity->addComponent<TitleObjectsMover>(Vec2(4.f, 0.f));
 				entity->stopComponent<TitleObjectsMover>();
 			}
 
@@ -96,7 +96,7 @@ namespace ECS
 				float(GetRand(System::SCREEN_WIDIH - xSize)),
 				float(GetRand(System::SCREEN_HEIGHT / 5) - 20.f));
 			entity->addComponent<SpriteDraw>(imgName.c_str());
-			entity->addComponent<ZoomIn>(0.01f, Vec2(556.f + 66.5f, 400.f + 116.f)).setStop(true);
+			entity->addComponent<ZoomIn>(0.01f, Vec2(560.f + 65.f, 389.f + 115.f)).setStop(true);
 
 			if (i % 2)
 			{
