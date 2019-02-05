@@ -31,8 +31,15 @@ namespace ECS
 					logo[0]->updateComponent<FlashImage>();
 					logo[0]->getComponent<FlashImage>().setIsDelete(true);
 
-					auto& bg = entityManager.getEntitiesByGroup(ENTITY_GROUP::TITLE_BG);
-					bg[0]->updateComponent<ZoomIn>();
+					auto& bg = entityManager.getEntitiesByGroup(ENTITY_GROUP::TITLE_BACK);
+					for (size_t i = 0; i < bg.size(); ++i)
+					{
+						bg[i]->getComponent<ZoomIn>().setStop(false);
+						if (bg[i]->hasComponent<TitleObjectsMover>())
+						{
+							bg[i]->updateComponent<TitleObjectsMover>();
+						}
+					}
 					isPushed = true;
 				}
 				return;
@@ -49,11 +56,12 @@ namespace ECS
 			auto* entity = &entityManager_.addEntity();
 
 			entity->addComponent<Transform>().setPosition(-1000.f, -1000.f);
+			entity->getComponent<Scale>().val *= 1.2f;
 			entity->addComponent<FlashImage>();
 			entity->stopComponent<FlashImage>();
 			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<EasingPosMove>().setDest(
-				Vec2(System::SCREEN_WIDIH / 2.f, -50.f),
+				Vec2(System::SCREEN_WIDIH / 2.f, -100.f),
 				goalpos,
 				60.f);
 
@@ -62,16 +70,44 @@ namespace ECS
 			return entity;
 		}
 
-		static Entity* CreateTitleBGArchetype(const std::string& imgName, EntityManager& entityManager_)
+		static Entity* CreateTitleBGArchetype(const std::string& imgName, const Vec2& pos, EntityManager& entityManager_, bool isDoor = false)
 		{
 			auto* entity = &entityManager_.addEntity();
 
-			entity->addComponent<Transform>();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<SpriteDraw>(imgName.c_str());
-			entity->addComponent<ZoomIn>(0.008f, Vec2(575.f, 660.f));
-			entity->stopComponent<ZoomIn>();
+			entity->addComponent<ZoomIn>(0.01f, Vec2(556.f + 66.5f, 400.f + 116.f)).setStop(true);
 
-			entity->addGroup(ENTITY_GROUP::TITLE_BG);
+			if (isDoor)
+			{
+				entity->addComponent<TitleObjectsMover>(Vec2(3.f, 0.f));
+				entity->stopComponent<TitleObjectsMover>();
+			}
+
+			entity->addGroup(ENTITY_GROUP::TITLE_BACK);
+
+			return entity;
+		}
+
+		static Entity* CreateCloud(const std::string& imgName, int xSize, int i, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(
+				float(GetRand(System::SCREEN_WIDIH - xSize)),
+				float(GetRand(System::SCREEN_HEIGHT / 5) - 20.f));
+			entity->addComponent<SpriteDraw>(imgName.c_str());
+			entity->addComponent<ZoomIn>(0.01f, Vec2(556.f + 66.5f, 400.f + 116.f)).setStop(true);
+
+			if (i % 2)
+			{
+				entity->addComponent<TitleObjectsMover>(Vec2(1, 0));
+			}
+			else
+			{
+				entity->addComponent<TitleObjectsMover>(Vec2(-1, 0));
+			}
+
+			entity->addGroup(ENTITY_GROUP::TITLE_BACK);
 
 			return entity;
 		}

@@ -19,8 +19,11 @@ namespace Scene
 		//決定音
 		ResourceManager::GetSound().load("Resource/sound/SE/enterShop.ogg", "enter", SoundType::SE);
 		ResourceManager::GetGraph().load("Resource/image/press_any_key.png", "pak");
-		ResourceManager::GetGraph().load("Resource/image/kari_titlelogo.png", "logo");
-		ResourceManager::GetGraph().load("Resource/image/title_backImage.png", "tbi");
+		ResourceManager::GetGraph().load("Resource/image/logo.png", "logo");
+		ResourceManager::GetGraph().load("Resource/image/title_bg.png", "title_bg");
+		ResourceManager::GetGraph().load("Resource/image/title_cloud.png", "cloud");
+		ResourceManager::GetGraph().load("Resource/image/title_door.png", "title_door");
+		ResourceManager::GetGraph().load("Resource/image/title_building.png", "title_building");
 		ResourceManager::GetGraph().load("Resource/image/fade_white.png", "fw");
 	}
 	void Title::initialize()
@@ -31,7 +34,13 @@ namespace Scene
 			Vec2(System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f - 200.f),
 			*entityManager_);
 
-		ECS::TitleUIArcheType::CreateTitleBGArchetype("tbi", *entityManager_);
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_bg", Vec2(0.f, 0.f), *entityManager_);		//背景
+		for (int i = 1; i <= 2; ++i)
+		{
+			ECS::TitleUIArcheType::CreateCloud("cloud", 172, i, *entityManager_);//雲
+		}
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_door", Vec2(556.f, 388.f), *entityManager_, true);	//ドア
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_building", Vec2(251.f, 92.f), *entityManager_);	//外装
 		Sound bgm("titleBGM");
 		bgm.play(true,false);
 	}

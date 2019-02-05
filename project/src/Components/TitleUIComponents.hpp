@@ -214,27 +214,73 @@ namespace ECS
 		Counter_f cnt_;
 		Vec2 zoomPos_;
 
+		bool stopFlag_;
+
 	public:
-		ZoomIn(const float zoomSpd, Vec2 zoomPos) :
+		ZoomIn(const float zoomSpd, const Vec2& zoomPos) :
 			cnt_(1.f, zoomSpd, 1.f, 255.f),
-			zoomPos_(zoomPos) {}
+			zoomPos_(zoomPos),
+			stopFlag_(false) {}
 
 		void initialize() override
 		{
 			pos_ = &entity->getComponent<Position>();
-			pos_->val += zoomPos_;
-
+			sd = &entity->getComponent<SpriteDraw>();
 			scale_ = &entity->getComponent<Scale>();
 
-			sd = &entity->getComponent<SpriteDraw>();
-			sd->setPivot(zoomPos_);
+			sd->setPivot(zoomPos_ - pos_->val);
+			pos_->val += zoomPos_ - pos_->val;	//画像の左上が基準であるかのように見せる
 		}
 
 		void update() override
 		{
-			scale_->val.x = cnt_.getCurrentCount();
-			scale_->val.y = cnt_.getCurrentCount();
-			++cnt_;
+			if (!stopFlag_)
+			{
+				scale_->val.x = cnt_.getCurrentCount();
+				scale_->val.y = cnt_.getCurrentCount();
+				++cnt_;
+			}
+		}
+
+		void setStop(bool isStop)
+		{
+			stopFlag_ = isStop;
+		}
+	};
+
+	/*!
+	@brief タイトル画面で使っている動くやつらの動き（ドアとか雲とか）
+	* - PositionとSpriteDrawが必要
+	*/
+	class TitleObjectsMover final : public ComponentSystem
+	{
+	private:
+		Position* pos_ = nullptr;
+		SpriteDraw* sd_ = nullptr;
+		Vec2 spd_;
+
+	public:
+		TitleObjectsMover(const Vec2& spd):
+			spd_(spd){}
+
+		void initialize() override
+		{
+			pos_ = &entity->getComponent<Position>();
+			sd_ = &entity->getComponent<SpriteDraw>();
+		}
+
+		void update() override
+		{
+			pos_->val += spd_;
+
+			if (int(pos_->val.x) < -500.f)
+			{
+				pos_->val.x = float(System::SCREEN_WIDIH);
+			}
+			else if (System::SCREEN_WIDIH + 500.f < int(pos_->val.x))
+			{
+				pos_->val.x = float(-sd_->getSize().x);
+			}
 		}
 	};
 }
