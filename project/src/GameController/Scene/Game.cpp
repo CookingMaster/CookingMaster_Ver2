@@ -245,7 +245,7 @@ namespace Scene
 						DOUT << "PARFECT" << std::endl;
 						se.play(false, true);
 						++comb_;
-						ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_, ECS::AlphaBlend::BlendMode::SUB);
+						ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
 						return msl_.getPoint(nowstate, comb_);
 					}
 					break;
