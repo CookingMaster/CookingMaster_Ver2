@@ -35,7 +35,7 @@ namespace ECS
 				break;
 
 			case ECS::Direction::Dir::R:
-				posX = System::SCREEN_WIDIH + (notesData.xsize / 2.f);	//出現するX座標
+				posX = System::SCREEN_WIDTH + (notesData.xsize / 2.f);	//出現するX座標
 				entity->addComponent<Transform>().setPosition(posX, targetPos.y);
 				break;
 			}

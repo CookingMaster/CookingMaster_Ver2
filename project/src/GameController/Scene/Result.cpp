@@ -49,14 +49,14 @@ void Scene::Result::initialize()
 	//エンティティ初期化
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity(
 		"cloche",
-		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 50.f },
+		Vec2{ System::SCREEN_WIDTH / 2.f, System::SCREEN_HEIGHT / 2.f + 50.f },
 		*entityManager_
 	);
 	dish_ = ECS::ResultArcheType::CreateDishEntity(
 		"dish",
 		dishImgPos,
 		Vec2{ 512.f,512.f },
-		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 100.f },
+		Vec2{ System::SCREEN_WIDTH / 2.f, System::SCREEN_HEIGHT / 2.f + 100.f },
 		*entityManager_
 	);
 	back_ = ECS::ResultArcheType::CreateBackEntity(
@@ -73,7 +73,7 @@ void Scene::Result::initialize()
 	evaluation_ = ECS::ResultArcheType::CreateEvaluationEntity(
 		"evaluation",
 		index,
-		Vec2{ System::SCREEN_WIDIH / 2.f, 125.f },
+		Vec2{ System::SCREEN_WIDTH / 2.f, 125.f },
 		Vec2_i{ 598,203 },
 		*entityManager_
 	);
@@ -130,11 +130,11 @@ void Scene::Result::update()
 		//スコア背景入場
 		auto black = ECS::ArcheType::CreateEntity(
 			"black",
-			Vec2{ System::SCREEN_WIDIH / 2 - 500.f,-720.f },
+			Vec2{ System::SCREEN_WIDTH / 2 - 500.f,-720.f },
 			*entityManager_, ENTITY_GROUP::EFFECT);
 		black->addComponent<ECS::EasingMove>(
 			Easing::LinearIn,
-			Vec2{ System::SCREEN_WIDIH / 2 - 500.f,0.f },
+			Vec2{ System::SCREEN_WIDTH / 2 - 500.f,0.f },
 			10.f
 			);
 	}
@@ -142,7 +142,7 @@ void Scene::Result::update()
 		//スコアフォント入場
 		ECS::ArcheType::CreateRectEntity(
 			"scorecombo",
-			Vec2{ System::SCREEN_WIDIH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f - 100.f },
+			Vec2{ System::SCREEN_WIDTH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f - 100.f },
 			ECS::Rectangle{ 0,0,500,150 },
 			*entityManager_,
 			ENTITY_GROUP::UI
@@ -152,7 +152,7 @@ void Scene::Result::update()
 		//スコア出現
 		ECS::ResultArcheType::CreateScoreEntity(
 			"scorefont",
-			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f - 30.f },
+			Vec2{ System::SCREEN_WIDTH / 2.f + 100, System::SCREEN_HEIGHT / 2.f - 30.f },
 			score_,
 			*entityManager_
 		);
@@ -160,7 +160,7 @@ void Scene::Result::update()
 		//コンボフォント入場
 		ECS::ArcheType::CreateRectEntity(
 			"scorecombo",
-			Vec2{ System::SCREEN_WIDIH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f + 50.f },
+			Vec2{ System::SCREEN_WIDTH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f + 50.f },
 			ECS::Rectangle{ 0,150,500,150 },
 			*entityManager_,
 			ENTITY_GROUP::UI
@@ -170,7 +170,7 @@ void Scene::Result::update()
 		//コンボ出現
 		ECS::ResultArcheType::CreateScoreEntity(
 			"scorefont",
-			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f + 110.f },
+			Vec2{ System::SCREEN_WIDTH / 2.f + 100, System::SCREEN_HEIGHT / 2.f + 110.f },
 			combo_,
 			*entityManager_
 		);

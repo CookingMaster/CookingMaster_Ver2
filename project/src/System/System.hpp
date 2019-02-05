@@ -44,7 +44,7 @@ private:
 		//ウインドウタイトルを変更
 		SetMainWindowText("CookingMaster2");
 		//画面サイズ変更
-		SetGraphMode(SCREEN_WIDIH, SCREEN_HEIGHT, 32);
+		SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);
 		//ウィンドウモード変更
 		//初期化
 		DxLib_Init();
@@ -62,7 +62,7 @@ private:
 public:
 	//!画面サイズ
 	static constexpr int
-	SCREEN_WIDIH = 1280,
+	SCREEN_WIDTH = 1280,
 	SCREEN_HEIGHT = 720;
 	System()
 	{
