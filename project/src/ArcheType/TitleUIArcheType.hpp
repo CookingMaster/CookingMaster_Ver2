@@ -70,11 +70,12 @@ namespace ECS
 			return entity;
 		}
 
-		static Entity* CreateTitleBGArchetype(const std::string& imgName, const Vec2& pos, EntityManager& entityManager_, bool isDoor = false)
+		static Entity* CreateTitleBGArchetype(const std::string& imgName, const Vec2& pos, EntityManager& entityManager_, bool isDoor = false, bool isLight = false)
 		{
 			auto* entity = &entityManager_.addEntity();
 
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<ZoomIn>(0.01f, Vec2(560.f + 65.f, 389.f + 115.f)).setStop(true);
 
@@ -82,6 +83,11 @@ namespace ECS
 			{
 				entity->addComponent<TitleObjectsMover>(Vec2(4.f, 0.f));
 				entity->stopComponent<TitleObjectsMover>();
+			}
+
+			if (isLight)
+			{
+				entity->addComponent<FlashImage>();
 			}
 
 			entity->addGroup(ENTITY_GROUP::TITLE_BACK);

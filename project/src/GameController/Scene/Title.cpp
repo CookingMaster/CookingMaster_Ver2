@@ -24,6 +24,7 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/title_cloud.png", "cloud");
 		ResourceManager::GetGraph().load("Resource/image/title_door.png", "title_door");
 		ResourceManager::GetGraph().load("Resource/image/title_building.png", "title_building");
+		ResourceManager::GetGraph().load("Resource/image/title_light.png", "title_light");
 		ResourceManager::GetGraph().load("Resource/image/fade_white.png", "fw");
 	}
 	void Title::initialize()
@@ -41,6 +42,7 @@ namespace Scene
 		}
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_door", Vec2(560.f, 389.f), *entityManager_, true);	//ドア
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_building", Vec2(0.f, 96.f), *entityManager_);	//外装
+		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_light", Vec2(1084.f, 92.f), *entityManager_, false, true);	//ライト
 		Sound bgm("titleBGM");
 		bgm.play(true,false);
 	}
