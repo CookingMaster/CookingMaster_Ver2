@@ -2,11 +2,12 @@
 #include "../src/Input/Input.hpp"
 #include "../src/Components/ScoreSystem.hpp"
 #include "../src/ArcheType/ScoreArcheType.hpp"
+#include "../src/ArcheType/UIArcheType.hpp"
 #include "../src/Components/CursorMove.hpp"
 #include "../src/Class/Sound.hpp"
 #include "../src/ArcheType/ArcheType.hpp"
 #include "../src/Components/musicName.hpp"
-
+#include "../src/Utility/String.hpp"
 namespace Scene
 {
 	
@@ -18,7 +19,7 @@ namespace Scene
 		//Fade
 		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
 		//セレクト曲
-		ResourceManager::GetSound().load("Resource/sound/BGM/Welcome.ogg", "selectBGM",SoundType::BGM);
+		ResourceManager::GetSound().load("Resource/sound/BGM/SelectMenu.ogg", "selectBGM",SoundType::BGM);
 		//オプション決定音
 		ResourceManager::GetSound().load("Resource/sound/SE/turnthepaper.wav", "turn", SoundType::SE);
 		//セレクト効果音
@@ -46,9 +47,11 @@ namespace Scene
 		//難易度の星
 		ResourceManager::GetGraph().loadDiv("Resource/image/star.png", "star", 2,2,1,55,53);
 		//フォント
-		ResourceManager::GetGraph().load("Resource/image/number2.png", "number");
+		ResourceManager::GetGraph().load("Resource/image/number2.png", "scorefont");
 		//料理
 		ResourceManager::GetGraph().loadDiv("Resource/image/dish_menu.png", "dish",3,3,1,256,256);
+		//操作方法
+		ResourceManager::GetGraph().load("Resource/image/menu_howto.png", "howto");
 		//サウンド情報の読み込み
 		std::ifstream ifs("Resource/system/gain.bin");
 		ifs >> bgmVal_ >> seVal_;
@@ -87,6 +90,8 @@ namespace Scene
 			*entityManager_,
 			ENTITY_GROUP::BACK_OBJECT
 		);
+
+		ECS::UIArcheType::CreateMenuHowTo("howto", Vec2(0.f, 0.f), entityManager_);
 
 		//ターゲット(アイコンが指すエンティティ)
 		{
@@ -182,16 +187,16 @@ namespace Scene
 			bgmBar_ = ECS::ArcheType::CreateEntity
 			(
 				"bar",
-				Vec2{ 0.f,0.f },
+				Vec2{ -100.f,0.f },
 				*entityManager_,
-				ENTITY_GROUP::LAYER1
+				ENTITY_GROUP::BACK
 			);
 			seBar_ = ECS::ArcheType::CreateEntity
 			(
 				"bar",
-				Vec2{ 0.f,0.f },
+				Vec2{ -100.f,0.f },
 				*entityManager_,
-				ENTITY_GROUP::LAYER1
+				ENTITY_GROUP::BACK
 			);
 		}
 		//カーソル生成
@@ -320,7 +325,7 @@ namespace Scene
 		{
 			score_ = ECS::ScoreArcheType::CreateSelectScoreEntity
 			(
-				"number",
+				"scorefont",
 				Vec2{ 740.f, 620.f },
 				ECS::StageHighScore::STAGE1,
 				*entityManager_
@@ -417,7 +422,13 @@ namespace Scene
 		MasterSound::Get().setAllBGMGain(bgmVal_);
 		MasterSound::Get().setAllSEGain(seVal_);
 	}
-
+	void StageSelect::gainAdjustment()
+	{
+		if (bgmVal_ >= 1.f && bgmVal_ <= 1.1f) { bgmVal_ = 1.f; }
+		if (seVal_ >= 1.f && seVal_ <= 1.1f) { seVal_ = 1.f; }
+		if (bgmVal_ < 0.f) { bgmVal_ = 0.f; }
+		if (seVal_ < 0.f) { seVal_ = 0.f; }
+	}
 	void StageSelect::changeLayer()
 	{
 		//レイヤー入れ替え
@@ -447,8 +458,8 @@ namespace Scene
 			seSlider_->changeGroup(ENTITY_GROUP::BACK);
 			bgmFullSlider_->changeGroup(ENTITY_GROUP::BACK);
 			seFullSlider_->changeGroup(ENTITY_GROUP::BACK);
-			bgmBar_->changeGroup(ENTITY_GROUP::LAYER1);
-			seBar_->changeGroup(ENTITY_GROUP::LAYER1);
+			bgmBar_->changeGroup(ENTITY_GROUP::BACK);
+			seBar_->changeGroup(ENTITY_GROUP::BACK);
 			score_->changeGroup(ENTITY_GROUP::UI);
 			effects_[0]->changeGroup(ENTITY_GROUP::EFFECT);
 			effects_[1]->changeGroup(ENTITY_GROUP::EFFECT);
@@ -511,20 +522,28 @@ namespace Scene
 		optionSheetMove();
 		changeLayer();
 		setSoundVolume();
-		const auto bgm_path = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
-		if (bgm_path != "")
+		const auto select_bgm_path = cursor_->getComponent<ECS::CursorMove>().getSelectStage();
+		if (select_bgm_path != "")
 		{
 			if (!isPlay_)
 			{
 				stageNum_ = cursor_->getComponent<ECS::CursorMove>().getStageNumber();
-				ResourceManager::GetSound().load(
-					"Resource/sound/MUSIC/stage" + std::to_string(stageNum_) + "/" + bgm_path,
-					"stage" + std::to_string(stageNum_),
-					SoundType::BGM);
-				
 				std::ofstream ofs("Resource/system/gain.bin");
+				gainAdjustment();
 				ofs << bgmVal_ << "\n" << seVal_;
+				fadeGain_= bgmVal_;
 				isPlay_ = true;
+				extension::std::String path = select_bgm_path;
+				if (path.split('|').size() >= 2)
+				{
+					auto str = path.split('|');
+					bgmPath_ = str[0];
+					isAuto_ = true;
+				}
+				else
+				{
+					bgmPath_ = select_bgm_path;
+				}
 				fade_->getComponent<ECS::SpriteDraw>().drawEnable();
 				Sound se("selectSE");
 				se.play(false,true);
@@ -532,15 +551,23 @@ namespace Scene
 		}
 		if (isPlay_)
 		{
+			cursor_->stopComponent<ECS::CursorMove>();
 			fade_->getComponent<ECS::AlphaBlend>().alpha += 6;
+			//BGMのフェードアウト
+			fadeGain_ -= 0.02f;
+			MasterSound::Get().setAllBGMGain(fadeGain_);
 		}
 
 
-		if (fade_->getComponent<ECS::AlphaBlend>().alpha >= 255)
+		if (fade_->getComponent<ECS::AlphaBlend>().alpha >= 255 && fadeGain_ < 0.f)
 		{
+			ResourceManager::GetSound().remove("selectBGM");
+			MasterSound::Get().setAllBGMGain(bgmVal_);
 			auto parameter = std::make_unique<Parameter>();
 			parameter->add<std::string>("BGM_name", "stage" + std::to_string(stageNum_));
 			parameter->add<size_t>("stageNum", stageNum_);
+			parameter->add<std::string>("BGM_path", bgmPath_);
+			parameter->add<bool>("autoFlag", isAuto_);
 			ON_SCENE_CHANGE(SceneName::GAME, parameter.get(), StackPopFlag::POP, true);
 		}
 	}
@@ -553,7 +580,7 @@ namespace Scene
 	{
 		entityManager_->removeAll();
 		ResourceManager::GetGraph().removeAll();
-		ResourceManager::GetSound().remove("selectBGM");
+
 	}
 
-}// namespace StageSelect
+}// namespace Scene

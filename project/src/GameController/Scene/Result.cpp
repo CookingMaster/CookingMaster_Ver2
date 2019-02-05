@@ -1,4 +1,4 @@
-#include "Result.h"
+ï»¿#include "Result.h"
 #include "../../System/System.hpp"
 #include "../GameController.h"
 #include "../../ArcheType/ResultArcheType.hpp"
@@ -24,37 +24,37 @@ void Scene::Result::initialize()
 	//Fade
 	isFadeOut_ = false;
 	ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
-	//‰æ‘œ
+	//ç”»åƒ
 	ResourceManager::GetGraph().load("Resource/image/cloche.png", "cloche");
 	ResourceManager::GetGraph().load("Resource/image/menuback.png", "result_back");
 	ResourceManager::GetGraph().load("Resource/image/dish.png", "dish");
 	ResourceManager::GetGraph().load("Resource/image/confetti.png", "confetti");
 	ResourceManager::GetGraph().load("Resource/image/result_black.png", "black");
-	//•]‰¿ƒtƒHƒ“ƒg
+	//è©•ä¾¡ãƒ•ã‚©ãƒ³ãƒˆ
 	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
-	//ƒtƒHƒ“ƒg
+	//ãƒ•ã‚©ãƒ³ãƒˆ
 	ResourceManager::GetGraph().load("Resource/image/score_combo.png", "scorecombo");
 	ResourceManager::GetGraph().load("Resource/image/score_font.png", "scorefont");
 
-	//ƒvƒŒƒC‚µ‚½ƒXƒe[ƒW‚ğŠ„‚èo‚·
+	//ãƒ—ãƒ¬ã‚¤ã—ãŸã‚¹ãƒ†ãƒ¼ã‚¸ã‚’å‰²ã‚Šå‡ºã™
 	setStage();
-	//stage‚ÆƒXƒRƒA‚É‚æ‚Á‚Ä—¿—‚Ì‰æ‘œ‚ğ•Ï‚¦‚é
+	//stageã¨ã‚¹ã‚³ã‚¢ã«ã‚ˆã£ã¦æ–™ç†ã®ç”»åƒã‚’å¤‰ãˆã‚‹
 	Vec2 dishImgPos = setDishImg();
 
-	//ƒJƒEƒ“ƒ^‰Šú‰»
+	//ã‚«ã‚¦ãƒ³ã‚¿åˆæœŸåŒ–
 	counter_.reset();
 	counter_.setEndTime(600, 0);
-	//ƒGƒ“ƒeƒBƒeƒB‰Šú‰»
+	//ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£åˆæœŸåŒ–
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity(
 		"cloche",
-		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 50.f },
+		Vec2{ System::SCREEN_WIDTH / 2.f, System::SCREEN_HEIGHT / 2.f + 50.f },
 		*entityManager_
 	);
 	dish_ = ECS::ResultArcheType::CreateDishEntity(
 		"dish",
 		dishImgPos,
 		Vec2{ 512.f,512.f },
-		Vec2{ System::SCREEN_WIDIH / 2.f, System::SCREEN_HEIGHT / 2.f + 100.f },
+		Vec2{ System::SCREEN_WIDTH / 2.f, System::SCREEN_HEIGHT / 2.f + 100.f },
 		*entityManager_
 	);
 	ECS::ResultArcheType::CreateBackEntity(
@@ -72,6 +72,7 @@ void Scene::Result::initialize()
 
 void Scene::Result::update()
 {
+	//ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³
 	if (!isFadeOut_ && fade_->getComponent<ECS::AlphaBlend>().alpha >= 165) {
 		fade_->getComponent<ECS::AlphaBlend>().alpha -= 6;
 		return;
@@ -82,7 +83,7 @@ void Scene::Result::update()
 
 	if (counter_.getCurrentCount() == Timing::CONFETTI) {
 		fade_->getComponent<ECS::AlphaBlend>().alpha = 0;
-		//†á
+		//ç´™å¹é›ª
 		if (score_ >= SCORE_GREAT) {
 			for (int i = 0; i < 50; ++i) {
 				confetties_.push_back(
@@ -95,9 +96,9 @@ void Scene::Result::update()
 				);
 			}
 		}
-		//ƒNƒƒbƒVƒ…”ò‚Î‚·
+		//ã‚¯ãƒ­ãƒƒã‚·ãƒ¥é£›ã°ã™
 		cloche_->addComponent<ECS::FlyAway>(Vec2{ 1920,600 }, 3.f);
-		//—¿—Šg‘å
+		//æ–™ç†æ‹¡å¤§
 		dish_->addComponent<ECS::Expand>(
 			Vec2{ 1.8f,1.8f },
 			Easing::ExpoIn,
@@ -105,71 +106,69 @@ void Scene::Result::update()
 			);
 	}
 	if (dish_->hasComponent<ECS::Expand>() && dish_->getComponent<ECS::Expand>().isEaseEnd()) {
-		//—¿—k¬
+		//æ–™ç†ç¸®å°
 		dish_->addComponent<ECS::Reduction>(
 			Vec2{ 1.2f,1.2f },
 			Easing::ExpoOut, 8.f
 			);
 	}
 	if (counter_.getCurrentCount() == Timing::EVALUATION) {
-		//•]‰¿ƒtƒHƒ“ƒgŠg‘å
-		//ƒXƒRƒA‚É‚æ‚Á‚Ä•]‰¿ƒtƒHƒ“ƒg‚Ì‰æ‘œ‚ğ•Ï‚¦‚é
 		int index = getEvaluationIndex();
 		ECS::ResultArcheType::CreateEvaluationEntity(
 			"evaluation",
 			index,
-			Vec2{ System::SCREEN_WIDIH / 2.f, 125.f },
+			Vec2{ System::SCREEN_WIDTH / 2.f, 125.f },
 			Vec2_i{ 598,203 },
 			*entityManager_
 		);			
-		//ƒNƒƒbƒVƒ…–ß‚Á‚Ä‚­‚é‚Ì‚ÅˆÚ“®ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğÁ‚·
+		//ã‚¯ãƒ­ãƒƒã‚·ãƒ¥æˆ»ã£ã¦ãã‚‹ã®ã§ç§»å‹•ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æ¶ˆã™
 		cloche_->removeComponent<ECS::FlyAway>();
 	}
 	if (counter_.getCurrentCount() == Timing::SCORE_BACK) {
-		//ƒXƒRƒA”wŒi“üê
+		//ã‚¹ã‚³ã‚¢èƒŒæ™¯å…¥å ´
 		auto black = ECS::ArcheType::CreateEntity(
 			"black",
-			Vec2{ System::SCREEN_WIDIH / 2 - 500.f,-720.f },
+			Vec2{ System::SCREEN_WIDTH / 2 - 500.f,-720.f },
 			*entityManager_, ENTITY_GROUP::EFFECT);
 		black->addComponent<ECS::EasingMove>(
 			Easing::LinearIn,
-			Vec2{ System::SCREEN_WIDIH / 2 - 500.f,0.f },
+			Vec2{ System::SCREEN_WIDTH / 2 - 500.f,0.f },
 			10.f
 			);
 	}
 	if (counter_.getCurrentCount() == Timing::SCOREFONT) {
-		//ƒXƒRƒAƒtƒHƒ“ƒg“üê
+		//ã‚¹ã‚³ã‚¢ãƒ•ã‚©ãƒ³ãƒˆå…¥å ´
 		ECS::ArcheType::CreateRectEntity(
 			"scorecombo",
-			Vec2{ System::SCREEN_WIDIH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f - 100.f },
+			Vec2{ System::SCREEN_WIDTH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f - 100.f },
 			ECS::Rectangle{ 0,0,500,150 },
 			*entityManager_,
 			ENTITY_GROUP::UI
 		);
 	}
 	if (counter_.getCurrentCount() == Timing::SCORE) {
-		//ƒXƒRƒAoŒ»
+		//ã‚¹ã‚³ã‚¢å‡ºç¾
 		ECS::ResultArcheType::CreateScoreEntity(
 			"scorefont",
-			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f - 30.f },
+			Vec2{ System::SCREEN_WIDTH / 2.f + 100, System::SCREEN_HEIGHT / 2.f - 30.f },
 			score_,
 			*entityManager_
 		);
 	}	if (counter_.getCurrentCount() == Timing::COMBOFONT) {
-		//ƒRƒ“ƒ{ƒtƒHƒ“ƒg“üê
+		//ã‚³ãƒ³ãƒœãƒ•ã‚©ãƒ³ãƒˆå…¥å ´
 		ECS::ArcheType::CreateRectEntity(
 			"scorecombo",
-			Vec2{ System::SCREEN_WIDIH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f + 50.f },
+			Vec2{ System::SCREEN_WIDTH / 2.f - 450.f, System::SCREEN_HEIGHT / 2.f + 50.f },
 			ECS::Rectangle{ 0,150,500,150 },
 			*entityManager_,
 			ENTITY_GROUP::UI
 		);
 	}
 	if (counter_.getCurrentCount() == Timing::COMBO) {
-		//ƒRƒ“ƒ{oŒ»
+		//ã‚³ãƒ³ãƒœå‡ºç¾
 		ECS::ResultArcheType::CreateScoreEntity(
 			"scorefont",
-			Vec2{ System::SCREEN_WIDIH / 2.f + 100, System::SCREEN_HEIGHT / 2.f + 110.f },
+			Vec2{ System::SCREEN_WIDTH / 2.f + 100, System::SCREEN_HEIGHT / 2.f + 110.f },
 			combo_,
 			*entityManager_
 		);
@@ -196,13 +195,15 @@ void Scene::Result::draw()
 Scene::Result::~Result()
 {
 	entityManager_->removeAll();
+	ResourceManager::GetGraph().removeAll();
+	ResourceManager::GetSound().removeAll();
 }
 
 Vec2 Scene::Result::setDishImg()
 {
 	Vec2 dishImgPos;
 
-	//ƒXƒRƒA‚É‚æ‚Á‚ÄxÀ•W‚ğ•Ï‚¦‚é
+	//ã‚¹ã‚³ã‚¢ã«ã‚ˆã£ã¦xåº§æ¨™ã‚’å¤‰ãˆã‚‹
 	if (score_ >= SCORE_GREAT) {
 		dishImgPos.x = 0;
 	}
@@ -212,7 +213,7 @@ Vec2 Scene::Result::setDishImg()
 	else {
 		dishImgPos.x = 1024;
 	}
-	//ƒXƒe[ƒW‚É‚æ‚Á‚ÄyÀ•W‚ğ•Ï‚¦‚é
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã«ã‚ˆã£ã¦yåº§æ¨™ã‚’å¤‰ãˆã‚‹
 	dishImgPos.y = (static_cast<int>(stage_) - 1) * 512.f;
 
 	return dishImgPos;
@@ -220,7 +221,7 @@ Vec2 Scene::Result::setDishImg()
 
 void Scene::Result::setStage()
 {
-	//BGM–¼‚©‚çƒXƒe[ƒW‚ğŠ„‚èo‚·
+	//BGMåã‹ã‚‰ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’å‰²ã‚Šå‡ºã™
 	if (bgmName_ == "stage1") {
 		stage_ = ECS::StageHighScore::STAGE1;
 	}

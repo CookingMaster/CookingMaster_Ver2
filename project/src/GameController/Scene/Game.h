@@ -1,8 +1,8 @@
 ﻿/**
 * @file Game.hpp
 * @brief ゲームシーンでの動作を記述します
-* @author 
-* @date 
+* @author
+* @date
 */
 #pragma once
 #include "../../ECS/ECS.hpp"
@@ -14,32 +14,45 @@
 #include "../src/Class/BossController.hpp"
 namespace Scene
 {
-	class Game : public AbstractScene
+	class Game final : public AbstractScene
 	{
 	private:
 		ECS::Entity* fade_ = nullptr;
 		bool isPlay_ = false;
 		ECS::EntityManager* entityManager_ = nullptr;
-		int scoreNum_;
-		std::string bgmName_;
+		int scoreNum_ = 0;
+		std::string bgmName_ = "";
+		std::string bgmPath_ = "";
 		size_t stageNum_;
-		std::unique_ptr<BossController> boss_;
+		std::unique_ptr<BossController> boss_ = nullptr;
 		MusicScoreLoader msl_;
 		NotesCreator nc_;
 		int comb_ = 0;
 		int maxComb_ = 0;
+		ECS::Entity* scoreFont_ = nullptr;
+		ECS::Entity* start_ = nullptr;
+		ECS::Entity* otama_ = nullptr;
+		ECS::Entity* pan_ = nullptr;
+		ECS::Entity* stars_[4] = { nullptr };
+		const int startUIstopTime = 70;
+
+		//こいつをtrueにするとオートモードになるぞ！
+		bool autoPerfectMode_;
+
 	public:
 		Game(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~Game();
 		void initialize() override;
 		void update() override;
 		void draw() override;
-	
+
 	private:
 		int getNoteScore();
 		void changePauseScene();
 		void changeResultScene();
 		void comboReset();
 		void saveMaxComb();
+		void createRankFont(int rank);
+		[[nodiscard]] const bool isStartUIEnd();
 	};
 }

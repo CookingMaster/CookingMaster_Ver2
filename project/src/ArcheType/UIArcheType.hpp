@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file UIArcheType.hpp
-* @brief UI‚ÌƒA[ƒLƒ^ƒCƒv‚ðì‚è‚Ü‚·
+* @brief UIã®ã‚¢ãƒ¼ã‚­ã‚¿ã‚¤ãƒ—ã‚’ä½œã‚Šã¾ã™
 * @author moon
 * @date 2018/10/25
 */
@@ -9,12 +9,13 @@
 #include "../GameController/GameController.h"
 #include "../Components/Renderer.hpp"
 #include "../Components/UIComponents.hpp"
-
+#include "../Components/TitleUIComponents.hpp"
+#include "../Components/CursorMove.hpp"
 namespace ECS
 {
-	struct UIArcheType
+	struct UIArcheType final
 	{
-		//!‹ó‚Á‚Û‚Ìƒo[iƒXƒRƒA•\Ž¦—pj
+		//!ç©ºã£ã½ã®ãƒãƒ¼ï¼ˆã‚¹ã‚³ã‚¢è¡¨ç¤ºç”¨ï¼‰
 		static Entity* CreateEmptyBarUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -26,7 +27,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::KITCHENWARE);
 			return entity;
 		}
-		//!ƒo[‚Ì’†giƒXƒRƒA•\Ž¦—pj
+		//!ãƒãƒ¼ã®ä¸­èº«ï¼ˆã‚¹ã‚³ã‚¢è¡¨ç¤ºç”¨ï¼‰
 		static Entity* CreateFullBarUI(const char* graphicName, const Vec2& rect, const Vec2& pos, int maxScore, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -39,7 +40,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::KITCHENWARE);
 			return entity;
 		}
-		//!ŽžŒv
+		//!æ™‚è¨ˆ
 		static Entity* CreateClockUI(const char* graphicName, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -50,7 +51,7 @@ namespace ECS
 			entity->addComponent<SpriteDraw>(graphicName);
 			return entity;
 		}
-		//!ŽžŒv‚Ìj
+		//!æ™‚è¨ˆã®é‡
 		static Entity* CreateNeedleUI(const char* graphicName, const Vec2& pos, EntityManager& entityManager_, float speed)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -62,7 +63,7 @@ namespace ECS
 			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2{ 7.f,48.f });
 			return entity;
 		}
-		//!ƒXƒRƒA•\Ž¦—pƒtƒHƒ“ƒg
+		//!ã‚¹ã‚³ã‚¢è¡¨ç¤ºç”¨ãƒ•ã‚©ãƒ³ãƒˆ
 		static Entity* CreateFontUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -73,12 +74,25 @@ namespace ECS
 			entity->addComponent<SpriteRectDraw>(graphicName);
 			entity->addComponent<DrawFont>(rect.x, rect.y);
 			entity->addComponent<ExpandReduceComponentSystem>(1.5f, 0.1f);
+			entity->addGroup(ENTITY_GROUP::BACK_STAFF);
+			return entity;
+		}
+		//! æ–¬ã£ãŸæ™‚ã®è©•ä¾¡ãƒ•ã‚©ãƒ³ãƒˆã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£
+		static Entity* CreateRankFont(const char* graphicName, const Vec2& pos, EntityManager& entityManager_) 
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>();
+			entity->addComponent<SpriteAnimationDraw>(graphicName);
+			entity->addComponent<ChangeAlphaComponent>(5, 10);
+			entity->addComponent<EasingPosMove>();
+			entity->getComponent<EasingPosMove>().setDest(pos, Vec2{ pos.x,pos.y - 30.f }, 15);
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
-
-		//---------- ƒ|[ƒY‰æ–Ê
-		//ƒ|[ƒY‰æ–Ê‚Ì”wŒi
+		//---------- ãƒãƒ¼ã‚ºç”»é¢
+		//ãƒãƒ¼ã‚ºç”»é¢ã®èƒŒæ™¯
 		static Entity* CreatePauseBG(const char* graphicName, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -89,7 +103,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
-		//ƒ|[ƒY‰æ–Ê‚Ìƒpƒ“ƒlƒ‹
+		//ãƒãƒ¼ã‚ºç”»é¢ã®ãƒ‘ãƒ³ãƒãƒ«
 		static Entity* CreatePauseUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -101,7 +115,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
-		//ƒ|[ƒY‰æ–Ê‚Ìƒ{ƒ^ƒ“
+		//ãƒãƒ¼ã‚ºç”»é¢ã®ãƒœã‚¿ãƒ³
 		static Entity* CreateButtonUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -114,7 +128,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
-		//ƒ|[ƒY‰æ–Ê‚Ìƒ{ƒ^ƒ“‚Ìã‚É‚Ì‚¹‚é•¶Žš
+		//ãƒãƒ¼ã‚ºç”»é¢ã®ãƒœã‚¿ãƒ³ã®ä¸Šã«ã®ã›ã‚‹æ–‡å­—
 		static Entity* CreateButtonMojiUI(const char* graphicName, const Vec2& rect, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -127,7 +141,7 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
-		//ƒ|[ƒY‰æ–Ê‚Ì‘I‘ðŽˆƒtƒŒ[ƒ€
+		//ãƒãƒ¼ã‚ºç”»é¢ã®é¸æŠžè‚¢ãƒ•ãƒ¬ãƒ¼ãƒ 
 		static Entity* CreateSelectFrame(const char* graphicName, const Vec2& pos, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
@@ -139,6 +153,23 @@ namespace ECS
 			entity->addComponent<SelectFrame>();
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
+		}
+
+		//ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠžç”»é¢ã®æ“ä½œæ–¹æ³•
+		static Entity* CreateMenuHowTo(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+
+			e.addComponent<Transform>().setPosition(pos.x, -50.f);
+			e.addComponent<EasingPosMove>().setDest(
+				Vec2(pos.x, -50.f),
+				Vec2(pos.x, pos.y),
+				60.f);
+			e.getComponent<EasingPosMove>().isSetAlphaBlend(true);
+			e.addComponent<SpriteDraw>(graphicName).setPivot(Vec2(0.f, 0.f));
+			e.addGroup(ENTITY_GROUP::UI);
+
+			return &e;
 		}
 	};
 }

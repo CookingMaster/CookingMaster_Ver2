@@ -28,7 +28,7 @@ private:
 public:
 
 	/**
-	*  @brief エンティティ属するのグループです
+	*  @brief エンティティ属するグループです
 	* - 描画レイヤー、処理順、エンティティの取得に使います
 	* - OrderByDraw使用時、番号が大きいほど手前に描画されます
 	*/
@@ -44,12 +44,13 @@ public:
 		GIRL,			//女の子
 		RECEIVE_STAFF,	//食材を受け取るスタッフ
 		MARKER,			//マーカー(ノーツの判定位置)
+		GUCHA,			//グチャってなった食材
 		NOTE,			//音符(食材)
 		EFFECT,			//演出用エフェクト
 		UI,				//時計やスコアゲージ等のUI
 		FADE,			//フェード用
 		PAUSE_UI,		//ポーズ用UI
-		TITLE_BG,		//タイトル画面背景
+		TITLE_BACK,		//タイトル画面の背景
 		TITLE_MESSAGE,	//タイトル画面の「PRESS ANY KEY」
 		TITLE_LOGO,		//タイトルロゴ
 		TOP_FADE,		//最前面フェード

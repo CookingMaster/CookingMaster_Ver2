@@ -14,9 +14,15 @@
 
 namespace ECS
 {
-	struct NotesArcheType
+	struct NotesArcheType final
 	{
-		static Entity* CreateNotes(const NotesData& notesData, const ECS::Direction::Dir& dir, float wait, float arrivalBeatTime, const Vec2& targetPos, EntityManager& entityManager_)
+		static Entity* CreateNotes(
+			const NotesData& notesData,
+			const ECS::Direction::Dir& dir,
+			float wait,
+			float arrivalBeatTime,
+			const Vec2& targetPos,
+			EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 
@@ -29,7 +35,7 @@ namespace ECS
 				break;
 
 			case ECS::Direction::Dir::R:
-				posX = System::SCREEN_WIDIH + (notesData.xsize / 2.f);	//出現するX座標
+				posX = System::SCREEN_WIDTH + (notesData.xsize / 2.f);	//出現するX座標
 				entity->addComponent<Transform>().setPosition(posX, targetPos.y);
 				break;
 			}
@@ -52,7 +58,7 @@ namespace ECS
 				true);
 
 			entity->addComponent<NoteState>().dir = dir;
-			entity->addComponent<NoteStateTransition>(notesData, arrivalBeatTime);
+			entity->addComponent<NoteStateTransition>(notesData, arrivalBeatTime, entityManager_);
 
 			entity->addComponent<ReplayNotesComponents>(int(wait));
 

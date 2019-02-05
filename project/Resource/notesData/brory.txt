@@ -1,5 +1,6 @@
 Resource/image/notes/broccoli.png
 brory
+1
 Resource/sound/SE/brory_.ogg
 2
 7

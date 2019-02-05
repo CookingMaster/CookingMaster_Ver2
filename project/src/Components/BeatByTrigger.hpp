@@ -25,7 +25,7 @@ namespace ECS {
 		float rhythm_ = 0.f;	//リズムを取るタイミング
 		float goalTime_ = 0.f;	//次にtrueとなる時間
 		Sound sound_;
-		bool trigger = false;
+		bool trigger_ = false;
 
 	public:
 		BeatByTrigger(int bpm, int beat, float rhythm, const std::string& soundName) :
@@ -47,24 +47,30 @@ namespace ECS {
 			{
 				CalcurationBeat beat(bpm_, beat_);
 				goalTime_ += beat.calcNote_Millisecond(rhythm_);
-				trigger = true;
+				trigger_ = true;
 			}
 			else
 			{
-				trigger = false;
+				trigger_ = false;
 			}
 		}
 
 		//トリガーを取得
 		bool getTrigger()
 		{
-			return trigger;
+			return trigger_;
 		}
 
 		//トリガーがtrueになる拍を変更
 		void setBeat(float rhythm)
 		{
 			rhythm_ = rhythm;
+		}
+
+		//曲が終了したか否かを取得する(終了したらtrue)
+		[[nodiscard]] bool isEndSound()
+		{
+			return sound_.getCurrentTime() >= sound_.getTotalTime();
 		}
 	};
 }

@@ -34,7 +34,6 @@
     <ClInclude Include="src\ArcheType\PlayerArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ResultArcheType.hpp" />
     <ClInclude Include="src\ArcheType\ScoreArcheType.hpp" />
-    <ClInclude Include="src\ArcheType\SelectArchetype.hpp" />
     <ClInclude Include="src\ArcheType\ArcheType.hpp" />
     <ClInclude Include="src\ArcheType\TitleUIArcheType.hpp" />
     <ClInclude Include="src\ArcheType\UIArcheType.hpp" />
@@ -77,6 +76,7 @@
     <ClInclude Include="src\Utility\Easing.hpp" />
     <ClInclude Include="src\Utility\FPS.hpp" />
     <ClInclude Include="src\Utility\Random.hpp" />
+    <ClInclude Include="src\Utility\String.hpp" />
     <ClInclude Include="src\Utility\Utility.hpp" />
     <ClInclude Include="src\Utility\Vec.hpp" />
   </ItemGroup>

@@ -1,7 +1,6 @@
 ﻿/**
 * @file  Renderer.hpp
 * @brief 描画関連のコンポーネントです。
-* @note  特に理由がなければSpriteDrawやSpriteAnimationDraw、SpriteRectDrawが最も多機能なのでそれらの使用を推奨します
 * @author tonarinohito
 * @date 2018/10/06
 * @par History
@@ -9,6 +8,8 @@
 -# SpriteRectDraw追加
 - 2018/10/25 tonarinohito
 -# SpriteDrawもsetPivot()追加
+- 2019/1/23 tonarinohito
+-# 反転処理追加
 */
 #pragma once
 #include "../ECS/ECS.hpp"
@@ -80,6 +81,7 @@ namespace ECS
 			NOBLEND    = DX_BLENDMODE_NOBLEND,		//ノーブレンド（デフォルト）
 			ALPHA      = DX_BLENDMODE_ALPHA,		//ブレンド
 			ADD        = DX_BLENDMODE_ADD,			//加算ブレンド
+			HALF_ADD   = DX_BLENDMODE_HALF_ADD,		//半加算ブレンド
 			SUB        = DX_BLENDMODE_SUB,			//減算ブレンド
 			MULA	   = DX_BLENDMODE_MULA,			//乗算ブレンド
 			INVSRC     = DX_BLENDMODE_INVSRC,		//反転ブレンド
@@ -165,7 +167,7 @@ namespace ECS
 		std::string name_;
 		Vec2_i size_;
 		bool isDraw_ = true;
-		bool isTurn = false;
+		bool isTurn_ = false;
 		Vec2 pivot_;
 	public:
 		//!登録した画像名を指定して初期化します
@@ -211,7 +213,7 @@ namespace ECS
 					scale_->val.x,
 					scale_->val.y,
 					DirectX::XMConvertToRadians(rota_->val),
-					ResourceManager::GetGraph().getHandle(name_), true, isTurn);
+					ResourceManager::GetGraph().getHandle(name_), true, isTurn_);
 				RenderUtility::ResetRenderState();
 			}
 
@@ -239,7 +241,7 @@ namespace ECS
 		//!画像を反転させます
 		void turnGraph()
 		{
-			isTurn = !isTurn;
+			isTurn_ = !isTurn_;
 		}
 
 	};
@@ -276,7 +278,7 @@ namespace ECS
 					__super::scale_->val.x,
 					__super::scale_->val.y,
 					DirectX::XMConvertToRadians(__super::rota_->val),
-					ResourceManager::GetGraph().getDivHandle(__super::name_,index_), true);
+					ResourceManager::GetGraph().getDivHandle(__super::name_,index_), true, __super::isTurn_);
 				RenderUtility::ResetRenderState();
 			}
 
@@ -338,7 +340,8 @@ namespace ECS
 					__super::scale_->val.y,
 					DirectX::XMConvertToRadians(rota_->val),
 					ResourceManager::GetGraph().getHandle(name_),
-					true);
+					true,
+					__super::isTurn_);
 				RenderUtility::ResetRenderState();
 			}
 		}

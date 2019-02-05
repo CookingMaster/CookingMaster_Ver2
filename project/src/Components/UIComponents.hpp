@@ -17,6 +17,7 @@
 #include "../Utility/Counter.hpp"
 #include "Renderer.hpp"
 #include "../Utility/Easing.hpp"
+#include "BeatByTrigger.hpp"
 #include <DxLib.h>
 #include <functional>
 namespace ECS
@@ -112,13 +113,14 @@ namespace ECS
 		float magni_;
 		float speed_;
 		float frame_;
-		bool flag_;
+		bool flag_ = false;
 	public:
-		ExpandReduceComponentSystem(float magni, float speed)
+		ExpandReduceComponentSystem(const float magni, const float speed) :
+			magni_(magni),
+			speed_(speed),
+			frame_(0.f)
 		{
-			magni_ = magni;
-			speed_ = speed;
-			frame_ = 0.f;
+
 		}
 
 		void initialize() override
@@ -156,43 +158,45 @@ namespace ECS
 	};
 
 	/**
-	*@brief 画像を拡大します
-	* @param magni_min_　始まる数値（1が元サイズ）
-	* @param magni_max_ 拡大する数値（1が元サイズ）
+	*@brief 画像をイージングで拡大、縮小する
+	* @param magni_start_　始まる数値（1.0fが元サイズ）
+	* @param magni_end_ 目標の数値（1.0fが元サイズ）
 	* @param speed 速さ（大きいほど速い）
 	*/
 	class ExpandComponentSystem final : public ComponentSystem
 	{
 	private:
 		Scale * scale_ = nullptr;
-		Counter_f cnt_;
+		Easing easing_;
 
-		float magni_min_;
-		float magni_max_;
-		float speed_;
+		float start_, end_, speed_;
+
 	public:
-		ExpandComponentSystem(float magni_min, float magni_max, float speed)
-		{
-			magni_min_ = magni_min;
-			magni_max_ = magni_max;
-			speed_ = speed;
-		}
+		ExpandComponentSystem(float start, float end, float speed) :
+			start_(start),
+			end_(end),
+			speed_(speed) {}
 
 		void initialize() override
 		{
 			scale_ = &entity->getComponent<Scale>();
-			cnt_.setCounter(magni_min_, speed_, magni_min_, magni_max_);
 		}
 
 		void update() override
 		{
-			cnt_.add();
-			scale_->val = cnt_.getCurrentCount();
+			easing_.run(easing_.CubicIn, speed_);
+			scale_->val = easing_.getVolume(start_, end_);
 		}
 
-		bool endFlag()
+		void reset()
 		{
-			return cnt_.isMax();
+			easing_.reset();
+			scale_->val = easing_.getVolume(start_, end_);
+		}
+
+		[[nodiscard]] const bool isEaseEnd()
+		{
+			return easing_.isEaseEnd();
 		}
 	};
 
@@ -263,8 +267,8 @@ namespace ECS
 	class BarComponentSystemY final : public ComponentSystem
 	{
 	private:
-		Rectangle * rectangle_;
-		Position* position_;
+		Rectangle * rectangle_ = nullptr;
+		Position* position_ = nullptr;
 		Easing ease_;
 
 		float posY = 0.f;
@@ -273,7 +277,7 @@ namespace ECS
 		int score_ = 0;
 
 	public:
-		BarComponentSystemY(int rectY, int maxScore) :
+		BarComponentSystemY(const int rectY, const int maxScore) :
 			maxScore_(maxScore),
 			imgRect_y_(rectY) {}
 
@@ -326,10 +330,10 @@ namespace ECS
 		SpriteRectDraw* rectDraw_ = nullptr;
 
 		int num_;
-		Vec2 rect_;
-		Vec2 initPos_;
+		Vec2 rect_{};
+		Vec2 initPos_{};
 
-		int font_[4];
+		int font_[4]{};
 
 		void setRectAndDraw(const bool isDraw = true)
 		{
@@ -354,7 +358,7 @@ namespace ECS
 		}
 
 	public:
-		DrawFont(float rectW, float rectH) :
+		DrawFont(const float rectW, const float rectH) :
 			num_(0)
 		{
 			rect_.x = rectW;
@@ -371,7 +375,7 @@ namespace ECS
 			rectangle_->x = (int)rect_.x * num_;
 			rectangle_->w = (int)rect_.x;
 			font_[3] = 10;
-			setRectAndDraw(false);
+			//setRectAndDraw(false);
 		}
 
 		void update() override
@@ -398,8 +402,8 @@ namespace ECS
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
-		bool button_[3];
-		float posX_;
+		bool button_[3]{};
+		float posX_ = 0.f;
 		int rectW_;
 
 		void setRect(SpriteRectDraw* draw)
@@ -425,10 +429,9 @@ namespace ECS
 			}
 		}
 	public:
-		ButtonCommponent(int rect_w)
-		{
-			rectW_ = rect_w;
-		}
+		ButtonCommponent(const int rect_w) :
+			rectW_(rect_w)
+		{}
 
 		void initialize() override
 		{
@@ -457,8 +460,8 @@ namespace ECS
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
-		int moji_[3];
-		float posX_;
+		int moji_[3]{};
+		float posX_ = 0.f;
 		int rectW_;
 
 		void setRect(SpriteRectDraw* draw)
@@ -476,10 +479,9 @@ namespace ECS
 			}
 		}
 	public:
-		ButtonMojiCommponent(int rectW)
-		{
-			rectW_ = rectW;
-		}
+		ButtonMojiCommponent(const int rectW) :
+			rectW_(rectW)
+		{}
 		void initialize() override
 		{
 			pos_ = &entity->getComponent<Position>();
@@ -506,8 +508,8 @@ namespace ECS
 		Rectangle* rectangle_ = nullptr;
 		SpriteRectDraw* rectDraw_ = nullptr;
 
-		float posX_;
-		int select_;
+		float posX_ = 0;
+		int select_ = 0;
 	public:
 		SelectFrame() {}
 		void initialize() override {
@@ -515,7 +517,6 @@ namespace ECS
 			rectangle_ = &entity->getComponent<Rectangle>();
 			rectDraw_ = &entity->getComponent<SpriteRectDraw>();
 			posX_ = pos_->val.x;
-			select_ = 0;
 		}
 		void update() override {}
 		void draw2D() override {}
@@ -555,10 +556,10 @@ namespace ECS
 		SpriteRectDraw* rectDraw_ = nullptr;
 
 		int num_;
-		Vec2 rect_;
-		Vec2 initPos_;
+		Vec2 rect_{};
+		Vec2 initPos_{};
 
-		int font_[3];
+		int font_[3]{};
 
 		void setRectAndDraw(const bool isDraw = true)
 		{
@@ -583,7 +584,7 @@ namespace ECS
 		}
 
 	public:
-		DrawFont2(float rectW, float rectH, const int num) :
+		DrawFont2(const float rectW, const float rectH, const int num) :
 			num_(num)
 		{
 			rect_.x = rectW;
@@ -600,6 +601,7 @@ namespace ECS
 			rectangle_->x = (int)rect_.x * num_;
 			rectangle_->w = (int)rect_.x;
 			rectDraw_->setPivot(Vec2(rect_.x / 2.f, rect_.y / 2.f));
+			rectDraw_->drawDisable();
 			setNumber();
 		}
 
@@ -622,6 +624,229 @@ namespace ECS
 			font_[2] = num % 10;		//一桁目(一の位)
 			font_[1] = (num % 100) / 10;	//二桁目(十の位)
 			font_[0] = num / 100;		//三桁目(百の位)
+		}
+	};
+
+	/*
+	*@brief マーカーをリズムに合わせてビクンビクンさせる（ExpandComponentSystemが必要）
+	*/
+	class MarkerBodyController final : public ComponentSystem
+	{
+	private:
+		ExpandComponentSystem * expander = nullptr;
+		BeatByTrigger* beatbt = nullptr;
+
+		int bpm_;
+		int beat_;
+		std::string soundName_;
+
+	public:
+		MarkerBodyController(int bpm, int beat, const std::string& soundName) :
+			bpm_(bpm),
+			beat_(beat),
+			soundName_(soundName) {}
+
+		void initialize() override
+		{
+			CalcurationBeat beat(bpm_, beat_);
+			entity->addComponent<ExpandComponentSystem>(1.2f, 1.f, beat.calcNote_Frame((float)beat_));
+			expander = &entity->getComponent<ExpandComponentSystem>();
+
+			entity->addComponent<BeatByTrigger>(bpm_, beat_, (float)beat_, soundName_);
+			beatbt = &entity->getComponent<BeatByTrigger>();
+		}
+
+		void update() override
+		{
+			if (beatbt->getTrigger())
+			{
+				expander->reset();
+			}
+		}
+	};
+
+	//! 指定フレーム後に指定スピードでアルファ値を変更する
+	class ChangeAlphaComponent final : public ComponentSystem
+	{
+	private:
+		AlphaBlend * alphaBlend_ = nullptr;
+		int elapse_;
+		int fadeSpeed_;
+		Counter counter_;
+
+	public:
+		ChangeAlphaComponent(const int elapse, const int fadeSpeed)
+			:
+			elapse_(elapse),
+			fadeSpeed_(fadeSpeed)
+		{}
+		void initialize() override
+		{
+			alphaBlend_ = &entity->getComponent<AlphaBlend>();
+			counter_.setCounter(0, 1, 0, elapse_);
+		}
+		void update() override
+		{
+			counter_.add();
+			if (counter_.isMax())
+			{
+				alphaBlend_->alpha -= fadeSpeed_;
+				if (alphaBlend_->alpha <= 0) {
+					alphaBlend_->alpha = 0;
+					entity->destroy();		//死ぬ
+				}
+			}
+		}
+	};
+
+	/**
+	* @brief 拡大を二回繰り返すコンポーネント
+	*- 途中で指定フレーム停止する
+	*- GameStartUIに使う
+	* @param float firstEndSize		1回目の拡大の最大サイズ
+	* @param float secondEndSize	2回目の拡大の最大サイズ
+	* @param int pauseFrame			停止するフレーム数
+	* @param float speed			拡大スピード
+	*/
+	class ExpandTwiceComponent final : public ComponentSystem
+	{
+	private:
+		Scale * scale_ = nullptr;
+		Vec2 originSize_;
+		float firstEndSize_, secondEndSize_, endSize_;
+		int pauseFrame_;
+		float inSpeed_, outSpeed_, easingSpeed_;
+		bool fadeOutFlag_;
+		Easing easing_;
+		Counter counter_;
+	public:
+		ExpandTwiceComponent(float firstEndSize, float secondEndSize, int pauseFrame, float inSpeed, float outSpeed)
+			:
+			firstEndSize_(firstEndSize),
+			secondEndSize_(secondEndSize),
+			endSize_(firstEndSize),
+			pauseFrame_(pauseFrame),
+			inSpeed_(inSpeed),
+			outSpeed_(outSpeed),
+			easingSpeed_(inSpeed)
+		{}
+		void initialize() override
+		{
+			scale_ = &entity->getComponent<Scale>();
+			originSize_ = scale_->val;
+			easing_.reset();
+			counter_.setCounter(0, 1, 0, pauseFrame_);
+			fadeOutFlag_ = false;
+		}
+		void update() override
+		{
+			easing_.run(easing_.CubicIn, easingSpeed_);
+			if (fadeOutFlag_) {
+				entity->getComponent<AlphaBlend>().alpha -= 10;
+			}
+			if (counter_.getCurrentCount() == 0) {
+				scale_->val = easing_.getVolume(originSize_.x, endSize_);
+			}
+			if (easing_.isEaseEnd())
+			{
+				counter_.add();
+			}
+			if (counter_.getCurrentCount() == pauseFrame_)
+			{
+				initialize();
+				endSize_ = secondEndSize_;
+				easingSpeed_ = outSpeed_;
+				fadeOutFlag_ = true;
+			}
+		}
+		[[nodiscard]] const bool isPause()
+		{
+			return (counter_.getCurrentCount() != 0);
+		}
+	};
+
+	/**
+	* @brief 指定フレームだけ高速で回転し続ける
+	* @param int frame 回転を続けるフレーム数
+	* @param float oneFrameAngle 1フレームで加算する角度
+	* @param float endAngle 停止したときの角度
+	* @note 思った動きをしない＆大して見えないので使わないことにした
+	*/
+	class KeepRotation final : public ComponentSystem
+	{
+	private:
+		Rotation * rotation_ = nullptr;
+		int frame_;
+		float oneFrameAngle_;
+		float endAngle_;
+		Counter counter_;
+	public:
+		KeepRotation(const int frame, const float oneFrameAngle, const float endAngle)
+			:
+			frame_(frame),
+			oneFrameAngle_(oneFrameAngle),
+			endAngle_(endAngle)
+		{}
+		void initialize() override
+		{
+			rotation_ = &entity->getComponent<Rotation>();
+			counter_.setCounter(0, 1, 0, frame_);
+		}
+		void update() override
+		{
+			if (!counter_.isMax())
+			{
+				rotation_->val += oneFrameAngle_;
+				counter_.add();
+			}
+			else {
+				rotation_->val = endAngle_;
+			}
+		}
+	};
+
+	/**
+	* @brief お玉とフライパンをカンカンするためのコンポーネント
+	* @param int waitFrame 開始するまでの待機フレーム数
+	*/
+	class SoundGongComponent final : public ComponentSystem
+	{
+	private:
+		Rotation * rotation_ = nullptr;
+		int waitFrame_;
+		float originAngle_, endAngle_;
+		Easing easing_;
+		Counter counter_;
+		int gongTimes_;
+	public:
+		SoundGongComponent(const int waitFrame, const float endAngle)
+			:
+			waitFrame_(waitFrame),
+			endAngle_(endAngle)
+		{}
+		void initialize() override
+		{
+			rotation_ = &entity->getComponent<Rotation>();
+			originAngle_ = rotation_->val;
+			counter_.setCounter(0, 1, 0, waitFrame_);
+			gongTimes_ = 0;
+		}
+		void update() override
+		{
+			if (gongTimes_ > 3) { return; }
+			counter_.add();
+			if (counter_.isMax())
+			{
+				easing_.run(Easing::CircIn, 5.f);
+				rotation_->val = easing_.getVolume(originAngle_, endAngle_);
+				if (easing_.isEaseEnd()) {
+					++gongTimes_;
+					easing_.reset();
+					float temp = originAngle_;
+					originAngle_ = endAngle_;
+					endAngle_ = temp;
+				}
+			}
 		}
 	};
 } //namespce ECS

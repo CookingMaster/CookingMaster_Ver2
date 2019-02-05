@@ -46,17 +46,20 @@ namespace ECS {
 	class PlayerController final : public ComponentSystem
 	{
 	private:
-		Animator* animator_;
-		RecordAnimation* recData_;
-		BeatByTrigger* beatTrigger_;
-		PlayerState* state_;
+		Animator* animator_ = nullptr;
+		RecordAnimation* recData_ = nullptr;
+		BeatByTrigger* beatTrigger_ = nullptr;
+		PlayerState* state_ = nullptr;
 
 		Counter animCnt_;	//切りモーションの終了までの時間を計測したりする
-		bool handup = false;
+		bool handup_ = false;
+
+		const bool isAutoMode_;
 
 	public:
-		PlayerController() :
-			animCnt_(0, 15) {};
+		PlayerController(const bool isAuto) :
+			animCnt_(0, 15),
+			isAutoMode_(isAuto) {};
 
 		void initialize() override
 		{
@@ -84,49 +87,13 @@ namespace ECS {
 			transitionState();
 		}
 
-	private:
-		//入力や時間経過に対応してアニメーションと状態を遷移させる
-		void transitionState()
+		//切りアニメーション実行
+		void playSlashAnim(ECS::Direction::Dir dir)
 		{
-			//待機動作が次のリズムのタイミングになったらパタパタ
-			if (state_->val == PlayerState::State::Idle && beatTrigger_->getTrigger())
+			switch (dir)
 			{
-				handup = !handup;
-				animator_->setIsMinusAnim(handup);
-				recData_->setAnimData((int)PlayerState::State::Idle, false);
-			}
-			//切りモーションが終了したら待機
-			if (state_->val != PlayerState::State::Idle && animCnt_.isMax())
-			{
-				handup = !handup;
-				animator_->setIsMinusAnim(handup);
-				state_->val = PlayerState::State::Idle;
-				recData_->setAnimData((int)PlayerState::State::Idle, false);
-				animator_->setIndexMax();
-			}
-
-			//同時押しは許さない
-			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1 &&
-				Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
-			{
-				return;
-			}
-
-			//左カーソルを押すと左切り状態
-			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1)
-			{
-				if (state_->val == PlayerState::State::Left1)
-				{
-					changeState(PlayerState::State::Left2);
-				}
-				else
-				{
-					changeState(PlayerState::State::Left1);
-				}
-			}
-			//右カーソルを押すと右切り状態
-			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
-			{
+			//右切り
+			case ECS::Direction::Dir::R:
 				if (state_->val == PlayerState::State::Right1)
 				{
 					changeState(PlayerState::State::Right2);
@@ -135,6 +102,67 @@ namespace ECS {
 				{
 					changeState(PlayerState::State::Right1);
 				}
+				break;
+
+			//左切り
+			case ECS::Direction::Dir::L:
+				if (state_->val == PlayerState::State::Left1)
+				{
+					changeState(PlayerState::State::Left2);
+				}
+				else
+				{
+					changeState(PlayerState::State::Left1);
+				}
+				break;
+			}
+		}
+
+	private:
+		//入力や時間経過に対応してアニメーションと状態を遷移させる
+		void transitionState()
+		{
+			//待機動作が次のリズムのタイミングになったらパタパタ
+			if (state_->val == PlayerState::State::Idle && beatTrigger_->getTrigger())
+			{
+				handup_ = !handup_;
+				animator_->setIsMinusAnim(handup_);
+				recData_->setAnimData((int)PlayerState::State::Idle, false);
+			}
+			//切りモーションが終了したら待機
+			if (state_->val != PlayerState::State::Idle && animCnt_.isMax())
+			{
+				handup_ = !handup_;
+				animator_->setIsMinusAnim(handup_);
+				state_->val = PlayerState::State::Idle;
+				recData_->setAnimData((int)PlayerState::State::Idle, false);
+				animator_->setIndexMax();
+			}
+
+			//同時押しは許さない
+			if (beatTrigger_->isEndSound() ||
+				(Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1 &&
+				 Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1))
+			{
+				return;
+			}
+
+			//オートモードだったら入力させない
+			if (isAutoMode_)
+			{
+				animCnt_.add();
+				return;
+			}
+
+			//左カーソルを押すと左切り状態
+			if (Input::Get().getKeyFrame(KEY_INPUT_LEFT) == 1)
+			{
+				playSlashAnim(ECS::Direction::Dir::L);
+			}
+			//右カーソルを押すと右切り状態
+			if (Input::Get().getKeyFrame(KEY_INPUT_RIGHT) == 1)
+			{
+				playSlashAnim(ECS::Direction::Dir::R);
 			}
 
 			animCnt_.add();

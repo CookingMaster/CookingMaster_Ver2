@@ -27,7 +27,7 @@ GameController::GameController()
 	MasterSound::Get().setAllBGMGain(BGM);
 	MasterSound::Get().setAllSEGain(SE);
 	//初期シーンの設定
-	sceneStack_.push(std::make_unique<Scene::StageSelect>(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
+	sceneStack_.push(std::make_unique<Scene::Title>(this, nullptr, &entityManager_));	//タイトルシーンを作成し、プッシュ
 	MasterSound::Get().update();
 	sceneStack_.top()->initialize();
 	
@@ -96,6 +96,8 @@ void GameController::update()
 
 void GameController::draw()
 {
-	//シーン描画
+	//グループ順に描画
+	SetDrawMode(DX_DRAWMODE_ANISOTROPIC);
 	sceneStack_.top()->draw();
+	SetDrawMode(DX_DRAWMODE_NEAREST);
 }

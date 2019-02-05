@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file ResultArcheType.hpp
-* @brief ƒŠƒUƒ‹ƒg‚ÌƒA[ƒLƒ^ƒCƒv‚ğì‚è‚Ü‚·
+* @brief ãƒªã‚¶ãƒ«ãƒˆã®ã‚¢ãƒ¼ã‚­ã‚¿ã‚¤ãƒ—ã‚’ä½œã‚Šã¾ã™
 * @author yokota0717
 * @date 2018.11.22
 */
@@ -13,7 +13,7 @@
 
 namespace ECS
 {
-	struct ResultArcheType
+	struct ResultArcheType final
 	{
 		static Entity* CreateClocheEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
 		{
@@ -22,7 +22,7 @@ namespace ECS
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SpriteDraw>(graphicName);
-			entity->addGroup(ENTITY_GROUP::COOKING_AREA);	//‚æ‚³‚°‚È‚Ìg‚¢‚Ü‚í‚µ
+			entity->addGroup(ENTITY_GROUP::COOKING_AREA);	//ã‚ˆã•ã’ãªã®ä½¿ã„ã¾ã‚ã—
 			return entity;
 		}
 		static Entity* CreateDishEntity(const char* graphicName, const Vec2 rectXY, const Vec2 rectWH, const Vec2 pos, EntityManager& entityManager_)
@@ -34,7 +34,7 @@ namespace ECS
 			entity->addComponent<Rectangle>((int)rectXY.x, (int)rectXY.y, (int)rectWH.x, (int)rectWH.y);
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot({256.f,256.f});
 			entity->getComponent<Transform>().setScale(0.7f,0.7f);
-			entity->addGroup(ENTITY_GROUP::KITCHENWARE);	//‚æ‚³‚°‚È‚Ìg‚¢‚Ü‚í‚µ
+			entity->addGroup(ENTITY_GROUP::KITCHENWARE);	//ã‚ˆã•ã’ãªã®ä½¿ã„ã¾ã‚ã—
 			return entity;
 		}
 		static Entity* CreateBackEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)

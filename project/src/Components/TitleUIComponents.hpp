@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file TitleUIComponents.hpp
-* @brief ƒ^ƒCƒgƒ‹ƒV[ƒ“‚ÅŽg—p‚·‚éUI‚Ì‚½‚ß‚Éì‚Á‚½ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì•ûX
+* @brief ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³ã§ä½¿ç”¨ã™ã‚‹UIã®ãŸã‚ã«ä½œã£ãŸã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æ–¹ã€…
 * @author feveleK5563
 * @date 2018/11/22
 */
@@ -14,21 +14,25 @@
 namespace ECS
 {
 	/*!
-	@brief ‰æ‘œ‚ð“_–Å‚³‚¹‚éi‹­’²‚³‚¹‚éjAƒtƒ‰ƒO‚ðtrue‚É‚·‚é‚ÆÁ–Å‚·‚é
-	* - AlphaBlend‚ª•K—vA‚È‚¯‚ê‚ÎŸŽè‚Éì‚é
+	@brief ç”»åƒã‚’ç‚¹æ»…ã•ã›ã‚‹ï¼ˆå¼·èª¿ã•ã›ã‚‹ï¼‰ã€ãƒ•ãƒ©ã‚°ã‚’trueã«ã™ã‚‹ã¨æ¶ˆæ»…ã™ã‚‹
+	* - AlphaBlendãŒå¿…è¦ã€ãªã‘ã‚Œã°å‹æ‰‹ã«ä½œã‚‹
 	*/
 	class FlashImage final : public ComponentSystem
 	{
 	private:
 		AlphaBlend* alpha_ = nullptr;
 		Easing ease_;
+		Counter waitCnt_;
 		bool bright_;
 		bool isDelete_;
+		float deleteTime_;
 
 	public:
 		FlashImage() :
+			waitCnt_(0, 1, 0, 0),
 			bright_(false),
-			isDelete_(false) {}
+			isDelete_(false),
+			deleteTime_(0.f) {}
 
 		void initialize() override
 		{
@@ -42,9 +46,15 @@ namespace ECS
 
 		void update() override
 		{
+			waitCnt_.add();
+			if (!waitCnt_.isMax())
+			{
+				return;
+			}
+
 			if (isDelete_)
 			{
-				ease_.run(Easing::CubicOut, 30.f);
+				ease_.run(Easing::CubicOut, deleteTime_);
 				alpha_->alpha = int(ease_.getVolume(255.f, 0.f));
 				if (ease_.isEaseEnd())
 				{
@@ -72,31 +82,42 @@ namespace ECS
 			}
 		}
 
-		void setIsDelete(bool isDelete)
+		void setIsDelete(bool isDelete, float deleteTime = 30.f)
 		{
 			isDelete_ = isDelete;
+			deleteTime_ = deleteTime;
 			ease_.reset();
+		}
+
+		void setWaitTime(int waitTime)
+		{
+			waitCnt_.reset();
+			waitCnt_.setCounter(0, 1, 0, waitTime);
 		}
 	};
 
 	/*!
-	@brief ƒC[ƒWƒ“ƒO‚ÅÀ•W‚ð‘€ì‚·‚é
-	* - Position‚ª•K—vA‚È‚¯‚ê‚ÎŸŽè‚Éì‚é
+	@brief ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã§åº§æ¨™ã‚’æ“ä½œã™ã‚‹ã€é€éŽå…·åˆã‚‚æ“ä½œã§ãã‚‹
+	* - PositionãŒå¿…è¦ã€ãªã‘ã‚Œã°å‹æ‰‹ã«ä½œã‚‹
 	*/
 	class EasingPosMove final : public ComponentSystem
 	{
 	private:
-		Position* pos_ = nullptr;		//À•W
-		Easing ease_;		//ƒC[ƒWƒ“ƒO
-		Vec2 start_;		//ƒXƒ^[ƒgˆÊ’u
-		Vec2 goal_;			//ƒS[ƒ‹ˆÊ’u
-		float durationTime;	//Œo‰ßŽžŠÔ
+		Position* pos_ = nullptr;		//åº§æ¨™
+		AlphaBlend* alpha_ = nullptr;	//ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‰
+		Easing ease_;		//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
+		Vec2 start_;		//ã‚¹ã‚¿ãƒ¼ãƒˆä½ç½®
+		Vec2 goal_;			//ã‚´ãƒ¼ãƒ«ä½ç½®
+		float durationTime;	//çµŒéŽæ™‚é–“
+
+		bool isTrans_;	//é€éŽã™ã‚‹ã‹å¦ã‹
 
 	public:
 		EasingPosMove() :
 			start_(0, 0),
 			goal_(0, 0),
-			durationTime(60.f) {}
+			durationTime(60.f),
+			isTrans_(false){}
 
 		void initialize() override
 		{
@@ -105,6 +126,12 @@ namespace ECS
 				entity->addComponent<Position>();
 			}
 			pos_ = &entity->getComponent<Position>();
+
+			if (!entity->hasComponent<AlphaBlend>())
+			{
+				entity->addComponent<AlphaBlend>();
+			}
+			alpha_ = &entity->getComponent<AlphaBlend>();
 		}
 
 		void update() override
@@ -112,6 +139,11 @@ namespace ECS
 			ease_.run(ease_.CircOut, durationTime);
 			pos_->val.x = ease_.getVolume(start_.x, goal_.x);
 			pos_->val.y = ease_.getVolume(start_.y, goal_.y);
+
+			if (isTrans_)
+			{
+				alpha_->alpha = int(ease_.getVolume(0, 255));
+			}
 		}
 
 		void setDest(const Vec2& start, const Vec2& goal, float time)
@@ -127,10 +159,16 @@ namespace ECS
 			return ease_.isEaseEnd();
 		}
 
+		//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã§é€éŽã•ã›ã‚‹ã‹å¦ã‹
+		void isSetAlphaBlend(bool isTrans)
+		{
+			isTrans_ = isTrans;
+			alpha_->alpha = 0;
+		}
 	};
 
 	/*!
-	@brief ‚È‚ñ‚©‚Ìƒ{ƒ^ƒ““ü—Í‚ª‚ ‚Á‚½‚çAˆø”‚ÉŽw’è‚µ‚½ŠÖ”‚ðŽÀs‚·‚é
+	@brief ãªã‚“ã‹ã®ãƒœã‚¿ãƒ³å…¥åŠ›ãŒã‚ã£ãŸã‚‰ã€å¼•æ•°ã«æŒ‡å®šã—ãŸé–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	class AnyInputFunction final : public ComponentSystem
 	{
@@ -164,8 +202,8 @@ namespace ECS
 	};
 
 	/*!
-	@brief ‰æ‘œ‚ÌŽw’èÀ•W‚ÉŒü‚©‚Á‚ÄŠg‘å‚·‚é
-	* - Position‚ÆScale‚ÆSpriteDraw‚ª•K—v
+	@brief ç”»åƒã®æŒ‡å®šåº§æ¨™ã«å‘ã‹ã£ã¦æ‹¡å¤§ã™ã‚‹
+	* - Positionã¨Scaleã¨SpriteDrawãŒå¿…è¦
 	*/
 	class ZoomIn final : public ComponentSystem
 	{
@@ -176,27 +214,73 @@ namespace ECS
 		Counter_f cnt_;
 		Vec2 zoomPos_;
 
+		bool stopFlag_;
+
 	public:
-		ZoomIn(const float zoomSpd, Vec2 zoomPos) :
+		ZoomIn(const float zoomSpd, const Vec2& zoomPos) :
 			cnt_(1.f, zoomSpd, 1.f, 255.f),
-			zoomPos_(zoomPos) {}
+			zoomPos_(zoomPos),
+			stopFlag_(false) {}
 
 		void initialize() override
 		{
 			pos_ = &entity->getComponent<Position>();
-			pos_->val += zoomPos_;
-
+			sd = &entity->getComponent<SpriteDraw>();
 			scale_ = &entity->getComponent<Scale>();
 
-			sd = &entity->getComponent<SpriteDraw>();
-			sd->setPivot(zoomPos_);
+			sd->setPivot(zoomPos_ - pos_->val);
+			pos_->val += zoomPos_ - pos_->val;	//ç”»åƒã®å·¦ä¸ŠãŒåŸºæº–ã§ã‚ã‚‹ã‹ã®ã‚ˆã†ã«è¦‹ã›ã‚‹
 		}
 
 		void update() override
 		{
-			scale_->val.x = cnt_.getCurrentCount();
-			scale_->val.y = cnt_.getCurrentCount();
-			++cnt_;
+			if (!stopFlag_)
+			{
+				scale_->val.x = cnt_.getCurrentCount();
+				scale_->val.y = cnt_.getCurrentCount();
+				++cnt_;
+			}
+		}
+
+		void setStop(bool isStop)
+		{
+			stopFlag_ = isStop;
+		}
+	};
+
+	/*!
+	@brief ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã§ä½¿ã£ã¦ã„ã‚‹å‹•ãã‚„ã¤ã‚‰ã®å‹•ãï¼ˆãƒ‰ã‚¢ã¨ã‹é›²ã¨ã‹ï¼‰
+	* - Positionã¨SpriteDrawãŒå¿…è¦
+	*/
+	class TitleObjectsMover final : public ComponentSystem
+	{
+	private:
+		Position* pos_ = nullptr;
+		SpriteDraw* sd_ = nullptr;
+		Vec2 spd_;
+
+	public:
+		TitleObjectsMover(const Vec2& spd):
+			spd_(spd){}
+
+		void initialize() override
+		{
+			pos_ = &entity->getComponent<Position>();
+			sd_ = &entity->getComponent<SpriteDraw>();
+		}
+
+		void update() override
+		{
+			pos_->val += spd_;
+
+			if (int(pos_->val.x) < -500.f)
+			{
+				pos_->val.x = float(System::SCREEN_WIDTH);
+			}
+			else if (System::SCREEN_WIDTH + 500.f < int(pos_->val.x))
+			{
+				pos_->val.x = float(-sd_->getSize().x);
+			}
 		}
 	};
 }

@@ -19,18 +19,18 @@ private:
 		float bgmGain_ = 1.0f;
 	public:
 		//!BGM音量の読み込み
-		const float getBGMGain() { return bgmGain_; }
-		const float getSEGain() { return seGain_; }
+		const float getBGMGain() const { return bgmGain_; }
+		const float getSEGain() const { return seGain_; }
 		//!すべてのSEサウンドの音量を0.0f~1.fで指定
-		void setAllSEGain(float gain)
+		void setAllSEGain(const float gain)
 		{
-			if (gain >= 1.f || gain <= 0) { return; }
+			if (gain > 1.f || gain < 0) { return; }
 			seGain_ = gain;
 		}
 		//!すべてのBGMサウンドの音量を0.0f~1.fで指定
-		void setAllBGMGain(float gain)
+		void setAllBGMGain(const float gain)
 		{
-			if (gain >= 1.f || gain <= 0) { return; }
+			if (gain > 1.f || gain < 0) { return; }
 			bgmGain_ = gain;
 		}
 		//!登録されているサウンドの更新を行います
@@ -66,12 +66,20 @@ public:
 class Sound final
 {
 private:
-	std::string name_;
-	int handle_;
+	std::string name_ = "";
+	int handle_ = -1;
 	float gain_ = 1.f;
 public:
+	Sound() = default;
 	//!コンストラクタで登録したサウンドハンドル名を指定します
 	Sound(const std::string& soundName)
+	{
+		assert(ResourceManager::GetSound().hasHandle(soundName));
+		handle_ = ResourceManager::GetSound().getHandle(soundName);
+		name_ = soundName;
+	}
+	//!登録したサウンドハンドル名を指定します
+	void setSoundHandle(const std::string& soundName)
 	{
 		assert(ResourceManager::GetSound().hasHandle(soundName));
 		handle_ = ResourceManager::GetSound().getHandle(soundName);
@@ -102,6 +110,7 @@ public:
 		StopSoundMem(handle_);
 	}
 	//!サウンドが再生中か取得します
+	//! - 停止した曲を途中から再生した場合、終了したのにfalseになるバグ?がある、ライブラリ由来のものか不明
 	[[nodiscard]] const bool isPlay() const
 	{
 		switch (CheckSoundMem(handle_))
@@ -130,4 +139,5 @@ public:
 	{
 		ChangePanSoundMem(panPosition,handle_);
 	}
+
 };

@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file Pause.hpp
-* @brief ƒ|[ƒYƒV[ƒ“‚Å‚Ì“®ì‚ğ‹Lq‚µ‚Ü‚·
+* @brief ãƒãƒ¼ã‚ºã‚·ãƒ¼ãƒ³ã§ã®å‹•ä½œã‚’è¨˜è¿°ã—ã¾ã™
 * @author
 * @date
 */
@@ -16,15 +16,15 @@ namespace Scene
 	{
 	private:
 		ECS::EntityManager* entityManager_;
-		ECS::Entity* slide;
-		ECS::Entity* button;
-		ECS::Entity* moji;
-		ECS::Entity* frame;
-		ECS::Entity* bg;
-		std::string name;
-
+		ECS::Entity* slide_ = nullptr;
+		ECS::Entity* button_ = nullptr;
+		ECS::Entity* moji_ = nullptr;
+		ECS::Entity* frame_ = nullptr;
+		ECS::Entity* bg_ = nullptr;
+		std::string name_;
+		std::string bgmPath_;
+		bool isAuto_;
 		void selectButton();
-		void backToGame();
 		void moveCursor();
 
 	public:

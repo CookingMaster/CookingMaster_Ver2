@@ -12,19 +12,30 @@
 #include "../Components/UIComponents.hpp"
 #include "../Components/TitleUIComponents.hpp"
 #include "../Components/BossAnimator.hpp"
+#include "../Components/BeatByTrigger.hpp"
+#include "../Utility/Easing.hpp"
+#include "../Components/ResultComponent.hpp"
 
 namespace ECS
 {
-	struct GameEffectsArcheType
+	struct GameEffectsArcheType final
 	{
 		//!マーカー
-		static Entity* CreateMarker(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
+		static Entity* CreateMarker(const char* graphicName, const std::string& musicName, int bpm, int beat, ECS::Direction::Dir dir, const Vec2& pos, EntityManager* entityManager)
 		{
 			auto& marker = entityManager->addEntity();
 			marker.addComponent<Transform>().setPosition(pos.x, pos.y);
 			marker.addComponent<Color>();
 			marker.addComponent<AlphaBlend>();
+
 			marker.addComponent<SpriteDraw>(graphicName);
+			if (dir == ECS::Direction::Dir::L)
+			{
+				auto& draw = marker.getComponent<SpriteDraw>();
+				draw.turnGraph();
+			}
+			marker.addComponent<MarkerBodyController>(bpm, beat, musicName);
+
 			marker.addGroup(ENTITY_GROUP::MARKER);
 			return &marker;
 		}
@@ -35,9 +46,9 @@ namespace ECS
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
-			e.addComponent<SpriteAnimationDraw>(divGraphicName).setPivot(Vec2{0.f,0.f});
+			e.addComponent<SpriteAnimationDraw>(divGraphicName).setPivot(Vec2{ 0.f,0.f });
 			e.getComponent<Scale>().val;
-			e.addComponent<Animator>(0,0,7,0,7);
+			e.addComponent<Animator>(0, 0, 7, 0, 7);
 			e.addGroup(ENTITY_GROUP::BACK_OBJECT);
 			return &e;
 		}
@@ -52,7 +63,7 @@ namespace ECS
 			class RotationFan : public ComponentSystem
 			{
 			private:
-				Rotation* rota_ = nullptr;
+				Rotation * rota_ = nullptr;
 			public:
 				void initialize() override
 				{
@@ -68,15 +79,27 @@ namespace ECS
 			return &e;
 		}
 		//!斬撃エフェクト
-		static Entity* CreateSlashEffect(const char* divGraphicName, const Vec2& pos, const int& lifeSpan,EntityManager* entityManager)
+		static Entity* CreateSlashEffect(
+			const char* divGraphicName,
+			const Vec2& pos,
+			ECS::Direction::Dir dir,
+			EntityManager* entityManager,
+			AlphaBlend::BlendMode bm = AlphaBlend::BlendMode::ADD)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.addComponent<Color>();
-			e.addComponent<AlphaBlend>();
-			e.addComponent<SpriteAnimationDraw>(divGraphicName);
-			//e.addComponent<Animator>();
-			e.addComponent<KillEntity>(lifeSpan);
+			e.addComponent<AlphaBlend>().blendMode = bm;
+			if (dir == ECS::Direction::Dir::R)
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName).turnGraph();
+			}
+			else
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName);
+			}
+			e.addComponent<Animator>(0, 0, 3, 0, 2).setIsEndStopAnim(true);
+			e.addComponent<KillEntity>(8);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
@@ -94,7 +117,7 @@ namespace ECS
 			return &e;
 		}
 		//!蛇口から出る水
-		static Entity* CreateWater(const char* graphicName, const Vec2& pos, const ECS::Rectangle& rect,EntityManager* entityManager)
+		static Entity* CreateWater(const char* graphicName, const Vec2& pos, const ECS::Rectangle& rect, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
@@ -105,15 +128,29 @@ namespace ECS
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
-		//!開始の合図
-		static Entity* CreateStartLogo(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
+		//!CookingStartのフォント
+		static Entity* CreateStartUIFont(const char* graphicName, const Vec2& pos, const int startUIstopTime, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteDraw>(graphicName);
-			e.addComponent<EasingPosMove>();
+			e.addComponent<ECS::ExpandTwiceComponent>(1.f, 10.f, startUIstopTime, 20.f, 10.f);
+			e.addGroup(ENTITY_GROUP::UI);
+			return &e;
+		}
+		//! お玉とフライパンと星
+		static Entity* CreateStartUIOrnament(const char* graphicName, const int index, const Vec2& pos, const int startUIstopTime, EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			e.addComponent<Color>();
+			e.addComponent<AlphaBlend>();
+			e.addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
+			e.addComponent<ECS::ExpandTwiceComponent>(1.f, 10.f, startUIstopTime, 20.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
@@ -166,15 +203,17 @@ namespace ECS
 			return &e;
 		}
 		//!おやっさんのセリフ(吹き出し用)
-		static Entity* CreateBossBalloon(const char* graphicName, const Vec2& pos,const int& lifeSpan, EntityManager* entityManager)
+		static Entity* CreateBossBalloon(const char* graphicName, const Vec2& pos, const int& lifeSpan, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteDraw>(graphicName);
 			e.addComponent<KillEntity>(lifeSpan);
 			e.addComponent<Canvas>();
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
 			return &e;
 		}
@@ -184,13 +223,45 @@ namespace ECS
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
+			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<Rectangle>(rectAngle);
 			e.addComponent<SpriteRectDraw>(graphicName);
-			e.addComponent<DrawFont2>(50.f, 100.f, combNum);
+			e.addComponent<DrawFont2>(59.f, 75.f, combNum);
 			e.addComponent<KillEntity>(lifeSpan);
+			e.addComponent<ExpandComponentSystem>(0.f, 1.f, 10.f);
 			e.addGroup(ENTITY_GROUP::UI);
+			return &e;
+		}
+
+		//!グチャってなった残骸
+		static Entity* CreateDirty(
+			const char* divGraphicName,
+			const int id,
+			const Vec2& pos,
+			ECS::Direction::Dir dir,
+			EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+			float randx = float(GetRand(100) - 50);
+			float randy = 15.f;
+			e.addComponent<Transform>().setPosition(pos.x + randx, pos.y + randy);
+			e.addComponent<Color>();
+			e.addComponent<AlphaBlend>();
+			if (dir == ECS::Direction::Dir::R)
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName).turnGraph();
+			}
+			else
+			{
+				e.addComponent<SpriteAnimationDraw>(divGraphicName);
+			}
+			e.getComponent<SpriteAnimationDraw>().setIndex(id);
+
+			e.addComponent<FlashImage>().setIsDelete(true);
+			e.getComponent<FlashImage>().setWaitTime(400);
+			e.addGroup(ENTITY_GROUP::GUCHA);
 			return &e;
 		}
 	};

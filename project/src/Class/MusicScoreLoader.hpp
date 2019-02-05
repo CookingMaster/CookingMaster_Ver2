@@ -12,10 +12,11 @@
 #include <math.h>
 #include "NotesAndScoreData.hpp"
 #include "ResourceManager.hpp"
+#include "../Components/NoteStateTransition.hpp"
 
 //-----------------------------------------------------------------------------
 //読み込み&提供くん
-class MusicScoreLoader
+class MusicScoreLoader final
 {
 private:
 	int bpm_;
@@ -23,12 +24,13 @@ private:
 	int offsetTime_;
 	int noteAllNum_;	//休符以外のノーツの総数
 	int maxPoint_;		//最大点数
-	std::vector<NotesData> notesData_;
-	MusicData scoreData_;
+	std::vector<NotesData> notesData_{};
+	MusicData scoreData_{};
 
 public:
 	MusicScoreLoader() :
 		bpm_(0),
+		beat_(0),
 		offsetTime_(0),
 		noteAllNum_(0),
 		maxPoint_(0){}
@@ -71,12 +73,10 @@ public:
 
 		fin.close();
 
-		int combBonus = 0;
 		for (int i = 0; i < noteAllNum_; ++i)
 		{
-			combBonus += i / 20;
+			maxPoint_ += getPoint(ECS::NoteState::State::PARFECT, i);
 		}
-		maxPoint_ = (noteAllNum_ * 8) + combBonus;
 	}
 
 	/**
@@ -150,6 +150,36 @@ public:
 		return maxPoint_;
 	}
 
+	/**
+	* @brief コンボ数とノーツ状態からスコアを取得する
+	* @return int スコア
+	*/
+	[[nodiscard]] int getPoint(ECS::NoteState::State state, int combo)
+	{
+		//コンボ数から追加ポイントを計算
+		int combBonus = combo / 20;
+		if (combBonus > 2) combBonus = 2;
+
+		switch (state)
+		{
+		case ECS::NoteState::State::MISS:
+		case ECS::NoteState::State::NON:
+		case ECS::NoteState::State::BAD:
+			return 0;
+
+		case ECS::NoteState::State::GOOD:
+			return 2 + combBonus;
+
+		case ECS::NoteState::State::GREAT:
+			return 5 + combBonus;
+
+		case ECS::NoteState::State::PARFECT:
+		case ECS::NoteState::State::AUTO:
+			return 8 + combBonus;
+		}
+		return 0;
+	}
+
 private:
 	//休符のノーツデータを追加する
 	void addRestNotes()
@@ -180,6 +210,7 @@ private:
 		notesData_.emplace_back();
 		fin >> notesData_.back().imagePath
 			>> notesData_.back().imageName
+			>> notesData_.back().dirtyID
 			>> notesData_.back().seName
 			>> notesData_.back().arrivalBeatTime
 			>> notesData_.back().hitJudge[0]	//BAD

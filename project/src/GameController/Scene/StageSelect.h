@@ -14,7 +14,7 @@
 
 namespace Scene
 {
-	class StageSelect : public AbstractScene
+	class StageSelect final : public AbstractScene
 	{
 	private:
 		ECS::Entity* option_ = nullptr;
@@ -32,18 +32,21 @@ namespace Scene
 		ECS::Entity* fade_ = nullptr;
 		ECS::EntityManager* entityManager_ = nullptr;
 		std::vector<ECS::Entity*> cursorTargets{};
-		std::unique_ptr<Parameter> param_;
 		Counter cnt_;
 		float bgmVal_ = 0;
 		float seVal_ = 0;
 		int backVal_ = 0;
+		float fadeGain_ = 0;
+		std::string bgmPath_;
 		bool isPlay_ = false;
+		bool isAuto_ = false;
 		size_t stageNum_ = 0u;
 		void entitySetUp();
 		void optionSheetMove();
 		void setSoundVolume();
 		void changeLayer();
 		void showDishParameter();
+		void gainAdjustment();
 	public:
 		StageSelect(IOnSceneChangeCallback* sceneChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);
 		~StageSelect();
