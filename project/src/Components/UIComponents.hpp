@@ -69,7 +69,10 @@ namespace ECS
 			start_(0.f),
 			end_(0.f),
 			spd_(0.f) {}
-
+		FadeComponent(const float& start, const float& end, const float& speed) :
+			start_(start),
+			end_(end),
+			spd_(speed) {}
 		void initialize() override
 		{
 			if (!entity->hasComponent<AlphaBlend>())

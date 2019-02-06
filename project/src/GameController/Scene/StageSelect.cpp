@@ -18,6 +18,8 @@ namespace Scene
 	{
 		//Fade
 		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "fade");
+		ResourceManager::GetGraph().load("Resource/image/fade_white.png", "w_fade");
+
 		//セレクト曲
 		ResourceManager::GetSound().load("Resource/sound/BGM/SelectMenu.ogg", "selectBGM",SoundType::BGM);
 		//オプション決定音
@@ -332,6 +334,15 @@ namespace Scene
 			);
 				
 		}
+		wFade_ = ECS::ArcheType::CreateEntity
+		(
+			"w_fade",
+			Vec2{ 0.f,0.f },
+			*entityManager_,
+			ENTITY_GROUP::TOP_FADE
+		);
+		wFade_->addComponent<ECS::FadeComponent>(255.f, 0.f, 36.f);
+
 		fade_ = ECS::ArcheType::CreateEntity
 		(
 			"fade",
