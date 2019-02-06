@@ -177,6 +177,7 @@ namespace Scene
 			}
 			nc_.run(msl_.getNotesData(), msl_.getScoreData(), *entityManager_);
 
+#ifdef _DEBUG
 			if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 			{
 				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
@@ -194,7 +195,7 @@ namespace Scene
 				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
 			//-----------------------------------------------------------------------------------------
-
+#endif
 			changeResultScene();
 			changePauseScene();
 			saveMaxComb();
