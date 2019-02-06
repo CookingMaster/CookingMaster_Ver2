@@ -30,6 +30,7 @@ namespace Scene
 		ECS::Entity* score_{};
 		ECS::Entity* effects_[4]{};
 		ECS::Entity* fade_ = nullptr;
+		ECS::Entity* wFade_ = nullptr;
 		ECS::EntityManager* entityManager_ = nullptr;
 		std::vector<ECS::Entity*> cursorTargets{};
 		Counter cnt_;

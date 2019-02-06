@@ -111,11 +111,6 @@ namespace Scene
 		}
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
-		//マーカー(左右に一つずつ)
-		ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::L,
-			Vec2((System::SCREEN_WIDTH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
-		ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::R,
-			Vec2((System::SCREEN_WIDTH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 		fade_ = ECS::ArcheType::CreateEntity
 		(
 			"fade",
@@ -151,6 +146,11 @@ namespace Scene
 				{
 					s.play(false, false);
 				}
+				//マーカーを作成(左右に一つずつ)
+				ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::L,
+					Vec2((System::SCREEN_WIDTH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
+				ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::R,
+					Vec2((System::SCREEN_WIDTH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 			}
 		}
 		if (isPlay_)
@@ -177,6 +177,7 @@ namespace Scene
 			}
 			nc_.run(msl_.getNotesData(), msl_.getScoreData(), *entityManager_);
 
+#ifdef _DEBUG
 			if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 			{
 				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
@@ -194,7 +195,7 @@ namespace Scene
 				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
 			//-----------------------------------------------------------------------------------------
-
+#endif
 			changeResultScene();
 			changePauseScene();
 			saveMaxComb();
