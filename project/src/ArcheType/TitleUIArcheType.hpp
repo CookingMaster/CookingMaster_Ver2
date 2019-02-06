@@ -95,7 +95,7 @@ namespace ECS
 			return entity;
 		}
 
-		static Entity* CreateCloud(const std::string& imgName, int xSize, EntityManager& entityManager_)
+		static Entity* CreateCloud(const std::string& imgName, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(0.f, 50.f);
