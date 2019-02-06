@@ -58,6 +58,7 @@ namespace ECS
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot({ 50,50 });
 			entity->addComponent<Rotate>(1.f);
 			entity->addComponent<FallDance>(rand.getRand(-5.f, 5.f), rand.getRand(0.f, 180.f), rand.getRand(0.01f, 0.1f));
+			entity->addComponent<DestroyOutOfScreen>(Vec2{ 100.f,100.f });
 			entity->addGroup(ENTITY_GROUP::EFFECT);
 			return entity;
 		}
@@ -87,6 +88,19 @@ namespace ECS
 			entity->addComponent<SpriteRectDraw>(graphicName).setPivot(Vec2{ 59.f / 2,75.f / 2 });
 			entity->addComponent<DrawFont2>(59.f, 75.f, score);
 			entity->addGroup(ENTITY_GROUP::UI);
+			return entity;
+		}
+		static Entity* CreateSpotLightEntity(const char* graphicName, const Vec2 pos, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			//entity->getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			entity->addComponent<Color>();
+			entity->addComponent<AlphaBlend>(AlphaBlend::BlendMode::ADD, 255);
+			//entity->addComponent<Expand>(Vec2{ 1.f,1.f }, Easing::ExpoIn, 5.f);
+			entity->addComponent<SpriteDraw>(graphicName);
+			entity->addComponent<Lemniscate>(30.f);
+			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
 
