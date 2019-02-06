@@ -95,23 +95,13 @@ namespace ECS
 			return entity;
 		}
 
-		static Entity* CreateCloud(const std::string& imgName, int xSize, int i, EntityManager& entityManager_)
+		static Entity* CreateCloud(const std::string& imgName, int xSize, EntityManager& entityManager_)
 		{
 			auto* entity = &entityManager_.addEntity();
-			entity->addComponent<Transform>().setPosition(
-				float(GetRand(System::SCREEN_WIDTH - xSize)),
-				float(GetRand(System::SCREEN_HEIGHT / 5) - 20.f));
+			entity->addComponent<Transform>().setPosition(0.f, 50.f);
 			entity->addComponent<SpriteDraw>(imgName.c_str());
 			entity->addComponent<ZoomIn>(0.01f, Vec2(560.f + 65.f, 389.f + 115.f)).setStop(true);
-
-			if (i % 2)
-			{
-				entity->addComponent<TitleObjectsMover>(Vec2(1, 0));
-			}
-			else
-			{
-				entity->addComponent<TitleObjectsMover>(Vec2(-1, 0));
-			}
+			entity->addComponent<TitleObjectsMover>(Vec2(1, 0));
 
 			entity->addGroup(ENTITY_GROUP::TITLE_BACK);
 

@@ -36,10 +36,7 @@ namespace Scene
 			*entityManager_);
 
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_bg", Vec2(0.f, 0.f), *entityManager_);		//背景
-		for (int i = 1; i <= 2; ++i)
-		{
-			ECS::TitleUIArcheType::CreateCloud("cloud", 172, i, *entityManager_);//雲
-		}
+		ECS::TitleUIArcheType::CreateCloud("cloud", 172, *entityManager_);	//雲
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_door", Vec2(560.f, 389.f), *entityManager_, true);	//ドア
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_building", Vec2(0.f, 96.f), *entityManager_);	//外装
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_light", Vec2(1084.f, 92.f), *entityManager_, false, true);	//ライト

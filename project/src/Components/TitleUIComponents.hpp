@@ -258,6 +258,7 @@ namespace ECS
 		Position* pos_ = nullptr;
 		SpriteDraw* sd_ = nullptr;
 		Vec2 spd_;
+		float sizex = 0.f;
 
 	public:
 		TitleObjectsMover(const Vec2& spd):
@@ -266,20 +267,20 @@ namespace ECS
 		void initialize() override
 		{
 			pos_ = &entity->getComponent<Position>();
-			sd_ = &entity->getComponent<SpriteDraw>();
+			if (entity->hasComponent<SpriteDraw>())
+			{
+				sd_ = &entity->getComponent<SpriteDraw>();
+				sizex = float(sd_->getSize().x);
+			}
 		}
 
 		void update() override
 		{
 			pos_->val += spd_;
 
-			if (int(pos_->val.x) < -500.f)
+			if (System::SCREEN_WIDTH + sizex < int(pos_->val.x))
 			{
-				pos_->val.x = float(System::SCREEN_WIDTH);
-			}
-			else if (System::SCREEN_WIDTH + 500.f < int(pos_->val.x))
-			{
-				pos_->val.x = float(-sd_->getSize().x);
+				pos_->val.x = -sizex;
 			}
 		}
 	};
