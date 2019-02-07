@@ -81,9 +81,10 @@ namespace Scene
 		case 1:
 			if (message[0]->getComponent<ECS::AnyInputFunction>().getIsPushed())
 			{
+				Sound se("enter");
+				se.play(false, true);
 				fade[0]->getComponent<ECS::FadeComponent>().reset(0.f, 255.f, 80.f);
 				++progress;
-				
 			}
 			break;
 
