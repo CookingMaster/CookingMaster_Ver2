@@ -91,6 +91,22 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::UI);
 			return entity;
 		}
+		//ステージ選択画面の操作方法
+		static Entity* CreateMenuHowTo(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
+		{
+			auto& e = entityManager->addEntity();
+
+			e.addComponent<Transform>().setPosition(pos.x, -50.f);
+			e.addComponent<EasingPosMove>().setDest(
+				Vec2(pos.x, -50.f),
+				Vec2(pos.x, pos.y),
+				60.f);
+			e.getComponent<EasingPosMove>().isSetAlphaBlend(true);
+			e.addComponent<SpriteDraw>(graphicName).setPivot(Vec2(0.f, 0.f));
+			e.addGroup(ENTITY_GROUP::UI);
+
+			return &e;
+		}
 		//---------- ポーズ画面
 		//ポーズ画面の背景
 		static Entity* CreatePauseBG(const char* graphicName, const Vec2& pos, EntityManager& entityManager_)
@@ -153,23 +169,6 @@ namespace ECS
 			entity->addComponent<SelectFrame>();
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
-		}
-
-		//ステージ選択画面の操作方法
-		static Entity* CreateMenuHowTo(const char* graphicName, const Vec2& pos, EntityManager* entityManager)
-		{
-			auto& e = entityManager->addEntity();
-
-			e.addComponent<Transform>().setPosition(pos.x, -50.f);
-			e.addComponent<EasingPosMove>().setDest(
-				Vec2(pos.x, -50.f),
-				Vec2(pos.x, pos.y),
-				60.f);
-			e.getComponent<EasingPosMove>().isSetAlphaBlend(true);
-			e.addComponent<SpriteDraw>(graphicName).setPivot(Vec2(0.f, 0.f));
-			e.addGroup(ENTITY_GROUP::UI);
-
-			return &e;
 		}
 	};
 }
