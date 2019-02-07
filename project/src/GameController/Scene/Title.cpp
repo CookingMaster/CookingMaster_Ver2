@@ -89,8 +89,9 @@ namespace Scene
 			break;
 
 		case 2:
+			Sound se("enter");
 			gain_ -= 0.02f;
-			if (fade[0]->getComponent<ECS::FadeComponent>().isFadeEnd() && gain_ <= 0.f)
+			if (fade[0]->getComponent<ECS::FadeComponent>().isFadeEnd() && gain_ <= 0.f && !se.isPlay())
 			{
 				ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::POP, true);
 			}
