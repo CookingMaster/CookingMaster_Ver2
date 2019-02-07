@@ -350,6 +350,7 @@ namespace Scene
 			send_parameter->add<std::string>("BGM_name", bgmName_);
 			send_parameter->add<std::string>("BGM_path", bgmPath_);
 			send_parameter->add<bool>("autoFlag", autoPerfectMode_);
+			send_parameter->add<size_t>("stage", stageNum_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			ON_SCENE_CHANGE(SceneName::PAUSE, send_parameter.get(), StackPopFlag::NON, true);
