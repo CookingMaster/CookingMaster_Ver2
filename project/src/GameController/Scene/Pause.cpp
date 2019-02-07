@@ -21,6 +21,7 @@ namespace Scene
 		name_ = parame->get<std::string>("BGM_name");
 		bgmPath_ = parame->get<std::string>("BGM_path");
 		isAuto_ = parame->get<bool>("autoFlag");
+		stageNum_ = parame->get<size_t>("stage");
 		bg_ = ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
 		
 		//size(522,255), pos(640,360):3つのボタンのうち左の左上

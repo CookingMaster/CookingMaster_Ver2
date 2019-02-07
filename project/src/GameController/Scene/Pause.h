@@ -26,6 +26,7 @@ namespace Scene
 		bool isAuto_;
 		void selectButton();
 		void moveCursor();
+		size_t stageNum_ = 0u;
 
 	public:
 		Pause(IOnSceneChangeCallback* sceneTitleChange, [[maybe_unused]] Parameter* parame, ECS::EntityManager* entityManager);

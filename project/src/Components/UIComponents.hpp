@@ -736,7 +736,7 @@ namespace ECS
 		float firstEndSize_, secondEndSize_, endSize_;
 		int pauseFrame_;
 		float inSpeed_, outSpeed_, easingSpeed_;
-		bool fadeOutFlag_;
+		bool fadeOutFlag_ = false;
 		Easing easing_;
 		Counter counter_;
 	public:
@@ -834,10 +834,11 @@ namespace ECS
 	private:
 		Rotation * rotation_ = nullptr;
 		int waitFrame_;
-		float originAngle_, endAngle_;
+		float originAngle_ = 0;
+		float endAngle_;
 		Easing easing_;
 		Counter counter_;
-		int gongTimes_;
+		int gongTimes_ = 0;
 	public:
 		SoundGongComponent(const int waitFrame, const float endAngle)
 			:
@@ -849,7 +850,6 @@ namespace ECS
 			rotation_ = &entity->getComponent<Rotation>();
 			originAngle_ = rotation_->val;
 			counter_.setCounter(0, 1, 0, waitFrame_);
-			gongTimes_ = 0;
 		}
 		void update() override
 		{
