@@ -77,7 +77,7 @@ namespace ECS
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SpriteDraw>(imgName.c_str());
-			entity->addComponent<ZoomIn>(0.01f, Vec2(560.f + 65.f, 389.f + 115.f)).setStop(true);
+			entity->addComponent<ZoomIn>(0.01f, Vec2(560.f + 65.f, 500.f + 115.f)).setStop(true);
 
 			if (isDoor)
 			{
@@ -100,7 +100,7 @@ namespace ECS
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(0.f, 50.f);
 			entity->addComponent<SpriteDraw>(imgName.c_str());
-			entity->addComponent<ZoomIn>(0.01f, Vec2(560.f + 65.f, 389.f + 115.f)).setStop(true);
+			entity->addComponent<ZoomIn>(0.01f, Vec2(560.f + 65.f, 500.f + 115.f)).setStop(true);
 			entity->addComponent<TitleObjectsMover>(Vec2(1, 0));
 
 			entity->addGroup(ENTITY_GROUP::TITLE_BACK);
