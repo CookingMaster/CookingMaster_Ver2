@@ -52,13 +52,14 @@ namespace ECS
 			return entity;
 		}
 		//!分割画像を表示できるエンティティの生成
-		static Entity* CreateAnimationEntity(const char* graphicName, const Vec2& pos, EntityManager& entityManager, const Group group)
+		static Entity* CreateAnimationEntity(const char* graphicName, const Vec2& pos, EntityManager& entityManager, const Group group, int index = 0)
 		{
 			auto* entity = &entityManager.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>();
 			entity->addComponent<SpriteAnimationDraw>(graphicName).setPivot(Vec2{0.f,0.f});
+			entity->getComponent<SpriteAnimationDraw>().setIndex(index);
 			entity->addGroup(group);
 			return entity;
 		}
