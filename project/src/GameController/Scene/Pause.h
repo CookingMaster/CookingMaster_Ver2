@@ -21,6 +21,7 @@ namespace Scene
 		ECS::Entity* moji_ = nullptr;
 		ECS::Entity* frame_ = nullptr;
 		ECS::Entity* bg_ = nullptr;
+		ECS::Entity* stage_ = nullptr;
 		std::string name_;
 		std::string bgmPath_;
 		bool isAuto_;
