@@ -859,7 +859,7 @@ namespace ECS
 			{
 				easing_.run(Easing::CircIn, 5.f);
 				rotation_->val = easing_.getVolume(originAngle_, endAngle_);
-				if (easing_.isEaseEnd()) {
+				if (easing_.isEaseEnd()) {		
 					++gongTimes_;
 					easing_.reset();
 					float temp = originAngle_;

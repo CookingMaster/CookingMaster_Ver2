@@ -35,7 +35,8 @@ namespace Scene
 		//鍋
 		ResourceManager::GetGraph().loadDiv("Resource/image/bg_nabe1.png", "nabe1", 8, 8, 1, 140, 148);
 		ResourceManager::GetGraph().loadDiv("Resource/image/bg_nabe2.png", "nabe2", 8, 8, 1, 186, 98);
-		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
+		//鍋かんかん
+		ResourceManager::GetSound().load("Resource/sound/SE/nabeHit.ogg", "nabeHit", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/bg_back.png", "bg_back");
 		ResourceManager::GetGraph().load("Resource/image/rakugaki.png", "rakugaki");
@@ -62,7 +63,6 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/cut_effect_d.png", "slash", 4, 4, 1, 384, 256);
 		//斬撃エフェクト(悪)
 		ResourceManager::GetGraph().loadDiv("Resource/image/cut_effect_bad_d.png", "slash_bad", 4, 4, 1, 256, 256);
-
 		//グチャ
 		ResourceManager::GetSound().load("Resource/sound/SE/miss.ogg", "miss", SoundType::SE);
 		//グチャ画像
@@ -448,6 +448,11 @@ namespace Scene
 		start_->update();
 		otama_->update();
 		pan_->update();
+		if (otama_->getComponent<ECS::Rotation>().val >= 40.f)
+		{
+			Sound se("nabeHit");
+			se.play(false, true);
+		}
 		for (int i = 0; i < 4; ++i)
 		{
 			stars_[i]->update();
