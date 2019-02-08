@@ -25,10 +25,6 @@ private:
 	{
 		game->draw();
 	}
-	const bool pushEscape() const
-	{
-		return Input::Get().getKeyFrame(KEY_INPUT_ESCAPE) == 1;
-	}
 public:
 	GameMain()
 	{
@@ -39,7 +35,7 @@ public:
 	void run()
 	{
 
-		while (system->isOk() && !pushEscape())
+		while (system->isOk() && !game->pushEscapeAndFadeOut())
 		{
 			Fps::Get().update();
 			update();

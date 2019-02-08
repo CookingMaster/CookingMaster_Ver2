@@ -48,6 +48,8 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/gameStart/gameStart.png", "start");
 		ResourceManager::GetGraph().loadDiv("Resource/image/gameStart/gong.png", "gong", 2, 2, 1, 150, 200);
 		ResourceManager::GetGraph().loadDiv("Resource/image/gameStart/star.png", "star", 2, 2, 1, 55, 53);
+		//FINISH
+		ResourceManager::GetGraph().load("Resource/image/finish.png", "finish");
 
 		//プレイヤーの画像読み込み
 		ResourceManager::GetGraph().loadDiv("Resource/image/playerd.png", "player", 15, 3, 5, 500, 505);
@@ -118,6 +120,8 @@ namespace Scene
 			*entityManager_,
 			ENTITY_GROUP::TOP_FADE
 		);
+
+		finishCnt_.setCounter(0, 1, 0, 60);
 	}
 
 	void Game::update()
@@ -416,7 +420,21 @@ namespace Scene
 			{
 				sendParame->add<bool>("newrecord", false);
 			}
-			ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
+			if (finish == nullptr) {
+				finish = ECS::GameEffectsArcheType::CreateFinishEntity(
+					"finish", Vec2{ System::SCREEN_WIDTH / 2.f,System::SCREEN_HEIGHT / 2.f }, entityManager_
+				);
+			}
+			else {
+				if (finish->getComponent<ECS::ExpandComponentSystem>().isEaseEnd())
+				{
+					fade_->getComponent<ECS::AlphaBlend>().alpha += 10;
+				}
+			}
+			if (fade_->getComponent<ECS::AlphaBlend>().alpha >= 255)
+			{
+				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
+			}
 		}
 	}
 
@@ -469,10 +487,10 @@ namespace Scene
 			//星の角度
 			float starAngle[2] = { 30.f, -30.f };
 			//星つくる
-			for (int i = 0; i < 4; ++i) 
+			for (int i = 0; i < 4; ++i)
 			{
 				stars_[i] = ECS::GameEffectsArcheType::CreateStartUIOrnament(
-					"star", i / 2, starPos[i], starAngle[i%2], startUIstopTime, entityManager_
+					"star", i / 2, starPos[i], starAngle[i % 2], startUIstopTime, entityManager_
 				);
 			}
 		}

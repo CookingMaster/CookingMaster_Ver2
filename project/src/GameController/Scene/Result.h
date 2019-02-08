@@ -57,11 +57,13 @@ namespace Scene
 		bool isNewRecord_ = false;
 		//! フルコンボフラグ
 		bool isFullCombo_ = false;
+		//! ドラムロール終了フラグ
+		bool drumendFlag_ = false;
 		//リザルトの進行度を管理する
 		enum Timing
 		{
 			DRUMROLL = 120,					//ドラムローーーーール
-			CONFETTI = DRUMROLL + 60,		//紙吹雪出す
+			CONFETTI = DRUMROLL + 100,		//紙吹雪出す
 			EVALUATION = CONFETTI + 40,		//評価フォント出す
 			SCORE_BACK = EVALUATION + 60,	//スコア用背景出す
 			SCOREFONT = SCORE_BACK + 60,	//スコアの文字出す

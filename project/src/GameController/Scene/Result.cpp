@@ -37,6 +37,8 @@ void Scene::Result::initialize()
 	//音
 	ResourceManager::GetSound().load("Resource/sound/SE/roll.ogg", "drumroll", SoundType::SE);
 	ResourceManager::GetSound().load("Resource/sound/SE/roll_end.ogg", "drumend", SoundType::SE);
+	ResourceManager::GetSound().load("Resource/sound/SE/orchestra_hit.ogg", "orchestra", SoundType::SE);
+
 	//評価フォント
 	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
 	ResourceManager::GetGraph().loadDiv("Resource/image/resultUI.png", "result", 2, 1, 2, 500, 150);
@@ -51,7 +53,7 @@ void Scene::Result::initialize()
 
 	//カウンタ初期化
 	counter_.reset();
-	counter_.setEndTime(600, 0);
+	counter_.setEndTime(Timing::FADE_OUT, 0);
 	//エンティティ初期化
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity(
 		"cloche",
@@ -79,6 +81,7 @@ void Scene::Result::initialize()
 	spotLight = ECS::ResultArcheType::CreateSpotLightEntity(
 		"spotlight", Vec2{ System::SCREEN_WIDTH / 2.f + 30.f,System::SCREEN_HEIGHT / 2.f }, *entityManager_
 	);
+	drumendFlag_ = false;
 }
 
 void Scene::Result::update()
@@ -86,25 +89,37 @@ void Scene::Result::update()
 	//フェードイン
 	if (!isFadeOut_ && fade_->getComponent<ECS::AlphaBlend>().alpha >= 165)
 	{
-		fade_->getComponent<ECS::AlphaBlend>().alpha -= 6;
+		fade_->getComponent<ECS::AlphaBlend>().alpha -= 3;
 		return;
 	}
 
-	//ドラムロール開始
-	Sound drumrollSE("drumroll");
-	drumrollSE.play(false, true);
-	
 	counter_.add();
 	entityManager_->update();
+
+	if (counter_.getCurrentCount() == 30)
+	{
+		//ドラムロール開始
+		Sound drumrollSE("drumroll");
+		drumrollSE.play(false, true);
+	}
 	if (spotLight->getComponent<ECS::SpotLightMove>().isEnd())
 	{
 		spotLight->addComponent<ECS::ExpandComponentSystem>(1.f, 0.f, 7.f);
+		Sound drumendSE("drumend");
+		Sound drumrollSE("drumroll");
+		drumrollSE.stop();
+		if (!drumendSE.isPlay() && !drumendFlag_)
+		{
+			drumendSE.play(false, true);
+		}
+		drumendFlag_ = true;
 	}
 	if (counter_.getCurrentCount() == Timing::CONFETTI)
 	{
-		drumrollSE.stop();
-		Sound drumendSE("drumend");
-		drumendSE.play(false, true);
+		Sound orchestra("orchestra");
+		if (!orchestra.isPlay()) {
+			orchestra.play(false, true);
+		}
 		fade_->getComponent<ECS::AlphaBlend>().alpha = 0;
 		//紙吹雪
 		if (score_ >= SCORE_GREAT)
