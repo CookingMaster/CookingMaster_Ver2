@@ -8,9 +8,10 @@
 #include "Scene/Pause.h"
 #include "Scene/Result.h"
 #include "../Class/Sound.hpp"
+#include "../ArcheType/ArcheType.hpp"
+
 void GameController::resourceLoad()
 {
-	
 }
 
 GameController::GameController()
@@ -90,8 +91,18 @@ void GameController::update()
 	MasterSound::Get().update();
 	entityManager_.refresh();
 	Input::Get().updateKey();
-	//シーン更新
-	sceneStack_.top()->update();
+	if (gameEndFadeOut_ == nullptr)
+	{
+		//シーン更新
+		sceneStack_.top()->update();
+	}
+	else
+	{
+		fadeSoundGain_ -= 0.015f;
+		MasterSound::Get().setAllBGMGain(fadeSoundGain_);
+		gameEndFadeOut_->update();
+	}
+	
 }
 
 void GameController::draw()
@@ -99,5 +110,38 @@ void GameController::draw()
 	//グループ順に描画
 	SetDrawMode(DX_DRAWMODE_ANISOTROPIC);
 	sceneStack_.top()->draw();
+	if (gameEndFadeOut_ != nullptr)
+	{
+		gameEndFadeOut_->draw2D();
+	}
 	SetDrawMode(DX_DRAWMODE_NEAREST);
+}
+
+const bool GameController::pushEscapeAndFadeOut()
+{
+	if (Input::Get().getKeyFrame(KEY_INPUT_ESCAPE) == 1)
+	{
+		ResourceManager::GetGraph().load("Resource/image/fade_black.png", "endfade");
+		ResourceManager::GetSound().load("Resource/sound/SE/thankyou.ogg", "end", SoundType::SE);
+		fadeSoundGain_= MasterSound::Get().getBGMGain();
+		Sound se("end");
+		se.play(false,true);
+		gameEndFadeOut_ = ECS::ArcheType::CreateEntity
+		(
+			"endfade",
+			Vec2{ 0.f,0.f },
+			entityManager_,
+			ENTITY_GROUP::TOP_FADE
+		);
+		gameEndFadeOut_->addComponent<ECS::FadeComponent>(0.f, 255.f, 100.f);
+	}
+	if (gameEndFadeOut_ == nullptr)
+	{
+		return false;
+	}
+	if (gameEndFadeOut_->getComponent<ECS::FadeComponent>().isFadeEnd())
+	{
+		return true;
+	}
+	return false;
 }

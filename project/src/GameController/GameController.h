@@ -22,6 +22,8 @@
 class GameController final : public Scene::IOnSceneChangeCallback
 {
 private:
+	float fadeSoundGain_ = 0.f;
+	ECS::Entity* gameEndFadeOut_ = nullptr;
 	ECS::EntityManager entityManager_;
 	std::stack<std::unique_ptr<Scene::AbstractScene>> sceneStack_;	//シーンのスタック
 	void resourceLoad();
@@ -71,4 +73,6 @@ public:
 	void update();
 	//!Entityの描画を行います
 	void draw();
+	//!Escapeキーを押すとフェードアウトして終了します
+	const bool pushEscapeAndFadeOut();
 };
