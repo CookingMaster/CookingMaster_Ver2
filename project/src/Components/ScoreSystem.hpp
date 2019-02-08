@@ -41,6 +41,7 @@ namespace ECS
 		ScoreData* score_ = nullptr;
 		int saveScore_ = 0;
 		StageHighScore stageName_;
+		bool isUpdate_ = false;
 		//得点保存用ファイルを作成
 		void wrightScoreData(int score)
 		{
@@ -72,6 +73,7 @@ namespace ECS
 			//スコアが高いほうをsaveScore_保存
 			if (saveScore_ < score_->val)
 			{
+				isUpdate_ = true;
 				wrightScoreData(score_->val);
 			}
 			ifs.close();
@@ -91,6 +93,11 @@ namespace ECS
 		{
 			loadScoreData(stageName);
 			return saveScore_;
+		}
+		//!ハイスコアを更新したか返します
+		[[nodiscard]] const bool isUpdateScore() const
+		{
+			return isUpdate_;
 		}
 	};
 
