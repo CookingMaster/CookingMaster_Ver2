@@ -206,7 +206,28 @@ void Scene::Result::update()
 		);
 	}
 	if (counter_.getCurrentCount() == Timing::NEW_RECORD) {
-		//
+		//ニューレコードだったら出す
+		if (isNewRecord_)
+		{
+			ECS::ResultArcheType::CreateNewMessageEntity(
+				"result",
+				Vec2{ 1010.f, 346.f },
+				0,
+				*entityManager_
+			);
+		}
+	}
+	if (counter_.getCurrentCount() == Timing::FULLCOMBO) {
+		//フルコンボだったら出す
+		if (isFullCombo_)
+		{
+			ECS::ResultArcheType::CreateNewMessageEntity(
+				"result",
+				Vec2{ 1010.f, 490.f },
+				1,
+				*entityManager_
+			);
+		}
 	}
 	if (counter_.getCurrentCount() >= Timing::FADE_OUT) {
 		isFadeOut_ = true;

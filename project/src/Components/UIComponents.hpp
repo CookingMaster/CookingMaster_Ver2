@@ -183,6 +183,7 @@ namespace ECS
 		void initialize() override
 		{
 			scale_ = &entity->getComponent<Scale>();
+			scale_->val = start_;
 		}
 
 		void update() override
@@ -866,6 +867,67 @@ namespace ECS
 					originAngle_ = endAngle_;
 					endAngle_ = temp;
 				}
+			}
+		}
+	};
+
+	/**
+	* @brief ぐるぐるってなりながら拡縮して、指定した角度でスパーンってなるコンポーネント
+	* @param int angle 最終的な角度
+	*/
+	class GuruguruSpaan final : public ComponentSystem
+	{
+	private:
+		Rotation* rot_ = nullptr;
+		ExpandComponentSystem* ex_ = nullptr;
+		float angle_;
+		int cnt_ = 0;
+
+	public:
+		GuruguruSpaan(float angle):
+			angle_(angle){}
+
+		void initialize() override
+		{
+			if (!entity->hasComponent<Rotation>())
+			{
+				entity->addComponent<Rotation>();
+			}
+			rot_ = &entity->getComponent<Rotation>();
+
+			if (!entity->hasComponent<ExpandComponentSystem>())
+			{
+				entity->addComponent<ExpandComponentSystem>(0.f, 1.f, 20.f);
+			}
+			ex_ = &entity->getComponent<ExpandComponentSystem>();
+		}
+
+		void update() override
+		{
+			switch (cnt_)
+			{
+			case 0:
+				rot_->val += 50.f;
+				if (ex_->isEaseEnd())
+				{
+					ex_->set(1.f, 0.5f, 20.f);
+					++cnt_;
+				}
+				break;
+
+			case 1:
+				if (ex_->isEaseEnd())
+				{
+					rot_->val = angle_;
+				}
+				else
+				{
+					rot_->val += 50.f;
+				}
+				break;
+
+			default:
+				break;
 			}
 		}
 	};

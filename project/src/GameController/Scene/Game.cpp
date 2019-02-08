@@ -190,6 +190,7 @@ namespace Scene
 				sendParame->add<std::string>("BGM_name", bgmName_);
 				sendParame->add<int>("score", scoreNum_);
 				sendParame->add<int>("maxcombo", maxComb_);
+				sendParame->add<bool>("fullcombo", maxComb_ == msl_.getMaxNoteNum());
 				//BGMを停止する
 				Sound(bgmName_).stop();
 				//オートモードは記録しない
@@ -210,12 +211,10 @@ namespace Scene
 							->getComponent<ECS::ScoreSystem>().isUpdateScore());
 						break;
 					}
-					sendParame->add<bool>("fullcombo", comb_ == maxComb_);
 				}
 				else
 				{
 					sendParame->add<bool>("newrecord", false);
-					sendParame->add<bool>("fullcombo", false);
 				}
 				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
@@ -391,6 +390,7 @@ namespace Scene
 			sendParame->add<std::string>("BGM_name", bgmName_);
 			sendParame->add<int>("score", scoreNum_);
 			sendParame->add<int>("maxcombo", maxComb_);
+			sendParame->add<bool>("fullcombo", maxComb_ == msl_.getMaxNoteNum());
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			//オートモードは記録しない
@@ -411,12 +411,10 @@ namespace Scene
 						->getComponent<ECS::ScoreSystem>().isUpdateScore());
 					break;
 				}
-				sendParame->add<bool>("fullcombo", comb_ == maxComb_);
 			}
 			else
 			{
 				sendParame->add<bool>("newrecord", false);
-				sendParame->add<bool>("fullcombo", false);
 			}
 			ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 		}

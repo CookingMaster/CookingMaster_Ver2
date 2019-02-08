@@ -66,8 +66,10 @@ namespace Scene
 			SCORE_BACK = EVALUATION + 60,	//スコア用背景出す
 			SCOREFONT = SCORE_BACK + 60,	//スコアの文字出す
 			SCORE = SCOREFONT + 5,			//スコア数字出す
+			NEW_RECORD = SCOREFONT + 10,	//ニューレコード出す
 			COMBOFONT = SCORE + 55,			//コンボの文字出す
 			COMBO = COMBOFONT + 5,			//コンボ数出す
+			FULLCOMBO = COMBOFONT + 10,		//フルコンボ出す
 			FADE_OUT = COMBO + 175,			//フェードアウト開始
 		};
 

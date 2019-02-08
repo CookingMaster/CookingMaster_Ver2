@@ -10,6 +10,7 @@
 #include "../Components/Renderer.hpp"
 #include "../Components/ResultComponent.hpp"
 #include "../Utility/Random.hpp"
+#include "../Components/UIComponents.hpp"
 
 namespace ECS
 {
@@ -104,6 +105,15 @@ namespace ECS
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}
+		static Entity* CreateNewMessageEntity(const char* graphicName, const Vec2 pos, int index, EntityManager& entityManager_)
+		{
+			auto* entity = &entityManager_.addEntity();
+			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
+			entity->addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
+			entity->addComponent<GuruguruSpaan>(10.f);
 
+			entity->addGroup(ENTITY_GROUP::UI);
+			return entity;
+		}
 	};
 }
