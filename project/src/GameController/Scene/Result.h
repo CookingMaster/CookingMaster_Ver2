@@ -55,7 +55,8 @@ namespace Scene
 		ECS::StageHighScore stage_ = ECS::StageHighScore::NON;
 		//! フェードアウトフラグ
 		bool isFadeOut_ = false;
-
+		//! ハイスコア更新フラグ
+		bool isNewRecord_ = false;
 		//リザルトの進行度を管理する
 		enum Timing {
 			CONFETTI = 100,		//紙吹雪出す

@@ -192,6 +192,29 @@ namespace Scene
 				sendParame->add<int>("maxcombo", maxComb_);
 				//BGMを停止する
 				Sound(bgmName_).stop();
+				//オートモードは記録しない
+				if (!autoPerfectMode_)
+				{
+					switch (stageNum_)
+					{
+					case 1:
+						sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_)
+							->getComponent<ECS::ScoreSystem>().isUpdateScore());
+						break;
+					case 2:
+						sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_)
+							->getComponent<ECS::ScoreSystem>().isUpdateScore());
+						break;
+					case 3:
+						sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_)
+							->getComponent<ECS::ScoreSystem>().isUpdateScore());
+						break;
+					}
+				}
+				else
+				{
+					sendParame->add<bool>("newrecord", false);
+				}
 				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
 			//-----------------------------------------------------------------------------------------
@@ -374,15 +397,22 @@ namespace Scene
 				switch (stageNum_)
 				{
 				case 1:
-					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_);
+					sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_)
+						->getComponent<ECS::ScoreSystem>().isUpdateScore());
 					break;
 				case 2:
-					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_);
+					sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_)
+						->getComponent<ECS::ScoreSystem>().isUpdateScore());
 					break;
 				case 3:
-					ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_);
+					sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_)
+						->getComponent<ECS::ScoreSystem>().isUpdateScore());
 					break;
 				}
+			}
+			else
+			{
+				sendParame->add<bool>("newrecord",false);
 			}
 			ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 		}
