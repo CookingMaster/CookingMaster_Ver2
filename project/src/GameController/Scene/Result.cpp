@@ -80,6 +80,7 @@ void Scene::Result::initialize()
 	//ドラムロール開始
 	Sound drumrollSE("drumroll");
 	drumrollSE.play(false, true);
+	drumendFlag_ = false;
 }
 
 void Scene::Result::update()
@@ -96,11 +97,15 @@ void Scene::Result::update()
 	if (spotLight->getComponent<ECS::SpotLightMove>().isEnd())
 	{
 		spotLight->addComponent<ECS::ExpandComponentSystem>(1.f, 0.f, 7.f);
+		Sound drumendSE("drumend");
+		if (!drumendSE.isPlay() && !drumendFlag_)
+		{
+			drumendSE.play(false, true);
+		}
+		drumendFlag_ = true;
 	}
 	if (counter_.getCurrentCount() == Timing::CONFETTI)
 	{
-		Sound drumendSE("drumend");
-		drumendSE.play(false, true);
 		fade_->getComponent<ECS::AlphaBlend>().alpha = 0;
 		//紙吹雪
 		if (score_ >= SCORE_GREAT)

@@ -55,6 +55,8 @@ namespace Scene
 		bool isFadeOut_ = false;
 		//! ハイスコア更新フラグ
 		bool isNewRecord_ = false;
+		//! ドラムロール終了フラグ
+		bool drumendFlag_ = false;
 		//リザルトの進行度を管理する
 		enum Timing
 		{
