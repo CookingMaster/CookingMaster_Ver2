@@ -450,11 +450,11 @@ namespace Scene
 		{
 			//お玉とフライパン
 			pan_ = ECS::GameEffectsArcheType::CreateStartUIOrnament(
-				"gong", 1, Vec2{ System::SCREEN_WIDTH / 2.f + 30.f,System::SCREEN_HEIGHT / 2.f + 50.f }, startUIstopTime, entityManager_
+				"gong", 1, Vec2{ System::SCREEN_WIDTH / 2.f + 30.f,System::SCREEN_HEIGHT / 2.f + 50.f }, 0.f, startUIstopTime, entityManager_
 			);
 			pan_->addComponent<ECS::SoundGongComponent>(40, -40.f);
 			otama_ = ECS::GameEffectsArcheType::CreateStartUIOrnament(
-				"gong", 0, Vec2{ System::SCREEN_WIDTH / 2.f - 10.f,System::SCREEN_HEIGHT / 2.f + 60.f }, startUIstopTime, entityManager_
+				"gong", 0, Vec2{ System::SCREEN_WIDTH / 2.f - 10.f,System::SCREEN_HEIGHT / 2.f + 60.f }, 0.f, startUIstopTime, entityManager_
 			);
 			otama_->addComponent<ECS::SoundGongComponent>(40, 40.f);
 			//GameStartの文字
@@ -474,7 +474,7 @@ namespace Scene
 			for (int i = 0; i < 4; ++i) 
 			{
 				stars_[i] = ECS::GameEffectsArcheType::CreateStartUIOrnament(
-					"star", i / 2, starPos[i], startUIstopTime, entityManager_
+					"star", i / 2, starPos[i], starAngle[i%2], startUIstopTime, entityManager_
 				);
 			}
 		}

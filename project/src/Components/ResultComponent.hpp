@@ -16,13 +16,15 @@
 
 namespace ECS
 {
+	constexpr float PI = 3.1415926575f;
+
 	/**
 	* @brief クロッシュが回転しながらびゅーん
 	*/
 	class FlyAway final : public ComponentSystem
 	{
 	private:
-		Position* position_ = nullptr;
+		Position * position_ = nullptr;
 		Rotation* rotate_ = nullptr;
 		Counter_f cnt_;
 
@@ -54,13 +56,13 @@ namespace ECS
 			rotate_->val = cnt_.getCurrentCount();
 			//画像の回転移動処理(遅かったから微妙に調整)
 			float angle = PI / 180.0f + 0.015f;
-			position_->val.x = 
-				center_.x 
-				+ (position_->val.x - center_.x) * cosf(angle) 
+			position_->val.x =
+				center_.x
+				+ (position_->val.x - center_.x) * cosf(angle)
 				- (position_->val.y - center_.y) * sinf(angle);
-			position_->val.y = 
-				center_.y 
-				+ (position_->val.x - center_.x) * sinf(angle) 
+			position_->val.y =
+				center_.y
+				+ (position_->val.x - center_.x) * sinf(angle)
 				+ (position_->val.y - center_.y) * cosf(angle);
 		}
 	};
@@ -69,32 +71,35 @@ namespace ECS
 	* @brief 画像の拡大を行う
 	*- 指定したイージングで拡大
 	*/
-	class Expand final : public ComponentSystem 
+	class Expand final : public ComponentSystem
 	{
 	private:
-		Scale* scale_ = nullptr;
+		Scale * scale_ = nullptr;
 		Easing ease_;
 		Vec2 startSize_;
 		Vec2 endSize_;
 		Ease em_;
 		float durationTime_;
 	public:
-		Expand(const Vec2 endSize, const Ease em, float durationTime) 
+		Expand(const Vec2 endSize, const Ease em, float durationTime)
 			:
 			endSize_(endSize),
 			em_(em),
 			durationTime_(durationTime)
 		{}
-		void initialize() override {
+		void initialize() override
+		{
 			scale_ = &entity->getComponent<Scale>();
 			startSize_ = scale_->val;
 		}
-		void update() override {
+		void update() override
+		{
 			ease_.run(em_, durationTime_);
 			scale_->val.x = ease_.getVolume(startSize_.x, endSize_.x);
 			scale_->val.y = ease_.getVolume(startSize_.y, endSize_.y);
 		}
-		[[nodiscard]] bool isEaseEnd() {
+		[[nodiscard]] bool isEaseEnd()
+		{
 			return ease_.isEaseEnd();
 		}
 	};
@@ -118,16 +123,19 @@ namespace ECS
 			em_(em),
 			durationTime_(durationTime)
 		{}
-		void initialize() override {
+		void initialize() override
+		{
 			scale_ = &entity->getComponent<Scale>();
 			startSize_ = scale_->val;
 		}
-		void update() override {
+		void update() override
+		{
 			ease_.run(em_, durationTime_);
 			scale_->val.x = ease_.getVolume(startSize_.x, endSize_.x);
 			scale_->val.y = ease_.getVolume(startSize_.y, endSize_.y);
 		}
-		[[nodiscard]] const bool isEaseEnd() {
+		[[nodiscard]] const bool isEaseEnd()
+		{
 			return ease_.isEaseEnd();
 		}
 	};
@@ -135,26 +143,26 @@ namespace ECS
 	/**
 	* @brief 指定スピードで回転させるだけ
 	*/
-	class Rotate final : public ComponentSystem 
+	class Rotate final : public ComponentSystem
 	{
 	private:
-		Rotation* rotation_ = nullptr;
+		Rotation * rotation_ = nullptr;
 		float speed_;
 	public:
 		Rotate(const float speed)
 			:
 			speed_(speed)
 		{}
-		void initialize() override 
+		void initialize() override
 		{
 			rotation_ = &entity->getComponent<Rotation>();
 		}
-		void update() override 
+		void update() override
 		{
 			rotation_->val += speed_;
 		}
 	};
-	
+
 	/**
 	* @brief x方向に往復しながら下に落ちる
 	* @param shift 左右にずれる量
@@ -165,7 +173,7 @@ namespace ECS
 	class FallDance final : public ComponentSystem
 	{
 	private:
-		Position* position_ = nullptr;
+		Position * position_ = nullptr;
 		float shift_;
 		Counter_f angleCnt_;
 	public:
@@ -179,7 +187,7 @@ namespace ECS
 		{
 			position_ = &entity->getComponent<Position>();
 		}
-		void update() override 
+		void update() override
 		{
 			position_->val.x += static_cast<float>(sin(++angleCnt_) * 10.f) + shift_;
 			position_->val.y += 10;
@@ -216,9 +224,108 @@ namespace ECS
 			position_->val.x = ease_.getVolume(startPos_.x, endPos_.x);
 			position_->val.y = ease_.getVolume(startPos_.y, endPos_.y);
 		}
-		[[nodiscard]] const bool isEaseEnd() 
+		[[nodiscard]] const bool isEaseEnd()
 		{
 			return ease_.isEaseEnd();
+		}
+	};
+
+	/**
+	* @brief y座標が画面下に出たらエンティティを殺すコンポーネント
+	* @param Vec2 size 画像サイズ
+	*/
+	class DestroyOutOfScreen final : public ComponentSystem
+	{
+	private:
+		Position * position_ = nullptr;
+		Vec2 size_;
+	public:
+		DestroyOutOfScreen(const Vec2& size)
+			:
+			size_(size)
+		{}
+		void initialize() override
+		{
+			position_ = &entity->getComponent<Position>();
+		}
+		void update() override
+		{
+			if (position_->val.y - size_.y / 2 >= System::SCREEN_HEIGHT)
+			{
+				entity->destroy();
+			}
+		}
+	};
+
+	/**
+	* @brief スポットライトの∞の動き
+	*/
+	class SpotLightMove final : public ComponentSystem
+	{
+	private:
+		Position * position_ = nullptr;
+		Counter_f counter_;
+		float speed_;
+		Vec2 startPos_;
+		int moveCnt_;
+	public:
+		SpotLightMove(const float speed, const Vec2& startPos)
+			:
+			speed_(speed),
+			startPos_(startPos)
+		{}
+		void initialize() override
+		{
+			position_ = &entity->getComponent<Position>();
+			counter_.setCounter(0.f, speed_, 0.f, 360.f);
+			moveCnt_ = 0;
+		}
+		void update() override
+		{
+			counter_.add();
+			if (counter_.isMax())
+			{
+				return;
+			}
+			float radian = counter_.getCurrentCount() * PI / 180.f;
+			position_->val.x += cosf(radian) * 30.f;
+			position_->val.y += cosf(radian * 2.f) * 20.f;
+		}
+		[[nodiscard]] const bool isEnd() 
+		{
+			return counter_.isMax();
+		}
+	};
+
+	/**
+	* @brief レムニスケート曲線で動くコンポーネント
+	*/
+	class Lemniscate final : public ComponentSystem
+	{
+	private:
+		Position * position_ = nullptr;
+		Counter_f counter_;
+		float endX_;
+	public:
+		Lemniscate(const float endX)
+			:
+			endX_(endX)
+		{}
+		void initialize() override
+		{
+			position_ = &entity->getComponent<Position>();
+			counter_.setCounter(0.f, 0.001f / 180.f * PI, 0.f, 360.f / 180.f * PI);
+		}
+		void update() override
+		{
+			counter_.add();
+			if (counter_.isMax())
+			{
+				counter_.reset();
+			}
+			float a2 = powf(endX_, 2);
+			position_->val.x += powf(2 * a2*cosf(2 * counter_.getCurrentCount()), 1 / 2.f) * cosf(counter_.getCurrentCount());
+			position_->val.y += powf(2 * a2*cosf(2 * counter_.getCurrentCount()), 1 / 2.f) * sinf(counter_.getCurrentCount());
 		}
 	};
 }

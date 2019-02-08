@@ -141,11 +141,12 @@ namespace ECS
 			return &e;
 		}
 		//! お玉とフライパンと星
-		static Entity* CreateStartUIOrnament(const char* graphicName, const int index, const Vec2& pos, const int startUIstopTime, EntityManager* entityManager)
+		static Entity* CreateStartUIOrnament(const char* graphicName, const int index, const Vec2& pos, const float angle, const int startUIstopTime, EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			e.getComponent<Rotation>().val = angle;
 			e.addComponent<Color>();
 			e.addComponent<AlphaBlend>();
 			e.addComponent<SpriteAnimationDraw>(graphicName).setIndex(index);
