@@ -17,6 +17,7 @@ Scene::Result::Result(IOnSceneChangeCallback * sceneTitleChange, [[maybe_unused]
 		score_ = (parame->get<int>("score"));
 		combo_ = (parame->get<int>("maxcombo"));
 		isNewRecord_ = (parame->get<bool>("newrecord"));
+		isFullCombo_ = (parame->get<bool>("fullcombo"));
 	}
 }
 
@@ -176,6 +177,9 @@ void Scene::Result::update()
 			combo_,
 			*entityManager_
 		);
+	}
+	if (counter_.getCurrentCount() == Timing::NEW_RECORD) {
+		//
 	}
 	if (counter_.getCurrentCount() >= Timing::FADE_OUT) {
 		isFadeOut_ = true;

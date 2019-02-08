@@ -57,6 +57,8 @@ namespace Scene
 		bool isFadeOut_ = false;
 		//! ハイスコア更新フラグ
 		bool isNewRecord_ = false;
+		//! フルコンボフラグ
+		bool isFullCombo_ = false;
 		//リザルトの進行度を管理する
 		enum Timing {
 			CONFETTI = 100,		//紙吹雪出す
@@ -66,6 +68,7 @@ namespace Scene
 			SCORE = 265,		//スコア数字出す
 			COMBOFONT = 320,	//コンボの文字出す
 			COMBO = 325,		//コンボ数出す
+			NEW_RECORD = 400,	//NEWRECORDとFULLCOMBO出す
 			FADE_OUT = 500,		//フェードアウト開始
 		};
 

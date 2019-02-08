@@ -210,10 +210,12 @@ namespace Scene
 							->getComponent<ECS::ScoreSystem>().isUpdateScore());
 						break;
 					}
+					sendParame->add<bool>("fullcombo", comb_ == maxComb_);
 				}
 				else
 				{
 					sendParame->add<bool>("newrecord", false);
+					sendParame->add<bool>("fullcombo", false);
 				}
 				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
@@ -409,10 +411,12 @@ namespace Scene
 						->getComponent<ECS::ScoreSystem>().isUpdateScore());
 					break;
 				}
+				sendParame->add<bool>("fullcombo", comb_ == maxComb_);
 			}
 			else
 			{
-				sendParame->add<bool>("newrecord",false);
+				sendParame->add<bool>("newrecord", false);
+				sendParame->add<bool>("fullcombo", false);
 			}
 			ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 		}
