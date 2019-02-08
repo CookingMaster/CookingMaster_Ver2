@@ -51,7 +51,7 @@ void Scene::Result::initialize()
 
 	//カウンタ初期化
 	counter_.reset();
-	counter_.setEndTime(600, 0);
+	counter_.setEndTime(Timing::FADE_OUT, 0);
 	//エンティティ初期化
 	cloche_ = ECS::ResultArcheType::CreateClocheEntity(
 		"cloche",
