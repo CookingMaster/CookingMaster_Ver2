@@ -18,6 +18,7 @@ Scene::Result::Result(IOnSceneChangeCallback * sceneTitleChange, [[maybe_unused]
 		score_ = (parame->get<int>("score"));
 		combo_ = (parame->get<int>("maxcombo"));
 		isNewRecord_ = (parame->get<bool>("newrecord"));
+		isFullCombo_ = (parame->get<bool>("fullcombo"));
 	}
 }
 
@@ -40,6 +41,7 @@ void Scene::Result::initialize()
 
 	//評価フォント
 	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
+	ResourceManager::GetGraph().loadDiv("Resource/image/resultUI.png", "result", 2, 1, 2, 500, 150);
 	//フォント
 	ResourceManager::GetGraph().load("Resource/image/score_combo.png", "scorecombo");
 	ResourceManager::GetGraph().load("Resource/image/score_font.png", "scorefont");
@@ -218,8 +220,31 @@ void Scene::Result::update()
 			*entityManager_
 		);
 	}
-	if (counter_.getCurrentCount() >= Timing::FADE_OUT)
-	{
+	if (counter_.getCurrentCount() == Timing::NEW_RECORD) {
+		//ニューレコードだったら出す
+		if (isNewRecord_)
+		{
+			ECS::ResultArcheType::CreateNewMessageEntity(
+				"result",
+				Vec2{ 1010.f, 346.f },
+				0,
+				*entityManager_
+			);
+		}
+	}
+	if (counter_.getCurrentCount() == Timing::FULLCOMBO) {
+		//フルコンボだったら出す
+		if (isFullCombo_)
+		{
+			ECS::ResultArcheType::CreateNewMessageEntity(
+				"result",
+				Vec2{ 1010.f, 490.f },
+				1,
+				*entityManager_
+			);
+		}
+	}
+	if (counter_.getCurrentCount() >= Timing::FADE_OUT) {
 		isFadeOut_ = true;
 	}
 	if (isFadeOut_)

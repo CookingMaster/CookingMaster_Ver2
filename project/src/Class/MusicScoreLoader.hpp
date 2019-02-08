@@ -73,6 +73,7 @@ public:
 
 		fin.close();
 
+		//スコア計算
 		for (int i = 0; i < noteAllNum_; ++i)
 		{
 			maxPoint_ += getPoint(ECS::NoteState::State::PARFECT, i);
@@ -148,6 +149,14 @@ public:
 	[[nodiscard]]int getMaxPoint()
 	{
 		return maxPoint_;
+	}
+	/**
+	* @brief ノーツの総数を取得する
+	* @return int ノーツの総数
+	*/
+	[[nodiscard]]int getMaxNoteNum()
+	{
+		return noteAllNum_;
 	}
 
 	/**
