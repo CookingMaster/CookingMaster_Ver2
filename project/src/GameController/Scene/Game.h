@@ -19,6 +19,7 @@ namespace Scene
 	private:
 		ECS::Entity* fade_ = nullptr;
 		bool isPlay_ = false;
+		bool isUpdateScore_ = false;
 		ECS::EntityManager* entityManager_ = nullptr;
 		int scoreNum_ = 0;
 		std::string bgmName_ = "";

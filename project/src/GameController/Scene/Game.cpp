@@ -389,50 +389,61 @@ namespace Scene
 	void Game::changeResultScene()
 	{
 		Sound sound(bgmName_);
-		if (sound.getTotalTime() <= sound.getCurrentTime()) {
-			auto sendParame = std::make_unique<Parameter>();
-			sendParame->add<std::string>("BGM_name", bgmName_);
-			sendParame->add<int>("score", scoreNum_);
-			sendParame->add<int>("maxcombo", maxComb_);
-			sendParame->add<bool>("fullcombo", maxComb_ == msl_.getMaxNoteNum());
-			//BGMを停止する
-			Sound(bgmName_).stop();
-			//オートモードは記録しない
-			if (!autoPerfectMode_)
+		if (sound.getTotalTime() <= sound.getCurrentTime()) 
+		{
+			if (finish == nullptr)
 			{
-				switch (stageNum_)
-				{
-				case 1:
-					sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_)
-						->getComponent<ECS::ScoreSystem>().isUpdateScore());
-					break;
-				case 2:
-					sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_)
-						->getComponent<ECS::ScoreSystem>().isUpdateScore());
-					break;
-				case 3:
-					sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_)
-						->getComponent<ECS::ScoreSystem>().isUpdateScore());
-					break;
-				}
-			}
-			else
-			{
-				sendParame->add<bool>("newrecord", false);
-			}
-			if (finish == nullptr) {
 				finish = ECS::GameEffectsArcheType::CreateFinishEntity(
 					"finish", Vec2{ System::SCREEN_WIDTH / 2.f,System::SCREEN_HEIGHT / 2.f }, entityManager_
 				);
 			}
-			else {
+			else
+			{
 				if (finish->getComponent<ECS::ExpandComponentSystem>().isEaseEnd())
 				{
 					fade_->getComponent<ECS::AlphaBlend>().alpha += 10;
 				}
 			}
+			//BGMを停止する
+			Sound(bgmName_).stop();
 			if (fade_->getComponent<ECS::AlphaBlend>().alpha >= 255)
 			{
+				auto sendParame = std::make_unique<Parameter>();
+				sendParame->add<std::string>("BGM_name", bgmName_);
+				sendParame->add<int>("score", scoreNum_);
+				sendParame->add<int>("maxcombo", maxComb_);
+				sendParame->add<bool>("fullcombo", maxComb_ == msl_.getMaxNoteNum());
+				//オートモードは記録しない
+				if (!autoPerfectMode_)
+				{
+					if (!isUpdateScore_)
+					{
+						switch (stageNum_)
+						{
+						case 1:
+							sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE1, scoreNum_, *entityManager_)
+								->getComponent<ECS::ScoreSystem>().isUpdateScore());
+							isUpdateScore_ = true;
+							break;
+						case 2:
+							sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE2, scoreNum_, *entityManager_)
+								->getComponent<ECS::ScoreSystem>().isUpdateScore());
+							isUpdateScore_ = true;
+							break;
+						case 3:
+							sendParame->add<bool>("newrecord", ECS::ScoreArcheType::CreateScoreEntity(ECS::StageHighScore::STAGE3, scoreNum_, *entityManager_)
+								->getComponent<ECS::ScoreSystem>().isUpdateScore());
+							isUpdateScore_ = true;
+							break;
+						}
+					}
+
+				}
+				else
+				{
+					sendParame->add<bool>("newrecord", false);
+				}
+				
 				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
 		}

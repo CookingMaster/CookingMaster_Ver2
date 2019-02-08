@@ -70,6 +70,17 @@ namespace ECS
 				"score" + std::to_string(size_t(stageName)) +
 				".bin", std::ios::in);
 			ifs >> saveScore_;
+			ifs.close();
+		}
+		void saveScoreData(const StageHighScore& stageName)
+		{
+			std::ifstream ifs;
+			ifs.open(
+				std::string("Resource/sound/MUSIC/stage") +
+				std::to_string(size_t(stageName)) + "/" +
+				"score" + std::to_string(size_t(stageName)) +
+				".bin", std::ios::in);
+			ifs >> saveScore_;
 			//スコアが高いほうをsaveScore_保存
 			if (saveScore_ < score_->val)
 			{
@@ -86,7 +97,7 @@ namespace ECS
 		void initialize() override
 		{
 			score_ = &entity->getComponent<ScoreData>();
-			loadScoreData(stageName_);
+			saveScoreData(stageName_);
 		}
 		//!指定したステージのスコアを取得します
 		[[nodiscard]] int getHighScore(const StageHighScore& stageName)
