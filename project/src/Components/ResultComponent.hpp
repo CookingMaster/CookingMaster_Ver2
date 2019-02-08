@@ -16,7 +16,7 @@
 
 namespace ECS
 {
-	constexpr float PI = 3.1415926535f;
+	constexpr float PI = 3.1415926575f;
 
 	/**
 	* @brief クロッシュが回転しながらびゅーん
@@ -283,13 +283,17 @@ namespace ECS
 		void update() override
 		{
 			counter_.add();
-			if (counter_.isMax() && moveCnt_ <= 1)
+			if (counter_.isMax())
 			{
-				counter_.reset();
-				++moveCnt_;
+				return;
 			}
-			position_->val.x += cosf(counter_.getCurrentCount()) * 500.f;
-			position_->val.y += sinf(counter_.getCurrentCount() * 2.f) * 300.f;
+			float radian = counter_.getCurrentCount() * PI / 180.f;
+			position_->val.x += cosf(radian) * 30.f;
+			position_->val.y += cosf(radian * 2.f) * 20.f;
+		}
+		[[nodiscard]] const bool isEnd() 
+		{
+			return counter_.isMax();
 		}
 	};
 

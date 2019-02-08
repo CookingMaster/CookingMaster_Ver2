@@ -70,8 +70,8 @@ void Scene::Result::initialize()
 		*entityManager_,
 		ENTITY_GROUP::FADE
 	);
-	spotLight[0] = ECS::ResultArcheType::CreateSpotLightEntity(
-		"spotlight", Vec2{ System::SCREEN_WIDTH / 2.f,System::SCREEN_HEIGHT / 2.f }, *entityManager_
+	spotLight = ECS::ResultArcheType::CreateSpotLightEntity(
+		"spotlight", Vec2{ System::SCREEN_WIDTH / 2.f + 30.f,System::SCREEN_HEIGHT / 2.f }, *entityManager_
 	);
 }
 
@@ -86,9 +86,9 @@ void Scene::Result::update()
 
 	counter_.add();
 	entityManager_->update();
-	if (counter_.getCurrentCount() == Timing::DRUMROLL)
+	if (spotLight->getComponent<ECS::SpotLightMove>().isEnd())
 	{
-		spotLight[0]->destroy();
+		spotLight->addComponent<ECS::ExpandComponentSystem>(1.f, 0.f, 7.f);
 	}
 	if (counter_.getCurrentCount() == Timing::CONFETTI)
 	{

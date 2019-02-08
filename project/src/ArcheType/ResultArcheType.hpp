@@ -94,12 +94,13 @@ namespace ECS
 		{
 			auto* entity = &entityManager_.addEntity();
 			entity->addComponent<Transform>().setPosition(pos.x, pos.y);
-			//entity->getComponent<Scale>().val = Vec2{ 0.f,0.f };
+			entity->getComponent<Scale>().val = Vec2{ 0.f,0.f };
 			entity->addComponent<Color>();
 			entity->addComponent<AlphaBlend>(AlphaBlend::BlendMode::ADD, 255);
-			//entity->addComponent<Expand>(Vec2{ 1.f,1.f }, Easing::ExpoIn, 5.f);
-			entity->addComponent<SpriteDraw>(graphicName);
-			entity->addComponent<Lemniscate>(30.f);
+			entity->addComponent<Expand>(Vec2{ 1.f,1.f }, Easing::ExpoIn, 5.f);
+			entity->addComponent<SpriteDraw>(graphicName).setPivot(Vec2{ 256.f,256.f });
+			entity->addComponent<SpotLightMove>(2.5f, pos);
+			//entity->addComponent<Lemniscate>(30.f);
 			entity->addGroup(ENTITY_GROUP::PAUSE_UI);
 			return entity;
 		}

@@ -39,7 +39,7 @@ namespace Scene
 		//! 紙吹雪
 		std::vector<ECS::Entity*> confetties_{ nullptr };
 		//スポットライト
-		ECS::Entity* spotLight[2] = { nullptr };
+		ECS::Entity* spotLight = nullptr;
 		//! スコア背景
 		ECS::Entity* black_ = nullptr;
 		//! スコア
