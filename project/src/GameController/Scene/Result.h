@@ -55,15 +55,17 @@ namespace Scene
 		bool isFadeOut_ = false;
 
 		//リザルトの進行度を管理する
-		enum Timing {
-			CONFETTI = 100,		//紙吹雪出す
-			EVALUATION = 140,	//評価フォント出す
-			SCORE_BACK = 200,	//スコア用背景出す
-			SCOREFONT = 260,	//スコアの文字出す
-			SCORE = 265,		//スコア数字出す
-			COMBOFONT = 320,	//コンボの文字出す
-			COMBO = 325,		//コンボ数出す
-			FADE_OUT = 500,		//フェードアウト開始
+		enum Timing
+		{
+			DRUMROLL = 120,					//ドラムローーーーール
+			CONFETTI = DRUMROLL + 60,		//紙吹雪出す
+			EVALUATION = CONFETTI + 40,		//評価フォント出す
+			SCORE_BACK = EVALUATION + 60,	//スコア用背景出す
+			SCOREFONT = SCORE_BACK + 60,	//スコアの文字出す
+			SCORE = SCOREFONT + 5,			//スコア数字出す
+			COMBOFONT = SCORE + 55,			//コンボの文字出す
+			COMBO = COMBOFONT + 5,			//コンボ数出す
+			FADE_OUT = COMBO + 175,			//フェードアウト開始
 		};
 
 		//! スコアから料理の画像を設定する
