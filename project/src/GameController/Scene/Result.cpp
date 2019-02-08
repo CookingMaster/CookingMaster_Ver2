@@ -84,7 +84,7 @@ void Scene::Result::update()
 	//フェードイン
 	if (!isFadeOut_ && fade_->getComponent<ECS::AlphaBlend>().alpha >= 165)
 	{
-		fade_->getComponent<ECS::AlphaBlend>().alpha -= 6;
+		fade_->getComponent<ECS::AlphaBlend>().alpha -= 3;
 		return;
 	}
 

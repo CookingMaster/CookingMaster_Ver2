@@ -34,6 +34,8 @@ namespace Scene
 		ECS::Entity* otama_ = nullptr;
 		ECS::Entity* pan_ = nullptr;
 		ECS::Entity* stars_[4] = { nullptr };
+		ECS::Entity* finish = nullptr;
+		Counter finishCnt_;
 		const int startUIstopTime = 70;
 
 		//こいつをtrueにするとオートモードになるぞ！
