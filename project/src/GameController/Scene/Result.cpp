@@ -17,6 +17,7 @@ Scene::Result::Result(IOnSceneChangeCallback * sceneTitleChange, [[maybe_unused]
 		bgmName_ = (parame->get<std::string>("BGM_name"));
 		score_ = (parame->get<int>("score"));
 		combo_ = (parame->get<int>("maxcombo"));
+		isNewRecord_ = (parame->get<bool>("newrecord"));
 	}
 }
 
