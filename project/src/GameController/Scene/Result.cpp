@@ -77,6 +77,9 @@ void Scene::Result::initialize()
 	spotLight = ECS::ResultArcheType::CreateSpotLightEntity(
 		"spotlight", Vec2{ System::SCREEN_WIDTH / 2.f + 30.f,System::SCREEN_HEIGHT / 2.f }, *entityManager_
 	);
+	//ドラムロール開始
+	Sound drumrollSE("drumroll");
+	drumrollSE.play(false, true);
 }
 
 void Scene::Result::update()
@@ -88,10 +91,6 @@ void Scene::Result::update()
 		return;
 	}
 
-	//ドラムロール開始
-	Sound drumrollSE("drumroll");
-	drumrollSE.play(false, true);
-	
 	counter_.add();
 	entityManager_->update();
 	if (spotLight->getComponent<ECS::SpotLightMove>().isEnd())
@@ -100,7 +99,6 @@ void Scene::Result::update()
 	}
 	if (counter_.getCurrentCount() == Timing::CONFETTI)
 	{
-		drumrollSE.stop();
 		Sound drumendSE("drumend");
 		drumendSE.play(false, true);
 		fade_->getComponent<ECS::AlphaBlend>().alpha = 0;

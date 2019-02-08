@@ -98,7 +98,7 @@ void GameController::update()
 	}
 	else
 	{
-		fadeSoundGain_ -= 0.01f;
+		fadeSoundGain_ -= 0.015f;
 		MasterSound::Get().setAllBGMGain(fadeSoundGain_);
 		gameEndFadeOut_->update();
 	}
