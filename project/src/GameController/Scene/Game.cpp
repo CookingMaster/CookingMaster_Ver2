@@ -429,7 +429,7 @@ namespace Scene
 					fade_->getComponent<ECS::AlphaBlend>().alpha += 10;
 				}
 			}
-			if (fade_->getComponent<ECS::AlphaBlend>().alpha == 255)
+			if (fade_->getComponent<ECS::AlphaBlend>().alpha >= 255)
 			{
 				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}

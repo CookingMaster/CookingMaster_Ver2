@@ -36,6 +36,8 @@ void Scene::Result::initialize()
 	//音
 	ResourceManager::GetSound().load("Resource/sound/SE/roll.ogg", "drumroll", SoundType::SE);
 	ResourceManager::GetSound().load("Resource/sound/SE/roll_end.ogg", "drumend", SoundType::SE);
+	ResourceManager::GetSound().load("Resource/sound/SE/orchestra_hit.ogg", "orchestra", SoundType::SE);
+
 	//評価フォント
 	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
 	//フォント
@@ -77,9 +79,6 @@ void Scene::Result::initialize()
 	spotLight = ECS::ResultArcheType::CreateSpotLightEntity(
 		"spotlight", Vec2{ System::SCREEN_WIDTH / 2.f + 30.f,System::SCREEN_HEIGHT / 2.f }, *entityManager_
 	);
-	//ドラムロール開始
-	Sound drumrollSE("drumroll");
-	drumrollSE.play(false, true);
 	drumendFlag_ = false;
 }
 
@@ -94,10 +93,19 @@ void Scene::Result::update()
 
 	counter_.add();
 	entityManager_->update();
+
+	if (counter_.getCurrentCount() == 30)
+	{
+		//ドラムロール開始
+		Sound drumrollSE("drumroll");
+		drumrollSE.play(false, true);
+	}
 	if (spotLight->getComponent<ECS::SpotLightMove>().isEnd())
 	{
 		spotLight->addComponent<ECS::ExpandComponentSystem>(1.f, 0.f, 7.f);
 		Sound drumendSE("drumend");
+		Sound drumrollSE("drumroll");
+		drumrollSE.stop();
 		if (!drumendSE.isPlay() && !drumendFlag_)
 		{
 			drumendSE.play(false, true);
@@ -106,6 +114,10 @@ void Scene::Result::update()
 	}
 	if (counter_.getCurrentCount() == Timing::CONFETTI)
 	{
+		Sound orchestra("orchestra");
+		if (!orchestra.isPlay()) {
+			orchestra.play(false, true);
+		}
 		fade_->getComponent<ECS::AlphaBlend>().alpha = 0;
 		//紙吹雪
 		if (score_ >= SCORE_GREAT)
