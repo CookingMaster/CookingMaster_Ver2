@@ -272,13 +272,13 @@ namespace ECS
 		SpotLightMove(const float speed, const Vec2& startPos)
 			:
 			speed_(speed),
-			startPos_(startPos)
+			startPos_(startPos),
+			moveCnt_(0)
 		{}
 		void initialize() override
 		{
 			position_ = &entity->getComponent<Position>();
 			counter_.setCounter(0.f, speed_, 0.f, 360.f);
-			moveCnt_ = 0;
 		}
 		void update() override
 		{

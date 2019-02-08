@@ -31,7 +31,7 @@ namespace ECS
 	struct Rotation final : public ComponentData
 	{
 		float val;
-		Rotation() = default;
+		Rotation() : val(0.f) {};
 		Rotation(const float& r) : val(r) {}
 		
 	};

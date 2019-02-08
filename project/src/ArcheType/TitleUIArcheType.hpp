@@ -18,7 +18,7 @@ namespace ECS
 			entity->addComponent<EasingPosMove>().setDest(
 				Vec2(System::SCREEN_WIDTH / 2.f, System::SCREEN_HEIGHT + 100.f),
 				goalpos,
-				90.f);
+				50.f);
 
 			//イージングが終了したらロゴと一緒に消える
 			auto func = [](ECS::Entity* entity, EntityManager& entityManager, bool& isPushed)

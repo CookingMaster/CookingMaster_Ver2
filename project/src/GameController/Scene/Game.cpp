@@ -194,6 +194,7 @@ namespace Scene
 				sendParame->add<std::string>("BGM_name", bgmName_);
 				sendParame->add<int>("score", scoreNum_);
 				sendParame->add<int>("maxcombo", maxComb_);
+				sendParame->add<bool>("fullcombo", maxComb_ == msl_.getMaxNoteNum());
 				//BGMを停止する
 				Sound(bgmName_).stop();
 				//オートモードは記録しない
@@ -393,6 +394,7 @@ namespace Scene
 			sendParame->add<std::string>("BGM_name", bgmName_);
 			sendParame->add<int>("score", scoreNum_);
 			sendParame->add<int>("maxcombo", maxComb_);
+			sendParame->add<bool>("fullcombo", maxComb_ == msl_.getMaxNoteNum());
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			//オートモードは記録しない
