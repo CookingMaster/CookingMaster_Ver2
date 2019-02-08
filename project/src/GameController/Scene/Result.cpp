@@ -32,6 +32,9 @@ void Scene::Result::initialize()
 	ResourceManager::GetGraph().load("Resource/image/confetti.png", "confetti");
 	ResourceManager::GetGraph().load("Resource/image/result_black.png", "black");
 	ResourceManager::GetGraph().load("Resource/image/spotlight.png", "spotlight");
+	//音
+	ResourceManager::GetSound().load("Resource/sound/SE/roll.ogg", "drumroll", SoundType::SE);
+	ResourceManager::GetSound().load("Resource/sound/SE/roll_end.ogg", "drumend", SoundType::SE);
 	//評価フォント
 	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
 	//フォント
@@ -84,6 +87,10 @@ void Scene::Result::update()
 		return;
 	}
 
+	//ドラムロール開始
+	Sound drumrollSE("drumroll");
+	drumrollSE.play(false, true);
+	
 	counter_.add();
 	entityManager_->update();
 	if (spotLight->getComponent<ECS::SpotLightMove>().isEnd())
@@ -92,6 +99,9 @@ void Scene::Result::update()
 	}
 	if (counter_.getCurrentCount() == Timing::CONFETTI)
 	{
+		drumrollSE.stop();
+		Sound drumendSE("drumend");
+		drumendSE.play(false, true);
 		fade_->getComponent<ECS::AlphaBlend>().alpha = 0;
 		//紙吹雪
 		if (score_ >= SCORE_GREAT)
