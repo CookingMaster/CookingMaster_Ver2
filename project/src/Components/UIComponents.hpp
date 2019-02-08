@@ -69,7 +69,10 @@ namespace ECS
 			start_(0.f),
 			end_(0.f),
 			spd_(0.f) {}
-
+		FadeComponent(const float& start, const float& end, const float& speed) :
+			start_(start),
+			end_(end),
+			spd_(speed) {}
 		void initialize() override
 		{
 			if (!entity->hasComponent<AlphaBlend>())
@@ -192,6 +195,14 @@ namespace ECS
 		{
 			easing_.reset();
 			scale_->val = easing_.getVolume(start_, end_);
+		}
+
+		void set(float start, float end, float speed)
+		{
+			start_ = start;
+			end_ = end;
+			speed_ = speed;
+			reset();
 		}
 
 		[[nodiscard]] const bool isEaseEnd()
@@ -633,24 +644,27 @@ namespace ECS
 	class MarkerBodyController final : public ComponentSystem
 	{
 	private:
-		ExpandComponentSystem * expander = nullptr;
+		ExpandComponentSystem * expander_ = nullptr;
 		BeatByTrigger* beatbt = nullptr;
 
 		int bpm_;
 		int beat_;
 		std::string soundName_;
 
+		bool isPlay_;
+
 	public:
 		MarkerBodyController(int bpm, int beat, const std::string& soundName) :
 			bpm_(bpm),
 			beat_(beat),
-			soundName_(soundName) {}
+			soundName_(soundName),
+			isPlay_(true){}
 
 		void initialize() override
 		{
 			CalcurationBeat beat(bpm_, beat_);
-			entity->addComponent<ExpandComponentSystem>(1.2f, 1.f, beat.calcNote_Frame((float)beat_));
-			expander = &entity->getComponent<ExpandComponentSystem>();
+			entity->addComponent<ExpandComponentSystem>(0.f, 1.2f, beat.calcNote_Frame((float)beat_));
+			expander_ = &entity->getComponent<ExpandComponentSystem>();
 
 			entity->addComponent<BeatByTrigger>(bpm_, beat_, (float)beat_, soundName_);
 			beatbt = &entity->getComponent<BeatByTrigger>();
@@ -660,7 +674,13 @@ namespace ECS
 		{
 			if (beatbt->getTrigger())
 			{
-				expander->reset();
+				if (isPlay_)
+				{
+					CalcurationBeat beat(bpm_, beat_);
+					expander_->set(1.2f, 1.f, beat.calcNote_Frame((float)beat_));
+					isPlay_ = false;
+				}
+				expander_->reset();
 			}
 		}
 	};
@@ -716,7 +736,7 @@ namespace ECS
 		float firstEndSize_, secondEndSize_, endSize_;
 		int pauseFrame_;
 		float inSpeed_, outSpeed_, easingSpeed_;
-		bool fadeOutFlag_;
+		bool fadeOutFlag_ = false;
 		Easing easing_;
 		Counter counter_;
 	public:
@@ -814,10 +834,11 @@ namespace ECS
 	private:
 		Rotation * rotation_ = nullptr;
 		int waitFrame_;
-		float originAngle_, endAngle_;
+		float originAngle_ = 0;
+		float endAngle_;
 		Easing easing_;
 		Counter counter_;
-		int gongTimes_;
+		int gongTimes_ = 0;
 	public:
 		SoundGongComponent(const int waitFrame, const float endAngle)
 			:
@@ -829,7 +850,6 @@ namespace ECS
 			rotation_ = &entity->getComponent<Rotation>();
 			originAngle_ = rotation_->val;
 			counter_.setCounter(0, 1, 0, waitFrame_);
-			gongTimes_ = 0;
 		}
 		void update() override
 		{
@@ -839,7 +859,7 @@ namespace ECS
 			{
 				easing_.run(Easing::CircIn, 5.f);
 				rotation_->val = easing_.getVolume(originAngle_, endAngle_);
-				if (easing_.isEaseEnd()) {
+				if (easing_.isEaseEnd()) {		
 					++gongTimes_;
 					easing_.reset();
 					float temp = originAngle_;

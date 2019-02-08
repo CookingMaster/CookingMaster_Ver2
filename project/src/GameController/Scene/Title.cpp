@@ -36,10 +36,7 @@ namespace Scene
 			*entityManager_);
 
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_bg", Vec2(0.f, 0.f), *entityManager_);		//背景
-		for (int i = 1; i <= 2; ++i)
-		{
-			ECS::TitleUIArcheType::CreateCloud("cloud", 172, i, *entityManager_);//雲
-		}
+		ECS::TitleUIArcheType::CreateCloud("cloud", *entityManager_);	//雲
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_door", Vec2(560.f, 389.f), *entityManager_, true);	//ドア
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_building", Vec2(0.f, 96.f), *entityManager_);	//外装
 		ECS::TitleUIArcheType::CreateTitleBGArchetype("title_light", Vec2(1084.f, 92.f), *entityManager_, false, true);	//ライト
@@ -84,15 +81,17 @@ namespace Scene
 		case 1:
 			if (message[0]->getComponent<ECS::AnyInputFunction>().getIsPushed())
 			{
+				Sound se("enter");
+				se.play(false, true);
 				fade[0]->getComponent<ECS::FadeComponent>().reset(0.f, 255.f, 80.f);
 				++progress;
-				
 			}
 			break;
 
 		case 2:
+			Sound se("enter");
 			gain_ -= 0.02f;
-			if (fade[0]->getComponent<ECS::FadeComponent>().isFadeEnd() && gain_ <= 0.f)
+			if (fade[0]->getComponent<ECS::FadeComponent>().isFadeEnd() && gain_ <= 0.f && !se.isPlay())
 			{
 				ON_SCENE_CHANGE(SceneName::SELECT, nullptr, StackPopFlag::POP, true);
 			}

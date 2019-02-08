@@ -35,7 +35,8 @@ namespace Scene
 		//鍋
 		ResourceManager::GetGraph().loadDiv("Resource/image/bg_nabe1.png", "nabe1", 8, 8, 1, 140, 148);
 		ResourceManager::GetGraph().loadDiv("Resource/image/bg_nabe2.png", "nabe2", 8, 8, 1, 186, 98);
-		ResourceManager::GetSound().load("Resource/sound/SE/onion.ogg", "onion", SoundType::SE);
+		//鍋かんかん
+		ResourceManager::GetSound().load("Resource/sound/SE/nabeHit.ogg", "nabeHit", SoundType::SE);
 		//BPMアニメーションテストのため仮読み込み
 		ResourceManager::GetGraph().load("Resource/image/bg_back.png", "bg_back");
 		ResourceManager::GetGraph().load("Resource/image/rakugaki.png", "rakugaki");
@@ -62,7 +63,6 @@ namespace Scene
 		ResourceManager::GetGraph().loadDiv("Resource/image/cut_effect_d.png", "slash", 4, 4, 1, 384, 256);
 		//斬撃エフェクト(悪)
 		ResourceManager::GetGraph().loadDiv("Resource/image/cut_effect_bad_d.png", "slash_bad", 4, 4, 1, 256, 256);
-
 		//グチャ
 		ResourceManager::GetSound().load("Resource/sound/SE/miss.ogg", "miss", SoundType::SE);
 		//グチャ画像
@@ -111,11 +111,6 @@ namespace Scene
 		}
 		//おやっさんを攻撃表示で召喚する
 		boss_ = std::make_unique<BossController>(*entityManager_, msl_.getBPM(), msl_.getBeat(), bgmName_);
-		//マーカー(左右に一つずつ)
-		ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::L,
-			Vec2((System::SCREEN_WIDTH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
-		ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::R,
-			Vec2((System::SCREEN_WIDTH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 		fade_ = ECS::ArcheType::CreateEntity
 		(
 			"fade",
@@ -151,6 +146,11 @@ namespace Scene
 				{
 					s.play(false, false);
 				}
+				//マーカーを作成(左右に一つずつ)
+				ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::L,
+					Vec2((System::SCREEN_WIDTH / 2.f) - 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
+				ECS::GameEffectsArcheType::CreateMarker("marker", bgmName_, msl_.getBPM(), msl_.getBeat(), ECS::Direction::Dir::R,
+					Vec2((System::SCREEN_WIDTH / 2.f) + 200.f, System::SCREEN_HEIGHT / 2.f), entityManager_);
 			}
 		}
 		if (isPlay_)
@@ -177,6 +177,7 @@ namespace Scene
 			}
 			nc_.run(msl_.getNotesData(), msl_.getScoreData(), *entityManager_);
 
+#ifdef _DEBUG
 			if (Input::Get().getKeyFrame(KEY_INPUT_A) == 1)
 			{
 				getCallBack().onSceneChange(SceneName::TITLE, nullptr, StackPopFlag::POP, true);
@@ -194,7 +195,7 @@ namespace Scene
 				ON_SCENE_CHANGE(SceneName::RESULT, sendParame.get(), StackPopFlag::POP, true);
 			}
 			//-----------------------------------------------------------------------------------------
-
+#endif
 			changeResultScene();
 			changePauseScene();
 			saveMaxComb();
@@ -245,7 +246,7 @@ namespace Scene
 						DOUT << "PARFECT" << std::endl;
 						se.play(false, true);
 						++comb_;
-						ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_, ECS::AlphaBlend::BlendMode::SUB);
+						ECS::GameEffectsArcheType::CreateSlashEffect("slash", itnotestate.getPos(), itnotestate.getNoteDir(), entityManager_);
 						return msl_.getPoint(nowstate, comb_);
 					}
 					break;
@@ -349,6 +350,7 @@ namespace Scene
 			send_parameter->add<std::string>("BGM_name", bgmName_);
 			send_parameter->add<std::string>("BGM_path", bgmPath_);
 			send_parameter->add<bool>("autoFlag", autoPerfectMode_);
+			send_parameter->add<size_t>("stage", stageNum_);
 			//BGMを停止する
 			Sound(bgmName_).stop();
 			ON_SCENE_CHANGE(SceneName::PAUSE, send_parameter.get(), StackPopFlag::NON, true);
@@ -446,6 +448,11 @@ namespace Scene
 		start_->update();
 		otama_->update();
 		pan_->update();
+		if (otama_->getComponent<ECS::Rotation>().val >= 40.f)
+		{
+			Sound se("nabeHit");
+			se.play(false, true);
+		}
 		for (int i = 0; i < 4; ++i)
 		{
 			stars_[i]->update();

@@ -83,13 +83,12 @@ namespace ECS
 			const char* divGraphicName,
 			const Vec2& pos,
 			ECS::Direction::Dir dir,
-			EntityManager* entityManager,
-			AlphaBlend::BlendMode bm = AlphaBlend::BlendMode::ADD)
+			EntityManager* entityManager)
 		{
 			auto& e = entityManager->addEntity();
 			e.addComponent<Transform>().setPosition(pos.x, pos.y);
 			e.addComponent<Color>();
-			e.addComponent<AlphaBlend>().blendMode = bm;
+			e.addComponent<AlphaBlend>().blendMode = AlphaBlend::BlendMode::ADD;
 			if (dir == ECS::Direction::Dir::R)
 			{
 				e.addComponent<SpriteAnimationDraw>(divGraphicName).turnGraph();

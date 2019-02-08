@@ -3,6 +3,7 @@
 #include "SceneManager.hpp"
 #include "../GameController.h"
 #include "../../System/System.hpp"
+#include "../../ArcheType/ArcheType.hpp"
 #include "../../ArcheType/UIArcheType.hpp"
 #include "../src/Class/Sound.hpp"
 
@@ -17,10 +18,12 @@ namespace Scene
 		ResourceManager::GetGraph().load("Resource/image/button.png", "button");
 		ResourceManager::GetGraph().load("Resource/image/pause_moji.png", "moji");		
 		ResourceManager::GetGraph().load("Resource/image/button_frame.png", "frame");
+		ResourceManager::GetGraph().loadDiv("Resource/image/menuname.png", "stagename", 3, 1, 3, 240, 80);
 
 		name_ = parame->get<std::string>("BGM_name");
 		bgmPath_ = parame->get<std::string>("BGM_path");
 		isAuto_ = parame->get<bool>("autoFlag");
+		stageNum_ = parame->get<size_t>("stage");
 		bg_ = ECS::UIArcheType::CreatePauseBG("pause_bg", Vec2{ 0.f,0.f }, *entityManager);
 		
 		//size(522,255), pos(640,360):3つのボタンのうち左の左上
@@ -29,6 +32,11 @@ namespace Scene
 		button_ = ECS::UIArcheType::CreateButtonUI("button", Vec2{ 138.f, 56.f }, Vec2{ 400.f, 397.f }, *entityManager);
 		moji_ = ECS::UIArcheType::CreateButtonMojiUI("moji", Vec2{ 168.f, 56.f }, Vec2{ 400.f, 397.f }, *entityManager);
 		frame_ = ECS::UIArcheType::CreateSelectFrame("frame", Vec2{ 400.f - 7.f, 397.f - 7.f }, *entityManager);
+		
+		stage_ = ECS::ArcheType::CreateAnimationEntity("stagename", Vec2{ 640.f, 340.f }, *entityManager, ENTITY_GROUP::PAUSE_UI, int(stageNum_ - 1));
+		auto& sad = stage_->getComponent<ECS::SpriteAnimationDraw>();
+		sad.setPivot(Vec2{ sad.getSize().x / 2.f, sad.getSize().y / 2.f });
+		stage_->getComponent<ECS::Scale>().val = 1.1f;
 	}
 	void Pause::update()
 	{
@@ -37,6 +45,7 @@ namespace Scene
 		slide_->update();
 		moji_->update();
 		bg_->update();
+		stage_->update();
 
 		moveCursor();
 		selectButton();
@@ -54,6 +63,7 @@ namespace Scene
 		moji_->destroy();
 		bg_->destroy();
 		frame_->destroy();
+		stage_->destroy();
 	}
 
 

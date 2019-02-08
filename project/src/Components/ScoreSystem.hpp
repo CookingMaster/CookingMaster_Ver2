@@ -18,10 +18,9 @@ namespace ECS
 	//!曲ごとにスコアを設定するための定数です
 	enum class StageHighScore : size_t
 	{
-		STAGE1 = 1,		//本来は曲の名前とかにする
+		STAGE1 = 1,
 		STAGE2,
 		STAGE3,
-		STAGE4,
 		NON
 	};
 	struct ScoreData : public ComponentData
@@ -62,13 +61,13 @@ namespace ECS
 		}
 		void loadScoreData(const StageHighScore& stageName)
 		{
+
 			std::ifstream ifs;
 			ifs.open(
 				std::string("Resource/sound/MUSIC/stage") +
 				std::to_string(size_t(stageName)) + "/" +
 				"score" + std::to_string(size_t(stageName)) +
 				".bin", std::ios::in);
-
 			ifs >> saveScore_;
 			//スコアが高いほうをsaveScore_保存
 			if (saveScore_ < score_->val)
