@@ -32,6 +32,7 @@ void Scene::Result::initialize()
 	ResourceManager::GetGraph().load("Resource/image/result_black.png", "black");
 	//評価フォント
 	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
+	ResourceManager::GetGraph().loadDiv("Resource/image/resultUI.png", "result", 2, 1, 2, 500, 150);
 	//フォント
 	ResourceManager::GetGraph().load("Resource/image/score_combo.png", "scorecombo");
 	ResourceManager::GetGraph().load("Resource/image/score_font.png", "scorefont");
