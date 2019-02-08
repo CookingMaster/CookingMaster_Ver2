@@ -1,3 +1,0 @@
-menu.png  	245,55
-menuname.png    370,310  370,420  370,530
-option		670,50
