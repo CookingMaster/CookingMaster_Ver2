@@ -11,11 +11,10 @@
 class CalcurationBeat
 {
 private:
-	const float beat_ = 1.f;
-	const float bpm_ = 0.f;
+	const float beat_;
+	const float bpm_;
 
 public:
-	CalcurationBeat() {}
 	//bpm：BPM、beat：拍子
 	CalcurationBeat(int bpm, int beat) :
 		bpm_((float)bpm), beat_((float)beat) {}

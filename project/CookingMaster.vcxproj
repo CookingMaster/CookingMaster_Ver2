@@ -80,6 +80,9 @@
     <ClInclude Include="src\Utility\Utility.hpp" />
     <ClInclude Include="src\Utility\Vec.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ICON.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{3FD7EF5E-4359-47D9-9E85-A69DF9FDA696}</ProjectGuid>

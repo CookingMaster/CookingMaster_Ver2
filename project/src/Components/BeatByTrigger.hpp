@@ -55,19 +55,19 @@ namespace ECS {
 			}
 		}
 
-		//トリガーを取得
+		//!トリガーを取得
 		bool getTrigger()
 		{
 			return trigger_;
 		}
 
-		//トリガーがtrueになる拍を変更
+		//!トリガーがtrueになる拍を変更
 		void setBeat(float rhythm)
 		{
 			rhythm_ = rhythm;
 		}
 
-		//曲が終了したか否かを取得する(終了したらtrue)
+		//!曲が終了したか否かを取得する(終了したらtrue)
 		[[nodiscard]] bool isEndSound()
 		{
 			return sound_.getCurrentTime() >= sound_.getTotalTime();

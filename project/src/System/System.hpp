@@ -45,7 +45,8 @@ private:
 		SetMainWindowText("CookingMaster2");
 		//画面サイズ変更
 		SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);
-		//ウィンドウモード変更
+		//アイコン
+		SetWindowIconID(222);
 		//初期化
 		DxLib_Init();
 		assert(DxLib_IsInit());
