@@ -96,7 +96,7 @@ namespace Scene
 			autoPerfectMode_,
 			*entityManager_);
 		//スコア表示
-		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), *entityManager_);
+		ECS::UIArcheType::CreateEmptyBarUI("mori_empty", Vec2(256.f, 183.f), Vec2(1041.f, 142.f), *entityManager_);
 		ECS::UIArcheType::CreateFullBarUI("mori_full", Vec2(190.f, 136.f), Vec2(1074.f, 189.f), msl_.getMaxPoint(), *entityManager_);
 		//スコア％表示用貼り紙
 		ResourceManager::GetGraph().load("Resource/image/score_font2.png", "score_font");
