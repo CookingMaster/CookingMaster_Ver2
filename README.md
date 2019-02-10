@@ -30,6 +30,6 @@
 + Photoshop
 + CLIPSTUDIO
 + Cubase8.5 Pro
-外部ライブラリ **DxLib** http://dxlib.o.oo7.jp/
++ 外部ライブラリ **DxLib** http://dxlib.o.oo7.jp/
 
 *Wrote By Neighbor Sound*
