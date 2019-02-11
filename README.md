@@ -26,6 +26,7 @@
 ### **m.yokota https://github.com/yokota0717**
 + グラフィック制作
 ## 開発環境
++ GitKraken
 + VisualStudio2017 C/C++
 + Photoshop
 + CLIPSTUDIO
