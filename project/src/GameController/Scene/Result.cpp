@@ -40,7 +40,7 @@ void Scene::Result::initialize()
 	ResourceManager::GetSound().load("Resource/sound/SE/orchestra_hit.ogg", "orchestra", SoundType::SE);
 
 	//評価フォント
-	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 3, 1, 3, 598, 203);
+	ResourceManager::GetGraph().loadDiv("Resource/image/evaluation.png", "evaluation", 4, 1, 4, 756, 222);
 	ResourceManager::GetGraph().loadDiv("Resource/image/resultUI.png", "result", 2, 1, 2, 500, 150);
 	//フォント
 	ResourceManager::GetGraph().load("Resource/image/score_combo.png", "scorecombo");
@@ -160,7 +160,7 @@ void Scene::Result::update()
 			"evaluation",
 			index,
 			Vec2{ System::SCREEN_WIDTH / 2.f, 125.f },
-			Vec2_i{ 598,203 },
+			Vec2_i{ 756,203 },
 			*entityManager_
 		);
 		//クロッシュ戻ってくるので移動コンポーネントを消す
@@ -319,7 +319,11 @@ void Scene::Result::setStage()
 
 int Scene::Result::getEvaluationIndex()
 {
-	if (score_ >= SCORE_GREAT)
+	if (score_ >= SCORE_PERFECT)
+	{
+		return 3;
+	}
+	else if (score_ >= SCORE_GREAT)
 	{
 		return 2;
 	}

@@ -26,8 +26,9 @@ namespace Scene
 	{
 	private:
 		//! 定数
+		const int SCORE_PERFECT = 92;
 		const int SCORE_GREAT = 80;
-		const int SCORE_GOOD = 65;
+		const int SCORE_GOOD = 60;
 		//! エンティティマネージャー
 		ECS::EntityManager* entityManager_ = nullptr;
 		//! フェード
