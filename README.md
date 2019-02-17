@@ -3,7 +3,7 @@
 ## ゲーム概要
 
 **CookingMasterの続編です**
-+ https://freegame-mugen.jp/action/game_6944.html
++ 前作URL https://freegame-mugen.jp/action/game_6944.html
 ## 操作方法
 + ←→キー:切る
 + Zキー:決定
