@@ -1,8 +1,9 @@
 # CookingMaster２
 ![game](https://user-images.githubusercontent.com/30017323/52531561-b811ed80-2d5a-11e9-9d52-93f280c6b828.png)
 ## ゲーム概要
-
-**CookingMasterの続編です**
+**音楽に合わせて出てくる野菜を切るリズムゲーム**
++ フリーゲーム夢現に投稿しました https://freegame-mugen.jp/puzzle/game_7734.html
++ CookingMasterの続編です
 + 前作URL https://freegame-mugen.jp/action/game_6944.html
 ## 操作方法
 + ←→キー:切る
