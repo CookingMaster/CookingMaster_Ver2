@@ -3,7 +3,6 @@
 ## ゲーム概要
 **音楽に合わせて出てくる野菜を切るリズムゲーム**
 + フリーゲーム夢現に投稿しました https://freegame-mugen.jp/puzzle/game_7734.html
-+ CookingMasterの続編です https://github.com/tonarinohito/CookingMaster
 + 前作URL https://freegame-mugen.jp/action/game_6944.html
 ## 操作方法
 + ←→キー:切る
